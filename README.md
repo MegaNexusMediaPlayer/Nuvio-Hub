@@ -8,14 +8,18 @@ A community-built Nuvio-style experience inside Kodi: browse collections, explor
 
 ## What we have built
 
-- A home screen with poster shelves, collections and Continue Watching.
-- Series pages with simple season tabs and Specials placed last.
-- Full poster or landscape episode artwork, with a description for each episode.
-- Cast and crew portraits, an Info view and More like this recommendations, when supplied by your metadata provider.
-- A long-press/context menu for manual stream selection, recommendations and information.
-- Watched indicators, saved playback positions and Continue Watching refresh after playback.
-- In 6.0.7, the latest locally watched title appears first on the left, before remote-only history. This changes display order without changing saved progress or merge rules.
-- Shared settings for accounts, add-ons, collections, playback and subtitles, plus optional IPTV and trailer integration.
+Included experience
+Nuvio Hub brings a complete Nuvio-style experience to Kodi, combining browsing, streaming, metadata, subtitles, and watch tracking in one interface.
+- Nuvio account and addon integration — connect your account and bring your configured Nuvio addons into Kodi.
+- AIOStreams integration — connect your streaming setup and browse available sources, with manual stream selection when you want more control.
+- AIOMetadata integration — rich movie and series information, artwork, cast, crew, and recommendations.
+- Simkl integration — connect your watch tracking and watched history.
+- Automatic subtitles — automatic subtitle loading during playback, with options to change subtitles when needed.
+- Continue Watching — resume movies and episodes from your saved progress, with recently watched content shown first.
+- Movie and series discovery — browse addon catalogs, open detailed information, and explore related titles.
+- Full episode browsing — season tabs, episode descriptions, watched indicators, and portrait or landscape layouts.
+- A unified Kodi interface — access your addons, sources, metadata, subtitles, and playback through the Nuvio Hub skin.
+The experience depends on your connected accounts, configured addons, and available sources.
 
 [Download 6.0.7](https://github.com/MegaNexusMediaPlayer/Nuvio-Hub/releases/tag/v6.0.7) · [View screenshots](docs/SCREENSHOTS.md) · [Installation](docs/INSTALL.md) · [Contribute](CONTRIBUTING.md) · [6.0.7 release notes](docs/RELEASE-6.0.7.md)
 
