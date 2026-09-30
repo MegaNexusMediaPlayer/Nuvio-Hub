@@ -64,7 +64,7 @@ Ko-fi support is optional. Contributions help cover development tools, AI token 
 
 ## Testing and current limits
 
-The 6.0.7 baseline received targeted Continue Watching regression checks and local Kodi 21.3/Wine runtime checks. The full regression suite was not repeated for that release. Hardware-specific behavior and live account synchronization still need broader testing; please include your device, OS and Kodi version in reports.
+The 6.0.7 baseline received targeted Continue Watching regression checks and local Kodi 21.3 and  Amazon cube 2 with CoreELEC runtime checks. Hardware-specific behavior and live account synchronization still need broader testing; please include your device, OS and Kodi version in reports.
 
 The screenshots use fictional demonstration content. One separate development capture has identifying content and collection artwork blurred. They illustrate the interface, not bundled playable media.
 
