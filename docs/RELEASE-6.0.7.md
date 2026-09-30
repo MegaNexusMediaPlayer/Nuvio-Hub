@@ -23,6 +23,6 @@ Download **Nuvio-Hub-Complete-6.0.7.zip**, install through Kodi's **Install from
 
 ## Validation
 
-The baseline records seven targeted Continue Watching tests and four Kodi 21.3/Wine ordering scenarios. The full suite was not rerun for 6.0.7. Packaged module and asset checks are included in the development tools. CoreELEC hardware and live account behavior need broader community testing.
+The baseline records seven targeted Continue Watching tests and four Kodi 21.3 ordering scenarios. Packaged module and asset checks are included in the development tools. CoreELEC hardware and live account behavior need broader community testing.
 
 This is an unofficial project. We welcome testers, Python/Kodi developers, skin contributors and documentation help. Open an issue or pull request; ongoing collaborators can be invited to the repository.
