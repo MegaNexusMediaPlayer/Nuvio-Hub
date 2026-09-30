@@ -1,0 +1,50 @@
+<window>
+  <defaultcontrol always="true">100</defaultcontrol>
+  <controls>
+    <control type="image">
+      <left>0</left>
+      <top>0</top>
+      <width>1920</width>
+      <height>1080</height>
+      <aspectratio>scale</aspectratio>
+      <texture colordiffuse="99000000">special://home/addons/script.nuvio/resources/media/white.png</texture>
+    </control>
+    <control type="group">
+      <visible>String.IsEqual(Window.Property(nuvio.full),1)</visible>
+      <control type="image">
+        <left>0</left>
+        <top>0</top>
+        <width>1920</width>
+        <height>1080</height>
+        <aspectratio>scale</aspectratio>
+        <texture colordiffuse="FF090B11">special://home/addons/script.nuvio/resources/media/white.png</texture>
+      </control>
+      <control type="image">
+        <left>0</left>
+        <top>0</top>
+        <width>1920</width>
+        <height>1080</height>
+        <aspectratio>scale</aspectratio>
+        <texture colordiffuse="88484848">$INFO[Window.Property(nuvio.art)]</texture>
+      </control>
+    </control>
+    <control type="image">
+      <left>925</left>
+      <top>460</top>
+      <width>70</width>
+      <height>70</height>
+      <texture>special://home/addons/skin.nuvio/media/spinner.png</texture>
+      <animation effect="rotate" end="360" center="auto" time="1400" loop="true" condition="true">Conditional</animation>
+    </control>
+    <control type="label">
+      <left>460</left>
+      <top>555</top>
+      <width>1000</width>
+      <height>56</height>
+      <font>font14</font>
+      <textcolor>FFFFFFFF</textcolor>
+      <align>center</align>
+      <label>$INFO[Window.Property(nuvio.loading)]</label>
+    </control>
+  </controls>
+</window>

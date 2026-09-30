@@ -1,0 +1,1339 @@
+[
+  {
+    "id": "collections.discover",
+    "title": "Discover",
+    "folders": [
+      {
+        "id": "collections.discover.recommended",
+        "title": "Recommended",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tvdb.trending",
+            "genre": "Action"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tvdb.trending",
+            "genre": "Action"
+          }
+        ],
+        "cover": "resources/media/collections/collections_discover_recommended_cover.webp"
+      },
+      {
+        "id": "collections.discover.popular",
+        "title": "Popular",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.top",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.top",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_discover_popular_cover.webp"
+      },
+      {
+        "id": "collections.discover.trending",
+        "title": "Trending",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.trending",
+            "genre": "Day"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.trending",
+            "genre": "Day"
+          }
+        ],
+        "cover": "resources/media/collections/collections_discover_trending_cover.webp"
+      },
+      {
+        "id": "collections.discover.top-rated",
+        "title": "Top Rated",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.top_rated",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.top_rated",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_discover_top-rated_cover.webp"
+      }
+    ]
+  },
+  {
+    "id": "collections.streaming",
+    "title": "Streaming",
+    "folders": [
+      {
+        "id": "collections.streaming.netflix",
+        "title": "Netflix",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.streaming.netflix",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.streaming.netflix",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_streaming_netflix_cover.webp",
+        "backdrop": "resources/media/collections/collections_streaming_netflix_backdrop.webp"
+      },
+      {
+        "id": "collections.streaming.disney-plus",
+        "title": "Disney Plus",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.streaming.disney-plus",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.streaming.disney-plus",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_streaming_disney-plus_cover.webp",
+        "backdrop": "resources/media/collections/collections_streaming_disney-plus_backdrop.webp"
+      },
+      {
+        "id": "collections.streaming.prime-video",
+        "title": "Prime Video",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.streaming.prime-video",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.streaming.prime-video",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_streaming_prime-video_cover.webp",
+        "backdrop": "resources/media/collections/collections_streaming_prime-video_backdrop.webp"
+      },
+      {
+        "id": "collections.streaming.apple-tv",
+        "title": "Apple TV",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.streaming.apple-tv",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.streaming.apple-tv",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_streaming_apple-tv_cover.webp",
+        "backdrop": "resources/media/collections/collections_streaming_apple-tv_backdrop.webp"
+      },
+      {
+        "id": "collections.streaming.hbo-max",
+        "title": "HBO Max",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.streaming.hbo-max",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.streaming.hbo-max",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_streaming_hbo-max_cover.webp",
+        "backdrop": "resources/media/collections/collections_streaming_hbo-max_backdrop.webp"
+      },
+      {
+        "id": "collections.streaming.hulu",
+        "title": "Hulu",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.streaming.hulu",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.streaming.hulu",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_streaming_hulu_cover.webp",
+        "backdrop": "resources/media/collections/collections_streaming_hulu_backdrop.webp"
+      },
+      {
+        "id": "collections.streaming.paramount-plus",
+        "title": "Paramount Plus",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.streaming.paramount-plus",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.streaming.paramount-plus",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_streaming_paramount-plus_cover.webp",
+        "backdrop": "resources/media/collections/collections_streaming_paramount-plus_backdrop.webp"
+      },
+      {
+        "id": "collections.streaming.peacock",
+        "title": "Peacock",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.streaming.peacock",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.streaming.peacock",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_streaming_peacock_cover.webp",
+        "backdrop": "resources/media/collections/collections_streaming_peacock_backdrop.webp"
+      },
+      {
+        "id": "collections.streaming.crunchyroll",
+        "title": "Crunchyroll",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.streaming.crunchyroll",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.streaming.crunchyroll",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_streaming_crunchyroll_cover.webp",
+        "backdrop": "resources/media/collections/collections_streaming_crunchyroll_backdrop.webp"
+      },
+      {
+        "id": "collections.streaming.discovery-plus",
+        "title": "Discovery Plus",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.streaming.discovery-plus",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.streaming.discovery-plus",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_streaming_discovery-plus_cover.webp",
+        "backdrop": "resources/media/collections/collections_streaming_discovery-plus_backdrop.webp"
+      },
+      {
+        "id": "collections.streaming.curiosity-stream",
+        "title": "Curiosity Stream",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.streaming.curiosity-stream",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.streaming.curiosity-stream",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_streaming_curiosity-stream_cover.webp",
+        "backdrop": "resources/media/collections/collections_streaming_curiosity-stream_backdrop.webp"
+      },
+      {
+        "id": "collections.streaming.jiohotstar",
+        "title": "JioHotstar",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.streaming.jiohotstar",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.streaming.jiohotstar",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_streaming_jiohotstar_cover.webp",
+        "backdrop": "resources/media/collections/collections_streaming_jiohotstar_backdrop.webp"
+      },
+      {
+        "id": "collections.streaming.starz",
+        "title": "Starz",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.streaming.starz",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.streaming.starz",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_streaming_starz_cover.webp",
+        "backdrop": "resources/media/collections/collections_streaming_starz_backdrop.webp"
+      },
+      {
+        "id": "collections.streaming.shudder",
+        "title": "Shudder",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.streaming.shudder",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.streaming.shudder",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_streaming_shudder_cover.webp",
+        "backdrop": "resources/media/collections/collections_streaming_shudder_backdrop.webp"
+      }
+    ]
+  },
+  {
+    "id": "collections.genres",
+    "title": "Genres",
+    "folders": [
+      {
+        "id": "collections.genres.action",
+        "title": "Action",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.action",
+            "genre": "None"
+          },
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.adventure",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.genres.action-adventure",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_action_cover.webp"
+      },
+      {
+        "id": "collections.genres.animation",
+        "title": "Animation",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.animation",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.genres.animation",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_animation_cover.webp"
+      },
+      {
+        "id": "collections.genres.anime",
+        "title": "Anime",
+        "sources": [],
+        "cover": "resources/media/collections/collections_genres_anime_cover.webp"
+      },
+      {
+        "id": "collections.genres.comedy",
+        "title": "Comedy",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.comedy",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.genres.comedy",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_comedy_cover.webp"
+      },
+      {
+        "id": "collections.genres.crime",
+        "title": "Crime",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.crime",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.genres.crime",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_crime_cover.webp"
+      },
+      {
+        "id": "collections.genres.documentary",
+        "title": "Documentary",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.documentary",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.genres.documentary",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_documentary_cover.webp"
+      },
+      {
+        "id": "collections.genres.drama",
+        "title": "Drama",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.drama",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.genres.drama",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_drama_cover.webp"
+      },
+      {
+        "id": "collections.genres.family",
+        "title": "Family",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.family",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.genres.kids",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_family_cover.webp"
+      },
+      {
+        "id": "collections.genres.fantasy",
+        "title": "Fantasy",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.fantasy",
+            "genre": "None"
+          },
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.science-fiction",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.genres.sci-fi-fantasy",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_fantasy_cover.webp"
+      },
+      {
+        "id": "collections.genres.history",
+        "title": "History",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.history",
+            "genre": "None"
+          },
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.war",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.genres.war-politics",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_history_cover.webp"
+      },
+      {
+        "id": "collections.genres.horror",
+        "title": "Horror",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.horror",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_horror_cover.webp"
+      },
+      {
+        "id": "collections.genres.music",
+        "title": "Music",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.music",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_music_cover.webp"
+      },
+      {
+        "id": "collections.genres.mystery",
+        "title": "Mystery",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.mystery",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.genres.mystery",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_mystery_cover.webp"
+      },
+      {
+        "id": "collections.genres.talk",
+        "title": "Talk",
+        "sources": [
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.genres.news",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.genres.talk",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_talk_cover.webp"
+      },
+      {
+        "id": "collections.genres.reality",
+        "title": "Reality",
+        "sources": [
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.genres.reality",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.genres.soap",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_reality_cover.webp"
+      },
+      {
+        "id": "collections.genres.romance",
+        "title": "Romance",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.romance",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_romance_cover.webp"
+      },
+      {
+        "id": "collections.genres.thriller",
+        "title": "Thriller",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.thriller",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_thriller_cover.webp"
+      },
+      {
+        "id": "collections.genres.tv",
+        "title": "TV",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.tv-movie",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_tv_cover.webp"
+      },
+      {
+        "id": "collections.genres.western",
+        "title": "Western",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.genres.western",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.genres.western",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_genres_western_cover.webp"
+      }
+    ]
+  },
+  {
+    "id": "collections.themes",
+    "title": "Themes",
+    "folders": [
+      {
+        "id": "collections.themes.time-travel",
+        "title": "Time Travel",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.theme.time-travel",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.theme.time-travel",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_themes_time-travel_cover.webp"
+      },
+      {
+        "id": "collections.themes.revenge",
+        "title": "Revenge",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.theme.revenge",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.theme.revenge",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_themes_revenge_cover.webp"
+      },
+      {
+        "id": "collections.themes.spy",
+        "title": "Spy",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.theme.spy",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.theme.spy",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_themes_spy_cover.webp"
+      },
+      {
+        "id": "collections.themes.magic",
+        "title": "Magic",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.theme.magic",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.theme.magic",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_themes_magic_cover.webp"
+      },
+      {
+        "id": "collections.themes.k-drama",
+        "title": "K-Drama",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.theme.k-drama",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.theme.k-drama",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_themes_k-drama_cover.webp"
+      },
+      {
+        "id": "collections.themes.treasure-hunt",
+        "title": "Treasure Hunt",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.theme.treasure-hunt",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.theme.treasure-hunt",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_themes_treasure-hunt_cover.webp"
+      },
+      {
+        "id": "collections.themes.romantic-comedy",
+        "title": "Romantic Comedy",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.theme.romantic-comedy",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.theme.romantic-comedy",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_themes_romantic-comedy_cover.webp"
+      },
+      {
+        "id": "collections.themes.coming-of-age",
+        "title": "Coming of Age",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.theme.coming-of-age",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.theme.coming-of-age",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_themes_coming-of-age_cover.webp"
+      },
+      {
+        "id": "collections.themes.superhero",
+        "title": "Superhero",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.theme.superhero",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.theme.superhero",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_themes_superhero_cover.webp"
+      },
+      {
+        "id": "collections.themes.space",
+        "title": "Space",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.theme.space",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.theme.space",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_themes_space_cover.webp"
+      },
+      {
+        "id": "collections.themes.martial-arts",
+        "title": "Martial Arts",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.theme.martial-arts",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.theme.martial-arts",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_themes_martial-arts_cover.webp"
+      },
+      {
+        "id": "collections.themes.vampire",
+        "title": "Vampire",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.theme.vampire",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.theme.vampire",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_themes_vampire_cover.webp"
+      },
+      {
+        "id": "collections.themes.satire",
+        "title": "Satire",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.theme.satire",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.theme.satire",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_themes_satire_cover.webp"
+      }
+    ]
+  },
+  {
+    "id": "collections.studios",
+    "title": "Studios",
+    "folders": [
+      {
+        "id": "collections.studios.cartoon-network",
+        "title": "Cartoon Network",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.studios.cartoon-network",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.studios.cartoon-network",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_studios_cartoon-network_cover.webp"
+      },
+      {
+        "id": "collections.studios.dc",
+        "title": "DC",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.studios.dc",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.studios.dc",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_studios_dc_cover.webp"
+      },
+      {
+        "id": "collections.studios.dreamworks",
+        "title": "DreamWorks",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.studios.dreamworks",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.studios.dreamworks",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_studios_dreamworks_cover.webp"
+      },
+      {
+        "id": "collections.studios.ghibli",
+        "title": "Ghibli",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.studios.ghibli",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.studios.ghibli",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_studios_ghibli_cover.webp"
+      },
+      {
+        "id": "collections.studios.marvel",
+        "title": "Marvel",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.studios.marvel",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.studios.marvel",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_studios_marvel_cover.webp"
+      },
+      {
+        "id": "collections.studios.nickelodeon",
+        "title": "Nickelodeon",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.studios.nickelodeon",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.studios.nickelodeon",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_studios_nickelodeon_cover.webp"
+      },
+      {
+        "id": "collections.studios.pixar",
+        "title": "Pixar",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.studios.pixar",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.studios.pixar",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_studios_pixar_cover.webp"
+      },
+      {
+        "id": "collections.studios.lucasfilm",
+        "title": "Lucasfilm",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.studios.lucasfilm",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.studios.lucasfilm",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_studios_lucasfilm_cover.webp"
+      }
+    ]
+  },
+  {
+    "id": "collections.decades",
+    "title": "Decades",
+    "folders": [
+      {
+        "id": "collections.decades.2020s",
+        "title": "2020s",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.decades.2020s",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.decades.2020s",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_decades_2020s_cover.webp"
+      },
+      {
+        "id": "collections.decades.2010s",
+        "title": "2010s",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.decades.2010s",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.decades.2010s",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_decades_2010s_cover.webp"
+      },
+      {
+        "id": "collections.decades.2000s",
+        "title": "2000s",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.decades.2000s",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.decades.2000s",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_decades_2000s_cover.webp"
+      },
+      {
+        "id": "collections.decades.1990s",
+        "title": "1990s",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.decades.1990s",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.decades.1990s",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_decades_1990s_cover.webp"
+      },
+      {
+        "id": "collections.decades.1980s",
+        "title": "1980s",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.decades.1980s",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.decades.1980s",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_decades_1980s_cover.webp"
+      },
+      {
+        "id": "collections.decades.1970s",
+        "title": "1970s",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.decades.1970s",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.decades.1970s",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_decades_1970s_cover.webp"
+      },
+      {
+        "id": "collections.decades.1960s",
+        "title": "1960s",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.decades.1960s",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.decades.1960s",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_decades_1960s_cover.webp"
+      },
+      {
+        "id": "collections.decades.1950s",
+        "title": "1950s",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.decades.1950s",
+            "genre": "None"
+          },
+          {
+            "type": "series",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.series.decades.1950s",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_decades_1950s_cover.webp"
+      }
+    ]
+  },
+  {
+    "id": "collections.runtime",
+    "title": "Runtime",
+    "folders": [
+      {
+        "id": "collections.runtime.short",
+        "title": "Short (<90 min)",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.runtime.short",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_runtime_short_cover.webp"
+      },
+      {
+        "id": "collections.runtime.standard",
+        "title": "Standard (90-150 min)",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.runtime.standard",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_runtime_standard_cover.webp"
+      },
+      {
+        "id": "collections.runtime.long",
+        "title": "Long (150-180 min)",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.runtime.long",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_runtime_long_cover.webp"
+      },
+      {
+        "id": "collections.runtime.epic",
+        "title": "Epic (180+ min)",
+        "sources": [
+          {
+            "type": "movie",
+            "addonId": "aio-metadata",
+            "catalogId": "tmdb.discover.movie.runtime.epic",
+            "genre": "None"
+          }
+        ],
+        "cover": "resources/media/collections/collections_runtime_epic_cover.webp"
+      }
+    ]
+  }
+]

@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<window><defaultcontrol always="true">7000</defaultcontrol><controls>
+<control type="image"><left>0</left><top>0</top><width>1920</width><height>1080</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF090B11">special://home/addons/plugin.video.nuviohub/resources/media/black.png</texture></control>
+<control type="group"><visible>String.IsEqual(Window.Property(nuvio.hero_row),0)</visible>
+<control type="image"><left>640</left><top>0</top><width>1280</width><height>610</height><aspectratio>scale</aspectratio><texture background="true">$INFO[Container(7000).ListItem.Art(fanart)]</texture><fadetime>200</fadetime></control>
+<control type="image"><left>620</left><top>0</top><width>1000</width><height>610</height><aspectratio>stretch</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_hero_shade.png</texture></control>
+<control type="image"><left>0</left><top>245</top><width>1920</width><height>380</height><aspectratio>stretch</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_hero_fade.png</texture></control>
+<control type="label"><left>70</left><top>138</top><width>980</width><height>72</height><font>font52_title</font><textcolor>FFFFFFFF</textcolor><label>$INFO[Container(7000).ListItem.Property(title)]</label></control>
+<control type="label"><left>73</left><top>223</top><width>980</width><height>32</height><font>font12</font><textcolor>FFC2ADFF</textcolor><label>$INFO[Container(7000).ListItem.Property(meta_line)]</label></control>
+<control type="textbox"><left>73</left><top>276</top><width>830</width><height>120</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[Container(7000).ListItem.Property(plot)]</label></control>
+<control type="label"><left>73</left><top>410</top><width>850</width><height>30</height><font>font12</font><textcolor>FFE8EAF0</textcolor><label>$INFO[Container(7000).ListItem.Property(resume_label)]</label></control>
+</control>
+<control type="group"><visible>String.IsEqual(Window.Property(nuvio.hero_row),1)</visible>
+<control type="image"><left>640</left><top>0</top><width>1280</width><height>610</height><aspectratio>scale</aspectratio><texture background="true">$INFO[Container(7001).ListItem.Art(fanart)]</texture><fadetime>200</fadetime></control>
+<control type="image"><left>620</left><top>0</top><width>1000</width><height>610</height><aspectratio>stretch</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_hero_shade.png</texture></control>
+<control type="image"><left>0</left><top>245</top><width>1920</width><height>380</height><aspectratio>stretch</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_hero_fade.png</texture></control>
+<control type="label"><left>70</left><top>138</top><width>980</width><height>72</height><font>font52_title</font><textcolor>FFFFFFFF</textcolor><label>$INFO[Container(7001).ListItem.Property(title)]</label></control>
+<control type="label"><left>73</left><top>223</top><width>980</width><height>32</height><font>font12</font><textcolor>FFC2ADFF</textcolor><label>$INFO[Container(7001).ListItem.Property(meta_line)]</label></control>
+<control type="textbox"><left>73</left><top>276</top><width>830</width><height>120</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[Container(7001).ListItem.Property(plot)]</label></control>
+<control type="label"><left>73</left><top>410</top><width>850</width><height>30</height><font>font12</font><textcolor>FFE8EAF0</textcolor><label>$INFO[Container(7001).ListItem.Property(resume_label)]</label></control>
+</control>
+<control type="group"><visible>String.IsEqual(Window.Property(nuvio.hero_row),2)</visible>
+<control type="image"><left>640</left><top>0</top><width>1280</width><height>610</height><aspectratio>scale</aspectratio><texture background="true">$INFO[Container(7002).ListItem.Art(fanart)]</texture><fadetime>200</fadetime></control>
+<control type="image"><left>620</left><top>0</top><width>1000</width><height>610</height><aspectratio>stretch</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_hero_shade.png</texture></control>
+<control type="image"><left>0</left><top>245</top><width>1920</width><height>380</height><aspectratio>stretch</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_hero_fade.png</texture></control>
+<control type="label"><left>70</left><top>138</top><width>980</width><height>72</height><font>font52_title</font><textcolor>FFFFFFFF</textcolor><label>$INFO[Container(7002).ListItem.Property(title)]</label></control>
+<control type="label"><left>73</left><top>223</top><width>980</width><height>32</height><font>font12</font><textcolor>FFC2ADFF</textcolor><label>$INFO[Container(7002).ListItem.Property(meta_line)]</label></control>
+<control type="textbox"><left>73</left><top>276</top><width>830</width><height>120</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[Container(7002).ListItem.Property(plot)]</label></control>
+<control type="label"><left>73</left><top>410</top><width>850</width><height>30</height><font>font12</font><textcolor>FFE8EAF0</textcolor><label>$INFO[Container(7002).ListItem.Property(resume_label)]</label></control>
+</control>
+<control type="group"><visible>String.IsEqual(Window.Property(nuvio.hero_row),3)</visible>
+<control type="image"><left>640</left><top>0</top><width>1280</width><height>610</height><aspectratio>scale</aspectratio><texture background="true">$INFO[Container(7003).ListItem.Art(fanart)]</texture><fadetime>200</fadetime></control>
+<control type="image"><left>620</left><top>0</top><width>1000</width><height>610</height><aspectratio>stretch</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_hero_shade.png</texture></control>
+<control type="image"><left>0</left><top>245</top><width>1920</width><height>380</height><aspectratio>stretch</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_hero_fade.png</texture></control>
+<control type="label"><left>70</left><top>138</top><width>980</width><height>72</height><font>font52_title</font><textcolor>FFFFFFFF</textcolor><label>$INFO[Container(7003).ListItem.Property(title)]</label></control>
+<control type="label"><left>73</left><top>223</top><width>980</width><height>32</height><font>font12</font><textcolor>FFC2ADFF</textcolor><label>$INFO[Container(7003).ListItem.Property(meta_line)]</label></control>
+<control type="textbox"><left>73</left><top>276</top><width>830</width><height>120</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[Container(7003).ListItem.Property(plot)]</label></control>
+<control type="label"><left>73</left><top>410</top><width>850</width><height>30</height><font>font12</font><textcolor>FFE8EAF0</textcolor><label>$INFO[Container(7003).ListItem.Property(resume_label)]</label></control>
+</control>
+<control type="group"><visible>String.IsEqual(Window.Property(nuvio.hero_row),4)</visible>
+<control type="image"><left>640</left><top>0</top><width>1280</width><height>610</height><aspectratio>scale</aspectratio><texture background="true">$INFO[Container(7004).ListItem.Art(fanart)]</texture><fadetime>200</fadetime></control>
+<control type="image"><left>620</left><top>0</top><width>1000</width><height>610</height><aspectratio>stretch</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_hero_shade.png</texture></control>
+<control type="image"><left>0</left><top>245</top><width>1920</width><height>380</height><aspectratio>stretch</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_hero_fade.png</texture></control>
+<control type="label"><left>70</left><top>138</top><width>980</width><height>72</height><font>font52_title</font><textcolor>FFFFFFFF</textcolor><label>$INFO[Container(7004).ListItem.Property(title)]</label></control>
+<control type="label"><left>73</left><top>223</top><width>980</width><height>32</height><font>font12</font><textcolor>FFC2ADFF</textcolor><label>$INFO[Container(7004).ListItem.Property(meta_line)]</label></control>
+<control type="textbox"><left>73</left><top>276</top><width>830</width><height>120</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[Container(7004).ListItem.Property(plot)]</label></control>
+<control type="label"><left>73</left><top>410</top><width>850</width><height>30</height><font>font12</font><textcolor>FFE8EAF0</textcolor><label>$INFO[Container(7004).ListItem.Property(resume_label)]</label></control>
+</control>
+<control type="group"><visible>String.IsEqual(Window.Property(nuvio.hero_row),5)</visible>
+<control type="image"><left>640</left><top>0</top><width>1280</width><height>610</height><aspectratio>scale</aspectratio><texture background="true">$INFO[Container(7005).ListItem.Art(fanart)]</texture><fadetime>200</fadetime></control>
+<control type="image"><left>620</left><top>0</top><width>1000</width><height>610</height><aspectratio>stretch</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_hero_shade.png</texture></control>
+<control type="image"><left>0</left><top>245</top><width>1920</width><height>380</height><aspectratio>stretch</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_hero_fade.png</texture></control>
+<control type="label"><left>70</left><top>138</top><width>980</width><height>72</height><font>font52_title</font><textcolor>FFFFFFFF</textcolor><label>$INFO[Container(7005).ListItem.Property(title)]</label></control>
+<control type="label"><left>73</left><top>223</top><width>980</width><height>32</height><font>font12</font><textcolor>FFC2ADFF</textcolor><label>$INFO[Container(7005).ListItem.Property(meta_line)]</label></control>
+<control type="textbox"><left>73</left><top>276</top><width>830</width><height>120</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[Container(7005).ListItem.Property(plot)]</label></control>
+<control type="label"><left>73</left><top>410</top><width>850</width><height>30</height><font>font12</font><textcolor>FFE8EAF0</textcolor><label>$INFO[Container(7005).ListItem.Property(resume_label)]</label></control>
+</control>
+<control type="group"><visible>String.IsEqual(Window.Property(nuvio.hero_row),6)</visible>
+<control type="image"><left>640</left><top>0</top><width>1280</width><height>610</height><aspectratio>scale</aspectratio><texture background="true">$INFO[Container(7006).ListItem.Art(fanart)]</texture><fadetime>200</fadetime></control>
+<control type="image"><left>620</left><top>0</top><width>1000</width><height>610</height><aspectratio>stretch</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_hero_shade.png</texture></control>
+<control type="image"><left>0</left><top>245</top><width>1920</width><height>380</height><aspectratio>stretch</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_hero_fade.png</texture></control>
+<control type="label"><left>70</left><top>138</top><width>980</width><height>72</height><font>font52_title</font><textcolor>FFFFFFFF</textcolor><label>$INFO[Container(7006).ListItem.Property(title)]</label></control>
+<control type="label"><left>73</left><top>223</top><width>980</width><height>32</height><font>font12</font><textcolor>FFC2ADFF</textcolor><label>$INFO[Container(7006).ListItem.Property(meta_line)]</label></control>
+<control type="textbox"><left>73</left><top>276</top><width>830</width><height>120</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[Container(7006).ListItem.Property(plot)]</label></control>
+<control type="label"><left>73</left><top>410</top><width>850</width><height>30</height><font>font12</font><textcolor>FFE8EAF0</textcolor><label>$INFO[Container(7006).ListItem.Property(resume_label)]</label></control>
+</control>
+<control type="group"><visible>String.IsEqual(Window.Property(nuvio.hero_row),7)</visible>
+<control type="image"><left>640</left><top>0</top><width>1280</width><height>610</height><aspectratio>scale</aspectratio><texture background="true">$INFO[Container(7007).ListItem.Art(fanart)]</texture><fadetime>200</fadetime></control>
+<control type="image"><left>620</left><top>0</top><width>1000</width><height>610</height><aspectratio>stretch</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_hero_shade.png</texture></control>
+<control type="image"><left>0</left><top>245</top><width>1920</width><height>380</height><aspectratio>stretch</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_hero_fade.png</texture></control>
+<control type="label"><left>70</left><top>138</top><width>980</width><height>72</height><font>font52_title</font><textcolor>FFFFFFFF</textcolor><label>$INFO[Container(7007).ListItem.Property(title)]</label></control>
+<control type="label"><left>73</left><top>223</top><width>980</width><height>32</height><font>font12</font><textcolor>FFC2ADFF</textcolor><label>$INFO[Container(7007).ListItem.Property(meta_line)]</label></control>
+<control type="textbox"><left>73</left><top>276</top><width>830</width><height>120</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[Container(7007).ListItem.Property(plot)]</label></control>
+<control type="label"><left>73</left><top>410</top><width>850</width><height>30</height><font>font12</font><textcolor>FFE8EAF0</textcolor><label>$INFO[Container(7007).ListItem.Property(resume_label)]</label></control>
+</control>
+<control type="image"><left>70</left><top>24</top><width>240</width><height>76</height><aspectratio>keep</aspectratio><texture >special://home/addons/plugin.video.nuviohub/resources/media/nuvio_wordmark.png</texture></control>
+<control type="label"><left>322</left><top>40</top><width>80</width><height>40</height><font>font12</font><textcolor>FFC2ADFF</textcolor><label>HUB</label></control>
+<control type="videowindow"><left>950</left><top>118</top><width>900</width><height>320</height><visible>String.IsEqual(Window.Property(nuvio.preview),1) + Player.HasVideo</visible></control>
+<control type="button" id="101"><left>405</left><top>32</top><width>120</width><height>56</height>
+    <font>font13</font><align>center</align><aligny>center</aligny><textcolor>FFCCD1DC</textcolor><focusedcolor>FF090B11</focusedcolor>
+    <texturefocus border="22">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_pill.png</texturefocus><texturenofocus border="22" colordiffuse="20232935">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_pill.png</texturenofocus>
+    <label>Home</label><onleft>107</onleft><onright>102</onright><ondown>7000</ondown><onup>101</onup></control>
+<control type="image"><left>429</left><top>91</top><width>72</width><height>3</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture><visible>String.IsEqual(Window.Property(nuvio.tab),home)</visible></control>
+<control type="button" id="102"><left>540</left><top>32</top><width>145</width><height>56</height>
+    <font>font13</font><align>center</align><aligny>center</aligny><textcolor>FFCCD1DC</textcolor><focusedcolor>FF090B11</focusedcolor>
+    <texturefocus border="22">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_pill.png</texturefocus><texturenofocus border="22" colordiffuse="20232935">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_pill.png</texturenofocus>
+    <label>Movies</label><onleft>101</onleft><onright>103</onright><ondown>7000</ondown><onup>102</onup></control>
+<control type="image"><left>564</left><top>91</top><width>97</width><height>3</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture><visible>String.IsEqual(Window.Property(nuvio.tab),movies)</visible></control>
+<control type="button" id="103"><left>700</left><top>32</top><width>135</width><height>56</height>
+    <font>font13</font><align>center</align><aligny>center</aligny><textcolor>FFCCD1DC</textcolor><focusedcolor>FF090B11</focusedcolor>
+    <texturefocus border="22">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_pill.png</texturefocus><texturenofocus border="22" colordiffuse="20232935">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_pill.png</texturenofocus>
+    <label>Series</label><onleft>102</onleft><onright>104</onright><ondown>7000</ondown><onup>103</onup></control>
+<control type="image"><left>724</left><top>91</top><width>87</width><height>3</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture><visible>String.IsEqual(Window.Property(nuvio.tab),series)</visible></control>
+<control type="button" id="104"><left>850</left><top>32</top><width>140</width><height>56</height>
+    <font>font13</font><align>center</align><aligny>center</aligny><textcolor>FFCCD1DC</textcolor><focusedcolor>FF090B11</focusedcolor>
+    <texturefocus border="22">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_pill.png</texturefocus><texturenofocus border="22" colordiffuse="20232935">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_pill.png</texturenofocus>
+    <label>Anime</label><onleft>103</onleft><onright>105</onright><ondown>7000</ondown><onup>104</onup></control>
+<control type="image"><left>874</left><top>91</top><width>92</width><height>3</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture><visible>String.IsEqual(Window.Property(nuvio.tab),anime)</visible></control>
+<control type="button" id="105"><left>1235</left><top>32</top><width>145</width><height>56</height>
+    <font>font13</font><align>center</align><aligny>center</aligny><textcolor>FFCCD1DC</textcolor><focusedcolor>FF090B11</focusedcolor>
+    <texturefocus border="22">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_pill.png</texturefocus><texturenofocus border="22" colordiffuse="20232935">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_pill.png</texturenofocus>
+    <label>Search</label><onleft>104</onleft><onright>106</onright><ondown>7000</ondown><onup>105</onup></control>
+<control type="button" id="106"><left>1395</left><top>32</top><width>135</width><height>56</height>
+    <font>font13</font><align>center</align><aligny>center</aligny><textcolor>FFCCD1DC</textcolor><focusedcolor>FF090B11</focusedcolor>
+    <texturefocus border="22">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_pill.png</texturefocus><texturenofocus border="22" colordiffuse="20232935">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_pill.png</texturenofocus>
+    <label>Setup</label><onleft>105</onleft><onright>107</onright><ondown>7000</ondown><onup>106</onup></control>
+<control type="button" id="107"><left>1545</left><top>32</top><width>175</width><height>56</height>
+    <font>font13</font><align>center</align><aligny>center</aligny><textcolor>FFCCD1DC</textcolor><focusedcolor>FF090B11</focusedcolor>
+    <texturefocus border="22">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_pill.png</texturefocus><texturenofocus border="22" colordiffuse="20232935">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_pill.png</texturenofocus>
+    <label>Settings</label><onleft>106</onleft><onright>101</onright><ondown>7000</ondown><onup>107</onup></control>
+<control type="label"><left>1740</left><top>39</top><width>110</width><height>40</height><font>font12</font><textcolor>FFA6AEBD</textcolor><label>$INFO[System.Time(hh:mm)]</label><align>right</align></control>
+<control type="grouplist" id="6000"><left>56</left><top>456</top><width>1810</width><height>584</height>
+<orientation>vertical</orientation><itemgap>14</itemgap><scrolltime>180</scrolltime><usecontrolcoords>true</usecontrolcoords><onup>101</onup>
+<control type="group" id="6500"><height>372</height><width>1810</width><visible>String.IsEqual(Window.Property(nuvio.row.0.visible),1)</visible>
+<control type="label"><left>16</left><top>0</top><width>1720</width><height>38</height><font>font14</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[Window.Property(nuvio.row.0.title)][/B]</label></control>
+<control type="list" id="7000"><left>0</left><top>42</top><width>1810</width><height>330</height>
+    <orientation>horizontal</orientation><scrolltime>160</scrolltime><preloaditems>2</preloaditems>
+    <onup>101</onup><ondown>7001</ondown><onleft>7000</onleft><onright>7000</onright>
+<itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.0.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="label"><left>10</left><top>183</top><width>304</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+</itemlayout>
+<focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.0.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="image"><left>6</left><top>2</top><width>312</width><height>179</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFE6DBFF">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_focus.png</texture></control>
+<control type="label"><left>10</left><top>183</top><width>304</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+</focusedlayout>
+<itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.0.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_blank.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="textbox"><left>23</left><top>92</top><width>162</width><height>104</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[ListItem.Label]</label><visible>String.IsEmpty(ListItem.Art(poster))</visible></control>
+<control type="label"><left>10</left><top>298</top><width>194</width><height>29</height><font>font12</font><textcolor>FFCAD0DB</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+<control type="progress"><left>22</left><top>278</top><width>168</width><height>5</height><info>ListItem.Property(progress)</info>
+        <texturebg colordiffuse="A0454956">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texturebg><lefttexture>-</lefttexture><midtexture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</midtexture><righttexture>-</righttexture><overlaytexture>-</overlaytexture>
+        <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible></control>
+</itemlayout>
+<focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.0.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_blank.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="textbox"><left>23</left><top>92</top><width>162</width><height>104</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[ListItem.Label]</label><visible>String.IsEmpty(ListItem.Art(poster))</visible></control>
+<control type="image"><left>6</left><top>2</top><width>200</width><height>296</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFE6DBFF">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_focus.png</texture></control>
+<control type="label"><left>10</left><top>298</top><width>194</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+<control type="progress"><left>22</left><top>278</top><width>168</width><height>5</height><info>ListItem.Property(progress)</info>
+        <texturebg colordiffuse="A0454956">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texturebg><lefttexture>-</lefttexture><midtexture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</midtexture><righttexture>-</righttexture><overlaytexture>-</overlaytexture>
+        <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible></control>
+</focusedlayout>
+</control></control>
+<control type="group" id="6501"><height>372</height><width>1810</width><visible>String.IsEqual(Window.Property(nuvio.row.1.visible),1)</visible>
+<control type="label"><left>16</left><top>0</top><width>1720</width><height>38</height><font>font14</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[Window.Property(nuvio.row.1.title)][/B]</label></control>
+<control type="list" id="7001"><left>0</left><top>42</top><width>1810</width><height>330</height>
+    <orientation>horizontal</orientation><scrolltime>160</scrolltime><preloaditems>2</preloaditems>
+    <onup>7000</onup><ondown>7002</ondown><onleft>7001</onleft><onright>7001</onright>
+<itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.1.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="label"><left>10</left><top>183</top><width>304</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+</itemlayout>
+<focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.1.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="image"><left>6</left><top>2</top><width>312</width><height>179</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFE6DBFF">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_focus.png</texture></control>
+<control type="label"><left>10</left><top>183</top><width>304</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+</focusedlayout>
+<itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.1.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_blank.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="textbox"><left>23</left><top>92</top><width>162</width><height>104</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[ListItem.Label]</label><visible>String.IsEmpty(ListItem.Art(poster))</visible></control>
+<control type="label"><left>10</left><top>298</top><width>194</width><height>29</height><font>font12</font><textcolor>FFCAD0DB</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+<control type="progress"><left>22</left><top>278</top><width>168</width><height>5</height><info>ListItem.Property(progress)</info>
+        <texturebg colordiffuse="A0454956">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texturebg><lefttexture>-</lefttexture><midtexture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</midtexture><righttexture>-</righttexture><overlaytexture>-</overlaytexture>
+        <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible></control>
+</itemlayout>
+<focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.1.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_blank.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="textbox"><left>23</left><top>92</top><width>162</width><height>104</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[ListItem.Label]</label><visible>String.IsEmpty(ListItem.Art(poster))</visible></control>
+<control type="image"><left>6</left><top>2</top><width>200</width><height>296</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFE6DBFF">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_focus.png</texture></control>
+<control type="label"><left>10</left><top>298</top><width>194</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+<control type="progress"><left>22</left><top>278</top><width>168</width><height>5</height><info>ListItem.Property(progress)</info>
+        <texturebg colordiffuse="A0454956">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texturebg><lefttexture>-</lefttexture><midtexture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</midtexture><righttexture>-</righttexture><overlaytexture>-</overlaytexture>
+        <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible></control>
+</focusedlayout>
+</control></control>
+<control type="group" id="6502"><height>372</height><width>1810</width><visible>String.IsEqual(Window.Property(nuvio.row.2.visible),1)</visible>
+<control type="label"><left>16</left><top>0</top><width>1720</width><height>38</height><font>font14</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[Window.Property(nuvio.row.2.title)][/B]</label></control>
+<control type="list" id="7002"><left>0</left><top>42</top><width>1810</width><height>330</height>
+    <orientation>horizontal</orientation><scrolltime>160</scrolltime><preloaditems>2</preloaditems>
+    <onup>7001</onup><ondown>7003</ondown><onleft>7002</onleft><onright>7002</onright>
+<itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.2.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="label"><left>10</left><top>183</top><width>304</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+</itemlayout>
+<focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.2.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="image"><left>6</left><top>2</top><width>312</width><height>179</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFE6DBFF">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_focus.png</texture></control>
+<control type="label"><left>10</left><top>183</top><width>304</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+</focusedlayout>
+<itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.2.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_blank.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="textbox"><left>23</left><top>92</top><width>162</width><height>104</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[ListItem.Label]</label><visible>String.IsEmpty(ListItem.Art(poster))</visible></control>
+<control type="label"><left>10</left><top>298</top><width>194</width><height>29</height><font>font12</font><textcolor>FFCAD0DB</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+<control type="progress"><left>22</left><top>278</top><width>168</width><height>5</height><info>ListItem.Property(progress)</info>
+        <texturebg colordiffuse="A0454956">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texturebg><lefttexture>-</lefttexture><midtexture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</midtexture><righttexture>-</righttexture><overlaytexture>-</overlaytexture>
+        <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible></control>
+</itemlayout>
+<focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.2.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_blank.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="textbox"><left>23</left><top>92</top><width>162</width><height>104</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[ListItem.Label]</label><visible>String.IsEmpty(ListItem.Art(poster))</visible></control>
+<control type="image"><left>6</left><top>2</top><width>200</width><height>296</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFE6DBFF">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_focus.png</texture></control>
+<control type="label"><left>10</left><top>298</top><width>194</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+<control type="progress"><left>22</left><top>278</top><width>168</width><height>5</height><info>ListItem.Property(progress)</info>
+        <texturebg colordiffuse="A0454956">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texturebg><lefttexture>-</lefttexture><midtexture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</midtexture><righttexture>-</righttexture><overlaytexture>-</overlaytexture>
+        <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible></control>
+</focusedlayout>
+</control></control>
+<control type="group" id="6503"><height>372</height><width>1810</width><visible>String.IsEqual(Window.Property(nuvio.row.3.visible),1)</visible>
+<control type="label"><left>16</left><top>0</top><width>1720</width><height>38</height><font>font14</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[Window.Property(nuvio.row.3.title)][/B]</label></control>
+<control type="list" id="7003"><left>0</left><top>42</top><width>1810</width><height>330</height>
+    <orientation>horizontal</orientation><scrolltime>160</scrolltime><preloaditems>2</preloaditems>
+    <onup>7002</onup><ondown>7004</ondown><onleft>7003</onleft><onright>7003</onright>
+<itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.3.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="label"><left>10</left><top>183</top><width>304</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+</itemlayout>
+<focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.3.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="image"><left>6</left><top>2</top><width>312</width><height>179</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFE6DBFF">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_focus.png</texture></control>
+<control type="label"><left>10</left><top>183</top><width>304</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+</focusedlayout>
+<itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.3.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_blank.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="textbox"><left>23</left><top>92</top><width>162</width><height>104</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[ListItem.Label]</label><visible>String.IsEmpty(ListItem.Art(poster))</visible></control>
+<control type="label"><left>10</left><top>298</top><width>194</width><height>29</height><font>font12</font><textcolor>FFCAD0DB</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+<control type="progress"><left>22</left><top>278</top><width>168</width><height>5</height><info>ListItem.Property(progress)</info>
+        <texturebg colordiffuse="A0454956">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texturebg><lefttexture>-</lefttexture><midtexture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</midtexture><righttexture>-</righttexture><overlaytexture>-</overlaytexture>
+        <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible></control>
+</itemlayout>
+<focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.3.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_blank.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="textbox"><left>23</left><top>92</top><width>162</width><height>104</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[ListItem.Label]</label><visible>String.IsEmpty(ListItem.Art(poster))</visible></control>
+<control type="image"><left>6</left><top>2</top><width>200</width><height>296</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFE6DBFF">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_focus.png</texture></control>
+<control type="label"><left>10</left><top>298</top><width>194</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+<control type="progress"><left>22</left><top>278</top><width>168</width><height>5</height><info>ListItem.Property(progress)</info>
+        <texturebg colordiffuse="A0454956">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texturebg><lefttexture>-</lefttexture><midtexture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</midtexture><righttexture>-</righttexture><overlaytexture>-</overlaytexture>
+        <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible></control>
+</focusedlayout>
+</control></control>
+<control type="group" id="6504"><height>372</height><width>1810</width><visible>String.IsEqual(Window.Property(nuvio.row.4.visible),1)</visible>
+<control type="label"><left>16</left><top>0</top><width>1720</width><height>38</height><font>font14</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[Window.Property(nuvio.row.4.title)][/B]</label></control>
+<control type="list" id="7004"><left>0</left><top>42</top><width>1810</width><height>330</height>
+    <orientation>horizontal</orientation><scrolltime>160</scrolltime><preloaditems>2</preloaditems>
+    <onup>7003</onup><ondown>7005</ondown><onleft>7004</onleft><onright>7004</onright>
+<itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.4.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="label"><left>10</left><top>183</top><width>304</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+</itemlayout>
+<focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.4.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="image"><left>6</left><top>2</top><width>312</width><height>179</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFE6DBFF">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_focus.png</texture></control>
+<control type="label"><left>10</left><top>183</top><width>304</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+</focusedlayout>
+<itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.4.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_blank.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="textbox"><left>23</left><top>92</top><width>162</width><height>104</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[ListItem.Label]</label><visible>String.IsEmpty(ListItem.Art(poster))</visible></control>
+<control type="label"><left>10</left><top>298</top><width>194</width><height>29</height><font>font12</font><textcolor>FFCAD0DB</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+<control type="progress"><left>22</left><top>278</top><width>168</width><height>5</height><info>ListItem.Property(progress)</info>
+        <texturebg colordiffuse="A0454956">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texturebg><lefttexture>-</lefttexture><midtexture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</midtexture><righttexture>-</righttexture><overlaytexture>-</overlaytexture>
+        <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible></control>
+</itemlayout>
+<focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.4.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_blank.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="textbox"><left>23</left><top>92</top><width>162</width><height>104</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[ListItem.Label]</label><visible>String.IsEmpty(ListItem.Art(poster))</visible></control>
+<control type="image"><left>6</left><top>2</top><width>200</width><height>296</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFE6DBFF">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_focus.png</texture></control>
+<control type="label"><left>10</left><top>298</top><width>194</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+<control type="progress"><left>22</left><top>278</top><width>168</width><height>5</height><info>ListItem.Property(progress)</info>
+        <texturebg colordiffuse="A0454956">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texturebg><lefttexture>-</lefttexture><midtexture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</midtexture><righttexture>-</righttexture><overlaytexture>-</overlaytexture>
+        <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible></control>
+</focusedlayout>
+</control></control>
+<control type="group" id="6505"><height>372</height><width>1810</width><visible>String.IsEqual(Window.Property(nuvio.row.5.visible),1)</visible>
+<control type="label"><left>16</left><top>0</top><width>1720</width><height>38</height><font>font14</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[Window.Property(nuvio.row.5.title)][/B]</label></control>
+<control type="list" id="7005"><left>0</left><top>42</top><width>1810</width><height>330</height>
+    <orientation>horizontal</orientation><scrolltime>160</scrolltime><preloaditems>2</preloaditems>
+    <onup>7004</onup><ondown>7006</ondown><onleft>7005</onleft><onright>7005</onright>
+<itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.5.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="label"><left>10</left><top>183</top><width>304</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+</itemlayout>
+<focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.5.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="image"><left>6</left><top>2</top><width>312</width><height>179</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFE6DBFF">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_focus.png</texture></control>
+<control type="label"><left>10</left><top>183</top><width>304</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+</focusedlayout>
+<itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.5.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_blank.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="textbox"><left>23</left><top>92</top><width>162</width><height>104</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[ListItem.Label]</label><visible>String.IsEmpty(ListItem.Art(poster))</visible></control>
+<control type="label"><left>10</left><top>298</top><width>194</width><height>29</height><font>font12</font><textcolor>FFCAD0DB</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+<control type="progress"><left>22</left><top>278</top><width>168</width><height>5</height><info>ListItem.Property(progress)</info>
+        <texturebg colordiffuse="A0454956">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texturebg><lefttexture>-</lefttexture><midtexture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</midtexture><righttexture>-</righttexture><overlaytexture>-</overlaytexture>
+        <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible></control>
+</itemlayout>
+<focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.5.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_blank.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="textbox"><left>23</left><top>92</top><width>162</width><height>104</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[ListItem.Label]</label><visible>String.IsEmpty(ListItem.Art(poster))</visible></control>
+<control type="image"><left>6</left><top>2</top><width>200</width><height>296</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFE6DBFF">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_focus.png</texture></control>
+<control type="label"><left>10</left><top>298</top><width>194</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+<control type="progress"><left>22</left><top>278</top><width>168</width><height>5</height><info>ListItem.Property(progress)</info>
+        <texturebg colordiffuse="A0454956">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texturebg><lefttexture>-</lefttexture><midtexture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</midtexture><righttexture>-</righttexture><overlaytexture>-</overlaytexture>
+        <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible></control>
+</focusedlayout>
+</control></control>
+<control type="group" id="6506"><height>372</height><width>1810</width><visible>String.IsEqual(Window.Property(nuvio.row.6.visible),1)</visible>
+<control type="label"><left>16</left><top>0</top><width>1720</width><height>38</height><font>font14</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[Window.Property(nuvio.row.6.title)][/B]</label></control>
+<control type="list" id="7006"><left>0</left><top>42</top><width>1810</width><height>330</height>
+    <orientation>horizontal</orientation><scrolltime>160</scrolltime><preloaditems>2</preloaditems>
+    <onup>7005</onup><ondown>7007</ondown><onleft>7006</onleft><onright>7006</onright>
+<itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.6.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="label"><left>10</left><top>183</top><width>304</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+</itemlayout>
+<focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.6.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="image"><left>6</left><top>2</top><width>312</width><height>179</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFE6DBFF">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_focus.png</texture></control>
+<control type="label"><left>10</left><top>183</top><width>304</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+</focusedlayout>
+<itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.6.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_blank.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="textbox"><left>23</left><top>92</top><width>162</width><height>104</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[ListItem.Label]</label><visible>String.IsEmpty(ListItem.Art(poster))</visible></control>
+<control type="label"><left>10</left><top>298</top><width>194</width><height>29</height><font>font12</font><textcolor>FFCAD0DB</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+<control type="progress"><left>22</left><top>278</top><width>168</width><height>5</height><info>ListItem.Property(progress)</info>
+        <texturebg colordiffuse="A0454956">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texturebg><lefttexture>-</lefttexture><midtexture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</midtexture><righttexture>-</righttexture><overlaytexture>-</overlaytexture>
+        <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible></control>
+</itemlayout>
+<focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.6.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_blank.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="textbox"><left>23</left><top>92</top><width>162</width><height>104</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[ListItem.Label]</label><visible>String.IsEmpty(ListItem.Art(poster))</visible></control>
+<control type="image"><left>6</left><top>2</top><width>200</width><height>296</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFE6DBFF">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_focus.png</texture></control>
+<control type="label"><left>10</left><top>298</top><width>194</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+<control type="progress"><left>22</left><top>278</top><width>168</width><height>5</height><info>ListItem.Property(progress)</info>
+        <texturebg colordiffuse="A0454956">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texturebg><lefttexture>-</lefttexture><midtexture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</midtexture><righttexture>-</righttexture><overlaytexture>-</overlaytexture>
+        <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible></control>
+</focusedlayout>
+</control></control>
+<control type="group" id="6507"><height>372</height><width>1810</width><visible>String.IsEqual(Window.Property(nuvio.row.7.visible),1)</visible>
+<control type="label"><left>16</left><top>0</top><width>1720</width><height>38</height><font>font14</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[Window.Property(nuvio.row.7.title)][/B]</label></control>
+<control type="list" id="7007"><left>0</left><top>42</top><width>1810</width><height>330</height>
+    <orientation>horizontal</orientation><scrolltime>160</scrolltime><preloaditems>2</preloaditems>
+    <onup>7006</onup><ondown>7007</ondown><onleft>7007</onleft><onright>7007</onright>
+<itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.7.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="label"><left>10</left><top>183</top><width>304</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+</itemlayout>
+<focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.7.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>304</width><height>171</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="image"><left>6</left><top>2</top><width>312</width><height>179</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFE6DBFF">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_tile_focus.png</texture></control>
+<control type="label"><left>10</left><top>183</top><width>304</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+</focusedlayout>
+<itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.7.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_blank.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="textbox"><left>23</left><top>92</top><width>162</width><height>104</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[ListItem.Label]</label><visible>String.IsEmpty(ListItem.Art(poster))</visible></control>
+<control type="label"><left>10</left><top>298</top><width>194</width><height>29</height><font>font12</font><textcolor>FFCAD0DB</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+<control type="progress"><left>22</left><top>278</top><width>168</width><height>5</height><info>ListItem.Property(progress)</info>
+        <texturebg colordiffuse="A0454956">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texturebg><lefttexture>-</lefttexture><midtexture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</midtexture><righttexture>-</righttexture><overlaytexture>-</overlaytexture>
+        <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible></control>
+</itemlayout>
+<focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.7.shape),landscape)">
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF202532">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_blank.png</texture></control>
+<control type="image"><left>10</left><top>6</top><width>192</width><height>288</height><aspectratio>scale</aspectratio><texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_mask.png">$INFO[ListItem.Art(poster)]</texture></control>
+<control type="textbox"><left>23</left><top>92</top><width>162</width><height>104</height><font>font13</font><textcolor>FFBCC3D1</textcolor><label>$INFO[ListItem.Label]</label><visible>String.IsEmpty(ListItem.Art(poster))</visible></control>
+<control type="image"><left>6</left><top>2</top><width>200</width><height>296</height><aspectratio>stretch</aspectratio><texture colordiffuse="FFE6DBFF">special://home/addons/plugin.video.nuviohub/resources/media/nuvio_poster_focus.png</texture></control>
+<control type="label"><left>10</left><top>298</top><width>194</width><height>29</height><font>font12</font><textcolor>FFFFFFFF</textcolor><label>[B]$INFO[ListItem.Label][/B]</label></control>
+<control type="progress"><left>22</left><top>278</top><width>168</width><height>5</height><info>ListItem.Property(progress)</info>
+        <texturebg colordiffuse="A0454956">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texturebg><lefttexture>-</lefttexture><midtexture colordiffuse="FFB799FF">special://home/addons/plugin.video.nuviohub/resources/media/white.png</midtexture><righttexture>-</righttexture><overlaytexture>-</overlaytexture>
+        <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible></control>
+</focusedlayout>
+</control></control>
+</control>
+<control type="image"><left>0</left><top>1038</top><width>1920</width><height>42</height><aspectratio>stretch</aspectratio><texture colordiffuse="FF090B11">special://home/addons/plugin.video.nuviohub/resources/media/black.png</texture></control>
+<control type="label"><left>73</left><top>1045</top><width>1780</width><height>26</height><font>font10</font><textcolor>FF7F899B</textcolor><label>OK  Open     Back  Return     Up / Down  Browse rows</label></control>
+</controls></window>

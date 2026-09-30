@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='utf-8'?>
+<window>
+  <defaultcontrol always="true">10</defaultcontrol>
+  <controls>
+    <control type="button" id="10">
+      <left>1560</left>
+      <top>860</top>
+      <width>290</width>
+      <height>76</height>
+      <label>Skip intro</label>
+      <font>font13</font>
+      <textcolor>FFFFFFFF</textcolor>
+      <focusedcolor>FFFFFFFF</focusedcolor>
+      <align>center</align>
+      <aligny>center</aligny>
+      <onleft condition="String.IsEqual(Window.Property(nuvio.next_available),1)">11</onleft>
+      <onright>10</onright>
+      <onup>10</onup>
+      <ondown>10</ondown>
+      <texturefocus border="22" colordiffuse="FF7862AC">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturenofocus border="22" colordiffuse="E6222633">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+    </control>
+    <control type="image">
+      <left>1557</left>
+      <top>857</top>
+      <width>296</width>
+      <height>82</height>
+      <visible>Control.HasFocus(10)</visible>
+      <texture border="22">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus.png</texture>
+    </control>
+    <control type="button" id="11">
+      <left>1130</left>
+      <top>860</top>
+      <width>410</width>
+      <height>76</height>
+      <label>Watch next episode</label>
+      <font>font13</font>
+      <textcolor>FFFFFFFF</textcolor>
+      <focusedcolor>FFFFFFFF</focusedcolor>
+      <align>center</align>
+      <aligny>center</aligny>
+      <onleft>11</onleft>
+      <onright>10</onright>
+      <onup>11</onup>
+      <ondown>11</ondown>
+      <texturefocus border="22" colordiffuse="FF7862AC">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturenofocus border="22" colordiffuse="E6222633">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <visible>String.IsEqual(Window.Property(nuvio.next_available),1)</visible>
+    </control>
+    <control type="image">
+      <left>1127</left>
+      <top>857</top>
+      <width>416</width>
+      <height>82</height>
+      <visible>Control.HasFocus(11)</visible>
+      <texture border="22">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus.png</texture>
+    </control>
+  </controls>
+</window>

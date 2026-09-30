@@ -1,0 +1,175 @@
+<settings>
+  <category label="Nuvio Hub">
+    <setting type="action" label="Open Nuvio settings" action="RunScript(script.nuvio,settings)" option="close" />
+    <setting type="action" label="Install or repair the bundled Nuvio interface and skin" action="RunPlugin(plugin://plugin.video.nuviohub/?action=nuvio_install)" option="close" />
+    <setting type="lsep" label="AIOMetadata: catalogs and posters. AIOStreams: stream filtering and sorting." />
+    <setting type="lsep" label="Updates: install a new Nuvio Hub bundle ZIP manually." />
+    <setting id="providers_json" type="text" default="[]" visible="false" />
+    <setting id="last_account_sync_at" type="text" default="0" visible="false" />
+    <setting id="catalog_state_json" type="text" default="{}" visible="false" />
+    <setting id="provider_meta_map" type="text" default="{}" visible="false" />
+    <setting id="global_art_map" type="text" default="{}" visible="false" />
+    <setting id="bucket_art_map" type="text" default="{}" visible="false" />
+    <setting id="poster_source_mode" type="text" default="Local only" visible="false" />
+    <setting id="ui_lang_autodetected" type="text" default="" visible="false" />
+    <setting id="dexworld_force_folders" type="bool" default="false" visible="false" />
+    <setting id="source_sort_mode" type="text" default="S:DEFAULT" visible="false" />
+    <setting id="source_priority_order" type="text" default="" visible="false" />
+    <setting id="trakt_client_id" type="text" default="" visible="false" />
+    <setting id="trakt_client_secret" type="text" option="hidden" default="" visible="false" />
+    <setting id="simkl_client_id" type="text" default="" visible="false" />
+    <setting id="nuvio_profile_applied" type="bool" default="false" visible="false" />
+    <setting id="ui_language" type="labelenum" label="30110" values="English" default="English" visible="false" />
+    <setting id="lightweight_mode" type="bool" label="30228" default="true" visible="false" />
+    <setting id="catalog_click_mode" type="labelenum" label="30123" values="Nuvio Hub|TMDb Helper|Ask every time" lvalues="30252|30253|30254" default="Nuvio Hub" visible="false" />
+    <setting id="show_nextup_home" type="bool" label="30115" default="true" visible="false" />
+    <setting id="show_favorites_home" type="bool" label="30116" default="true" visible="false" />
+    <setting id="show_collection_home" type="bool" label="30330" default="true" visible="false" />
+    <setting id="catalog_genre_folders" type="bool" label="30117" default="false" visible="false" />
+    <setting id="hide_empty_collection_entries" type="bool" label="30118" default="true" visible="false" />
+    <setting id="dexhub_defaults_rev" type="text" default="" visible="false" />
+    <setting id="dexhub_v510_defaults_applied" type="bool" default="false" visible="false" />
+    <setting id="dexhub_v520_defaults_applied" type="bool" default="false" visible="false" />
+    <setting id="nuvio_wizard_applied" type="bool" default="false" visible="false" />
+    <setting id="nuvio_setup_v110_done" type="bool" default="false" visible="false" />
+    <setting id="nuvio_setup_offered" type="bool" default="false" visible="false" />
+    <setting id="nuvio_setup_v110_step" type="number" default="0" visible="false" />
+    <setting id="theme_preset" type="enum" label="30856" lvalues="30857|30858|30859|30860|30861|30862|30863" default="1" visible="false" />
+    <setting id="home_style" type="enum" label="30867" lvalues="30868|30869" default="1" visible="false" />
+    <setting id="home_show_continue" type="bool" label="30909" default="true" visible="false" />
+    <setting id="home_show_nextup" type="bool" label="30910" default="true" visible="false" />
+    <setting id="home_show_favorites" type="bool" label="30911" default="true" visible="false" />
+    <setting id="home_show_movies" type="bool" label="30912" default="true" visible="false" />
+    <setting id="home_show_series" type="bool" label="30913" default="true" visible="false" />
+    <setting id="home_show_anime" type="bool" label="30914" default="true" visible="false" />
+    <setting id="home_show_live" type="bool" label="30915" default="true" visible="false" />
+    <setting id="home_show_addons" type="bool" label="30916" default="true" visible="false" />
+    <setting id="home_show_plex" type="bool" label="30917" default="true" visible="false" />
+    <setting id="home_show_emby" type="bool" label="30918" default="true" visible="false" />
+    <setting id="home_show_tmdbh" type="bool" label="30919" default="true" visible="false" />
+    <setting id="home_show_search" type="bool" label="30920" default="true" visible="false" />
+    <setting id="home_show_collection" type="bool" label="30921" default="true" visible="false" />
+    <setting id="home_show_setup" type="bool" label="30922" default="true" visible="false" />
+    <setting id="search_style" type="enum" label="30876" lvalues="30877|30878" default="0" visible="false" />
+    <setting id="continue_art_style" type="enum" label="30853" lvalues="30854|30855" default="0" visible="false" />
+    <setting id="source_resolution_mode" type="labelenum" label="30230" values="Same source|TMDb Helper|NuvioHub picker" lvalues="30257|30253|30258" default="NuvioHub picker" visible="false" />
+    <setting id="stremio_sources_enabled" type="bool" label="30820" default="true" visible="false" />
+    <setting id="streams_quick_open_seconds" type="slider" label="30821" default="0.4" range="0.3,0.1,4.0" option="float" visible="false" />
+    <setting id="streams_result_goal" type="enum" label="30870" lvalues="30871|30872|30873|30874" default="1" visible="false" />
+    <setting id="streams_enough_wait_seconds" type="slider" label="30875" default="8" range="3,1,12" option="int" visible="false" />
+    <setting id="playback_open_mode" type="labelenum" label="30124" values="Choose from sources|Best quality automatically" lvalues="30255|30256" default="Choose from sources" visible="false" />
+    <setting id="remember_last_source" type="bool" label="30155" default="false" visible="false" />
+    <setting id="auto_next_episode" type="bool" label="30164" default="true" visible="false" />
+    <setting id="auto_next_prompt_seconds" type="slider" label="30165" default="20" range="5,1,60" option="int" visible="false" />
+    <setting id="timeout" type="number" label="30111" default="10" visible="false" />
+    <setting id="show_playback_waiter" type="bool" label="30113" default="false" visible="false" />
+    <setting id="safe_playback_handoff" type="bool" label="30229" default="true" visible="false" />
+    <setting id="anime_id_mapping" type="bool" label="30450" default="true" visible="false" />
+    <setting id="source_dedup_mode" type="labelenum" label="30446" values="Off|Single best|One per addon" lvalues="30449|30447|30448" default="Off" visible="false" />
+    <setting id="server_lookup_seconds" type="number" label="30451" default="5" visible="false" />
+    <setting id="search_ceiling_seconds" type="number" label="30444" default="6" visible="false" />
+    <setting id="kodi22_minimal_item" type="bool" label="30443" default="true" visible="false" />
+    <setting id="tmdbh_auto_play_first" type="bool" label="30202" default="false" visible="false" />
+    <setting id="tmdbh_poster_picker" type="bool" label="30432" default="false" visible="false" />
+    <setting id="switch_source_keymap_data" type="text" default="" visible="false" />
+    <setting id="quality_profile" type="labelenum" label="30322" values="Balanced (recommended)|Best|Data saver|Custom" lvalues="30323|30324|30325|30326" default="Balanced (recommended)" visible="false" />
+    <setting id="bypass_all_filters" type="bool" label="30425" default="false" visible="false" />
+    <setting id="pre_cache_next_episode" type="bool" label="30426" default="false" visible="false" />
+    <setting id="min_quality" type="labelenum" label="30150" values="No filter|480p+|720p+|1080p+|4K only" lvalues="30262|30263|30264|30265|30266" default="No filter" visible="false" />
+    <setting id="hide_cam_ts" type="bool" label="30151" default="true" visible="false" />
+    <setting id="prefer_debrid" type="bool" label="30152" default="true" visible="false" />
+    <setting id="prefer_hdr" type="bool" label="30153" default="true" visible="false" />
+    <setting id="prefer_atmos" type="bool" label="30154" default="true" visible="false" />
+    <setting id="exclude_av1" type="bool" label="30760" default="false" visible="false" />
+    <setting id="exclude_dv" type="bool" label="30761" default="false" visible="false" />
+    <setting id="exclude_hevc" type="bool" label="30762" default="false" visible="false" />
+    <setting id="streams_full_parallel_scan" type="bool" label="30234" default="false" visible="false" />
+    <setting id="streams_quick_to_results" type="bool" label="30235" default="true" visible="false" />
+    <setting id="elite_badges_enabled" type="bool" label="30879" default="false" visible="false" />
+    <setting id="elite_badges_json_url" type="text" label="30431" default="" visible="false" />
+    <setting id="default_meta_source" type="labelenum" label="30130" values="Auto (smart)|TMDb Helper (recommended)|Native (addon)" lvalues="30259|30260|30261" default="Native (addon)" visible="false" />
+    <setting id="art_configuration_mode" type="labelenum" label="30822" values="Unified|Custom" lvalues="30828|30829" default="Unified" visible="false" />
+    <setting id="deep_meta_enrich" type="bool" label="30132" default="false" visible="false" />
+    <setting id="poster_reliability_mode" type="labelenum" label="30158" values="Smart fallback (recommended)|Always clean (no badges)|Keep decorated" lvalues="30267|30268|30269" default="Always clean (no badges)" visible="false" />
+    <setting id="fanarttv_enrich" type="bool" label="30134" default="false" visible="false" />
+    <setting id="fanarttv_api_key" type="text" label="30135" default="" visible="false" />
+    <setting id="cloud_sync_direction" type="labelenum" label="30805" values="Two-way|Upload only|Download only" lvalues="30811|30812|30813" default="Two-way" visible="false" />
+    <setting id="cloud_sync_interval_min" type="slider" label="30908" default="30" range="0,5,240" option="int" visible="false" />
+    <setting id="cloud_sync_continuous" type="bool" label="30883" default="true" visible="false" />
+    <setting id="nuvio_sync_merge_only" type="bool" label="30809" default="true" visible="false" />
+    <setting id="nuvio_sync_enabled" type="bool" label="30802" default="false" visible="false" />
+    <setting id="nuvio_email" type="text" label="30816" default="" visible="false" />
+    <setting id="nuvio_password" type="text" label="30817" default="" option="hidden" visible="false" />
+    <setting id="nuvio_sync_direction" type="labelenum" label="30804" values="Follow global|Two-way|Upload only|Download only" lvalues="30810|30811|30812|30813" default="Follow global" visible="false" />
+    <setting id="nuvio_sync_addons" type="bool" label="30902" default="true" visible="false" />
+    <setting id="nuvio_sync_progress" type="bool" label="30903" default="true" visible="false" />
+    <setting id="nuvio_sync_collections" type="bool" label="30901" default="true" visible="false" />
+    <setting id="nuvio_sync_library" type="bool" label="30882" default="true" visible="false" />
+    <setting id="stremio_sync_enabled" type="bool" label="30803" default="false" visible="false" />
+    <setting id="stremio_email" type="text" label="30816" default="" visible="false" />
+    <setting id="stremio_password" type="text" label="30817" default="" option="hidden" visible="false" />
+    <setting id="stremio_sync_direction" type="labelenum" label="30804" values="Follow global|Two-way|Upload only|Download only" lvalues="30810|30811|30812|30813" default="Follow global" visible="false" />
+    <setting id="stremio_sync_addons" type="bool" label="30904" default="true" visible="false" />
+    <setting id="stremio_sync_progress" type="bool" label="30905" default="true" visible="false" />
+    <setting id="enable_trakt" type="bool" label="30180" default="true" visible="false" />
+    <setting id="trakt_scrobble" type="bool" label="30186" default="true" visible="false" />
+    <setting id="trakt_sync_progress" type="bool" label="30187" default="true" visible="false" />
+    <setting id="trakt_fetch_art" type="bool" label="30188" default="true" visible="false" />
+    <setting id="trakt_sync_watchlist" type="bool" label="30189" default="true" visible="false" />
+    <setting id="trakt_service_sync_interval" type="slider" label="30190" default="30" range="10,5,60" option="int" visible="false" />
+    <setting id="enable_simkl" type="bool" label="30841" default="true" visible="false" />
+    <setting id="simkl_mark_watched" type="bool" label="30845" default="true" visible="false" />
+    <setting id="simkl_watched_threshold" type="slider" label="30846" default="85" range="50,1,99" option="int" visible="false" />
+    <setting id="simkl_service_sync" type="bool" label="30849" default="true" visible="false" />
+    <setting id="watchlist_merge_simkl" type="bool" label="30850" default="true" visible="false" />
+    <setting id="watchlist_merge_mdblist" type="bool" label="30851" default="true" visible="false" />
+    <setting id="plex_in_sources" type="bool" label="30439" default="true" visible="false" />
+    <setting id="plex_auth_json" type="text" default="" visible="false" />
+    <setting id="plex_client_identifier" type="text" default="" visible="false" />
+    <setting id="plex_servers_cache_json" type="text" default="" visible="false" />
+    <setting id="emby_in_sources" type="bool" label="30440" default="true" visible="false" />
+    <setting id="server_art_from_tmdb" type="bool" label="30452" default="true" visible="false" />
+    <setting id="emby_auth_json" type="text" default="" visible="false" />
+    <setting id="emby_device_id" type="text" default="" visible="false" />
+    <setting id="enable_companion_sync" type="bool" label="30170" default="true" visible="false" />
+    <setting id="companion_interval" type="number" label="30171" default="5" visible="false" />
+    <setting id="tmdb_api_key" type="text" label="30137" default="" visible="false" />
+    <setting id="mdblist_api_key" type="text" label="30138" default="" visible="false" />
+    <setting id="enable_stremio_subtitle_broker" type="bool" label="30160" default="true" visible="false" />
+    <setting id="never_auto_ai_subtitles" type="bool" label="30825" default="true" visible="false" />
+    <setting id="subtitle_search_mode" type="labelenum" label="30161" values="Play only|Play with subtitles" lvalues="30270|30271" default="Play only" visible="false" />
+    <setting id="subtitle_timeout" type="slider" label="30162" default="15" range="10,1,20" option="int" visible="false" />
+    <setting id="preferred_subtitle_langs" type="text" label="30163" default="en" visible="false" />
+    <setting id="parallel_workers" type="slider" label="30210" default="4" range="2,1,4" option="int" visible="false" />
+    <setting id="large_section_limit" type="slider" label="30211" default="24" range="12,6,60" option="int" visible="false" />
+    <setting id="http_gzip" type="bool" label="30212" default="true" visible="false" />
+    <setting id="clean_catalog_view" type="bool" label="30280" default="false" visible="false" />
+    <setting id="hide_pagination_more" type="bool" label="30281" default="true" visible="false" />
+    <setting id="catalog_cache_ttl" type="slider" label="30214" default="600" range="0,30,1800" option="int" visible="false" />
+    <setting id="meta_cache_ttl" type="slider" label="30215" default="3600" range="300,300,14400" option="int" visible="false" />
+    <setting id="index_mode" type="labelenum" label="30222" values="Live (current)|Hybrid (recommended)|Fast Index" lvalues="30272|30273|30274" default="Live (current)" visible="false" />
+    <setting id="index_sync_interval_hours" type="slider" label="30223" default="4" range="1,1,24" option="int" visible="false" />
+    <setting id="verbose_logging" type="bool" label="30328" default="false" visible="false" />
+    <setting id="nuvio_skip_mode" type="labelenum" label="Skip intro, recap and credits" values="Button|Automatic|Off" default="Button" visible="false" />
+    <setting id="nuvio_introdb_key" type="text" label="TheIntroDB API key (optional)" default="" option="hidden" visible="false" />
+    <setting id="nuvio_auto_trailers" type="bool" label="Automatic home trailers after 6 seconds" default="false" visible="false" />
+    <setting id="nuvio_metadata_provider" type="text" default="" visible="false" />
+    <setting id="nuvio_streams_provider" type="text" default="" visible="false" />
+    <setting id="nuvio_skin_applied" type="bool" default="false" visible="false" />
+    <setting id="nuvio_autoplay" type="text" default="false" visible="false" />
+    <setting id="nuvio_trailer_delay" type="text" default="6" visible="false" />
+    <setting id="nuvio_trailer_duration" type="text" default="30" visible="false" />
+    <setting id="nuvio_animated_art" type="text" default="false" visible="false" />
+    <setting id="nuvio_art_cache" type="text" default="disk246" visible="false" />
+    <setting id="nuvio_card_shape" type="text" default="poster" visible="false" />
+    <setting id="nuvio_animation_map" type="text" default="{}" visible="false" />
+    <setting id="nuvio_iptv_instance" type="text" default="" visible="false" />
+    <setting id="nuvio_iptv_configured" type="text" default="false" visible="false" />
+    <setting id="nuvio_iptv_last_unique" type="text" default="" visible="false" />
+    <setting id="nuvio_iptv_last_group" type="text" default="" visible="false" />
+    <setting id="nuvio_screensaver_art" type="text" default="" visible="false" />
+    <setting id="nuvio_screensaver_applied" type="text" default="false" visible="false" />
+  </category>
+  <setting id="nuvio_subtitle_language" type="text" default="" visible="false" />
+  <setting id="nuvio_subtitles_on_start" type="bool" default="false" visible="false" />
+</settings>

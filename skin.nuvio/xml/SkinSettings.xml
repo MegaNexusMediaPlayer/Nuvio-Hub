@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<window><defaultcontrol>100</defaultcontrol><onload>RunScript(script.nuvio,skinsettings)</onload><controls>
+<control type="image"><left>0</left><top>0</top><width>1920</width><height>1080</height><texture>nuvio/nuvio_banner.png</texture></control>
+<control type="button" id="100"><left>620</left><top>805</top><width>680</width><height>70</height><font>font13</font><align>center</align><aligny>center</aligny><label>Nuvio Settings</label><textcolor>FFFFFFFF</textcolor><focusedcolor>FF090B11</focusedcolor><texturefocus border="22">nuvio/nuvio_pill.png</texturefocus><texturenofocus border="22" colordiffuse="FF252A38">nuvio/nuvio_pill.png</texturenofocus><onclick>RunScript(script.nuvio,skinsettings)</onclick></control>
+</controls></window>

@@ -1,0 +1,872 @@
+# -*- coding: utf-8 -*-
+import os
+import sys
+import threading
+import time
+import xbmc
+
+addon_path = os.path.dirname(os.path.abspath(__file__))
+lib_path = os.path.join(addon_path, 'resources', 'lib')
+if lib_path not in sys.path:
+    sys.path.insert(0, lib_path)
+
+import xbmcgui
+
+if __name__ == '__main__':
+    from resources.lib.fork_profile import ensure_profile
+    ensure_profile()
+
+
+# Trakt/Simkl and Nuvio/Stremio touch the same local playback state.  They
+# must never run concurrently: apart from extra pressure, overlapping pulls
+# can race over progress rows.  A non-blocking lock lets the later cycle defer
+# cleanly instead of creating another waiting worker.
+_SYNC_CYCLE_LOCK = threading.Lock()
+# --- dexhub-402-patch ---
+try:
+    from resources.lib.i18n import tr as tr
+except Exception:
+    try:
+        from i18n import tr as tr
+    except Exception:
+        def tr(_s):
+            return _s
+
+
+
+def _purge_http_cache():
+    """Delete cached HTTP responses older than twice their max TTL. Keeps the
+    cache dir bounded on long-running installs.
+
+    Also purges:
+      * special://temp/dexhub_subs/  → subtitle files older than 24h
+      * addon_data/subtitle_cache/    → switched subtitle copies older than 7d
+      * meta_cache.db expired rows
+      * fanarttv_cache.db expired rows
+    """
+    import os as _os, time as _t
+    try:
+        from resources.lib.dexhub.client import HTTP_CACHE_DIR, catalog_ttl, meta_ttl
+        max_ttl = max(catalog_ttl(), meta_ttl(), 3600) * 2
+        if _os.path.isdir(HTTP_CACHE_DIR):
+            now = _t.time()
+            removed = 0
+            for name in _os.listdir(HTTP_CACHE_DIR):
+                path = _os.path.join(HTTP_CACHE_DIR, name)
+                try:
+                    if _os.path.isfile(path) and (now - _os.path.getmtime(path)) > max_ttl:
+                        _os.remove(path)
+                        removed += 1
+                except Exception:
+                    continue
+            if removed:
+                xbmc.log('[NuvioHub] purged %d stale http-cache files' % removed, xbmc.LOGINFO)
+    except Exception as exc:
+        xbmc.log('[NuvioHub] http-cache purge failed: %s' % exc, xbmc.LOGWARNING)
+
+    # Subtitle files dir — wasn't being touched in earlier versions.
+    try:
+        import xbmcvfs
+        subs_dir = xbmcvfs.translatePath('special://temp/dexhub_subs/')
+        if _os.path.isdir(subs_dir):
+            now = _t.time()
+            cutoff = now - 86400  # 24h
+            removed = 0
+            for root, dirs, files in _os.walk(subs_dir):
+                for fn in files:
+                    fp = _os.path.join(root, fn)
+                    try:
+                        if _os.path.getmtime(fp) < cutoff:
+                            _os.remove(fp)
+                            removed += 1
+                    except Exception:
+                        continue
+                # Drop empty subdirs left behind
+                try:
+                    if root != subs_dir and not _os.listdir(root):
+                        _os.rmdir(root)
+                except Exception:
+                    pass
+            if removed:
+                xbmc.log('[NuvioHub] purged %d stale subtitle files' % removed, xbmc.LOGINFO)
+    except Exception as exc:
+        xbmc.log('[NuvioHub] subs purge failed: %s' % exc, xbmc.LOGWARNING)
+
+    # Stable copies used only to preserve external subtitles across source
+    # switches. Keep them for a week, then remove them so the cache stays
+    # bounded even on devices that are rarely restarted.
+    try:
+        import xbmcvfs
+        switch_subs_dir = xbmcvfs.translatePath('special://profile/addon_data/plugin.video.nuviohub/subtitle_cache/')
+        if _os.path.isdir(switch_subs_dir):
+            cutoff = _t.time() - (7 * 86400)
+            removed = 0
+            for fn in _os.listdir(switch_subs_dir):
+                fp = _os.path.join(switch_subs_dir, fn)
+                try:
+                    if _os.path.isfile(fp) and _os.path.getmtime(fp) < cutoff:
+                        _os.remove(fp)
+                        removed += 1
+                except Exception:
+                    continue
+            if removed:
+                xbmc.log('[NuvioHub] purged %d stale switched-subtitle files' % removed, xbmc.LOGINFO)
+    except Exception as exc:
+        xbmc.log('[NuvioHub] switched-subs purge failed: %s' % exc, xbmc.LOGWARNING)
+
+    # SQLite caches — drop expired rows
+    try:
+        from resources.lib import meta_cache as _mc
+        n = _mc.purge_expired()
+        if n:
+            xbmc.log('[NuvioHub] purged %d expired meta_cache rows' % n, xbmc.LOGINFO)
+    except Exception:
+        pass
+    try:
+        from resources.lib import fanarttv as _ft
+        n = _ft.purge_expired()
+        if n:
+            xbmc.log('[NuvioHub] purged %d expired fanarttv rows' % n, xbmc.LOGINFO)
+    except Exception:
+        pass
+
+
+def _win():
+    try:
+        return xbmcgui.Window(10000)
+    except Exception:
+        return None
+
+
+def _interactive_busy(max_age=180.0):
+    """True while playback or a source/search interaction has priority."""
+    try:
+        if xbmc.Player().isPlayingVideo():
+            return True
+    except Exception:
+        pass
+    try:
+        win = _win()
+        raw = win.getProperty('dexhub.interactive_busy') if win else ''
+        return bool(raw and (time.time() - float(raw)) < float(max_age))
+    except Exception:
+        return False
+
+
+
+def _setting(key, default=''):
+    try:
+        import xbmcaddon
+        return xbmcaddon.Addon('plugin.video.nuviohub').getSetting(key) or default
+    except Exception:
+        return default
+
+
+
+def _primary_player_mode():
+    raw = str(_setting('catalog_click_mode', 'TMDb Helper') or 'TMDb Helper').strip().lower()
+    compact = raw.replace(' ', '').replace('_', '').replace('-', '')
+    if compact in ('tmdbhelper', 'helper', '1') or 'tmdb' in compact:
+        return 'tmdbhelper'
+    if compact in ('ask', 'askeverytime', '2') or raw in ('اسأل كل مرة', 'السؤال كل مرة'):
+        return 'ask'
+    return 'dexhub'
+
+
+
+def _publish_badge_props():
+    return  # No source badge UI exists in the backend build.
+
+
+def _publish_core_props(last_sync=''):
+    win = _win()
+    if not win:
+        return
+    # Keep Kodi startup light: optional integrations are imported only when
+    # this small status snapshot is actually published.
+    try:
+        from resources.lib import tmdbh_player
+        tmdbh_available = '1' if tmdbh_player.has_tmdbhelper() else '0'
+        tmdbh_installed = '1' if tmdbh_player.player_installed() else '0'
+    except Exception:
+        tmdbh_available = '0'
+        tmdbh_installed = '0'
+    tmdbh_primary = '1' if _primary_player_mode() == 'tmdbhelper' else '0'
+    try:
+        from resources.lib import trakt
+        trakt_enabled = '1' if trakt.enabled() else '0'
+        trakt_connected = '1' if trakt.authorized() else '0'
+    except Exception:
+        trakt_enabled = '0'
+        trakt_connected = '0'
+    payload = {
+        'dexhub.core.ready': '1',
+        'dexhub.core.tmdbh.available': tmdbh_available,
+        'dexhub.core.tmdbh.player_installed': tmdbh_installed,
+        'dexhub.core.tmdbh.primary': tmdbh_primary,
+        'dexhub.core.trakt.enabled': trakt_enabled,
+        'dexhub.core.trakt.connected': trakt_connected,
+        'dexhub.core.trakt.last_sync': str(last_sync or ''),
+        'dexhub.core.formatter.enabled': '1' if ((_setting('enable_source_formatter', 'true') or 'true').lower() == 'true') else '0',
+    }
+    for k, v in payload.items():
+        try:
+            win.setProperty(k, v)
+        except Exception:
+            pass
+
+
+
+def _invalidate_ui_caches():
+    win = _win()
+    if not win:
+        return
+    for key in ('dexhub.nextup_cache', 'dexhub.nextup_cache_ts', 'dexhub.fav_mirror_done'):
+        try:
+            win.clearProperty(key)
+        except Exception:
+            pass
+
+
+
+def _sync_trakt_state(reason='manual'):
+    # Trakt is optional and fairly heavy; do not import it during service
+    # bootstrap on installations where it is never used.
+    try:
+        from resources.lib import trakt
+    except Exception:
+        _publish_core_props('')
+        return False
+    if not trakt.enabled():
+        _publish_core_props('')
+        return False
+    try:
+        if not trakt.authorized():
+            _publish_core_props('')
+            return False
+    except Exception:
+        _publish_core_props('')
+        return False
+
+    did_work = False
+    try:
+        if trakt.sync_enabled():
+            trakt.import_progress(limit=100)
+            did_work = True
+    except Exception as exc:
+        xbmc.log('[NuvioHub] trakt progress sync failed (%s): %s' % (reason, exc), xbmc.LOGWARNING)
+
+    try:
+        # v4.2.0: one merged snapshot (Trakt + Simkl + MDBList). Writing a
+        # trakt-only snapshot here used to erase the other services' rows on
+        # every service cycle.
+        from resources.lib import favorites_store
+        # v4.4.1: the merged mirror hits up to three external APIs; refreshing
+        # it every service cycle is wasteful. 30-minute throttle via window
+        # property (resets on Kodi restart) keeps sections fresh and light.
+        import time as _t
+        win = _win()
+        last = 0.0
+        try:
+            last = float(win.getProperty('dexhub.mirror.last') or 0) if win else 0.0
+        except Exception:
+            last = 0.0
+        if _t.time() - last >= 30 * 60:
+            include_trakt = (_setting('trakt_sync_watchlist', 'true') or 'true').lower() == 'true'
+            favorites_store.refresh_external_mirror(include_trakt=include_trakt)
+            if win:
+                win.setProperty('dexhub.mirror.last', str(int(_t.time())))
+            did_work = True
+    except Exception as exc:
+        xbmc.log('[NuvioHub] watchlist mirror sync failed (%s): %s' % (reason, exc), xbmc.LOGWARNING)
+
+    if did_work:
+        try:
+            trakt.invalidate_cache('next_up_v1')
+            trakt.invalidate_cache('/sync/playback/')
+        except Exception:
+            pass
+        _invalidate_ui_caches()
+        _publish_core_props(str(int(__import__('time').time())))
+    else:
+        _publish_core_props('')
+    return did_work
+
+
+
+def _sync_simkl_state(reason='manual'):
+    """v4.2.0: mirror Simkl into Continue Watching on the trakt cadence.
+
+    The watching-list sync is one request per kind and runs every cycle; the
+    full watched-history import walks every list so it runs at most once per
+    6 hours (window-property timestamp, resets on Kodi restart)."""
+    if (_setting('simkl_service_sync', 'true') or 'true').lower() != 'true':
+        return False
+    try:
+        from resources.lib import simkl
+    except Exception:
+        return False
+    try:
+        if not (simkl.enabled() and simkl.authorized()):
+            return False
+    except Exception:
+        return False
+    did_work = False
+    try:
+        simkl.sync_continue_watching(limit=60)
+        did_work = True
+    except Exception as exc:
+        xbmc.log('[NuvioHub] simkl continue sync failed (%s): %s' % (reason, exc), xbmc.LOGWARNING)
+    try:
+        import time as _t
+        win = _win()
+        last = 0.0
+        try:
+            last = float(win.getProperty('dexhub.simkl.last_import') or 0) if win else 0.0
+        except Exception:
+            last = 0.0
+        if _t.time() - last >= 6 * 3600:
+            simkl.import_watched()
+            if win:
+                win.setProperty('dexhub.simkl.last_import', str(int(_t.time())))
+            did_work = True
+    except Exception as exc:
+        xbmc.log('[NuvioHub] simkl watched import failed (%s): %s' % (reason, exc), xbmc.LOGWARNING)
+    if did_work:
+        try:
+            simkl.invalidate_cache()
+        except Exception:
+            pass
+        _invalidate_ui_caches()
+    return did_work
+
+
+def _sync_interval_ms():
+    try:
+        minutes = int(_setting('trakt_service_sync_interval', '30') or '30')
+    except Exception:
+        minutes = 30
+    # Keep the full set exposed by the simplified account screen.  Earlier
+    # code silently collapsed the 120/240 minute choices back to 60 minutes.
+    minutes = max(10, min(240, minutes))
+    return minutes * 60 * 1000
+
+
+
+def _background_sync_loop(monitor):
+    # Do not race Kodi/TMDb Helper/database migrations during boot. Previous
+    # builds launched this at 4s and a second Trakt startup sync at 5s, doing
+    # the same account import twice while the home screen was still opening.
+    if monitor.waitForAbort(60):
+        return
+    _last_health = time.time()
+    _last_purge = time.time()
+    while not monitor.abortRequested():
+        deferred = _interactive_busy()
+        acquired = False
+        if not deferred:
+            acquired = _SYNC_CYCLE_LOCK.acquire(False)
+            deferred = not acquired
+        if acquired:
+            try:
+                try:
+                    _sync_trakt_state(reason='service')
+                except Exception as exc:
+                    xbmc.log('[NuvioHub] trakt background sync failed: %s' % exc, xbmc.LOGWARNING)
+                try:
+                    _sync_simkl_state(reason='service')
+                except Exception as exc:
+                    xbmc.log('[NuvioHub] simkl background sync failed: %s' % exc, xbmc.LOGWARNING)
+            finally:
+                _SYNC_CYCLE_LOCK.release()
+
+        # Health check Plex/Emby endpoints every 5 minutes
+        import time as _t
+        now = _t.time()
+        if not deferred and now - _last_health >= 300:
+            try:
+                from resources.lib import health_monitor
+                checked = health_monitor.run_check_cycle()
+                if checked:
+                    xbmc.log('[NuvioHub] health checks: %d endpoints' % checked, xbmc.LOGDEBUG)
+            except Exception as exc:
+                xbmc.log('[NuvioHub] health check failed: %s' % exc, xbmc.LOGWARNING)
+            _last_health = now
+
+        # Cache cleanup every hour
+        if not deferred and now - _last_purge >= 3600:
+            try:
+                _purge_http_cache()
+            except Exception:
+                pass
+            _last_purge = now
+
+        if not deferred:
+            _publish_core_props(_win().getProperty('dexhub.core.trakt.last_sync') if _win() else '')
+        # If the user is browsing/playing or the cloud cycle owns the lock,
+        # retry gently in one minute. A completed cycle follows the normal
+        # account interval (30 minutes by default).
+        wait_seconds = 60.0 if deferred else (_sync_interval_ms() / 1000.0)
+        if monitor.waitForAbort(wait_seconds):
+            break
+
+
+def _autodetect_language_first_run():
+    """If the user hasn't picked a UI language yet, infer one from Kodi's
+    locale on the very first start. Saves new users from seeing English when
+    their Kodi UI is already Arabic (or vice versa). Runs once and writes a
+    sentinel setting so subsequent starts don't override the user's choice.
+    """
+    try:
+        import xbmcaddon
+        addon = xbmcaddon.Addon('plugin.video.nuviohub')
+        if (addon.getSetting('ui_lang_autodetected') or '').strip() == 'true':
+            return
+        # Read Kodi's UI language. xbmc.getLanguage gives English name; the
+        # ISO 639-1 form is the most reliable signal.
+        kodi_lang = (xbmc.getLanguage(xbmc.ISO_639_1) or '').strip().lower()
+        if kodi_lang.startswith('ar'):
+            addon.setSetting('ui_language', 'Arabic')
+            addon.setSetting('preferred_subtitle_langs', 'ar,en')
+        else:
+            addon.setSetting('ui_language', 'English')
+        addon.setSetting('ui_lang_autodetected', 'true')
+        xbmc.log('[NuvioHub] auto-detected UI language from Kodi locale=%s' % kodi_lang,
+                 xbmc.LOGINFO)
+    except Exception as exc:
+        xbmc.log('[NuvioHub] language auto-detect failed: %s' % exc, xbmc.LOGWARNING)
+
+
+def _migrate_performance_defaults():
+    """Move untouched legacy timeouts to the faster 3.9.242 defaults.
+
+    Explicit user choices are preserved.  Kodi stores defaults as literal
+    values, so the old 35/12 pair is a reliable signal that the user did not
+    customise them.  A sentinel makes this a one-time operation.
+    """
+    try:
+        import xbmcaddon
+        addon = xbmcaddon.Addon('plugin.video.nuviohub')
+        if (addon.getSetting('perf_defaults_39242') or '').strip() == '1':
+            return
+        ceiling = (addon.getSetting('search_ceiling_seconds') or '').strip()
+        lookup = (addon.getSetting('server_lookup_seconds') or '').strip()
+        if ceiling in ('', '35', '35.0'):
+            addon.setSetting('search_ceiling_seconds', '12')
+        if lookup in ('', '12', '12.0'):
+            addon.setSetting('server_lookup_seconds', '7')
+        addon.setSetting('perf_defaults_39242', '1')
+        xbmc.log('[NuvioHub] migrated untouched search defaults to 12s/7s', xbmc.LOGINFO)
+    except Exception as exc:
+        xbmc.log('[NuvioHub] performance-default migration failed: %s' % exc,
+                 xbmc.LOGDEBUG)
+
+
+def _migrate_subtitle_broker_defaults():
+    """Enable Stremio subtitle discovery once for existing installations.
+
+    v3.9.243 separates subtitle discovery from auto-showing subtitles.  The
+    broker may search all installed Stremio subtitle addons while Play only
+    remains selected, so enabling discovery no longer forces a subtitle on.
+    Users can still turn the broker off afterwards.
+    """
+    try:
+        import xbmcaddon
+        addon = xbmcaddon.Addon('plugin.video.nuviohub')
+        if (addon.getSetting('subtitle_defaults_39243') or '').strip() == '1':
+            return
+        addon.setSetting('enable_stremio_subtitle_broker', 'true')
+        addon.setSetting('subtitle_defaults_39243', '1')
+        xbmc.log('[NuvioHub] enabled parallel Stremio subtitle discovery', xbmc.LOGINFO)
+    except Exception as exc:
+        xbmc.log('[NuvioHub] subtitle-default migration failed: %s' % exc, xbmc.LOGDEBUG)
+
+
+def _migrate_v510_light_defaults():
+    """One-time production profile requested for speed and stability.
+
+    The settings remain readable for backward compatibility, but costly
+    experimental features are disabled and no longer exposed in the normal
+    settings UI.  Account links, provider lists, quality choices and user data
+    are untouched.
+    """
+    try:
+        import xbmcaddon
+        addon = xbmcaddon.Addon('plugin.video.nuviohub')
+        if (addon.getSetting('dexhub_v510_defaults_applied') or '').strip().lower() == 'true':
+            return
+        try:
+            revision = int((addon.getSetting('dexhub_defaults_rev') or '0').strip())
+        except Exception:
+            revision = 0
+        if revision >= 510:
+            addon.setSetting('dexhub_v510_defaults_applied', 'true')
+            return
+        # v5.4.1: this migration force-wrote every value below into existing
+        # installs — including two the user had deliberately turned ON:
+        # image badges (after several sessions spent getting community badge
+        # sets working) and continuous sync. Silently reversing a choice the
+        # user made is the same fault the clean_catalog_view migration had.
+        # Performance defaults still apply to installs that never touched
+        # them; anything the user has expressed an opinion on is left alone.
+        values = {
+            'lightweight_mode': 'true',
+            'pre_cache_next_episode': 'false',
+            'deep_meta_enrich': 'false',
+            'fanarttv_enrich': 'false',
+            'streams_full_parallel_scan': 'false',
+            'show_playback_waiter': 'false',
+            'safe_playback_handoff': 'true',
+            'kodi22_minimal_item': 'true',
+            'tmdbh_auto_play_first': 'false',
+            'parallel_workers': '4',
+            'trakt_service_sync_interval': '30',
+            'http_gzip': 'true',
+        }
+        # Features the user opts into keep whatever they already are.
+        for key, value in values.items():
+            addon.setSetting(key, value)
+        addon.setSetting('dexhub_v510_defaults_applied', 'true')
+        xbmc.log('[NuvioHub] applied v5.1 light production defaults', xbmc.LOGINFO)
+    except Exception as exc:
+        xbmc.log('[NuvioHub] v5.1 defaults migration failed: %s' % exc,
+                 xbmc.LOGDEBUG)
+
+
+def _migrate_v520_search_defaults():
+    """Move untouched v5.1 timing values to the v5.2 source/subtitle policy."""
+    try:
+        import xbmcaddon
+        addon = xbmcaddon.Addon('plugin.video.nuviohub')
+        if (addon.getSetting('dexhub_v520_defaults_applied') or '').strip().lower() == 'true':
+            return
+        try:
+            revision = int((addon.getSetting('dexhub_defaults_rev') or '0').strip())
+        except Exception:
+            revision = 0
+        if revision >= 520:
+            addon.setSetting('dexhub_v520_defaults_applied', 'true')
+            return
+        subtitle = (addon.getSetting('subtitle_timeout') or '').strip()
+        # Every old supported value is outside the new safe range. Move it to
+        # the requested midpoint; values already in 10..20 are user choices.
+        try:
+            subtitle_value = int(float(subtitle)) if subtitle else 0
+        except Exception:
+            subtitle_value = 0
+        if subtitle_value < 10 or subtitle_value > 20:
+            addon.setSetting('subtitle_timeout', '15')
+        quick = (addon.getSetting('streams_quick_open_seconds') or '').strip()
+        patient = (addon.getSetting('streams_enough_wait_seconds') or '').strip()
+        if quick in ('', '0.8', '0.80'):
+            addon.setSetting('streams_quick_open_seconds', '0.4')
+        if patient in ('', '5', '5.0'):
+            addon.setSetting('streams_enough_wait_seconds', '8')
+        # This is a permanent safe default (see apply_clean_defaults_once).
+        addon.setSetting('clean_catalog_view', 'false')
+        addon.setSetting('dexhub_v520_defaults_applied', 'true')
+        xbmc.log('[NuvioHub] applied v5.2 source/subtitle timing defaults', xbmc.LOGINFO)
+    except Exception as exc:
+        xbmc.log('[NuvioHub] v5.2 defaults migration failed: %s' % exc,
+                 xbmc.LOGDEBUG)
+
+
+if __name__ == '__main__':
+    xbmc.log('[NuvioHub] companion service started', xbmc.LOGINFO)
+    # v3.9.71: log Kodi version on startup so platform-specific issues
+    # (e.g. deprecated API native crashes on Kodi 22 alpha) are easy to
+    # correlate with bug reports.
+    try:
+        xbmc.log('[NuvioHub] platform: Kodi %s' % (xbmc.getInfoLabel('System.BuildVersion') or '?'),
+                 xbmc.LOGINFO)
+    except Exception:
+        pass
+
+    # New profiles use resources/settings.xml defaults. Existing profiles retain
+    # every saved choice; upstream baseline migrations must not reset an update.
+    # English initialization is handled once by ensure_profile above.
+
+    # Publish the skin-aware theme palette early so every NuvioHub dialog
+    # (sources, loading, wait, select) inherits the active skin's accent
+    # the moment it opens, regardless of open order.
+    pass  # Presentation is owned by the independent Nuvio skin.
+
+    try:
+        from resources.lib import tmdbh_player
+        tmdbh_player.ensure_installed_once()
+    except Exception as exc:
+        xbmc.log('[NuvioHub] tmdbh player auto-install failed: %s' % exc, xbmc.LOGWARNING)
+
+    _publish_core_props('')
+    _publish_badge_props()
+    from resources.lib import art_cache
+    art_cache.start()
+
+    # v3.9.24: launch the local poster proxy. Inspired by Plexio's
+    # /proxy/{token} pattern, this gives us a single-URL handle to every
+    # poster image that transparently falls back from decorated → clean
+    # if the upstream decoration service is slow/dead. Critically it
+    # works on skins that don't honour Kodi's poster→thumb fallback
+    # chain (Estuary, Confluence, much of the community-skin field).
+    _lightweight = (_setting('lightweight_mode', 'true') or 'true').strip().lower() in ('true', '1', 'yes', 'on')
+    if not _lightweight:
+        try:
+            from resources.lib import poster_proxy as _poster_proxy
+            _poster_proxy.start()
+        except Exception as exc:
+            xbmc.log('[NuvioHub] poster-proxy not started: %s' % exc, xbmc.LOGWARNING)
+    else:
+        xbmc.log('[NuvioHub] Lightweight Mode — poster proxy skipped', xbmc.LOGINFO)
+
+    # v3.9.27: launch the library-index sync scheduler. Runs the first
+    # sync 30s after Kodi boot, then every `index_sync_interval_hours`.
+    # Activated only when the user has enabled hybrid/fast mode — in
+    # 'live' mode the sync still runs to keep the index warm in case
+    # the user toggles modes later, but we skip the first-boot sync to
+    # avoid wasting bandwidth on someone who isn't using the feature.
+    #
+    # v3.9.37: Lightweight Mode disables the index scheduler entirely.
+    # The user opted out of aggregated buckets, so there is nothing to
+    # index — running the scheduler would only waste CPU and bandwidth.
+    if _lightweight:
+        xbmc.log('[NuvioHub] Lightweight Mode enabled — index scheduler skipped', xbmc.LOGINFO)
+    else:
+        try:
+            from resources.lib import index_render as _idx_render
+            from resources.lib.dexhub import sync_engine as _sync_eng
+            _idx_db = _idx_render.get_db()
+
+            def _pinned_provider():
+                # Late-import plugin (heavy module) only when actually needed.
+                try:
+                    from resources.lib import plugin as _plg
+                    return _plg._hub_catalog_entries(bucket=None) or []
+                except Exception as exc:
+                    xbmc.log('[NuvioHub] sync pinned-provider failed: %s' % exc,
+                             xbmc.LOGWARNING)
+                    return []
+
+            # v3.9.29: toast progress so the user knows the initial 5-15min
+            # library sync is actually doing something. Throttled — only
+            # fires on start/done and every 5 catalogs in between, never
+            # spamming. Stays silent during scheduled background syncs (the
+            # 4-hour periodic run) so it doesn't interrupt watching.
+            _sync_progress_state = {'last_toast_at': 0, 'total': 0,
+                                     'started_at': 0}
+
+            def _on_sync_progress(stage, info):
+                try:
+                    import xbmcgui as _xg
+                    now = time.time()
+                    if stage == 'start':
+                        _sync_progress_state['total'] = info.get('total') or 0
+                        _sync_progress_state['started_at'] = now
+                        _sync_progress_state['last_toast_at'] = now
+                        if (info.get('total') or 0) > 0:
+                            _xg.Dialog().notification(
+                                'Nuvio Hub',
+                                tr('بدء مزامنة المكتبة (%d كتالوج)') % info['total'],
+                                _xg.NOTIFICATION_INFO, 2500, sound=False,
+                            )
+                    elif stage == 'catalog':
+                        idx = info.get('index') or 0
+                        total = info.get('total') or 0
+                        # Throttle: every 5 catalogs, OR at least 4s since
+                        # last toast — whichever is less frequent.
+                        if total > 0 and (idx % 5 == 0 or idx == total) \
+                           and (now - _sync_progress_state['last_toast_at']) >= 4:
+                            _sync_progress_state['last_toast_at'] = now
+                            _xg.Dialog().notification(
+                                'Nuvio Hub',
+                                '%d / %d  •  %s' % (
+                                    idx, total,
+                                    info.get('catalog') or info.get('bucket') or ''),
+                                _xg.NOTIFICATION_INFO, 2000, sound=False,
+                            )
+                    elif stage == 'done':
+                        elapsed = info.get('duration') or 0
+                        ok = info.get('ok') or 0
+                        if (info.get('total') or 0) > 0:
+                            _xg.Dialog().notification(
+                                'Nuvio Hub',
+                                tr('انتهت المزامنة: %d ناجح في %.0f ث') % (ok, elapsed),
+                                _xg.NOTIFICATION_INFO, 3500, sound=False,
+                            )
+                except Exception as exc:
+                    xbmc.log('[NuvioHub] sync progress toast failed: %s' % exc,
+                             xbmc.LOGDEBUG)
+
+            _idx_engine = _sync_eng.SyncEngine(
+                _idx_db,
+                pinned_entries_provider=_pinned_provider,
+                on_progress=_on_sync_progress,
+            )
+
+            def _interval_hours():
+                try:
+                    raw = _setting('index_sync_interval_hours', '4') or '4'
+                    return int(float(raw))
+                except Exception:
+                    return 4
+
+            import threading as _thr
+            _thr.Thread(
+                target=_sync_eng.run_scheduler,
+                args=(_idx_engine, xbmc.Monitor()),
+                kwargs={'get_interval_hours': _interval_hours},
+                name='NuvioHub-index-scheduler', daemon=True,
+            ).start()
+            xbmc.log('[NuvioHub] library index scheduler started', xbmc.LOGINFO)
+        except Exception as exc:
+            xbmc.log('[NuvioHub] index scheduler not started: %s' % exc, xbmc.LOGWARNING)
+
+    # Playback monitor is the largest service dependency; load it only after
+    # lightweight startup work and optional schedulers are ready.
+    from resources.lib.companion import CompanionPlayer, ProgressLoop
+    player = CompanionPlayer()
+    from resources.lib.seek_profile import restore as restore_seek
+    try:restore_seek()
+    except Exception:xbmc.log('[Nuvio] Kodi seek migration will retry at next launch',xbmc.LOGWARNING)
+
+    class _NuvioHubMonitor(xbmc.Monitor):
+        def onNotification(self,sender,method,data):
+            if sender=='nuvio' and 'artcache.' in method:art_cache.notify(method)
+        def onSettingsChanged(self):
+            from resources.lib import settings_cache
+            settings_cache.invalidate()
+
+    monitor = _NuvioHubMonitor()
+
+    SYNC_DIRTY_PROP = 'dexhub.sync_dirty'
+
+    def _cloud_sync_loop(mon):
+        """Native Nuvio/Stremio sync.
+
+        v5.1 adaptive mode: local writes are debounced, cloud pulls use a
+        minimum 30-minute cadence, and all network/database work is deferred
+        while playback or an interactive source/search screen is active.
+        Pulled account rows use a bulk transaction and do not raise the dirty
+        flag, eliminating the old sync feedback loop.
+        """
+        if mon.waitForAbort(30):
+            return
+        from resources.lib.dexhub import nuvio_stremio_sync as sync
+        win = _win()
+        last_pull = time.time()  # never force a full pull during Kodi boot
+        dirty_since = None
+        next_retry = 0.0
+
+        while not mon.abortRequested():
+            try:
+                interval = int(float(_setting('cloud_sync_interval_min', '30') or '30'))
+            except Exception:
+                interval = 30
+
+            if interval <= 0:                     # user switched sync off
+                if mon.waitForAbort(60):
+                    break
+                continue
+
+            dirty = False
+            try:
+                dirty = bool(win and win.getProperty(SYNC_DIRTY_PROP))
+            except Exception:
+                dirty = False
+            now = time.time()
+            if dirty and dirty_since is None:
+                dirty_since = now
+            elif not dirty:
+                dirty_since = None
+            # v5.4.1: continuous mode is honoured again. 5.4.0 kept the
+            # sturdier loop (cycle lock, retry backoff, no sync while the
+            # user is interacting) but hardcoded a 45s debounce and a 30
+            # minute floor on pulls, so the cloud_sync_continuous setting
+            # did nothing at all. Continuous debounces 8s and pulls on the
+            # user's interval; periodic keeps the conservative numbers.
+            continuous = (_setting('cloud_sync_continuous', 'true') or 'true'
+                          ).strip().lower() in ('true', '1', 'yes', 'on')
+            debounce = 8.0 if continuous else 45.0
+            pull_floor = max(120, interval * 60) if continuous else max(1800, interval * 60)
+            dirty_due = bool(dirty and dirty_since is not None and
+                             (now - dirty_since) >= debounce)
+            pull_due = (now - last_pull) >= pull_floor
+
+            if ((dirty_due or pull_due) and now >= next_retry and
+                    not _interactive_busy() and sync.enabled_targets()):
+                acquired = _SYNC_CYCLE_LOCK.acquire(False)
+                if not acquired:
+                    if mon.waitForAbort(30):
+                        break
+                    continue
+                try:
+                    if win:
+                        win.clearProperty(SYNC_DIRTY_PROP)
+                except Exception:
+                    pass
+                try:
+                    # Each service resolves its own direction and sections.
+                    result = sync.run_sync()
+                    if result and result.get('ok'):
+                        last_pull = time.time()
+                        dirty_since = None
+                        next_retry = 0.0
+                    else:
+                        next_retry = time.time() + 300.0
+                        if dirty and win:
+                            win.setProperty(SYNC_DIRTY_PROP, '1')
+                except Exception as exc:
+                    next_retry = time.time() + 300.0
+                    if dirty and win:
+                        try:
+                            win.setProperty(SYNC_DIRTY_PROP, '1')
+                        except Exception:
+                            pass
+                    xbmc.log('[NuvioHub] cloud sync failed: %s' % exc, xbmc.LOGDEBUG)
+                finally:
+                    _SYNC_CYCLE_LOCK.release()
+
+            # Continuous mode has to wake often enough for its 8s debounce
+            # to be real; periodic keeps the cheap 30s tick.
+            if mon.waitForAbort(5 if continuous else 30):
+                break
+
+
+    def _bytecode_warm_job():
+        # v5.4.7: pre-compile the addon tree to __pycache__ so the user's
+        # first click after install/update pays warm-import cost only
+        # (~0.5s ARM32) instead of full byte-compilation (~4-6s ARM32).
+        # 20s boot delay keeps us out of Kodi's own startup CPU window;
+        # after the first pass this is a stat-only sweep in milliseconds.
+        try:
+            if monitor.waitForAbort(20):
+                return
+            from bytecode_warm import warm
+            addon_root = os.path.dirname(os.path.abspath(__file__))
+            checked, compiled = warm(addon_root, monitor=monitor)
+            if compiled:
+                xbmc.log('[NuvioHub] bytecode warm: compiled %d/%d files'
+                         % (compiled, checked), xbmc.LOGDEBUG)
+        except Exception as exc:
+            xbmc.log('[NuvioHub] bytecode warm skipped: %s' % exc, xbmc.LOGDEBUG)
+
+    try:
+        import threading as _thr
+        _thr.Thread(target=_background_sync_loop, args=(monitor,), name='NuvioHubCoreLoop', daemon=True).start()
+        _thr.Thread(target=_cloud_sync_loop, args=(monitor,), name='NuvioHubCloudLoop', daemon=True).start()
+        _thr.Thread(target=_bytecode_warm_job, name='NuvioHubBytecodeWarm', daemon=True).start()
+        from resources.lib.skip_service import run as _skip_run
+        _thr.Thread(target=_skip_run, args=(player, monitor), name='NuvioHubSkip', daemon=True).start()
+    except Exception as exc:
+        xbmc.log('[NuvioHub] could not spawn core sync thread: %s' % exc, xbmc.LOGWARNING)
+    try:
+        ProgressLoop(player).run()
+    finally:
+        art_cache.stop()
+        # Clean shutdown of the poster proxy thread when Kodi tears the
+        # service down. Errors here are non-fatal — daemon threads die
+        # with the process anyway, but explicit cleanup is hygienic.
+        try:
+            from resources.lib import poster_proxy as _poster_proxy
+            _poster_proxy.stop()
+        except Exception:
+            pass

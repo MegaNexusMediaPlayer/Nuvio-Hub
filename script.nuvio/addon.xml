@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='utf-8'?>
+<addon id="script.nuvio" name="Nuvio" version="6.0.7" provider-name="Nuvio community build">
+  <requires>
+    <import addon="xbmc.python" version="3.0.0" />
+    <import addon="plugin.video.nuviohub" version="6.0.7" />
+  </requires>
+  <extension point="xbmc.python.script" library="default.py">
+    <provides>executable</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <language>en</language>
+    <license>MIT; GPL-3.0 artwork</license>
+    <summary lang="en_GB">Nuvio home, collections and simple settings.</summary>
+    <description lang="en_GB">Independent interface using Nuvio Hub for catalogs, account state and playback. AIOMetadata supplies details; AIOStreams supplies ordered streams. Bundled local updates only.</description>
+    <assets>
+      <icon>resources/media/nuvio_mark.png</icon>
+      <fanart>resources/media/nuvio_banner.png</fanart>
+    </assets>
+  </extension>
+</addon>

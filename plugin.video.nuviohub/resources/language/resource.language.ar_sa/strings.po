@@ -1,0 +1,1357 @@
+# NuvioHub Arabic (ar_SA) translation
+# Project-Id-Version: plugin.video.nuviohub
+msgid ""
+msgstr ""
+"Project-Id-Version: plugin.video.nuviohub\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-09\n"
+"PO-Revision-Date: 2026-05-09\n"
+"Language-Team: Arabic\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ar_SA\n"
+
+# ── Original strings ──────────────────────────────────────────────────
+msgctxt "#30000"
+msgid "Playback mode"
+msgstr "وضع التشغيل"
+
+msgctxt "#30001"
+msgid "Choose source"
+msgstr "اختيار المصدر"
+
+# ── Categories ────────────────────────────────────────────────────────
+msgctxt "#30100"
+msgid "General"
+msgstr "عام"
+
+msgctxt "#30101"
+msgid "Metadata"
+msgstr "البيانات الوصفية"
+
+msgctxt "#30102"
+msgid "Sources"
+msgstr "المصادر"
+
+msgctxt "#30103"
+msgid "Subtitles"
+msgstr "الترجمات"
+
+msgctxt "#30104"
+msgid "Plex / Emby"
+msgstr "Plex / Emby"
+
+msgctxt "#30105"
+msgid "Trakt"
+msgstr "Trakt"
+
+msgctxt "#30106"
+msgid "TMDb Helper"
+msgstr "TMDb Helper"
+
+msgctxt "#30107"
+msgid "Performance"
+msgstr "الأداء"
+
+# ── General settings ──────────────────────────────────────────────────
+msgctxt "#30110"
+msgid "Language / اللغة"
+msgstr "اللغة / Language"
+
+msgctxt "#30111"
+msgid "Request timeout (seconds)"
+msgstr "مهلة الطلب (بالثواني)"
+
+msgctxt "#30112"
+msgid "Use direct player (recommended)"
+msgstr "استخدام المشغّل المباشر (مستحسن)"
+
+msgctxt "#30113"
+msgid "Show playback loading screen"
+msgstr "إظهار شاشة تحميل التشغيل"
+
+msgctxt "#30114"
+msgid "Home screen"
+msgstr "الشاشة الرئيسية"
+
+msgctxt "#30115"
+msgid "Show Next Up on the home screen"
+msgstr "إظهار \"التالي\" في الشاشة الرئيسية"
+
+msgctxt "#30116"
+msgid "Show Favorites on the home screen"
+msgstr "إظهار المفضلة في الشاشة الرئيسية"
+
+msgctxt "#30117"
+msgid "Show catalog facets as folders (Genre / Year)"
+msgstr "إظهار تصنيفات الكتالوج كمجلدات (النوع / السنة)"
+
+msgctxt "#30118"
+msgid "Hide empty collection entries"
+msgstr "إخفاء عناصر الكوليكشن الفارغة"
+
+msgctxt "#30119"
+msgid "DexWorld Pro: force folder view for internal catalogs"
+msgstr "DexWorld Pro: فرض عرض المجلدات للكتالوجات الداخلية"
+
+msgctxt "#30120"
+msgid "Add custom home folder..."
+msgstr "إضافة مجلد رئيسي مخصص..."
+
+msgctxt "#30121"
+msgid "Manage home folders..."
+msgstr "إدارة مجلدات الشاشة الرئيسية..."
+
+msgctxt "#30122"
+msgid "Click behavior"
+msgstr "سلوك الضغط"
+
+msgctxt "#30123"
+msgid "When pressing an item in the catalog"
+msgstr "عند الضغط على عنصر في الكتالوج"
+
+msgctxt "#30124"
+msgid "When pressing inside Nuvio Hub"
+msgstr "عند الضغط داخل Nuvio Hub"
+
+# ── Metadata settings ─────────────────────────────────────────────────
+msgctxt "#30130"
+msgid "Default metadata source"
+msgstr "مصدر البيانات الوصفية الافتراضي"
+
+msgctxt "#30131"
+msgid "Manage metadata sources per addon..."
+msgstr "إدارة مصادر البيانات الوصفية لكل إضافة..."
+
+msgctxt "#30132"
+msgid "Full metadata enrichment for listings (slower)"
+msgstr "إثراء كامل للبيانات الوصفية في القوائم (أبطأ)"
+
+msgctxt "#30133"
+msgid "Artwork enrichment (Fanart.tv)"
+msgstr "إثراء الصور والفنون (Fanart.tv)"
+
+msgctxt "#30134"
+msgid "Enrich artwork from Fanart.tv (clearart, banner, discart, multi-language clearlogo)"
+msgstr "إثراء الصور من Fanart.tv (شعار، بانر، صورة قرص، شعار متعدد اللغات)"
+
+msgctxt "#30135"
+msgid "Fanart.tv personal API key (optional — built-in key used if blank)"
+msgstr "مفتاح Fanart.tv الشخصي (اختياري — يُستخدم المفتاح المدمج إذا كان فارغاً)"
+
+msgctxt "#30136"
+msgid "API keys (used by Discover, People, Calendar)"
+msgstr "مفاتيح الـ API (تُستخدم في Discover والأشخاص والتقويم)"
+
+msgctxt "#30137"
+msgid "TMDb API key (required for People search and TMDb-direct lookups)"
+msgstr "مفتاح TMDb (مطلوب للبحث عن الأشخاص والوصول المباشر لـ TMDb)"
+
+msgctxt "#30138"
+msgid "MDBList API Key (optional, for MDBList lists)"
+msgstr "مفتاح MDBList (اختياري، لقوائم MDBList)"
+
+msgctxt "#30139"
+msgid "DexWorld API key (for AI subtitles + quality feedback)"
+msgstr "مفتاح DexWorld (للترجمات بالذكاء الاصطناعي + تقييم الجودة)"
+
+msgctxt "#30140"
+msgid "Clear metadata cache now"
+msgstr "مسح ذاكرة البيانات الوصفية الآن"
+
+# ── Sources settings ──────────────────────────────────────────────────
+msgctxt "#30150"
+msgid "Minimum source quality"
+msgstr "أدنى جودة للمصدر"
+
+msgctxt "#30151"
+msgid "Hide CAM / TS / TELESYNC / SCREENER sources"
+msgstr "إخفاء مصادر CAM / TS / TELESYNC / SCREENER"
+
+msgctxt "#30152"
+msgid "Prioritize RD / AD / Premiumize / TorBox sources"
+msgstr "إعطاء الأولوية لمصادر RD / AD / Premiumize / TorBox"
+
+msgctxt "#30153"
+msgid "Prefer HDR10+ / Dolby Vision"
+msgstr "تفضيل HDR10+ / Dolby Vision"
+
+msgctxt "#30154"
+msgid "Prefer Atmos / DTS-X / TrueHD"
+msgstr "تفضيل Atmos / DTS-X / TrueHD"
+
+msgctxt "#30155"
+msgid "Remember the last selected source for each movie/episode"
+msgstr "تذكّر آخر مصدر مختار لكل فيلم/حلقة"
+
+msgctxt "#30156"
+msgid "Diagnose sources (test response time)..."
+msgstr "تشخيص المصادر (اختبار سرعة الاستجابة)..."
+
+msgctxt "#30157"
+msgid "Posters &amp; overlays"
+msgstr "البوسترات والـ overlays"
+
+msgctxt "#30158"
+msgid "Decorated poster handling (RPDB, BetterPosters, TOP Posters)"
+msgstr "معالجة البوسترات المزيّنة (RPDB, BetterPosters, TOP Posters)"
+
+# ── Subtitles ─────────────────────────────────────────────────────────
+msgctxt "#30160"
+msgid "Enable Stremio subtitle broker"
+msgstr "تفعيل وسيط ترجمات Stremio"
+
+msgctxt "#30161"
+msgid "When choosing a source"
+msgstr "عند اختيار مصدر"
+
+msgctxt "#30162"
+msgid "Subtitle search window while choosing a source (seconds)"
+msgstr "مدة البحث عن الترجمة أثناء اختيار المصدر (بالثواني)"
+
+msgctxt "#30163"
+msgid "Preferred subtitle languages (comma-separated, e.g. ar,en)"
+msgstr "لغات الترجمة المفضلة (مفصولة بفواصل، مثل ar,en)"
+
+msgctxt "#30164"
+msgid "Auto-play the next episode for TV shows"
+msgstr "التشغيل التلقائي للحلقة التالية في المسلسلات"
+
+msgctxt "#30165"
+msgid "Next episode window duration (seconds)"
+msgstr "مدة نافذة الحلقة التالية (بالثواني)"
+
+# ── Plex / Emby ───────────────────────────────────────────────────────
+msgctxt "#30170"
+msgid "Enable progress sync (Companion)"
+msgstr "تفعيل مزامنة التقدّم (Companion)"
+
+msgctxt "#30171"
+msgid "Progress sync interval (seconds)"
+msgstr "فترة مزامنة التقدّم (بالثواني)"
+
+# ── Trakt ─────────────────────────────────────────────────────────────
+msgctxt "#30180"
+msgid "Enable Trakt integration"
+msgstr "تفعيل التكامل مع Trakt"
+
+msgctxt "#30181"
+msgid "Link via PIN"
+msgstr "الربط عبر PIN"
+
+msgctxt "#30182"
+msgid "Connect Trakt via PIN"
+msgstr "ربط Trakt عبر PIN"
+
+msgctxt "#30183"
+msgid "Disconnect Trakt"
+msgstr "قطع الاتصال بـ Trakt"
+
+msgctxt "#30184"
+msgid "Import Trakt progress now"
+msgstr "استيراد تقدّم Trakt الآن"
+
+msgctxt "#30185"
+msgid "Sync"
+msgstr "المزامنة"
+
+msgctxt "#30186"
+msgid "Send playback activity to Trakt (scrobble)"
+msgstr "إرسال نشاط التشغيل إلى Trakt (scrobble)"
+
+msgctxt "#30187"
+msgid "Import Trakt progress into Continue Watching"
+msgstr "استيراد تقدّم Trakt إلى \"متابعة المشاهدة\""
+
+msgctxt "#30188"
+msgid "Fetch posters for imported movies/shows"
+msgstr "جلب البوسترات للأفلام والمسلسلات المستوردة"
+
+msgctxt "#30189"
+msgid "Sync Trakt watchlist into Favorites"
+msgstr "مزامنة قائمة Trakt إلى المفضلة"
+
+msgctxt "#30190"
+msgid "Background Trakt sync interval (minutes)"
+msgstr "فترة مزامنة Trakt في الخلفية (بالدقائق)"
+
+msgctxt "#30191"
+msgid "Advanced"
+msgstr "متقدّم"
+
+# ── TMDb Helper ───────────────────────────────────────────────────────
+msgctxt "#30200"
+msgid "Register Nuvio Hub as a TMDb Helper player"
+msgstr "تسجيل Nuvio Hub كمشغّل لـ TMDb Helper"
+
+msgctxt "#30201"
+msgid "Remove Nuvio Hub from TMDb Helper players"
+msgstr "إزالة Nuvio Hub من مشغّلات TMDb Helper"
+
+msgctxt "#30202"
+msgid "Auto-play the first source when called from TMDb Helper"
+msgstr "تشغيل أول مصدر تلقائياً عند الاستدعاء من TMDb Helper"
+
+# ── Performance ───────────────────────────────────────────────────────
+msgctxt "#30210"
+msgid "Parallel request workers"
+msgstr "عدد العمّال المتوازين للطلبات"
+
+msgctxt "#30211"
+msgid "Item limit per page in large sections"
+msgstr "الحد الأقصى للعناصر في الصفحة (للأقسام الكبيرة)"
+
+msgctxt "#30212"
+msgid "Use gzip compression (faster)"
+msgstr "استخدام ضغط gzip (أسرع)"
+
+msgctxt "#30213"
+msgid "HTTP cache"
+msgstr "ذاكرة HTTP المؤقتة"
+
+msgctxt "#30214"
+msgid "Catalog cache TTL (seconds)"
+msgstr "مدة بقاء كاش الكتالوج (بالثواني)"
+
+msgctxt "#30215"
+msgid "Metadata HTTP cache TTL (seconds)"
+msgstr "مدة بقاء كاش HTTP للبيانات الوصفية (بالثواني)"
+
+msgctxt "#30216"
+msgid "Clear HTTP cache now"
+msgstr "مسح كاش HTTP الآن"
+
+# ── Home folder titles ────────────────────────────────────────────────
+msgctxt "#30300"
+msgid "Movies"
+msgstr "أفلام"
+
+msgctxt "#30301"
+msgid "Series"
+msgstr "مسلسلات"
+
+msgctxt "#30302"
+msgid "Anime"
+msgstr "أنمي"
+
+msgctxt "#30303"
+msgid "Arabic"
+msgstr "عربي"
+
+msgctxt "#30304"
+msgid "Turkish"
+msgstr "تركي"
+
+msgctxt "#30305"
+msgid "Korean"
+msgstr "كوري"
+
+msgctxt "#30306"
+msgid "Live TV"
+msgstr "بث مباشر"
+
+msgctxt "#30307"
+msgid "Other catalogs"
+msgstr "كتالوجات أخرى"
+
+msgctxt "#30308"
+msgid "Continue watching"
+msgstr "متابعة المشاهدة"
+
+msgctxt "#30309"
+msgid "Search"
+msgstr "بحث"
+
+msgctxt "#30310"
+msgid "Sources"
+msgstr "المصادر"
+
+msgctxt "#30311"
+msgid "Collection"
+msgstr "كوليكشن"
+
+msgctxt "#30312"
+msgid "Watchlist"
+msgstr "قائمتي"
+
+msgctxt "#30313"
+msgid "Favorites"
+msgstr "المفضلة"
+
+msgctxt "#30314"
+msgid "Next Up"
+msgstr "التالي"
+
+msgctxt "#30315"
+msgid "Discover"
+msgstr "اكتشاف"
+
+msgctxt "#30316"
+msgid "People"
+msgstr "الأشخاص"
+
+msgctxt "#30317"
+msgid "Calendar"
+msgstr "التقويم"
+
+msgctxt "#30318"
+msgid "4K"
+msgstr "4K"
+
+msgctxt "#30319"
+msgid "Kids"
+msgstr "أطفال"
+
+msgctxt "#30320"
+msgid "Documentary"
+msgstr "وثائقيات"
+
+# ── Dialog / status common strings ────────────────────────────────────
+msgctxt "#30400"
+msgid "CONNECTING"
+msgstr "جاري الاتصال"
+
+msgctxt "#30401"
+msgid "Press Back to cancel"
+msgstr "اضغط رجوع للإلغاء"
+
+msgctxt "#30402"
+msgid "Loading..."
+msgstr "جاري التحميل..."
+
+msgctxt "#30403"
+msgid "Searching sources..."
+msgstr "البحث في المصادر..."
+
+msgctxt "#30404"
+msgid "No sources found"
+msgstr "لم يتم العثور على مصادر"
+
+msgctxt "#30405"
+msgid "Cancel"
+msgstr "إلغاء"
+
+msgctxt "#30406"
+msgid "OK"
+msgstr "موافق"
+
+msgctxt "#30407"
+msgid "Yes"
+msgstr "نعم"
+
+msgctxt "#30408"
+msgid "No"
+msgstr "لا"
+
+# ── Sub folder management ─────────────────────────────────────────────
+msgctxt "#30420"
+msgid "Add a sub folder inside this folder"
+msgstr "إضافة مجلد فرعي داخل هذا المجلد"
+
+msgctxt "#30421"
+msgid "Manage sub folders for this folder"
+msgstr "إدارة المجلدات الفرعية لهذا المجلد"
+
+msgctxt "#30422"
+msgid "Add a new home folder"
+msgstr "إضافة مجلد جديد في الشاشة الرئيسية"
+
+msgctxt "#30423"
+msgid "Manage home folders"
+msgstr "إدارة مجلدات الشاشة الرئيسية"
+
+msgctxt "#30424"
+msgid "Remove this folder from home"
+msgstr "حذف هذا المجلد من الشاشة الرئيسية"
+
+# ── Library Index (v3.9.27) ────────────────────────────────────────────
+msgctxt "#30220"
+msgid "Library"
+msgstr "المكتبة"
+
+msgctxt "#30221"
+msgid "Local index"
+msgstr "الفهرس المحلي"
+
+msgctxt "#30222"
+msgid "Performance mode"
+msgstr "وضع الأداء"
+
+msgctxt "#30223"
+msgid "Background sync interval (hours)"
+msgstr "فترة المزامنة التلقائية (ساعات)"
+
+msgctxt "#30224"
+msgid "Refresh library now"
+msgstr "تحديث المكتبة الآن"
+
+msgctxt "#30225"
+msgid "View library status"
+msgstr "عرض حالة المكتبة"
+
+msgctxt "#30226"
+msgid "Clear library"
+msgstr "مسح المكتبة"
+
+# ── Community bilingual settings (v3.9.81) ───────────────────────
+
+msgctxt "#30227"
+msgid "Lightweight / community mode"
+msgstr "الوضع الخفيف / وضع المجتمع"
+
+msgctxt "#30228"
+msgid "Enable lightweight mode (hide aggregated home folders, disable index sync, speed up startup)"
+msgstr "تفعيل الوضع الخفيف (إخفاء مجلدات الهوم المجمعة، إيقاف مزامنة الفهرس، وتسريع البدء)"
+
+msgctxt "#30229"
+msgid "Disable the pre-playback loading window to reduce crashes"
+msgstr "تعطيل نافذة التحميل قبل التشغيل لتقليل الكراشات"
+
+msgctxt "#30230"
+msgid "Source playback routing"
+msgstr "طريقة تشغيل المصدر"
+
+msgctxt "#30231"
+msgid "Source priority order (optional text override)"
+msgstr "ترتيب أولوية المصادر (تجاوز نصّي اختياري)"
+
+msgctxt "#30232"
+msgid "Trakt Client ID (bundled)"
+msgstr "Trakt Client ID (مدمج)"
+
+msgctxt "#30233"
+msgid "Trakt Client Secret (bundled)"
+msgstr "Trakt Client Secret (مدمج)"
+
+msgctxt "#30234"
+msgid "Fetch all sources in parallel before showing results"
+msgstr "جلب كل المصادر بالتوازي قبل عرض النتائج"
+
+msgctxt "#30235"
+msgid "Open results quickly, then update remaining sources in the background"
+msgstr "فتح النتائج بسرعة ثم تحديث باقي المصادر بالخلفية"
+
+msgctxt "#30250"
+msgid "Arabic"
+msgstr "العربية"
+
+msgctxt "#30251"
+msgid "English"
+msgstr "English"
+
+msgctxt "#30252"
+msgid "Nuvio Hub"
+msgstr "Nuvio Hub"
+
+msgctxt "#30253"
+msgid "TMDb Helper"
+msgstr "TMDb Helper"
+
+msgctxt "#30254"
+msgid "Ask every time"
+msgstr "السؤال كل مرة"
+
+msgctxt "#30255"
+msgid "Choose from sources"
+msgstr "الاختيار من المصادر"
+
+msgctxt "#30256"
+msgid "Best quality automatically"
+msgstr "أفضل جودة تلقائيًا"
+
+msgctxt "#30257"
+msgid "Same source"
+msgstr "نفس المصدر"
+
+msgctxt "#30258"
+msgid "NuvioHub picker"
+msgstr "منتقي NuvioHub"
+
+msgctxt "#30259"
+msgid "Auto (smart)"
+msgstr "تلقائي (ذكي)"
+
+msgctxt "#30260"
+msgid "TMDb Helper (recommended)"
+msgstr "TMDb Helper (مستحسن)"
+
+msgctxt "#30261"
+msgid "Native (addon)"
+msgstr "الأصلي (الإضافة)"
+
+msgctxt "#30262"
+msgid "No filter"
+msgstr "بدون فلترة"
+
+msgctxt "#30263"
+msgid "480p+"
+msgstr "480p فأعلى"
+
+msgctxt "#30264"
+msgid "720p+"
+msgstr "720p فأعلى"
+
+msgctxt "#30265"
+msgid "1080p+"
+msgstr "1080p فأعلى"
+
+msgctxt "#30266"
+msgid "4K only"
+msgstr "4K فقط"
+
+msgctxt "#30267"
+msgid "Smart fallback (recommended)"
+msgstr "بديل ذكي (مستحسن)"
+
+msgctxt "#30268"
+msgid "Always clean (no badges)"
+msgstr "نظيف دائمًا (بدون شارات)"
+
+msgctxt "#30269"
+msgid "Keep decorated"
+msgstr "الحفاظ على البوستر المزيّن"
+
+msgctxt "#30270"
+msgid "Play only"
+msgstr "تشغيل فقط"
+
+msgctxt "#30271"
+msgid "Play with subtitles"
+msgstr "تشغيل مع الترجمات"
+
+msgctxt "#30272"
+msgid "Live (current)"
+msgstr "مباشر (الحالي)"
+
+msgctxt "#30273"
+msgid "Hybrid (recommended)"
+msgstr "هجين (مستحسن)"
+
+msgctxt "#30274"
+msgid "Fast Index"
+msgstr "فهرس سريع"
+
+# v3.9.88 — settings reorganization (new string IDs)
+
+msgctxt "#30280"
+msgid "Clean catalog view (hide inline + Add; use long-press)"
+msgstr "عرض كتالوج نظيف (إخفاء زر الإضافة المباشر؛ استخدم الضغط المطوّل)"
+
+msgctxt "#30281"
+msgid "Hide pagination \"More\" entries"
+msgstr "إخفاء عناصر \"المزيد\" في التصفح"
+
+msgctxt "#30282"
+msgid "Playback"
+msgstr "التشغيل"
+
+msgctxt "#30283"
+msgid "Next episode"
+msgstr "الحلقة التالية"
+
+msgctxt "#30284"
+msgid "Advanced playback"
+msgstr "تشغيل متقدّم"
+
+msgctxt "#30285"
+msgid "Quality filtering"
+msgstr "فلترة الجودة"
+
+msgctxt "#30286"
+msgid "Source preferences"
+msgstr "تفضيلات المصادر"
+
+msgctxt "#30287"
+msgid "Source fetching"
+msgstr "جلب المصادر"
+
+msgctxt "#30288"
+msgid "Metadata & posters"
+msgstr "البيانات والصور"
+
+msgctxt "#30289"
+msgid "Metadata source"
+msgstr "مصدر البيانات الوصفية"
+
+msgctxt "#30290"
+msgid "Accounts & API keys"
+msgstr "حسابات المزامنة"
+
+msgctxt "#30291"
+msgid "Performance & library"
+msgstr "الأداء والمكتبة"
+
+msgctxt "#30292"
+msgid "Speed & limits"
+msgstr "السرعة والحدود"
+
+msgctxt "#30293"
+msgid "Interface cleanup"
+msgstr "تنظيف الواجهة"
+
+msgctxt "#30294"
+msgid "Run the setup wizard"
+msgstr "تشغيل معالج الإعداد"
+
+# v3.9.90 — Quality Profile + Silent error diagnostics
+
+msgctxt "#30321"
+msgid "Quality profile"
+msgstr "ملف الجودة"
+
+msgctxt "#30322"
+msgid "Profile"
+msgstr "الملف"
+
+msgctxt "#30323"
+msgid "Balanced (recommended)"
+msgstr "متوازن (مستحسن)"
+
+msgctxt "#30324"
+msgid "Best"
+msgstr "أعلى جودة"
+
+msgctxt "#30325"
+msgid "Data saver"
+msgstr "موفّر بيانات"
+
+msgctxt "#30326"
+msgid "Custom"
+msgstr "مخصّص"
+
+msgctxt "#30327"
+msgid "Diagnostics"
+msgstr "التشخيص"
+
+msgctxt "#30328"
+msgid "Verbose logging (show silent errors in kodi.log)"
+msgstr "تسجيل مفصّل (إظهار الأخطاء الصامتة في kodi.log)"
+
+msgctxt "#30329"
+msgid "Show last silent error"
+msgstr "عرض آخر خطأ صامت"
+
+# v3.9.91 — show_collection_home toggle
+
+msgctxt "#30330"
+msgid "Show Collection on home"
+msgstr "إظهار Collection في الهوم"
+
+msgctxt "#30425"
+msgid "Show all sources (bypass every filter)"
+msgstr "عرض كل المصادر (تجاوز كل الفلاتر)"
+
+msgctxt "#30426"
+msgid "Pre-cache next episode sources (instant binge)"
+msgstr "تحميل مصادر الحلقة التالية مسبقاً (binge فوري)"
+
+msgctxt "#30427"
+msgid "DexWorld server URL"
+msgstr "عنوان سيرفر DexWorld"
+
+msgctxt "#30428"
+msgid "Link DexWorld (subtitles + AI + IPTV)"
+msgstr "ربط DexWorld (الترجمات + الذكاء الاصطناعي + IPTV)"
+
+msgctxt "#30429"
+msgid "Unlink DexWorld"
+msgstr "إلغاء ربط DexWorld"
+
+# v3.9.138 — Elite badges JSON setting
+
+msgctxt "#30430"
+msgid "Source result badges"
+msgstr "بادجات نتائج المصادر"
+
+msgctxt "#30431"
+msgid "Elite badges JSON URL"
+msgstr "رابط JSON للبادجات"
+
+msgctxt "#30432"
+msgid "Show source picker for TMDb Helper playback"
+msgstr "إظهار قائمة المصادر عند التشغيل من TMDb Helper"
+
+msgctxt "#30433"
+msgid "Source switch shortcut"
+msgstr "اختصار تبديل المصدر"
+
+msgctxt "#30434"
+msgid "Configure source switch shortcut..."
+msgstr "تعيين اختصار تبديل المصدر..."
+
+msgctxt "#30435"
+msgid "Show current source switch shortcut"
+msgstr "عرض اختصار تبديل المصدر الحالي"
+
+msgctxt "#30436"
+msgid "Remove source switch shortcut"
+msgstr "إزالة اختصار تبديل المصدر"
+
+msgctxt "#30437"
+msgid "Link Plex with PIN"
+msgstr "ربط Plex برمز PIN"
+
+msgctxt "#30438"
+msgid "Unlink Plex"
+msgstr "فصل Plex"
+
+msgctxt "#30439"
+msgid "Show Plex copies in source results"
+msgstr "إظهار نسخ Plex في نتائج المصادر"
+
+msgctxt "#30440"
+msgid "Show Emby copies in source results"
+msgstr "إظهار نسخ Emby في نتائج المصادر"
+
+msgctxt "#30441"
+msgid "Link Emby"
+msgstr "ربط Emby"
+
+msgctxt "#30442"
+msgid "Unlink Emby"
+msgstr "فصل Emby"
+
+msgctxt "#30443"
+msgid "Kodi 22: minimal playback item (crash guard)"
+msgstr "Kodi 22: عنصر تشغيل مبسّط (حماية من الانهيار)"
+
+msgctxt "#30444"
+msgid "Search: max seconds to wait for sources"
+msgstr "البحث: أقصى مهلة انتظار للمصادر (ثانية)"
+
+msgctxt "#30445"
+msgid "Run search self-test (which sources answer?)"
+msgstr "فحص البحث (أي المصادر تجيب فعلاً؟)"
+
+msgctxt "#30446"
+msgid "Remove duplicate sources"
+msgstr "إزالة المصادر المكرّرة"
+
+msgctxt "#30447"
+msgid "Single best copy"
+msgstr "نسخة واحدة (الأفضل)"
+
+msgctxt "#30448"
+msgid "One per addon"
+msgstr "واحدة لكل إضافة"
+
+msgctxt "#30449"
+msgid "Off"
+msgstr "معطّل"
+
+msgctxt "#30450"
+msgid "Anime: map IDs so anime addons answer (Kitsu/MAL/AniList)"
+msgstr "الأنمي: ترجمة المعرّفات ليجيب مزوّدو الأنمي (Kitsu/MAL/AniList)"
+
+msgctxt "#30451"
+msgid "Plex/Emby: max seconds per server lookup"
+msgstr "بلكس/إمبي: أقصى مهلة بحث لكل سيرفر"
+
+msgctxt "#30452"
+msgid "Plex/Emby: use TMDb posters (lighter, shares TMDb Helper cache)"
+msgstr "بلكس/إمبي: استخدام بوسترات TMDb (أخف وتشارك كاش TMDb Helper)"
+
+
+
+
+
+msgctxt "#30760"
+msgid "Hide AV1 sources (device cannot decode AV1)"
+msgstr "إخفاء مصادر AV1 (الجهاز لا يدعم فك AV1)"
+
+msgctxt "#30761"
+msgid "Hide Dolby Vision sources (device cannot decode DV)"
+msgstr "إخفاء مصادر Dolby Vision (الجهاز لا يدعمها)"
+
+msgctxt "#30762"
+msgid "Hide HEVC/H.265 sources (device cannot decode HEVC)"
+msgstr "إخفاء مصادر HEVC/H.265 (الجهاز لا يدعمها)"
+
+msgctxt "#30763"
+msgid "Cloud sync (Nuvio / Stremio)"
+msgstr "المزامنة السحابية (Nuvio / Stremio)"
+
+msgctxt "#30764"
+msgid "Enable Nuvio sync"
+msgstr "تفعيل مزامنة Nuvio"
+
+msgctxt "#30765"
+msgid "Nuvio email"
+msgstr "بريد Nuvio"
+
+msgctxt "#30766"
+msgid "Nuvio password"
+msgstr "كلمة مرور Nuvio"
+
+msgctxt "#30767"
+msgid "Log in to Nuvio"
+msgstr "تسجيل الدخول إلى Nuvio"
+
+msgctxt "#30768"
+msgid "Log out of Nuvio"
+msgstr "تسجيل الخروج من Nuvio"
+
+msgctxt "#30769"
+msgid "Enable Stremio sync"
+msgstr "تفعيل مزامنة Stremio"
+
+msgctxt "#30770"
+msgid "Stremio email"
+msgstr "بريد Stremio"
+
+msgctxt "#30771"
+msgid "Stremio password"
+msgstr "كلمة مرور Stremio"
+
+msgctxt "#30772"
+msgid "Log in to Stremio"
+msgstr "تسجيل الدخول إلى Stremio"
+
+msgctxt "#30773"
+msgid "Log out of Stremio"
+msgstr "تسجيل الخروج من Stremio"
+
+msgctxt "#30774"
+msgid "Sync direction"
+msgstr "اتجاه المزامنة"
+
+msgctxt "#30775"
+msgid "Auto-sync every (min, 0=off)"
+msgstr "مزامنة تلقائية كل (دقيقة، 0=إيقاف)"
+
+msgctxt "#30776"
+msgid "Sync now"
+msgstr "زامن الآن"
+
+msgctxt "#30777"
+msgid "Log in to Nuvio with QR (phone keyboard)"
+msgstr "الربط بالباركود (كيبورد الجوال) — Nuvio"
+
+msgctxt "#30778"
+msgid "Log in to Stremio with QR (phone keyboard)"
+msgstr "الربط بالباركود (كيبورد الجوال) — Stremio"
+
+# v4.0.0 — per-service cloud sync + settings i18n
+
+msgctxt "#30800"
+msgid "Cloud sync (Nuvio / Stremio)"
+msgstr "المزامنة السحابية (Nuvio / Stremio)"
+
+msgctxt "#30801"
+msgid "Open accounts & sync menu"
+msgstr "فتح قائمة الحسابات والمزامنة"
+
+msgctxt "#30802"
+msgid "Enable Nuvio account sync"
+msgstr "تفعيل مزامنة حساب Nuvio"
+
+msgctxt "#30803"
+msgid "Enable Stremio account sync"
+msgstr "تفعيل مزامنة حساب Stremio"
+
+msgctxt "#30804"
+msgid "Sync direction (this service)"
+msgstr "اتجاه المزامنة (لهذه الخدمة)"
+
+msgctxt "#30805"
+msgid "Global sync direction"
+msgstr "اتجاه المزامنة العام"
+
+msgctxt "#30806"
+msgid "Sync installed addons"
+msgstr "مزامنة الإضافات المثبتة"
+
+msgctxt "#30807"
+msgid "Sync watch progress"
+msgstr "مزامنة متابعة المشاهدة"
+
+msgctxt "#30808"
+msgid "Sync interval (minutes, 0 = off)"
+msgstr "فترة المزامنة بالدقائق (0 = إيقاف)"
+
+msgctxt "#30809"
+msgid "Merge only — never delete local data"
+msgstr "دمج فقط — بدون حذف البيانات المحلية"
+
+msgctxt "#30810"
+msgid "Follow global"
+msgstr "اتباع الإعداد العام"
+
+msgctxt "#30811"
+msgid "Two-way"
+msgstr "اتجاهين"
+
+msgctxt "#30812"
+msgid "Upload only"
+msgstr "رفع فقط"
+
+msgctxt "#30813"
+msgid "Download only"
+msgstr "سحب فقط"
+
+msgctxt "#30816"
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+msgctxt "#30817"
+msgid "Password"
+msgstr "كلمة المرور"
+
+msgctxt "#30818"
+msgid "Quick Start • Nuvio / Stremio / Manual setup"
+msgstr "البداية السريعة • Nuvio / Stremio / إعداد يدوي"
+
+msgctxt "#30819"
+msgid "Accounts & sync"
+msgstr "الحسابات والمزامنة"
+
+msgctxt "#30820"
+msgid "Stremio sources"
+msgstr "مصادر Stremio"
+
+msgctxt "#30821"
+msgid "Delay before showing first results"
+msgstr "تأخير عرض أول النتائج"
+
+msgctxt "#30822"
+msgid "Poster mode"
+msgstr "وضع الصور"
+
+msgctxt "#30823"
+msgid "Unified artwork setup"
+msgstr "إعداد الصور الموحّد"
+
+msgctxt "#30824"
+msgid "Per-section artwork"
+msgstr "تخصيص الصور حسب القسم"
+
+msgctxt "#30825"
+msgid "Never auto-download or enable AI subtitles"
+msgstr "عدم تنزيل أو تفعيل ترجمات AI تلقائياً"
+
+msgctxt "#30826"
+msgid "Smart source ordering by speed & success on this device"
+msgstr "ترتيب ذكي للمصادر حسب السرعة والنجاح على هذا الجهاز"
+
+msgctxt "#30827"
+msgid "Quick Start"
+msgstr "البداية السريعة"
+
+msgctxt "#30828"
+msgid "Unified"
+msgstr "موحّد"
+
+msgctxt "#30829"
+msgid "Custom"
+msgstr "تخصيص"
+
+# ── v4.1.0: Simkl + MDBList account sync ─────────────────────────────
+msgctxt "#30840"
+msgid "Simkl (watch & lists sync)"
+msgstr "Simkl (مزامنة المشاهدة واللستات)"
+
+msgctxt "#30841"
+msgid "Enable Simkl"
+msgstr "تفعيل Simkl"
+
+msgctxt "#30842"
+msgid "Link Simkl via PIN"
+msgstr "ربط Simkl عبر PIN"
+
+msgctxt "#30843"
+msgid "Sign out of Simkl"
+msgstr "تسجيل خروج Simkl"
+
+msgctxt "#30844"
+msgid "Import completed movies from Simkl"
+msgstr "استيراد الأفلام المكتملة من Simkl"
+
+msgctxt "#30845"
+msgid "Mark watched on Simkl at playback end"
+msgstr "تعليم كمُشاهد في Simkl عند انتهاء التشغيل"
+
+msgctxt "#30846"
+msgid "Watched threshold (%)"
+msgstr "نسبة اعتبار العنصر مُشاهدًا (%)"
+
+msgctxt "#30848"
+msgid "Open MDBList menu (watchlist & your lists)"
+msgstr "فتح قائمة MDBList (اللستات وWatchlist)"
+
+
+# ── v4.2.0: Simkl service sync + watchlist merge ─────────────────────
+msgctxt "#30849"
+msgid "Sync Simkl automatically in the background"
+msgstr "مزامنة Simkl تلقائياً بالخلفية"
+
+msgctxt "#30850"
+msgid "Merge Simkl plan-to-watch into the watchlist"
+msgstr "دمج خطة المشاهدة من Simkl في قائمة المشاهدة"
+
+msgctxt "#30851"
+msgid "Merge the MDBList watchlist into the watchlist"
+msgstr "دمج Watchlist من MDBList في قائمة المشاهدة"
+
+msgctxt "#30852"
+msgid "Sync Simkl now"
+msgstr "مزامنة Simkl الآن"
+
+
+# ── v4.3.0: sources window polish + continue art style ──────────────
+msgctxt "#30853"
+msgid "Continue Watching artwork style"
+msgstr "شكل صور متابعة المشاهدة"
+
+msgctxt "#30854"
+msgid "Poster"
+msgstr "بوستر"
+
+msgctxt "#30855"
+msgid "Banner (landscape)"
+msgstr "بانر (عرضي)"
+
+
+# ── v4.4.0: theme presets + fanart look + XML home ──────────────────
+msgctxt "#30856"
+msgid "Theme"
+msgstr "المظهر"
+
+msgctxt "#30857"
+msgid "Auto (follow skin)"
+msgstr "تلقائي (يتبع السكن)"
+
+msgctxt "#30858"
+msgid "Nuvio Crimson"
+msgstr "Nuvio Crimson"
+
+msgctxt "#30859"
+msgid "Midnight Ocean"
+msgstr "Midnight Ocean"
+
+msgctxt "#30860"
+msgid "Royal Violet"
+msgstr "Royal Violet"
+
+msgctxt "#30861"
+msgid "Emerald Noir"
+msgstr "Emerald Noir"
+
+msgctxt "#30862"
+msgid "Amber Cinema"
+msgstr "Amber Cinema"
+
+msgctxt "#30863"
+msgid "Slate Mono"
+msgstr "Slate Mono"
+
+msgctxt "#30864"
+msgid "Sources window look"
+msgstr "شكل نافذة المصادر"
+
+msgctxt "#30865"
+msgid "Fanart (immersive)"
+msgstr "فانارت (غامر)"
+
+msgctxt "#30866"
+msgid "Classic"
+msgstr "كلاسيكي"
+
+msgctxt "#30867"
+msgid "Home style"
+msgstr "شكل الصفحة الرئيسية"
+
+msgctxt "#30868"
+msgid "Classic (directory)"
+msgstr "كلاسيكي (قوائم)"
+
+msgctxt "#30869"
+msgid "NuvioHub cinematic home"
+msgstr "واجهة NuvioHub السينمائية"
+
+msgctxt "#30870"
+msgid "Open results after"
+msgstr "افتح النتائج بعد"
+
+msgctxt "#30871"
+msgid "10 unique results"
+msgstr "10 نتائج فريدة"
+
+msgctxt "#30872"
+msgid "20 unique results"
+msgstr "20 نتيجة فريدة"
+
+msgctxt "#30873"
+msgid "40 unique results"
+msgstr "40 نتيجة فريدة"
+
+msgctxt "#30874"
+msgid "Wait for every source"
+msgstr "انتظار جميع المصادر"
+
+msgctxt "#30875"
+msgid "Maximum wait before showing partial results"
+msgstr "أقصى انتظار قبل عرض النتائج الجزئية"
+
+msgctxt "#30876"
+msgid "Search results style"
+msgstr "شكل نتائج البحث"
+
+msgctxt "#30877"
+msgid "NuvioHub cinematic"
+msgstr "NuvioHub السينمائي"
+
+msgctxt "#30878"
+msgid "Classic directory"
+msgstr "قائمة كودي الكلاسيكية"
+
+msgctxt "#30879"
+msgid "Use external image badges (slower)"
+msgstr "استخدام شارات الصور الخارجية (أبطأ)"
+
+msgctxt "#30880"
+msgid "Appearance"
+msgstr "المظهر"
+
+msgctxt "#30881"
+msgid "Choose theme (with colour preview)"
+msgstr "اختيار الثيم (مع معاينة الألوان)"
+
+msgctxt "#30882"
+msgid "Sync saved library (favourites) with Nuvio"
+msgstr "مزامنة المكتبة المحفوظة (المفضلة) مع Nuvio"
+
+msgctxt "#30883"
+msgid "Continuous sync (keep Nuvio in sync all the time)"
+msgstr "المزامنة المستمرة (إبقاء Nuvio متزامناً طوال الوقت)"
+
+msgctxt "#30884"
+msgid "Trakt and Simkl"
+msgstr "Trakt و Simkl"
+
+
+msgctxt "#30885"
+msgid "Media servers (Plex, Emby)"
+msgstr "سيرفرات الوسائط (Plex, Emby)"
+
+
+msgctxt "#30886"
+msgid "API keys and integrations"
+msgstr "المفاتيح والتكاملات"
+
+msgctxt "#30900"
+msgid "Open simple setup centre"
+msgstr "فتح مركز الإعداد السهل"
+
+msgctxt "#30901"
+msgid "Sync collections (folder layout) with Nuvio"
+msgstr "مزامنة الكوليكشن (ترتيب المجلدات) مع Nuvio"
+
+
+msgctxt "#30902"
+msgid "Sync installed add-ons with Nuvio"
+msgstr "مزامنة الإضافات المثبتة مع Nuvio"
+
+
+msgctxt "#30903"
+msgid "Sync watch progress with Nuvio"
+msgstr "مزامنة متابعة المشاهدة مع Nuvio"
+
+
+msgctxt "#30904"
+msgid "Sync installed add-ons with Stremio"
+msgstr "مزامنة الإضافات المثبتة مع Stremio"
+
+
+msgctxt "#30905"
+msgid "Sync watch progress and library with Stremio"
+msgstr "مزامنة متابعة المشاهدة والمكتبة مع Stremio"
+
+
+msgctxt "#30906"
+msgid "Nuvio account: add-ons, collections, watch progress and saved library"
+msgstr "حساب Nuvio: الإضافات والكوليكشن والمتابعة والمكتبة المحفوظة"
+
+
+msgctxt "#30907"
+msgid "Stremio account: add-ons and watch progress (Stremio has no folder layouts)"
+msgstr "حساب Stremio: الإضافات والمتابعة (Stremio لا يحفظ ترتيب المجلدات)"
+
+
+msgctxt "#30908"
+msgid "How often NuvioHub pulls from the cloud. Continuous also pushes your changes within seconds."
+msgstr "كل كم يسحب Nuvio Hub من السحابة. المستمرة تدفع تغييراتك خلال ثوانٍ أيضاً."
+
+msgctxt "#30909"
+msgid "Show "Continue watching" on Home"
+msgstr "إظهار "متابعة المشاهدة" في الرئيسية"
+
+
+msgctxt "#30910"
+msgid "Show "Next episode" on Home"
+msgstr "إظهار "الحلقة التالية" في الرئيسية"
+
+
+msgctxt "#30911"
+msgid "Show "Favourites" on Home"
+msgstr "إظهار "المفضلة" في الرئيسية"
+
+
+msgctxt "#30912"
+msgid "Show "Movies" on Home"
+msgstr "إظهار "الأفلام" في الرئيسية"
+
+
+msgctxt "#30913"
+msgid "Show "Series" on Home"
+msgstr "إظهار "المسلسلات" في الرئيسية"
+
+
+msgctxt "#30914"
+msgid "Show "Anime" on Home"
+msgstr "إظهار "الأنمي" في الرئيسية"
+
+
+msgctxt "#30915"
+msgid "Show "Live" on Home"
+msgstr "إظهار "مباشر" في الرئيسية"
+
+
+msgctxt "#30916"
+msgid "Show "Add-ons" on Home"
+msgstr "إظهار "الإضافات" في الرئيسية"
+
+
+msgctxt "#30917"
+msgid "Show "Plex" on Home"
+msgstr "إظهار "Plex" في الرئيسية"
+
+
+msgctxt "#30918"
+msgid "Show "Emby / Jellyfin" on Home"
+msgstr "إظهار "Emby / Jellyfin" في الرئيسية"
+
+
+msgctxt "#30919"
+msgid "Show "TMDb Helper" on Home"
+msgstr "إظهار "TMDb Helper" في الرئيسية"
+
+
+msgctxt "#30920"
+msgid "Show "Search" on Home"
+msgstr "إظهار "البحث" في الرئيسية"
+
+
+msgctxt "#30921"
+msgid "Show "Collection" on Home"
+msgstr "إظهار "المجموعات" في الرئيسية"
+
+
+msgctxt "#30922"
+msgid "Show "Setup" on Home"
+msgstr "إظهار "الضبط" في الرئيسية"
+
+
+msgctxt "#30923"
+msgid "Home screen rows"
+msgstr "صفوف الشاشة الرئيسية"

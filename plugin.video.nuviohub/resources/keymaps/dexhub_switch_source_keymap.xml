@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Nuvio Hub manual fallback keymap.
+  The recommended method is Settings > Playback > Configure source switch
+  shortcut, which creates this mapping in the user's profile and reloads it
+  immediately. This sample is kept for manual/CoreELEC installation only.
+-->
+<keymap>
+  <fullscreenvideo>
+    <keyboard>
+      <s>RunPlugin(plugin://plugin.video.nuviohub/?action=switch_source)</s>
+    </keyboard>
+    <remote>
+      <yellow>RunPlugin(plugin://plugin.video.nuviohub/?action=switch_source)</yellow>
+    </remote>
+  </fullscreenvideo>
+</keymap>

@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8'?>
+<addon id="screensaver.nuvio" name="Nuvio" version="6.0.7" provider-name="Nuvio community build">
+  <requires>
+    <import addon="xbmc.python" version="3.0.0" />
+    <import addon="script.nuvio" version="6.0.7" />
+  </requires>
+  <extension point="xbmc.ui.screensaver" library="default.py" />
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <license>MIT</license>
+    <summary lang="en_GB">Nuvio artwork, time and weather.</summary>
+    <description lang="en_GB">A quiet Nuvio screensaver with an optional custom image or animated GIF. No navigation buttons.</description>
+    <assets>
+      <icon>resources/icon.png</icon>
+      <fanart>resources/fanart.png</fanart>
+    </assets>
+  </extension>
+</addon>

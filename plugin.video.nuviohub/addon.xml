@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<addon id="plugin.video.nuviohub" name="Nuvio Hub" version="6.0.7" provider-name="Nuvio Hub community build">
+  <requires>
+    <import addon="xbmc.python" version="3.0.0" />
+    <import addon="xbmc.gui" version="5.17.0" />
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.service" library="service.py" start="startup" />
+  <extension point="xbmc.addon.metadata">
+    <reuselanguageinvoker>true</reuselanguageinvoker>
+    <platform>all</platform>
+    <license>MIT; GPL-3.0 artwork (see resources/licenses)</license>
+    <language>en</language>
+    <summary lang="en_GB">Nuvio backend and complete local Nuvio build installer.</summary>
+    <description lang="en_GB">Backend for the independent Nuvio interface and Kodi skin. AIOMetadata supplies catalog metadata; AIOStreams supplies streams without additional filtering or sorting. Includes local component installation, account sync, Continue Watching and playback services. Independent Nuvio interface and skin. Manual bundle ZIP updates only.</description>
+    <disclaimer lang="en_GB">The author of this addon does not host any of the content which is found and has no affiliation with any of the content providers. The author is in no way affiliated with Kodi, Team Kodi, or the XBMC Foundation.</disclaimer>
+    <news>Nuvio 6.0.7: latest locally watched titles appear before cloud-imported history in Continue Watching. Saved progress, completion and metadata merge rules are unchanged. Removed remaining launcher Resume video button, icons, navigation and unused handler.</news>
+    <assets>
+      <icon>resources/media/icon.png</icon>
+      <fanart>resources/media/nuvio_banner.png</fanart>
+    </assets>
+  </extension>
+</addon>

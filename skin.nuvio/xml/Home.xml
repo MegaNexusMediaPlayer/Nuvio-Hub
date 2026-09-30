@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='utf-8'?>
+<window>
+  <defaultcontrol always="true">100</defaultcontrol>
+  <controls>
+    <control type="image">
+      <left>0</left>
+      <top>0</top>
+      <width>1920</width>
+      <height>1080</height>
+      <texture>nuvio/nuvio_banner.png</texture>
+    </control>
+    <control type="button" id="100">
+      <left>110</left>
+      <top>805</top>
+      <width>315</width>
+      <height>70</height>
+      <font>font13</font>
+      <label>Open Nuvio</label>
+      <align>center</align>
+      <aligny>center</aligny>
+      <textcolor>FFFFFFFF</textcolor>
+      <focusedcolor>FF090B11</focusedcolor>
+      <texturefocus border="22">nuvio/nuvio_pill.png</texturefocus>
+      <texturenofocus border="22" colordiffuse="FF252A38">nuvio/nuvio_pill.png</texturenofocus>
+      <onclick>RunScript(script.nuvio)</onclick>
+      <onleft>104</onleft>
+      <onright>101</onright>
+      <onup>100</onup>
+    </control>
+    <control type="button" id="101">
+      <left>455</left>
+      <top>805</top>
+      <width>315</width>
+      <height>70</height>
+      <font>font13</font>
+      <label>Open IPTV</label>
+      <align>center</align>
+      <aligny>center</aligny>
+      <textcolor>FFFFFFFF</textcolor>
+      <focusedcolor>FF090B11</focusedcolor>
+      <texturefocus border="22">nuvio/nuvio_pill.png</texturefocus>
+      <texturenofocus border="22" colordiffuse="FF252A38">nuvio/nuvio_pill.png</texturenofocus>
+      <onclick>RunScript(script.nuvio,iptv)</onclick>
+      <onleft>100</onleft>
+      <onright>102</onright>
+      <onup>101</onup>
+    </control>
+    <control type="button" id="102">
+      <left>800</left>
+      <top>805</top>
+      <width>315</width>
+      <height>70</height>
+      <font>font13</font>
+      <label>Nuvio Settings</label>
+      <align>center</align>
+      <aligny>center</aligny>
+      <textcolor>FFFFFFFF</textcolor>
+      <focusedcolor>FF090B11</focusedcolor>
+      <texturefocus border="22">nuvio/nuvio_pill.png</texturefocus>
+      <texturenofocus border="22" colordiffuse="FF252A38">nuvio/nuvio_pill.png</texturenofocus>
+      <onclick>RunScript(script.nuvio,settings)</onclick>
+      <onleft>101</onleft>
+      <onright>103</onright>
+      <onup>102</onup>
+    </control>
+    <control type="button" id="103">
+      <left>1145</left>
+      <top>805</top>
+      <width>315</width>
+      <height>70</height>
+      <font>font13</font>
+      <label>Kodi Settings</label>
+      <align>center</align>
+      <aligny>center</aligny>
+      <textcolor>FFFFFFFF</textcolor>
+      <focusedcolor>FF090B11</focusedcolor>
+      <texturefocus border="22">nuvio/nuvio_pill.png</texturefocus>
+      <texturenofocus border="22" colordiffuse="FF252A38">nuvio/nuvio_pill.png</texturenofocus>
+      <onclick>ActivateWindow(settings)</onclick>
+      <onleft>102</onleft>
+      <onright>104</onright>
+      <onup>103</onup>
+    </control>
+    <control type="button" id="104">
+      <left>1490</left>
+      <top>805</top>
+      <width>315</width>
+      <height>70</height>
+      <font>font13</font>
+      <label>Power</label>
+      <align>center</align>
+      <aligny>center</aligny>
+      <textcolor>FFFFFFFF</textcolor>
+      <focusedcolor>FF090B11</focusedcolor>
+      <texturefocus border="22">nuvio/nuvio_pill.png</texturefocus>
+      <texturenofocus border="22" colordiffuse="FF252A38">nuvio/nuvio_pill.png</texturenofocus>
+      <onclick>ActivateWindow(shutdownmenu)</onclick>
+      <onleft>103</onleft>
+      <onright>100</onright>
+      <onup>104</onup>
+    </control>
+    </controls>
+</window>

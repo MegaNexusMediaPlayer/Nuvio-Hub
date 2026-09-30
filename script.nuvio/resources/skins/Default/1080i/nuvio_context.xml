@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='utf-8'?>
+<window>
+  <defaultcontrol always="true">100</defaultcontrol>
+  <controls>
+    <control type="image">
+      <left>0</left>
+      <top>0</top>
+      <width>1920</width>
+      <height>1080</height>
+      <aspectratio>stretch</aspectratio>
+      <texture background="true" colordiffuse="CC000000">special://home/addons/script.nuvio/resources/media/white.png</texture>
+    </control>
+    <control type="image">
+      <left>575</left>
+      <top>305</top>
+      <width>770</width>
+      <height>460</height>
+      <aspectratio>stretch</aspectratio>
+      <texture background="true" colordiffuse="FF171B27" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+    </control>
+    <control type="label">
+      <left>625</left>
+      <top>345</top>
+      <width>670</width>
+      <height>48</height>
+      <font>font32</font>
+      <textcolor>FFF3F4F8</textcolor>
+      <label>Title options</label>
+      <scroll>true</scroll>
+    </control>
+    <control type="button" id="100">
+      <left>615</left>
+      <top>427</top>
+      <width>690</width>
+      <height>80</height>
+      <label>Choose stream manually</label>
+      <font>font12</font>
+      <align>left</align>
+      <aligny>center</aligny>
+      <textcolor>FFF3F4F8</textcolor>
+      <focusedcolor>FF12121C</focusedcolor>
+      <texturefocus border="22" colordiffuse="FFD3C2FF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturenofocus border="22" colordiffuse="FF252733">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <onup>102</onup>
+      <ondown>101</ondown>
+      <onleft>100</onleft>
+      <onright>100</onright>
+      <textoffsetx>28</textoffsetx>
+    </control>
+    <control type="button" id="101">
+      <left>615</left>
+      <top>517</top>
+      <width>690</width>
+      <height>80</height>
+      <label>More like this</label>
+      <font>font12</font>
+      <align>left</align>
+      <aligny>center</aligny>
+      <textcolor>FFF3F4F8</textcolor>
+      <focusedcolor>FF12121C</focusedcolor>
+      <texturefocus border="22" colordiffuse="FFD3C2FF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturenofocus border="22" colordiffuse="FF252733">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <onup>100</onup>
+      <ondown>102</ondown>
+      <onleft>101</onleft>
+      <onright>101</onright>
+      <textoffsetx>28</textoffsetx>
+    </control>
+    <control type="button" id="102">
+      <left>615</left>
+      <top>607</top>
+      <width>690</width>
+      <height>80</height>
+      <label>Info</label>
+      <font>font12</font>
+      <align>left</align>
+      <aligny>center</aligny>
+      <textcolor>FFF3F4F8</textcolor>
+      <focusedcolor>FF12121C</focusedcolor>
+      <texturefocus border="22" colordiffuse="FFD3C2FF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturenofocus border="22" colordiffuse="FF252733">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <onup>101</onup>
+      <ondown>100</ondown>
+      <onleft>102</onleft>
+      <onright>102</onright>
+      <textoffsetx>28</textoffsetx>
+    </control>
+  </controls>
+</window>

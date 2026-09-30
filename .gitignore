@@ -1,0 +1,40 @@
+# Local profiles, authentication and configuration exports
+.test-profile/
+**/.test-profile/
+userdata/
+portable_data/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*.json
+*credentials*.json
+providers.json
+active_session.json
+home_folders.json
+settings.xml.local
+
+# Python and runtime output
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+tmp*/
+temp/
+*.db
+*.db-*
+*.sqlite*
+*.log
+.DS_Store
+
+# Generated installers and review output
+*.zip
+*.sha256
+plugin.video.nuviohub/resources/packages/
+review/bundle-report.json
+work/
+outputs/
+dist/
+publishing/
