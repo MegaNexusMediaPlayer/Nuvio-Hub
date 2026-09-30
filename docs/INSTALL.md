@@ -16,6 +16,7 @@ Your providers and accounts are configured separately. The bundle includes the f
 6. In **Nuvio Settings → Accounts & tracking**, connect Nuvio and Simkl. Complete the displayed account/PIN flow.
 7. In **Add-ons**, configure your AIOMetadata and stream provider setup, or synchronize the add-ons associated with your Nuvio account. Use the URLs supplied by your own provider configuration.
 8. Open a title, confirm that metadata loads and that your provider returns playable sources. Play briefly and stop to create a fresh local resume record.
+9. Use built in collections/you will need to setup aiometadata with https://numb3rs.stream or set up collections in nuvio web.
 
 All four Nuvio components should report **6.0.7**: `plugin.video.nuviohub`, `script.nuvio`, `skin.nuvio` and `screensaver.nuvio`. External add-ons keep their own version numbers.
 
