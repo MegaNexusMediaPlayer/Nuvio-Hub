@@ -8,7 +8,7 @@ This candidate adds validated collections, independently enabled metadata provid
 
 **6.0.7 was the first public baseline for this project. 6.0.8 is the branding, language and Kodi 22 compatibility maintenance release.** It keeps the Nuvio Hub backend, Nuvio interface, skin and screensaver in one installation package, removes the old Arabic UI layer, and completes the runtime Nuvio Hub rebrand while retaining only upgrade-safe legacy aliases. This is an unofficial community project with a custom Kodi interface. It is not an official Nuvio or Team Kodi release.
 
-![Nuvio home with demonstration content](docs/screenshots/home.png)
+![MegaNexus Home with Continue Watching (posters blurred)](docs/screenshots/home-continue-watching.png)
 
 ## What we have built
 
@@ -76,7 +76,7 @@ Ko-fi support is optional. Contributions help cover development tools, AI token 
 
 Run `python review/check_624.py`, the release guard, builder and packaged smoke test documented in [AGENTS.md](AGENTS.md). Results are in `review/results-6.0.24.json` and the candidate report. These checks use Kodi/HTTP stubs and local SQLite, not a native Kodi process or live user accounts. Unicode glyph coverage, two-device sync and visual/navigation behavior require the manual checklist. No target-device speed benchmark has been performed.
 
-The screenshots use fictional demonstration content. One separate development capture has identifying content and collection artwork blurred. They illustrate the interface, not bundled playable media.
+The screenshots are real captures of MegaNexus 6.0.23 with personal data and third-party artwork (posters, stills, service and studio logos) blurred. They illustrate the interface, not bundled playable media.
 
 ## Credits and licenses
 

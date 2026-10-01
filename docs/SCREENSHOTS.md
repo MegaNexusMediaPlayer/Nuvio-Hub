@@ -1,25 +1,37 @@
 # Screenshots
 
-These four images were captured from the actual 6.0.7 package in an isolated Kodi 21.3/Wine runtime. Titles, artwork and people are fictional demonstration fixtures. They show the interface and do not represent included playable content or live account synchronization.
+Captured from MegaNexus 6.0.23 on Kodi and an iPhone. Personal data (account
+name and email, private add-on name, local IP address, the one-time QR key)
+and third-party artwork (film posters and stills, streaming service and studio
+logos, collection artwork) are blurred. Titles shown come from the user's own
+add-ons; MegaNexus does not host or provide any media.
 
-## Home and collections
+## HUB
 
-![Home with fictional demonstration artwork](screenshots/home.png)
+![MegaNexus HUB with MegaNexus, IPTV Channels, HUB Settings, Kodi Settings and Power](screenshots/hub.png)
 
-## Landscape episodes
+## Home
 
-![Season tabs and landscape episode descriptions](screenshots/episodes-landscape.png)
+![Continue Watching with resume progress and the Discover row](screenshots/home-continue-watching.png)
 
-## Poster episodes
+![Collection rows: Discover and streaming services](screenshots/home-collections.png)
 
-![Season tabs and full poster episode artwork](screenshots/episodes-poster.png)
+![Collection rows: studios and decades](screenshots/home-studios-decades.png)
 
-## Redacted development capture
+## HUB Settings
 
-The following is an earlier user-supplied development capture edited with the built-in image generation tool to obscure title/identifier text, posters and collection artwork. It is an illustrative redacted image, not a pixel-exact capture or evidence of final 6.0.7 ordering. The demo captures are preferred for the public release.
+![HUB Settings with Set up on phone as the first option](screenshots/hub-settings.png)
 
-![Redacted development capture with collection artwork obscured](screenshots/home-redacted-development.png)
+## Set up on your phone
 
-## Long-press title options
+The TV shows a QR code; the phone opens the setup page served by Kodi itself on the home network.
 
-![Manual stream selection, recommendations and information](screenshots/context-menu.png)
+![QR screen on the TV](screenshots/phone-setup-qr.png)
+
+| Account | Add-ons | Collections | Display |
+|---|---|---|---|
+| ![Nuvio account](screenshots/phone-account.png) | ![Metadata and stream add-ons](screenshots/phone-addons.png) | ![Home rows](screenshots/phone-collections.png) | ![Cards, trailers, screensaver](screenshots/phone-display.png) |
+
+## First start
+
+![Posters are preloaded with a cancellable progress screen](screenshots/poster-preload.png)
