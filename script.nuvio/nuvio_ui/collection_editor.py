@@ -61,6 +61,68 @@ def _catalogs(folder):
     return True
 
 
+def _source_label(source, providers):
+    from resources.lib.collections_home import matching_catalog
+    kind = 'Series' if source.get('type') == 'series' else 'Movies'
+    match = matching_catalog(source, providers)
+    if not match:
+        return '%s (%s)' % (source.get('catalogId'), kind), False
+    provider, catalog = match
+    name = catalog.get('name') or catalog.get('id')
+    genre = source.get('genre') if source.get('genre') not in (None, '', 'None') else ''
+    return '%s · %s (%s%s)' % (provider.get('name') or provider['id'], name, kind,
+                               ', ' + genre if genre else ''), True
+
+
+def linked_catalogs(groups, folder):
+    """Each linked catalog by name with its own On/Off switch."""
+    from . import settings_page as page
+    from .settings import commit_collections
+    from resources.lib.nuviohub import store
+
+    def rows():
+        providers = store.list_providers()
+        result = []
+        for source in folder['sources']:
+            label, installed = _source_label(source, providers)
+            if installed:
+                result.append(page.item(label, enabled=source.get('enabled') is not False))
+            else:
+                result.append(page.item(label, 'Not installed'))
+        return result + [page.item('Add or change catalogs…'), page.item('Back')]
+
+    def choose(pick):
+        sources = folder['sources']
+        if pick == len(sources) + 1:
+            return page.DONE
+        from copy import deepcopy
+        before = deepcopy(sources)
+        if pick == len(sources):
+            if not _catalogs(folder):
+                return None
+        else:
+            source = sources[pick]
+            turning_off = source.get('enabled') is not False
+            if turning_off and sum(1 for s in sources if s.get('enabled') is not False) <= 1:
+                raise ValueError('Keep at least one catalog ON. Use "Show on Home" to hide the whole card.')
+            source['enabled'] = not turning_off
+        if not commit_collections(groups):
+            folder['sources'][:] = before
+        return None
+
+    return page.show(lambda: 'Catalogs · ' + folder['title'], rows, choose)
+
+
+def _linked_summary(folder):
+    from resources.lib.nuviohub import store
+    providers = store.list_providers()
+    sources = folder.get('sources') or []
+    on = [s for s in sources if s.get('enabled') is not False]
+    names = [_source_label(s, providers)[0].split(' · ')[-1] for s in on[:2]]
+    text = ', '.join(names) + (' …' if len(on) > 2 else '')
+    return '%d of %d ON · %s' % (len(on), len(sources), text) if sources else 'None'
+
+
 def edit_items():
     dialog=xbmcgui.Dialog()
     previous=0
@@ -81,7 +143,7 @@ def edit_card(groups,group,folder):
         page.item('Hero background','Configured' if folder.get('backdrop') else 'Default'),
         page.item('Focused animation / GIF','Configured' if folder.get('animation') else 'Default'),
         page.item('Show on Home',enabled=not folder.get('hidden')),page.item('Move left'),page.item('Move right'),
-        page.item('Linked metadata catalogs',str(len(folder['sources']))+' catalogs'),page.item('Genre filter'),
+        page.item('Linked metadata catalogs',_linked_summary(folder)),page.item('Genre filter'),
         page.item('Show card title',enabled=not folder.get('hideTitle')),page.item('Back')]
     def choose(choice):
         if choice==10:return page.DONE
@@ -109,9 +171,13 @@ def edit_card(groups,group,folder):
             index=next(i for i,f in enumerate(group['folders']) if f['id']==folder['id'])
             dest=max(0,min(len(group['folders'])-1,index+(-1 if choice==5 else 1)))
             group['folders'].insert(dest,group['folders'].pop(index))
-        elif choice==7:changed=_catalogs(folder)
+        elif choice==7:
+            linked_catalogs(groups,folder)
+            changed=False  # Each switch in that page is saved and validated on its own.
         elif choice==8:
-            selected=dialog.select('Catalog genre filter',[s['catalogId']+' ('+s['type']+')' for s in folder['sources']])
+            from resources.lib.nuviohub import store
+            providers=store.list_providers()
+            selected=dialog.select('Catalog genre filter',[_source_label(s,providers)[0] for s in folder['sources']])
             if selected>=0:
                 source=folder['sources'][selected]
                 source['genre']=dialog.input('Genre (empty means all)',defaultt=source.get('genre') or '').strip()
@@ -182,16 +248,11 @@ def run():
             elif choice == 4:
                 settings.commit_collections(collection_profile.defaults())
             elif choice == 5:
-                from resources.lib import collection_validation
-                from .playback import job
                 groups = collection_profile.load()
-                proof = job(lambda: collection_validation.validate(groups), label='Rechecking collections')
-                if proof is not None:
-                    if proof.get('ok'):
-                        collection_profile.save(groups, validation=proof)
-                        dialog.ok('Collection checks', '%d catalog sources passed sampled metadata checks.' % proof['catalogs'])
-                    else:
-                        dialog.ok('Collection checks', collection_validation.message(proof))
+                if groups:
+                    settings.commit_collections(groups, force=True)
+                else:
+                    dialog.ok('Collection checks', 'Import or create collections first.')
             elif choice == 6:
                 create_collection()
         except (ValueError, OSError):

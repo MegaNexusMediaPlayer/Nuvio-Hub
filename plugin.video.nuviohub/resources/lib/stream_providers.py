@@ -37,9 +37,12 @@ def entries(providers=None):
     available = candidates(providers)
     saved = _saved()
     if saved is None:
+        # Never configured: keep a single earlier choice; with no such choice
+        # every stream add-on is ON so a fresh setup is not locked out.
         legacy = backend_api.provider('streams', available)
-        selected = (legacy or {}).get('id')
-        return [(p, p.get('id') == selected) for p in available]
+        if not legacy:
+            return [(p, True) for p in available]
+        return [(p, p.get('id') == legacy.get('id')) for p in available]
     by_id = {p['id']: p for p in available}
     result, seen = [], set()
     for row in saved:

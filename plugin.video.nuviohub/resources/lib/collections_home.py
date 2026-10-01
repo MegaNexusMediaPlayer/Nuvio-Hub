@@ -1,6 +1,7 @@
 """Local collection presets mapped to the user's installed Stremio providers."""
 import json
 import os
+import re
 
 import xbmcaddon
 
@@ -18,23 +19,57 @@ def find_collection(collection_id):
     return None
 
 
-def matching_catalog(source, providers, selected=None):
-    """Exact manifest/catalog/type identity; ambiguous configured variants fail closed.
+def _norm(value):
+    return re.sub(r'[^a-z0-9]', '', str(value or '').lower())
 
+
+def active_sources(folder):
+    """Sources switched ON in the collection editor (all sources by default)."""
+    return [s for s in (folder or {}).get('sources') or [] if s.get('enabled') is not False]
+
+
+def matching_catalog(source, providers, selected=None):
+    """Resolve a collection source to one installed add-on catalog.
+
+    The manifest ID must match (the same ID written with different separators,
+    e.g. ``aio-metadata``/``aiometadata``, counts as the same ID) and that add-on
+    must publish exactly this catalog ID and type. A provider name never proves
+    identity. When the same add-on is installed more than once, the exported
+    ``providerId`` wins, then an enabled metadata add-on, then the first
+    configured install - Nuvio exports do not carry local provider IDs, so an
+    unknown ``providerId`` is a preference, not a requirement.
     ``selected`` is retained for callers from older builds, never an ID override.
-    Catalog-only add-ons may supply lists that enabled metadata add-ons resolve.
     """
-    matches = []
+    addon = source.get('addonId') or ''
+    if not addon or not source.get('catalogId'):
+        return None
+    exact, similar = [], []
     for provider in providers:
         manifest = provider.get('manifest') or {}
-        if not source.get('addonId') or manifest.get('id') != source['addonId']:
-            continue
-        if source.get('providerId') and provider.get('id') != source['providerId']:
+        mid = manifest.get('id') or ''
+        if mid == addon:
+            bucket = exact
+        elif _norm(mid) and _norm(mid) == _norm(addon):
+            bucket = similar
+        else:
             continue
         for catalog in manifest.get('catalogs') or []:
             if catalog.get('id') == source.get('catalogId') and catalog.get('type') == source.get('type'):
-                matches.append((provider, catalog))
-    return matches[0] if len(matches) == 1 else None
+                bucket.append((provider, catalog))
+                break
+    matches = exact or similar
+    if len(matches) <= 1:
+        return matches[0] if matches else None
+    wanted = source.get('providerId')
+    for match in matches:
+        if wanted and match[0].get('id') == wanted:
+            return match
+    try:
+        from .metadata_providers import entries
+        switches = {p['id']: on for p, on in entries(providers)}
+    except Exception:
+        switches = {}
+    return next((m for m in matches if switches.get(m[0].get('id'))), matches[0])
 
 
 def folder_shelf(folder, providers, media_type=None, title=None):
@@ -45,7 +80,7 @@ def folder_shelf(folder, providers, media_type=None, title=None):
     switches={p['id']:on for p,on in entries(providers)}
     providers=[p for p in providers if switches.get(p['id'],True)]
     selected=xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_metadata_provider')
-    for source in folder['sources']:
+    for source in active_sources(folder):
         if media_type and source['type'] != media_type:
             continue
         match = matching_catalog(source, providers, selected)
@@ -136,7 +171,7 @@ def collection_shelves(collection_id):
     if not folder:
         return [{'title': 'Collection unavailable', 'rows': [placeholder('Open Setup', 'Choose another collection.', _api().build_url(action='setup_center'))]}]
     providers = store.list_providers()
-    types = {s['type'] for s in folder['sources']}
+    types = {s['type'] for s in active_sources(folder)}
     return [folder_shelf(folder, providers, mt, folder['title'] + (' — Movies' if mt == 'movie' else ' — Series'))
             for mt in ('movie', 'series') if mt in types]
 
@@ -147,7 +182,7 @@ def render_native(collection_id):
     from .nuviohub import store
     p = _api()
     folder = find_collection(collection_id)
-    for source in (folder or {}).get('sources', []):
+    for source in active_sources(folder):
         match = matching_catalog(source, store.list_providers())
         if not match:
             continue

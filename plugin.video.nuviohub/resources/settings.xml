@@ -168,6 +168,7 @@
     <setting id="nuvio_autoplay" type="text" default="false" visible="false" />
     <setting id="nuvio_trailer_delay" type="text" default="6" visible="false" />
     <setting id="nuvio_trailer_duration" type="text" default="90" visible="false" />
+    <setting id="nuvio_trailer_source" type="text" default="youtube" visible="false" />
     <setting id="nuvio_animated_art" type="text" default="false" visible="false" />
     <setting id="nuvio_art_cache" type="text" default="ram200" visible="false" />
     <setting id="nuvio_card_shape" type="text" default="poster" visible="false" />

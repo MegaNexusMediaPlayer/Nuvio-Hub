@@ -3,6 +3,21 @@ from . import collection_profile, backend_api
 from .nuviohub import nuvio_stremio_sync as sync, store, client
 
 
+def enable_imported(provider_ids):
+    """Add-ons the user just imported from their Nuvio profile are used as they
+    are in Nuvio: newly added metadata and stream add-ons are switched ON.
+    Existing switches, including explicit OFF, are left alone."""
+    from . import metadata_providers, stream_providers
+    wanted = set(provider_ids or [])
+    for module in (metadata_providers, stream_providers):
+        for provider, on in module.entries():
+            if provider['id'] in wanted and not on:
+                try:
+                    module.set_enabled(provider['id'], True)
+                except ValueError:
+                    pass
+
+
 def fetch():
     result = {'providers': [], 'collections': None, 'progress': None, 'errors': []}
     # This is deliberately independent of the optional background-sync toggles.
@@ -37,13 +52,18 @@ def fetch():
 
 def apply(result):
     report = {'providers': 0, 'collections': 0, 'progress': 0, 'errors': list(result['errors'])}
+    before = {p.get('id') for p in store.list_providers()}
+    added = []
     for row in result['providers']:
         try:
-            store.add_provider(row.get('name') or row['manifest'].get('name') or 'Add-on',
-                               row['manifest_url'], row['manifest'])
+            saved = store.add_provider(row.get('name') or row['manifest'].get('name') or 'Add-on',
+                                       row['manifest_url'], row['manifest'])
             report['providers'] += 1
+            if (saved or {}).get('id') and saved['id'] not in before:
+                added.append(saved['id'])
         except Exception:
             report['errors'].append('An add-on could not be saved. Check Kodi storage space.')
+    enable_imported(added)
     if result['collections']:
         try:report['collections'] = collection_profile.save(result['collections'])
         except Exception:report['errors'].append('Collections could not be saved or have an unsupported format.')

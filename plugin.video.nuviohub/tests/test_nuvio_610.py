@@ -112,6 +112,7 @@ class Collections(ProviderFixture):
         super().setUp();self.groups=layout()
         temp=tempfile.TemporaryDirectory();self.addCleanup(temp.cleanup);self.path=Path(temp.name)/'collections.json'
         patches=[mock.patch.object(profiles,'profile_file',return_value=self.path),
+            mock.patch.object(cache,'_CACHE',cache.Cache(Path(temp.name)/'browse.db')),
             mock.patch.object(client,'fetch_catalog',return_value={'metas':[{'id':'tt1','type':'movie'},{'id':'tt2','type':'movie'}]}),
             mock.patch.object(client,'fetch_meta',side_effect=lambda p,t,mid,**kw:{'meta':{'id':mid,'type':t}})]
         for patch in patches:patch.start();self.addCleanup(patch.stop)
@@ -130,9 +131,11 @@ class Collections(ProviderFixture):
     def test_wrong_metadata_sample_fails(self):
         with mock.patch.object(client,'fetch_meta',return_value={'meta':{'id':'tt999'}}):
             self.assertFalse(validation.validate(self.groups)['ok'])
-    def test_empty_catalog_fails_sample_verification(self):
+    def test_empty_catalog_is_a_warning_not_a_block(self):
+        # 6.0.11: a temporarily empty catalog no longer rejects the whole import.
         with mock.patch.object(client,'fetch_catalog',return_value={'metas':[]}):
-            self.assertFalse(validation.validate(self.groups)['ok'])
+            proof=validation.validate(self.groups)
+        self.assertTrue(proof['ok']);self.assertTrue(any('empty' in w for w in proof['warnings']))
     def test_wrong_catalog_item_type_fails(self):
         with mock.patch.object(client,'fetch_catalog',return_value={'metas':[{'id':'tt1','type':'series'}]}):
             self.assertFalse(validation.validate(self.groups)['ok'])
@@ -140,16 +143,21 @@ class Collections(ProviderFixture):
         self.sources[0]['manifest']['catalogs'][0]['extra'].append({'name':'country','isRequired':True})
         with mock.patch.object(client,'fetch_catalog') as fetch:
             self.assertFalse(validation.validate(self.groups)['ok']);fetch.assert_not_called()
-    def test_bad_filter_option_fails(self):
+    def test_unlisted_filter_option_is_a_warning(self):
+        # 6.0.11: Nuvio exports may use values the manifest does not list.
         self.groups[0]['folders'][0]['sources'][0]['genre']='MadeUp'
-        self.assertFalse(validation.validate(self.groups)['ok'])
+        proof=validation.validate(self.groups)
+        self.assertTrue(proof['ok']);self.assertTrue(any('not offered' in w for w in proof['warnings']))
     def test_legacy_required_filters_supported(self):
         self.assertTrue(validation.filter_error({'extraRequired':['search'],'extraSupported':['search']},{}))
         self.assertEqual(validation.filter_error({'extraRequired':['search'],'extraSupported':['search']},{'search':'Actor'}),'')
-    def test_ambiguous_installed_variants_need_binding(self):
+    def test_duplicate_installs_prefer_binding_then_enabled_metadata(self):
+        # 6.0.11: Nuvio exports carry no local provider ID; a duplicate install
+        # resolves to the enabled metadata add-on instead of failing.
         self.sources.append(source('second'));ref=self.groups[0]['folders'][0]['sources'][0];ref['providerId']=''
-        self.assertIsNone(collections.matching_catalog(ref,self.sources))
+        self.assertEqual(collections.matching_catalog(ref,self.sources)[0]['id'],'p')
         ref['providerId']='second';self.assertEqual(collections.matching_catalog(ref,self.sources)[0]['id'],'second')
+        ref['providerId']='unknown-remote-id';self.assertEqual(collections.matching_catalog(ref,self.sources)[0]['id'],'p')
     def test_cancelled_validation_keeps_previous_file(self):
         profiles.save(self.groups);before=self.path.read_bytes()
         proof=validation.validate(self.groups,stopped=lambda:True)

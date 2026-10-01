@@ -289,7 +289,7 @@ class Details(Dialog):
         elif control_id==502:self._play()
         elif control_id==103:
             from .trailers import show_trailer
-            if not show_trailer(self.meta):self.setProperty('nuvio.trailer_status','Trailer unavailable. Try another title or check the YouTube add-on.')
+            if not show_trailer(self.meta):self.setProperty('nuvio.trailer_status','Trailer unavailable. Try another title, or change the trailer source in Settings > Trailers.')
         elif control_id==101:
             self._add_to_library()
         elif control_id==104:self._mark_watched()

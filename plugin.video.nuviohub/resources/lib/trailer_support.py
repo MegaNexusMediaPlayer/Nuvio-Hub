@@ -37,7 +37,29 @@ def trailer_url(meta,allow_youtube=True):
     return ''
 
 
-def selected_trailer(row,direct_only=False):
+def trailer_candidates(youtube_url='', records=(), direct_only=False, addon=None):
+    """Playable trailer URLs in the user's source order (Settings > Trailers).
+
+    ``youtube_url`` is the add-on/metadata trailer (YouTube or a direct file);
+    IMDb trailers are looked up from the IMDb ID in ``records``. A YouTube link
+    is skipped when ``direct_only`` or when the YouTube add-on is missing.
+    """
+    from . import imdb_trailers
+    urls = []
+    for source in imdb_trailers.order(imdb_trailers.source_setting(addon)):
+        if source == 'imdb':
+            title_id = imdb_trailers.imdb_id(*records)
+            if title_id:
+                urls.extend(imdb_trailers.resolve_all(title_id)[:2])
+        elif youtube_url:
+            if youtube_url.startswith('plugin://plugin.video.youtube/') and (
+                    direct_only or not xbmc.getCondVisibility('System.HasAddon(plugin.video.youtube)')):
+                continue
+            urls.append(youtube_url)
+    return list(dict.fromkeys(urls))
+
+
+def _provider_trailer(row, direct_only):
     url = trailer_url({'trailer':row.get('trailer')},allow_youtube=not direct_only)
     if not url and row.get('target'):
         from . import backend_api
@@ -47,6 +69,36 @@ def selected_trailer(row,direct_only=False):
         from .nuviohub.client import get_json,build_resource_url
         data=get_json(build_resource_url(source,'meta',target.get('media_type') or 'movie',target['canonical_id']),ttl_seconds=3600,timeout_override=3,retry=False,rate_wait=.1)
         url=trailer_url((data or {}).get('meta') or {},allow_youtube=not direct_only)
-    if url.startswith('plugin://plugin.video.youtube/') and not xbmc.getCondVisibility('System.HasAddon(plugin.video.youtube)'):
-        return ''
     return url
+
+
+def selected_trailers(row,direct_only=False):
+    """Candidates for a Home card, in the chosen source order.
+
+    The second source is consulted only when the preferred one has nothing, so
+    a Home focus never costs both an IMDb query and a metadata request.
+    """
+    from . import imdb_trailers
+    urls = []
+    for source in imdb_trailers.order(imdb_trailers.source_setting()):
+        if urls:
+            break
+        if source == 'imdb':
+            title_id = imdb_trailers.imdb_id(row.get('target') or {}, row)
+            if title_id:
+                urls = imdb_trailers.resolve_all(title_id)[:2]
+        else:
+            try:
+                url = _provider_trailer(row, direct_only)
+            except Exception:
+                url = ''
+            if url.startswith('plugin://plugin.video.youtube/') and not xbmc.getCondVisibility('System.HasAddon(plugin.video.youtube)'):
+                url = ''
+            if url:
+                urls = [url]
+    return urls
+
+
+def selected_trailer(row,direct_only=False):
+    urls = selected_trailers(row, direct_only)
+    return urls[0] if urls else ''

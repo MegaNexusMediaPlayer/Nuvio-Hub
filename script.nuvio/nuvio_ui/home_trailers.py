@@ -11,7 +11,7 @@ import xbmcaddon
 import xbmcgui
 import xbmcvfs
 from resources.lib.settings_cache import cached_addon
-from resources.lib.trailer_support import trailer_url,selected_trailer
+from resources.lib.trailer_support import trailer_url,selected_trailer,selected_trailers
 
 _CACHE=OrderedDict()
 
@@ -83,12 +83,16 @@ class Controller:
         for key in keys:
             if home.getProperty(key)==self.player.token:home.clearProperty(key)
     def _resolve(self,key,row,direct_only,cancelled=None):
-        target=row.get('target') or {};cache_key=(target.get('media_type'),target.get('canonical_id'),direct_only)
+        from resources.lib.imdb_trailers import source_setting
+        target=row.get('target') or {}
+        cache_key=(target.get('media_type'),target.get('canonical_id'),direct_only,source_setting())
         cached=_CACHE.get(cache_key)
         if cached and cached[0]>time.monotonic() and os.path.isfile(cached[1]):return cached[1]
         from resources.lib.trailer_cache import prepare
-        selected=selected_trailer(row,direct_only=direct_only)
-        url=prepare({'trailer':selected}, cancelled or self.resolve_cancel)
+        url=''
+        for selected in selected_trailers(row,direct_only=direct_only):
+            url=prepare({'trailer':selected}, cancelled or self.resolve_cancel)
+            if url or (cancelled or self.resolve_cancel).is_set():break
         # Cancelled/busy resolution is not evidence that this title lacks a trailer.
         if url:_CACHE[cache_key]=(time.monotonic()+1800,url)
         while len(_CACHE)>64:_CACHE.popitem(last=False)

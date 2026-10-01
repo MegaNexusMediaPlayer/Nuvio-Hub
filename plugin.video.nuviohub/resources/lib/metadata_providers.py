@@ -20,8 +20,12 @@ def entries(providers=None):
     available = candidates(providers)
     raw = xbmcaddon.Addon('plugin.video.nuviohub').getSetting(SETTING) or ''
     if not raw.strip():
+        # Never configured: keep a single earlier choice; with no such choice
+        # every metadata add-on is ON so a fresh setup is not locked out.
         legacy = backend_api.provider('metadata', available)
-        return [(p, p['id'] == (legacy or {}).get('id')) for p in available]
+        if not legacy:
+            return [(p, True) for p in available]
+        return [(p, p['id'] == legacy.get('id')) for p in available]
     try:
         saved = json.loads(raw)
     except (ValueError, TypeError):

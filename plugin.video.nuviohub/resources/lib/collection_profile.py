@@ -37,7 +37,8 @@ def normalize(data):
                 if cid:clean.append({'addonId':s.get('addonId') or s.get('addon_id') or '',
                     'providerId':s.get('providerId') or s.get('provider_id') or '',
                     'catalogId':cid,'type':s.get('type') or s.get('catalogType') or 'movie',
-                    'genre':s.get('genre') or '', 'extra':s.get('extra') or {}})
+                    'genre':s.get('genre') or '', 'extra':s.get('extra') or {},
+                    'enabled':s.get('enabled') is not False})
             if not clean:continue
             folders.append({'id':str(f.get('id') or gid+'.'+str(len(folders))),
                 'title':f.get('title') or f.get('name') or 'Collection','sources':clean,

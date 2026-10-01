@@ -191,12 +191,40 @@ def import_nuvio_collections():
     return commit_collections(data)
 
 
-def commit_collections(data):
-    """Network validation is cancellable; only the UI commits after success."""
+def _switch_on_collection_addons(groups, dialog):
+    """Collections reference catalogs of metadata add-ons that are OFF: ask once."""
+    from resources.lib import collection_validation, metadata_providers
+    from resources.lib.collections_home import matching_catalog
+    providers = store.list_providers()
+    switches = {p['id']: on for p, on in metadata_providers.entries(providers)}
+    off = {}
+    for _, source in collection_validation.sources(groups):
+        match = matching_catalog(source, providers)
+        if match and switches.get(match[0]['id']) is False:
+            off[match[0]['id']] = match[0].get('name') or match[0]['id']
+    if not off:
+        return False
+    if not dialog.yesno('Collections', 'These collections use add-ons that are OFF under Metadata add-ons:\n'
+                        + ', '.join(off.values()) + '\nTurn them ON?'):
+        return False
+    for provider_id in off:
+        metadata_providers.set_enabled(provider_id, True)
+    settings_cache.invalidate()
+    return True
+
+
+def commit_collections(data, force=False):
+    """Network validation is cancellable; only the UI commits after success.
+
+    Individual catalogs that cannot be used are reported and skipped; the
+    collections are saved as long as at least one catalog works.
+    """
     from resources.lib import collection_validation
     from .playback import job
+    dialog = xbmcgui.Dialog()
     groups = collection_profile.normalize(data)
-    proof = collection_validation.stored_proof(groups)
+    _switch_on_collection_addons(groups, dialog)
+    proof = None if force else collection_validation.stored_proof(groups)
     if proof is None:
         import threading
         cancel = threading.Event()
@@ -204,10 +232,13 @@ def commit_collections(data):
     if proof is None:
         return False
     if not proof.get('ok') or not collection_validation.accepts(groups, proof):
-        xbmcgui.Dialog().ok('Collection check failed', collection_validation.message(proof))
+        dialog.ok('Collection check failed', collection_validation.message(proof))
         return False
     count = collection_profile.save(groups, validation=proof)
-    xbmcgui.Dialog().notification('Collections', '%d validated collections saved' % count)
+    if proof.get('skipped') or proof.get('warnings'):
+        dialog.ok('Collections saved', collection_validation.message(proof))
+    else:
+        dialog.notification('Collections', '%d collections saved · %d catalogs ready' % (count, proof.get('catalogs', 0)))
     return True
 
 
@@ -233,10 +264,12 @@ def playback():
 
 
 def trailers():
+    from resources.lib import imdb_trailers
     dialog=xbmcgui.Dialog()
     def rows():return [page.item('Automatic trailers',enabled=ADDON.getSetting('nuvio_auto_trailers')=='true'),
         page.item('Trailer focus delay',(ADDON.getSetting('nuvio_trailer_delay') or '6')+' seconds'),
         page.item('Trailer duration',('Full trailer' if ADDON.getSetting('nuvio_trailer_duration')=='0' else (ADDON.getSetting('nuvio_trailer_duration') or '90')+' seconds')),
+        page.item('Trailer source',imdb_trailers.LABELS[imdb_trailers.source_setting(ADDON)]),
         page.item('YouTube add-on','Configure' if xbmc.getCondVisibility('System.HasAddon(plugin.video.youtube)') else 'Install'),page.item('Back')]
     def choose(pick):
         if pick==0:toggle('nuvio_auto_trailers')
@@ -247,8 +280,13 @@ def trailers():
             i=dialog.select('Trailer length' if pick==2 else 'Seconds', ['Full trailer' if v=='0' else v+' seconds' for v in labels],preselect=labels.index(current) if current in labels else 0)
             if i>=0:ADDON.setSetting(key,labels[i])
         elif pick==3:
+            keys=list(imdb_trailers.SOURCES);current=imdb_trailers.source_setting(ADDON)
+            i=dialog.select('Trailer source',[imdb_trailers.LABELS[k]+(' · no YouTube add-on needed' if k=='imdb' else '') for k in keys],
+                            preselect=keys.index(current))
+            if i>=0:ADDON.setSetting(imdb_trailers.SETTING,keys[i])
+        elif pick==4:
             if ensure_addon('plugin.video.youtube'):xbmcaddon.Addon('plugin.video.youtube').openSettings()
-        elif pick==4:return page.DONE
+        elif pick==5:return page.DONE
     return page.show('Trailers',rows,choose)
 
 

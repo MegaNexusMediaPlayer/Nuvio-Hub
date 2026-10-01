@@ -12,7 +12,8 @@ def jobs_for(params):
     if params.get('collection_id'):
         from .collections_home import find_collection
         folder=find_collection(params['collection_id'])
-        specs=(folder or {}).get('sources') or []
+        from .collections_home import active_sources
+        specs=active_sources(folder)
     else:
         source = next((p for p in providers if p['id'] == params.get('provider_id')), None)
         if not source:

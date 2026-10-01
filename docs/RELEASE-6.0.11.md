@@ -75,7 +75,54 @@ collections) is carried into this version.
 * "Browse all" now normalizes artwork URLs the same way as Home (relative
   Plex/Emby paths).
 
-## 5. Retired name removed everywhere
+## 5. Setup, metadata and collection checks no longer lock Home
+
+Reported: metadata blocked entering Home, collections imported from Nuvio
+(which work in Nuvio) always ended with "Collection check failed", and the
+collection editor showed only "2 catalogs" with no names or switches.
+
+* **Add-on switches.** A metadata or stream add-on list that was never
+  configured now has every installed add-on ON (a single earlier choice is
+  kept). Add-ons imported from a Nuvio profile are switched ON; an explicit OFF
+  is still respected. If all add-ons of a kind are OFF, entering Home offers to
+  switch them on in one step, and the setup menu heading names what is missing
+  (e.g. "all metadata add-ons are OFF; collections not checked yet"). Importing
+  or editing collections that use an OFF metadata add-on asks to switch it on.
+* **Catalog matching.** Nuvio exports carry no local provider ID, so an unknown
+  `providerId` is a preference only. The same add-on installed twice resolves to
+  the exported binding, then the enabled metadata add-on, then the first install
+  (it used to fail as "ambiguous"). The same manifest ID written with different
+  separators (`aio-metadata`/`aiometadata`) matches; a provider name still never
+  proves identity.
+* **Collection check.** One unavailable catalog no longer rejects the whole
+  import. Each source is either ready, skipped (catalog not installed, add-on
+  OFF, required filter missing, wrong item type, sampled title resolves to a
+  different title) or ready with a warning (timeout, temporarily empty catalog,
+  filter value not listed in the manifest). The import is saved when at least one
+  catalog works and a summary lists what was skipped. Metadata identity is
+  sampled for up to 16 catalogs; catalog pages come from and warm the Home cache,
+  so a recheck after a small edit is fast. "Recheck current collections" is also
+  in the setup menu.
+* **Collection editor.** "Linked metadata catalogs" shows "1 of 2 ON · Popular
+  (Movies) …" and opens a page listing every linked catalog by add-on, name, type
+  and genre, each with its own On/Off switch, plus "Add or change catalogs…". A
+  switched-off catalog is kept in the collection but not loaded or checked. The
+  genre-filter picker uses the same names.
+
+## 6. IMDb trailers
+
+Settings > Trailers > **Trailer source**: YouTube (default, as before), IMDb,
+IMDb then YouTube, or YouTube then IMDb. IMDb trailers come from IMDb's public
+GraphQL endpoint as direct MP4 files (480p first, then SD/720p/1080p), so no
+YouTube add-on is needed. They use the existing download/cache/playback path for
+both Home previews and the Details trailer button; a too-large or failed file
+falls back to the next candidate. A Home focus asks the second source only when
+the preferred one has nothing. Lookups are cached for 30 minutes (misses for
+2 minutes). Live check on 30 Sep 2026: lookup about 0.5 s, 480p trailer
+(26.6 MB) downloaded and cached in about 4 s. IMDb may change or restrict this
+endpoint; then the other source is used.
+
+## 7. Retired name removed everywhere
 
 The retired pre-rename name no longer appears in any source, setting, string,
 test, document or review tool. Nothing was simply deleted; every feature was
@@ -106,10 +153,10 @@ renamed and stays connected:
 * The source acknowledgement sentence was removed from all `ATTRIBUTION.md` files.
 * Two legacy tests that expected stale names now pass.
 
-## 6. Automated checks (Python 3.14, Kodi/HTTP stubs, real SQLite)
+## 8. Automated checks (Python 3.14, Kodi/HTTP stubs, real SQLite)
 
-- `python review/check_611.py`: maintained suite PASS (337 existing + 47 new in
-  `test_nuvio_611.py`), runtime Python 3.8 grammar parse, XML and JSON parse.
+- `python review/check_611.py`: maintained suite PASS (337 existing, 3 updated for the intentional
+  collection-check change, + 64 new in `test_nuvio_611.py`), runtime Python 3.8 grammar parse, XML and JSON parse.
 - `python review/check_608_rebrand_kodi22.py 6.0.11`: PASS.
 - `review/build_bundle.py` + `review/check_packaged_build.py`: PASS (modules
   imported from the expanded ZIP, XML asset references, all components 6.0.11).
@@ -118,7 +165,7 @@ renamed and stays connected:
   compared with 6.0.10; two stale failures fixed (remaining ones encode obsolete
   4.x/5.x behaviour, as before).
 
-## 7. Limits
+## 9. Limits
 
 These are architectural improvements verified by tests, **not a measured speedup
 on a device**. No manual testing on Kodi 21/22, CoreELEC or Windows was done.
@@ -128,7 +175,7 @@ posters), returning from Details to Continue Watching, running without urllib3,
 offline use with a stale cache, and memory use. A stale page can show older
 titles for up to 7 days if refreshing keeps failing (e.g. provider offline).
 
-## 8. Delivery and rollback
+## 10. Delivery and rollback
 
 Install `Nuvio-Hub-Complete-6.0.11.zip` over 6.0.10 as before: back up the
 profile, stop video, close the frontend, install the ZIP, open the backend Nuvio

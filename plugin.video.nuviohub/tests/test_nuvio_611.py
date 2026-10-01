@@ -695,5 +695,247 @@ class RenamedServiceFeatures(unittest.TestCase):
         self.assertEqual(post.call_args.args[0]['sub_id'], 'sub1')
 
 
+def aio_provider(pid='aio', manifest_id='aio-metadata', catalogs=('tmdb.top', 'tvdb.trending')):
+    return {'id': pid, 'name': 'AIOMetadata', 'manifest_url': 'https://example.invalid/%s/manifest.json' % pid,
+            'base_url': 'https://example.invalid/' + pid,
+            'manifest': {'id': manifest_id, 'name': 'AIOMetadata', 'version': '1', 'types': ['movie', 'series'],
+                         'resources': ['catalog', 'meta'], 'idPrefixes': ['tt', 'tmdb:'],
+                         'catalogs': [{'id': c, 'type': t, 'extra': [{'name': 'genre'}]}
+                                      for c in catalogs for t in ('movie', 'series')]}}
+
+
+def nuvio_export(*catalogs):
+    return [{'id': 'g', 'title': 'Discover', 'folders': [
+        {'id': 'f%d' % i, 'title': 'Folder %d' % i, 'sources': [
+            {'type': t, 'addonId': 'aio-metadata', 'catalogId': c, 'genre': 'None'} for t in ('movie', 'series')]}
+        for i, c in enumerate(catalogs)]}]
+
+
+class NuvioCollectionImport(TempCache):
+    def setUp(self):
+        super().setUp()
+        self.providers = [aio_provider()]
+        self.values = {}
+        values = self.values
+
+        class Addon(kodi_stub._Addon):
+            def getSetting(self, key):
+                return values.get(key, '')
+
+            def setSetting(self, key, value):
+                values[key] = value
+        stream_mod = importlib.import_module('resources.lib.stream_providers')
+        for patch in (mock.patch.object(providers.xbmcaddon, 'Addon', Addon),
+                      mock.patch.object(stream_mod.xbmcaddon, 'Addon', Addon),
+                      mock.patch.object(store, 'list_providers', side_effect=lambda: list(self.providers)),
+                      mock.patch.object(client, 'fetch_meta', side_effect=lambda p, t, mid, **k: {'meta': {'id': mid, 'type': t}})):
+            patch.start()
+            self.addCleanup(patch.stop)
+        self.validation = importlib.import_module('resources.lib.collection_validation')
+
+    def test_export_with_a_missing_and_a_slow_catalog_still_imports(self):
+        groups = profiles.normalize(nuvio_export('tmdb.top', 'tvdb.trending', 'not.installed'))
+
+        def fetch(prov, media_type, catalog_id, **kwargs):
+            if catalog_id == 'tvdb.trending' and media_type == 'series':
+                raise TimeoutError('slow')
+            return {'metas': [{'id': 'tt1', 'type': media_type}]}
+        with mock.patch.object(client, 'fetch_catalog', side_effect=fetch):
+            proof = self.validation.validate(groups)
+        self.assertTrue(proof['ok'], proof)
+        self.assertEqual((proof['catalogs'], proof['total']), (4, 6))
+        self.assertEqual(len(proof['skipped']), 2)
+        self.assertTrue(any('did not answer' in w for w in proof['warnings']))
+        text = self.validation.message(proof)
+        self.assertIn('4 of 6', text)
+        self.assertIn('not.installed', text)
+
+    def test_never_configured_metadata_and_streams_are_on(self):
+        stream = aio_provider('streams', 'stream.addon', ())
+        stream['manifest']['resources'] = ['stream']
+        second = aio_provider('second', 'other.meta')
+        self.providers += [stream, second]
+        stream_mod = importlib.import_module('resources.lib.stream_providers')
+        backend = importlib.import_module('resources.lib.backend_api')
+        with mock.patch.object(backend, 'provider', return_value=None):
+            self.assertEqual({p['id'] for p in providers.enabled()}, {'aio', 'second'})
+            self.assertEqual([p['id'] for p in stream_mod.enabled()], ['streams'])
+
+    def test_explicit_off_is_respected(self):
+        self.values[providers.SETTING] = json.dumps([{'id': 'aio', 'enabled': False}])
+        self.assertEqual(providers.enabled(), [])
+        groups = profiles.normalize(nuvio_export('tmdb.top'))
+        with mock.patch.object(client, 'fetch_catalog', return_value={'metas': [{'id': 'tt1'}]}):
+            proof = self.validation.validate(groups)
+        self.assertFalse(proof['ok'])
+        self.assertIn('Enable at least one metadata add-on', self.validation.message(proof))
+
+    def test_imported_addons_are_switched_on(self):
+        nuvio_import = importlib.import_module('resources.lib.nuvio_import')
+        self.values[providers.SETTING] = json.dumps([{'id': 'aio', 'enabled': True}])
+        self.providers.append(aio_provider('new', 'other.meta'))
+        nuvio_import.enable_imported(['new'])
+        self.assertEqual({p['id'] for p in providers.enabled()}, {'aio', 'new'})
+
+    def test_same_id_written_differently_matches_but_name_never_does(self):
+        source = {'addonId': 'aio-metadata', 'catalogId': 'tmdb.top', 'type': 'movie'}
+        self.assertEqual(collections_home.matching_catalog(source, [aio_provider(manifest_id='aiometadata')])[0]['id'], 'aio')
+        self.assertIsNone(collections_home.matching_catalog(source, [aio_provider(manifest_id='different')]))
+
+    def test_switched_off_source_is_not_loaded_or_checked(self):
+        groups = profiles.normalize(nuvio_export('tmdb.top'))
+        groups[0]['folders'][0]['sources'][1]['enabled'] = False
+        again = profiles.normalize(groups)
+        self.assertIs(again[0]['folders'][0]['sources'][1]['enabled'], False)
+        self.assertEqual(len(list(self.validation.sources(again))), 1)
+        frontend_collections = importlib.import_module('resources.lib.collections_home')
+        shelf = frontend_collections.folder_shelf(again[0]['folders'][0], self.providers)
+        self.assertEqual([c['type'] for _, c, _ in shelf['collection_job']], ['movie'])
+
+
+class SetupGateDiagnosis(unittest.TestCase):
+    def setUp(self):
+        from nuvio_ui import setup_gate
+        self.gate = setup_gate
+
+    def test_reasons_name_what_blocks_home(self):
+        with mock.patch.object(self.gate.metadata_providers, 'candidates', return_value=[{'id': 'a'}]), \
+                mock.patch.object(self.gate.metadata_providers, 'enabled', return_value=[]), \
+                mock.patch.object(self.gate.stream_providers, 'candidates', return_value=[]), \
+                mock.patch.object(self.gate.collection_profile, 'load', return_value=[]):
+            self.assertEqual(self.gate.missing(), ['all metadata add-ons are OFF', 'no stream add-on installed',
+                                                   'no collections imported'])
+
+    def test_one_tap_switches_every_addon_on(self):
+        module = mock.Mock()
+        module.candidates.return_value = [{'id': 'a', 'name': 'A'}, {'id': 'b'}]
+        module.enabled.return_value = []
+        dialog = mock.Mock()
+        dialog.yesno.return_value = True
+        self.assertTrue(self.gate.offer_switch_on(module, 'metadata', dialog))
+        self.assertEqual([c.args for c in module.set_enabled.call_args_list], [('a', True), ('b', True)])
+        module.enabled.return_value = [{'id': 'a'}]
+        self.assertFalse(self.gate.offer_switch_on(module, 'metadata', dialog))
+
+
+class LinkedCatalogLabels(unittest.TestCase):
+    def test_editor_names_each_linked_catalog(self):
+        editor = importlib.import_module('nuvio_ui.collection_editor')
+        provider = aio_provider()
+        provider['manifest']['catalogs'][0]['name'] = 'Popular'
+        source = {'addonId': 'aio-metadata', 'catalogId': 'tmdb.top', 'type': 'movie', 'genre': 'None'}
+        self.assertEqual(editor._source_label(source, [provider]), ('AIOMetadata · Popular (Movies)', True))
+        self.assertEqual(editor._source_label(dict(source, catalogId='gone'), [provider]), ('gone (Movies)', False))
+        folder = {'sources': [source, dict(source, type='series', enabled=False)]}
+        with mock.patch.object(store, 'list_providers', return_value=[provider]):
+            self.assertEqual(editor._linked_summary(folder), '1 of 2 ON · Popular (Movies)')
+
+
+class ImdbTrailers(unittest.TestCase):
+    def setUp(self):
+        self.support = importlib.import_module('resources.lib.trailer_support')
+        # The instance trailer_support itself imports (test namespaces differ).
+        self.imdb = importlib.import_module(self.support.__package__ + '.imdb_trailers')
+        self.imdb._CACHE.clear()
+        self.addCleanup(self.imdb._CACHE.clear)
+
+    @staticmethod
+    def node(kind, *definitions):
+        return {'contentType': {'id': 'amzn1.imdb.video.contenttype.' + kind},
+                'playbackURLs': [{'url': 'https://imdb-video.invalid/%s-%s.mp4?sig=1' % (kind, d),
+                                  'videoMimeType': 'MP4', 'videoDefinition': d} for d in definitions] +
+                                [{'url': 'https://imdb-video.invalid/x.m3u8', 'videoMimeType': 'M3U8',
+                                  'videoDefinition': 'DEF_AUTO'}]}
+
+    def opener(self, nodes, calls=None):
+        import io
+
+        def open_(request, timeout):
+            if calls is not None:
+                calls.append(json.loads(request.data.decode()))
+            body = {'data': {'title': {'primaryVideos': {'edges': [{'node': n} for n in nodes]}}}}
+            response = io.BytesIO(json.dumps(body).encode())
+            response.__enter__ = lambda *a: response
+            response.__exit__ = lambda *a: False
+            return response
+        return open_
+
+    def test_trailer_beats_clip_and_compact_mp4_comes_first(self):
+        nodes = [self.node('clip', 'DEF_480p'), self.node('trailer', 'DEF_1080p', 'DEF_SD', 'DEF_480p')]
+        self.assertEqual(self.imdb.pick_all(nodes),
+                         ['https://imdb-video.invalid/trailer-DEF_480p.mp4?sig=1',
+                          'https://imdb-video.invalid/trailer-DEF_SD.mp4?sig=1',
+                          'https://imdb-video.invalid/trailer-DEF_1080p.mp4?sig=1'])
+        self.assertEqual(self.imdb.pick([self.node('clip', 'DEF_720p')]), 'https://imdb-video.invalid/clip-DEF_720p.mp4?sig=1')
+
+    def test_resolve_is_cached_and_never_raises(self):
+        calls = []
+        opener = self.opener([self.node('trailer', 'DEF_480p')], calls)
+        url = self.imdb.resolve('tt0111161', opener=opener)
+        self.assertTrue(url.endswith('.mp4?sig=1'))
+        self.assertEqual(self.imdb.resolve('tt0111161', opener=opener), url)
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls[0]['variables'], {'id': 'tt0111161'})
+
+        def broken(*args, **kwargs):
+            raise OSError('offline')
+        self.assertEqual(self.imdb.resolve('tt0000001', opener=broken), '')
+        self.assertEqual(self.imdb.resolve('not-an-id', opener=broken), '')
+
+    def test_imdb_id_from_targets_and_metadata(self):
+        self.assertEqual(self.imdb.imdb_id({'canonical_id': 'tmdb:5', 'imdb_id': ''}, {'ids': {'imdb': 'tt1234567'}}), 'tt1234567')
+        self.assertEqual(self.imdb.imdb_id({'imdb_id': '111161'}), 'tt0111161')
+        self.assertEqual(self.imdb.imdb_id({'id': 'kitsu:1'}), '')
+
+    def test_source_setting_defaults_to_youtube(self):
+        for raw, expected in (('', 'youtube'), ('bogus', 'youtube'), ('imdb', 'imdb'), ('imdb_youtube', 'imdb_youtube')):
+            addon = mock.Mock(getSetting=lambda key, v=raw: v)
+            self.assertEqual(self.imdb.source_setting(addon), expected)
+
+    def test_candidates_follow_the_chosen_order(self):
+        youtube = 'plugin://plugin.video.youtube/play/?video_id=abcdefghijk'
+        with mock.patch.object(self.imdb, 'resolve_all', return_value=['https://imdb/a.mp4', 'https://imdb/b.mp4', 'https://imdb/c.mp4']), \
+                mock.patch.object(self.support.xbmc, 'getCondVisibility', return_value=True):
+            for source, expected in (('youtube', [youtube]), ('imdb', ['https://imdb/a.mp4', 'https://imdb/b.mp4']),
+                                     ('imdb_youtube', ['https://imdb/a.mp4', 'https://imdb/b.mp4', youtube]),
+                                     ('youtube_imdb', [youtube, 'https://imdb/a.mp4', 'https://imdb/b.mp4'])):
+                addon = mock.Mock(getSetting=lambda key, v=source: v)
+                self.assertEqual(self.support.trailer_candidates(youtube, ({'id': 'tt1234567'},), addon=addon), expected)
+        with mock.patch.object(self.support.xbmc, 'getCondVisibility', return_value=False):
+            addon = mock.Mock(getSetting=lambda key: 'youtube')
+            self.assertEqual(self.support.trailer_candidates(youtube, (), addon=addon), [], 'no YouTube add-on')
+
+    def test_home_preview_only_uses_fallback_when_preferred_source_is_empty(self):
+        row = {'target': {'media_type': 'movie', 'canonical_id': 'tt1234567'}, 'trailer': 'https://cdn/t.mp4'}
+        with mock.patch.object(self.imdb, 'source_setting', return_value='imdb_youtube'), \
+                mock.patch.object(self.imdb, 'resolve_all', return_value=['https://imdb/a.mp4']), \
+                mock.patch.object(self.support, '_provider_trailer') as provider:
+            self.assertEqual(self.support.selected_trailers(row), ['https://imdb/a.mp4'])
+        provider.assert_not_called()
+        with mock.patch.object(self.imdb, 'source_setting', return_value='imdb_youtube'), \
+                mock.patch.object(self.imdb, 'resolve_all', return_value=[]):
+            self.assertEqual(self.support.selected_trailers(row), ['https://cdn/t.mp4'])
+
+    def test_details_trailer_tries_the_next_candidate(self):
+        trailers = importlib.import_module('nuvio_ui.trailers')
+        cache = importlib.import_module('resources.lib.trailer_cache')
+        playback = importlib.import_module('nuvio_ui.playback')
+        prepared = []
+
+        def prepare(meta, cancelled=None):
+            prepared.append(meta['trailer'])
+            return '' if meta['trailer'].endswith('a.mp4') else ''
+        with mock.patch.object(self.support, 'trailer_candidates', return_value=['https://imdb/a.mp4', 'https://imdb/b.mp4']), \
+                mock.patch.object(cache, 'prepare', side_effect=prepare), \
+                mock.patch.object(playback, 'job', side_effect=lambda fn, *a, **k: fn()), \
+                mock.patch.object(trailers.xbmc, 'Player', return_value=mock.Mock(isPlayingVideo=lambda: False)):
+            self.assertFalse(trailers.show_trailer({'id': 'tt1', 'name': 'X'}))
+        self.assertEqual(prepared, ['https://imdb/a.mp4', 'https://imdb/b.mp4'])
+
+    def test_trailer_source_setting_is_declared(self):
+        text = (Path(kodi_stub.ADDON_ROOT) / 'resources' / 'settings.xml').read_text(encoding='utf-8')
+        self.assertIn('id="nuvio_trailer_source"', text)
+
+
 if __name__ == '__main__':
     unittest.main()

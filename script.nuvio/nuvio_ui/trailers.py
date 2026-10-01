@@ -59,7 +59,14 @@ def show_trailer(meta):
     if xbmc.Player().isPlayingVideo():
         xbmcgui.Dialog().ok('Trailer','Stop the current video before opening a trailer.');return False
     cancelled=threading.Event()
-    try: url=job(lambda:prepare(meta,cancelled),meta,label='Preparing trailer')
+    def resolve():
+        # Trailer source order from Settings > Trailers (YouTube and/or IMDb).
+        from resources.lib.trailer_support import trailer_candidates
+        for candidate in trailer_candidates(trailer_url(meta),(meta,)):
+            path=prepare({'trailer':candidate},cancelled)
+            if path or cancelled.is_set():return path
+        return ''
+    try: url=job(resolve,meta,label='Preparing trailer')
     finally: cancelled.set()
     if not url:
         # A resolution failure never reaches Kodi's playback queue.

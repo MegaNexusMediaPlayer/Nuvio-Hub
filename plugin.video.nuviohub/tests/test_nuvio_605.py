@@ -117,8 +117,9 @@ class PreviewAndLabels(unittest.TestCase):
         with tempfile.NamedTemporaryFile() as clip,mock.patch.object(cache,'prepare',side_effect=['',clip.name]) as prepare:
             self.assertEqual(controller._resolve('key',row,False),'');self.assertEqual(controller._resolve('key',row,False),clip.name);self.assertEqual(prepare.call_count,2)
     def test_missing_cached_file_is_resolved_again(self):
-        controller=preview.Controller(mock.Mock());preview._CACHE.clear();row={'target':{'media_type':'movie','canonical_id':'tt605'}}
-        preview._CACHE[('movie','tt605',False)]=(float('inf'),'/missing/clip.mp4')
+        # 6.0.11: the preview cache key also carries the chosen trailer source.
+        controller=preview.Controller(mock.Mock());preview._CACHE.clear();row={'target':{'media_type':'movie','canonical_id':'tt605'},'trailer':'https://fixture/trailer.mp4'}
+        preview._CACHE[('movie','tt605',False,'youtube')]=(float('inf'),'/missing/clip.mp4')
         cache=importlib.import_module('resources.lib.trailer_cache')
         with mock.patch.object(cache,'prepare',return_value='fresh') as prepare:self.assertEqual(controller._resolve('key',row,False),'fresh');prepare.assert_called_once()
     def test_styled_badges_and_missing_font_letters_render_portable_text(self):
