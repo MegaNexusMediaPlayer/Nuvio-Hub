@@ -37,6 +37,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -45,6 +46,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -103,6 +105,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -111,6 +114,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -169,6 +173,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -177,6 +182,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -235,6 +241,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -243,6 +250,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -301,6 +309,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -309,6 +318,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -367,6 +377,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -375,6 +386,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -433,6 +445,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -441,6 +454,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -499,6 +513,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -507,6 +522,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -565,6 +581,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -573,6 +590,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -631,6 +649,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -639,6 +658,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -697,6 +717,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -705,6 +726,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -763,6 +785,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -771,6 +794,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -829,6 +853,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -837,6 +862,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -895,6 +921,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -903,6 +930,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -961,6 +989,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -969,6 +998,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -1027,6 +1057,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -1035,6 +1066,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -1093,6 +1125,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -1101,6 +1134,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -1159,6 +1193,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -1167,6 +1202,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -1225,6 +1261,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -1233,6 +1270,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -1291,6 +1329,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -1299,6 +1338,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -1357,6 +1397,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -1365,6 +1406,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -1423,6 +1465,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -1431,6 +1474,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -1489,6 +1533,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -1497,6 +1542,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>
@@ -1555,6 +1601,7 @@
         <height>610</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_shade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="image">
         <left>0</left>
@@ -1563,6 +1610,7 @@
         <height>380</height>
         <aspectratio>stretch</aspectratio>
         <texture>special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <animation effect="fade" start="100" end="55" time="300" condition="String.IsEqual(Window.Property(nuvio.preview),1)">Conditional</animation>
       </control>
       <control type="label">
         <left>70</left>

@@ -116,7 +116,8 @@ class Controller:
         def number(key,default,low,high):
             try:return min(high,max(low,float(addon.getSetting(key) or default)))
             except ValueError:return default
-        enabled=addon.getSetting('nuvio_auto_trailers')=='true'
+        # Windowed video OFF (Settings > Trailers): no small preview player.
+        enabled=addon.getSetting('nuvio_auto_trailers')=='true' and addon.getSetting('nuvio_windowed_video')!='off'
         if not enabled and not self.player.token and not self.job:return
         selection=self.window.preview_selection();key,row=selection if selection else (None,{})
         if key!=self.previous or not enabled:
@@ -133,6 +134,8 @@ class Controller:
             home.setProperty('nuvio.preview.active',token);home.setProperty('nuvio.preview.silent',token)
             self.window.setProperty('nuvio.preview.loading','1')
             self.play_started=now;self.player.path=url;self.player.play(url,item,windowed=True)
+            from resources.lib.video_window import coreelec_hint
+            coreelec_hint()
         if self.play_started and self.player.ready and not self.player.isPlayingVideo():
             self._clear();self.play_started=0
         if not enabled or not key or self.failed_session:return

@@ -257,6 +257,12 @@ class IPTV(Dialog):
         ADDON.setSetting('nuvio_iptv_last_unique',channel_key(row))
         self.setProperty('nuvio.playing',plain_label(row.get('label')))
         # Keep this modal visible: playback is rendered by its videowindow.
+        # Windowed video OFF (Settings > Trailers): go straight to fullscreen.
+        from resources.lib import video_window
+        video_window.coreelec_hint()
+        if not video_window.allowed():
+            self.child(self._fullscreen)
+            self._back_block_until=time.monotonic()+.3
     def onClick(self,cid):
         if cid==500 and self.rows:
             row=self.rows[self.getControl(500).getSelectedPosition()]
@@ -265,7 +271,7 @@ class IPTV(Dialog):
                 self.child(self._fullscreen)
                 self._back_block_until=time.monotonic()+.3
             else:self._play(row)
-        elif cid==505:
+        elif cid in (505,506):
             if xbmc.getCondVisibility('Pvr.IsPlayingTV'):xbmc.Player().stop()
             self.finish()
         elif cid==501:

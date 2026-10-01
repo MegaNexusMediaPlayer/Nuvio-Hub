@@ -53,13 +53,18 @@ class Loading(xbmcgui.WindowXMLDialog):
         xbmcgui.Window(10000).clearProperty('nuvio.loading.active')
         super().close()
 
-def job(fn,meta=None,full=False,label='Loading sources',cancel=None):
-    win=Loading('nuvio_loading.xml',ROOT,'Default','1080i',meta=meta,full=full,label=label)
+def job(fn,meta=None,full=False,label='Loading sources',cancel=None,window=None):
+    """Run fn off the GUI thread behind a loading screen. An already open
+    ``window`` is reused and left open, so consecutive steps show one screen."""
+    own=window is None
+    win=window or Loading('nuvio_loading.xml',ROOT,'Default','1080i',meta=meta,full=full,label=label)
+    if not own:win.setProperty('nuvio.loading',label)
     results=queue.Queue()
     def work():
         try:results.put((True,fn()))
         except Exception as exc:results.put((False,exc))
-    win.show();future=_JOBS.submit(work)
+    if own:win.show()
+    future=_JOBS.submit(work)
     try:
         while not win.cancelled and not xbmc.Monitor().abortRequested():
             try:
@@ -72,7 +77,8 @@ def job(fn,meta=None,full=False,label='Loading sources',cancel=None):
         return None
     finally:
         if cancel is not None:cancel.set()
-        future.cancel();win.close()
+        future.cancel()
+        if own:win.close()
 
 class Sources(xbmcgui.WindowXMLDialog):
     def __init__(self,*args,**kwargs):
@@ -133,12 +139,24 @@ class StartListener(xbmc.Player):
 def play(meta,context):
     auto=xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_autoplay')=='true' and not context.get('force_manual')
     loading_label='Loading video…' if auto else 'Loading sources'
-    result=job(lambda:backend_api.streams(meta.get('type') or 'movie',context.get('video_id') or meta['id']),meta,auto,label=loading_label)
-    if result is None:return False
+    # Autoplay keeps ONE loading screen from the source search until the video
+    # starts; closing and reopening it flashed the page underneath.
+    shared=Loading('nuvio_loading.xml',ROOT,'Default','1080i',meta=meta,full=True,label=loading_label) if auto else None
+    if shared:shared.show()
+    try:return _play(meta,context,auto,loading_label,shared)
+    finally:
+        if shared:shared.close()
+
+
+def _play(meta,context,auto,loading_label,shared):
+    result=job(lambda:backend_api.streams(meta.get('type') or 'movie',context.get('video_id') or meta['id']),meta,auto,label=loading_label,window=shared)
+    if result is None or (shared and shared.cancelled):return False
     source,rows=result
     if source.get('_nuvio_errors'):
         xbmcgui.Dialog().notification('Stream add-ons', '%d add-on(s) unavailable; showing available results.' % len(source['_nuvio_errors']))
-    if not rows:xbmcgui.Dialog().ok('Sources','No streams matched your provider configuration.');return False
+    if not rows:
+        if shared:shared.close()
+        xbmcgui.Dialog().ok('Sources','No streams matched your provider configuration.');return False
     selected=0 if auto else select_source(rows)
     if selected<0:return False
     ctx=backend_api.playback_context(meta,rows[selected],source,context.get('season',''),context.get('episode',''),context.get('video_id') or meta['id'],context.get('resume_seconds') or 0)
@@ -148,8 +166,8 @@ def play(meta,context):
     home=xbmcgui.Window(10000);home.clearProperty('nuvio.preview.active')
     home.clearProperty('nuvio.preview.silent')
     listener=StartListener(token)
-    win=Loading('nuvio_loading.xml',ROOT,'Default','1080i',meta=meta,full=True,label='Loading video…' if auto else 'Starting playback')
-    win.show()
+    win=shared or Loading('nuvio_loading.xml',ROOT,'Default','1080i',meta=meta,full=True,label='Starting playback')
+    if shared is None:win.show()
     try:
         xbmc.executebuiltin('RunPlugin("%s")'%backend_api.queue_playback(ctx))
         deadline=time.monotonic()+60
@@ -162,9 +180,12 @@ def play(meta,context):
             xbmc.executebuiltin('ActivateWindow(fullscreenvideo)')
             return True
         home.setProperty('nuvio.cancelled.'+token,'1')
-        if not win.cancelled:xbmcgui.Dialog().ok('Playback','The selected source did not start. Try another source or check your provider.')
+        if not win.cancelled:
+            if shared:shared.close()
+            xbmcgui.Dialog().ok('Playback','The selected source did not start. Try another source or check your provider.')
         return False
-    finally:win.close()
+    finally:
+        if shared is None:win.close()
 
 
 def source_badges(row):
