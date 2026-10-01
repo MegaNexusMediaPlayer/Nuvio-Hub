@@ -501,7 +501,7 @@ def maintenance():
     def rows():return [page.item('Check for updates',xbmcaddon.Addon('script.nuvio').getAddonInfo('version')),
         page.item('Automatic updates from GitHub',enabled=ADDON.getSetting('nuvio_auto_update')!='false'),
         page.item('Support MegaNexus · Ko-fi','QR code'),
-        page.item('Run setup wizard'),page.item('Remove Nuvio build'),page.item('Back')]
+        page.item('Run setup wizard'),page.item('Remove MegaNexus build'),page.item('Back')]
     def choose(pick):
         if pick==0:
             result=check_updates()

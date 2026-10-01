@@ -71,6 +71,20 @@ class AddonNames(unittest.TestCase):
         self.assertIn("'MegaNexus screensaver'", settings)
 
 
+class VideoAddonTexts(unittest.TestCase):
+    def test_video_add_on_menu_and_settings_say_meganexus(self):
+        settings = (ROOT / 'plugin.video.nuviohub/resources/settings.xml').read_text(encoding='utf-8')
+        plugin = (ROOT / 'plugin.video.nuviohub/resources/lib/plugin.py').read_text(encoding='utf-8')
+        removal = (ROOT / 'plugin.video.nuviohub/resources/lib/nuvio_uninstall.py').read_text(encoding='utf-8')
+        import re
+        quoted = lambda text: ' '.join(re.findall(r"'[^'\\n]*'|\"[^\"\\n]*\"", text))  # shown strings, not comments
+        for old in ('Nuvio interface', 'Nuvio build', 'Nuvio installation', 'Nuvio removal'):
+            for name, text in (('settings.xml', settings), ('plugin.py', quoted(plugin)), ('nuvio_uninstall.py', quoted(removal))):
+                self.assertNotIn(old, text, (name, old))
+        self.assertIn('Install or repair the MegaNexus interface, skin and screensaver', settings)
+        self.assertIn("add_item('Repair MegaNexus installation'", plugin)
+
+
 REMOTE = [{'id': 'g', 'title': 'Streaming', 'folders': [
     {'id': 'f', 'title': 'Netflix', 'catalogSources': [{'addonId': 'aio.meta', 'catalogId': 'netflix', 'type': 'movie'}]}]}]
 AIO = {'id': 'p-aio', 'name': 'AIOMetadata', 'manifest': {'id': 'aio.meta', 'resources': ['catalog', 'meta'], 'types': ['movie'],

@@ -136,9 +136,9 @@ def ensure_components(force=False):
     desired=json.loads((packages/'bundle.json').read_text(encoding='utf-8'))
     needs_change=force or any(not installed_matches(addons_dir/r['id'],r) for r in desired)
     if needs_change and xbmc.Player().isPlayingVideo():
-        raise RuntimeError('Stop playback before installing or updating the Nuvio interface.')
+        raise RuntimeError('Stop playback before installing or updating the MegaNexus interface.')
     if needs_change and xbmcgui.Window(10000).getProperty('nuvio.frontend.running'):
-        raise RuntimeError('Close the Nuvio interface and restart Kodi before updating the bundled components.')
+        raise RuntimeError('Close the MegaNexus interface and restart Kodi before updating the bundled components.')
     changed=install_components(packages,addons_dir,Path(xbmcvfs.translatePath(addon.getAddonInfo('profile')))/'installation-backups',force)
     xbmc.executebuiltin('UpdateLocalAddons')
     monitor=xbmc.Monitor()

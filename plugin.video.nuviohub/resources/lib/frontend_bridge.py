@@ -8,7 +8,7 @@ def open_home(settings=False, repair=False):
     try:
         ensure_components(force=repair)
     except Exception as exc:
-        xbmcgui.Dialog().ok('Nuvio installation',str(exc))
+        xbmcgui.Dialog().ok('MegaNexus installation',str(exc))
         return
     import xbmcaddon
     addon=xbmcaddon.Addon('plugin.video.nuviohub')

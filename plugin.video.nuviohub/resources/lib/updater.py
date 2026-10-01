@@ -239,7 +239,7 @@ def interactive_check():
     if not dialog.yesno('Nuvio Hub updates', 'Nuvio Hub %s is available (installed %s). Install it now?' % (info['version'], current)):
         return
     if xbmc.Player().isPlayingVideo() or xbmcgui.Window(10000).getProperty('nuvio.frontend.running'):
-        dialog.ok('Nuvio Hub updates', 'Stop playback and close the Nuvio interface, then retry.')
+        dialog.ok('Nuvio Hub updates', 'Stop playback and close the MegaNexus interface, then retry.')
         return
     busy = xbmcgui.DialogProgressBG()
     busy.create('Nuvio Hub', 'Installing %s' % info['version'])

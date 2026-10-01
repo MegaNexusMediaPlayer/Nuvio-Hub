@@ -1,10 +1,10 @@
 <settings>
   <category label="Nuvio Hub">
-    <setting type="lsep" label="Nuvio interface" />
+    <setting type="lsep" label="MegaNexus interface" />
     <setting type="action" label="Open HUB settings" action="RunScript(script.nuvio,settings)" option="close" />
-    <setting type="action" label="Install or repair the Nuvio interface, skin and screensaver" action="RunPlugin(plugin://plugin.video.nuviohub/?action=nuvio_install)" option="close" />
+    <setting type="action" label="Install or repair the MegaNexus interface, skin and screensaver" action="RunPlugin(plugin://plugin.video.nuviohub/?action=nuvio_install)" option="close" />
     <setting type="sep" />
-    <setting type="lsep" label="Updates · installed automatically from the Nuvio Hub GitHub releases" />
+    <setting type="lsep" label="Updates · installed automatically from the MegaNexus GitHub releases" />
     <setting type="action" label="Check for updates now" action="RunPlugin(plugin://plugin.video.nuviohub/?action=nuvio_update_check)" option="close" />
     <setting id="nuvio_subtitle_language" type="text" default="" visible="false" />
     <setting id="nuvio_subtitles_on_start" type="bool" default="false" visible="false" />
@@ -195,8 +195,8 @@
     <setting id="nuvio_screensaver_applied" type="text" default="false" visible="false" />
   </category>
   <category label="Remove">
-    <setting type="lsep" label="Removes the Nuvio interface, skin, screensaver and Nuvio Hub in the right order." />
+    <setting type="lsep" label="Removes the MegaNexus interface, skin, screensaver and Nuvio Hub in the right order." />
     <setting type="lsep" label="Kodi switches back to Estuary; accounts and history can be kept." />
-    <setting type="action" label="Remove the Nuvio build" action="RunPlugin(plugin://plugin.video.nuviohub/?action=nuvio_uninstall)" option="close" />
+    <setting type="action" label="Remove the MegaNexus build" action="RunPlugin(plugin://plugin.video.nuviohub/?action=nuvio_uninstall)" option="close" />
   </category>
 </settings>

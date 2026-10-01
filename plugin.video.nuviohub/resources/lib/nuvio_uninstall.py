@@ -147,19 +147,19 @@ def run():
     for _ in range(40):
         if not home.getProperty('nuvio.frontend.running'):break
         if monitor.waitForAbort(.1):return
-    if home.getProperty('nuvio.frontend.running'):raise ValueError('Close Nuvio and retry removal.')
-    if xbmc.Player().isPlaying():raise ValueError('Stop playback before removing Nuvio.')
+    if home.getProperty('nuvio.frontend.running'):raise ValueError('Close MegaNexus and retry removal.')
+    if xbmc.Player().isPlaying():raise ValueError('Stop playback before removing MegaNexus.')
     installed=inventory();ledger=read_ledger();order=removal_plan(installed,ledger)
     if not BUNDLE.intersection(installed).issubset(order):
-        raise ValueError('Another installed add-on requires Nuvio. Remove that dependency in Kodi first.')
-    if not order:dialog.ok('Nuvio removal','No Nuvio components remain.');return
-    choice=dialog.select('Remove Nuvio build',[
+        raise ValueError('Another installed add-on requires MegaNexus. Remove that dependency in Kodi first.')
+    if not order:dialog.ok('MegaNexus removal','No MegaNexus components remain.');return
+    choice=dialog.select('Remove MegaNexus build',[
         'Keep accounts, settings and history (recommended)',
-        'Remove Nuvio accounts, settings and history too','Cancel'],preselect=0)
+        'Remove accounts, settings and history too','Cancel'],preselect=0)
     if choice not in (0,1):return
     keep=choice==0
-    message='Accounts, settings and playback history will be kept.' if keep else 'Nuvio accounts, settings and history will be deleted. This cannot be undone.'
-    if not dialog.yesno('Remove Nuvio build','Remove these components?\n'+', '.join(order)+'\n'+message+' Shared and pre-existing add-ons are kept.'):return
+    message='Accounts, settings and playback history will be kept.' if keep else 'Accounts, settings and history will be deleted. This cannot be undone.'
+    if not dialog.yesno('Remove MegaNexus build','Remove these components?\n'+', '.join(order)+'\n'+message+' Shared and pre-existing add-ons are kept.'):return
     home.setProperty('nuvio.uninstalling','1')
     moved=[]
     root=Path(xbmcvfs.translatePath('special://home/addons')).resolve()
@@ -199,7 +199,7 @@ def run():
             if not set(moved).intersection(inventory()):break
             if monitor.waitForAbort(.2):break
         if set(moved).intersection(inventory()):
-            dialog.ok('Nuvio removal','Components were removed. Restart Kodi to refresh its component list. '+('Accounts and settings are kept.' if keep else 'Nuvio account data was removed.'))
+            dialog.ok('MegaNexus removal','Components were removed. Restart Kodi to refresh its component list. '+('Accounts and settings are kept.' if keep else 'Account data was removed.'))
             return
         if stage.parent==root.parent and stage.name.startswith('nuvio-removed-'):
             shutil.rmtree(stage)
@@ -218,4 +218,4 @@ def run():
 if __name__=='__main__':
     import xbmcgui
     try:run()
-    except Exception as exc:xbmcgui.Dialog().ok('Nuvio removal',str(exc) if isinstance(exc,ValueError) else 'Removal could not finish. Restart Kodi, then retry from HUB Settings.')
+    except Exception as exc:xbmcgui.Dialog().ok('MegaNexus removal',str(exc) if isinstance(exc,ValueError) else 'Removal could not finish. Restart Kodi, then retry from HUB Settings.')

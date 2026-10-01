@@ -6553,8 +6553,8 @@ def home():
     # Only a small recovery directory sits behind the independent Nuvio UI.
     add_item('MegaNexus', build_url(action='home_xml'))
     add_item('HUB Settings', build_url(action='first_run_wizard'), is_folder=False)
-    add_item('Repair Nuvio installation', build_url(action='nuvio_install'), is_folder=False)
-    add_item('Remove Nuvio build', build_url(action='nuvio_uninstall'), is_folder=False)
+    add_item('Repair MegaNexus installation', build_url(action='nuvio_install'), is_folder=False)
+    add_item('Remove MegaNexus build', build_url(action='nuvio_uninstall'), is_folder=False)
     end_dir(content='files', cache=False)
     from .frontend_bridge import open_home
     return open_home()

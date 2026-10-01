@@ -29,6 +29,10 @@ Prepared 1 October 2026 from 6.0.24.
   named **MegaNexus** in Kodi (were "Nuvio"); provider is MegaNexus. Settings
   rows say *Use MegaNexus skin* and *MegaNexus screensaver*. Add-on IDs are
   unchanged, so updates and settings carry over.
+* The video add-on (Nuvio Hub) menu and its Configure page say *Install or
+  repair the MegaNexus interface, skin and screensaver*, *Repair MegaNexus
+  installation*, *Remove MegaNexus build*; removal and install dialogs too.
+  The video add-on itself keeps the name Nuvio Hub.
 
 ## Wording and colours
 
