@@ -263,42 +263,15 @@ def playback():
     return page.show('Playback · Kodi controls',rows,choose)
 
 
-def coreelec_windowed_help():
-    """Black windowed video with sound (Amlogic video plane): find the device's
-    Dolby Vision options, offer the windowed-playback exception, else fullscreen."""
-    from resources.lib import video_window
-    from .playback import job
-    dialog=xbmcgui.Dialog()
-    settings=job(video_window.dolby_vision_settings,label='Reading CoreELEC video settings') or []
-    skip=video_window.windowed_skip_setting(settings)
-    if skip and skip.get('value') is not True:
-        if dialog.yesno('Windowed video on CoreELEC','This CoreELEC build has "%s".\nTurn it ON so trailer previews and the IPTV preview are not black?'%skip['label']):
-            try:video_window.enable(skip['id']);dialog.ok('Windowed video','Done. Open a trailer or an IPTV preview to check.');return
-            except Exception:dialog.ok('Windowed video','CoreELEC did not accept the change. Set it in Settings > Player > Videos.')
-    else:
-        found='\n'.join('• %s: %s'%(row['label'],row['value']) for row in settings[:8]) or '• No Dolby Vision options were found.'
-        dialog.textviewer('Windowed video on CoreELEC',
-            'Amlogic boxes show hardware video on a layer under Kodi. Some settings, most often Dolby Vision for '
-            'SDR video (VS10), leave small video windows black while the sound plays; fullscreen still works.\n\n'
-            'Dolby Vision settings on this device:\n'+found+'\n\n'
-            'Try: switch SDR video to "Off" (no Dolby Vision) in Settings > Player > Videos > Dolby Vision, or turn on '
-            '"Skip DV for windowed playback" if your CoreELEC version offers it.')
-    if video_window.allowed(ADDON) and dialog.yesno('Windowed video','Still black? Turn windowed video OFF.\nTrailers and IPTV then open in fullscreen, which works on every device.'):
-        video_window.set_allowed(False,ADDON)
-
-
 def trailers():
-    from resources.lib import imdb_trailers, video_window
+    from resources.lib import imdb_trailers
     dialog=xbmcgui.Dialog()
-    coreelec=video_window.is_coreelec()
     def rows():return [page.item('Automatic trailers',enabled=ADDON.getSetting('nuvio_auto_trailers')=='true'),
         page.item('Trailer focus delay',(ADDON.getSetting('nuvio_trailer_delay') or '6')+' seconds'),
         page.item('Trailer duration',('Full trailer' if ADDON.getSetting('nuvio_trailer_duration')=='0' else (ADDON.getSetting('nuvio_trailer_duration') or '90')+' seconds')),
         page.item('Trailer source',imdb_trailers.LABELS[imdb_trailers.source_setting(ADDON)]),
         page.item('IMDb trailer quality · no add-on needed',imdb_trailers.QUALITY_LABELS[imdb_trailers.quality_setting(ADDON)]),
-        page.item('YouTube add-on','Configure' if xbmc.getCondVisibility('System.HasAddon(plugin.video.youtube)') else 'Install (only for YouTube trailers)'),
-        page.item('Windowed video · Home trailers and IPTV preview',enabled=video_window.allowed(ADDON)),
-        page.item('CoreELEC: windowed video is black?','Fix' if coreelec else 'Not needed on this device'),page.item('Back')]
+        page.item('YouTube add-on','Configure' if xbmc.getCondVisibility('System.HasAddon(plugin.video.youtube)') else 'Install (only for YouTube trailers)'),page.item('Back')]
     def choose(pick):
         if pick==0:toggle('nuvio_auto_trailers')
         elif pick in (1,2):
@@ -318,9 +291,7 @@ def trailers():
             if i>=0:ADDON.setSetting(imdb_trailers.QUALITY_SETTING,keys[i])
         elif pick==5:
             if ensure_addon('plugin.video.youtube'):xbmcaddon.Addon('plugin.video.youtube').openSettings()
-        elif pick==6:video_window.set_allowed(not video_window.allowed(ADDON),ADDON)
-        elif pick==7:coreelec_windowed_help()
-        elif pick==8:return page.DONE
+        elif pick==6:return page.DONE
     return page.show('Trailers',rows,choose)
 
 

@@ -58,12 +58,15 @@ class SaverMonitor(xbmc.Monitor):
         if self.window:self.window.close()
 
 
+LOOP_RESTART_GRACE=3.0
+
+
 class VideoPlayer(PreviewPlayer):
     def __init__(self):
-        super().__init__();self.ended=False
+        super().__init__();self.ended=False;self.ended_at=0.0
     def onPlayBackEnded(self):
         # The owner may start another loop, with a fresh playback token.
-        self.ended=True
+        self.ended=True;self.ended_at=time.monotonic()
     def onAVStarted(self):
         super().onAVStarted()
         if self.ready:
@@ -152,8 +155,11 @@ def run_video(token):
         while not win.closed and not monitor.abortRequested():
             if path and (player is None or player.ended):
                 if xbmc.Player().isPlaying():
-                    if player and player.ended and player.owns():
-                        monitor.waitForAbort(.05);continue  # Let Kodi finish EOF teardown.
+                    # Kodi still reports "playing" for a moment after EOF, with no
+                    # video left to own. Short clips looped once and then the
+                    # screensaver closed; wait for the teardown instead.
+                    if player and player.ended and time.monotonic()-player.ended_at<LOOP_RESTART_GRACE:
+                        monitor.waitForAbort(.05);continue
                     break  # Another caller owns playback.
                 if player:player.cancel();player._ended()
                 player=VideoPlayer();player.token=uuid.uuid4().hex;player.path=path

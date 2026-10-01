@@ -2,6 +2,19 @@
 <window>
   <defaultcontrol always="true">100</defaultcontrol>
   <controls>
+    <!-- Nuvio screens are dialogs. Kodi drives the hardware video layer
+         (CoreELEC/Amlogic, Android) only through video controls of the ACTIVE
+         WINDOW (CGUIWindowManager::RenderEx skips dialogs), so a small video in a
+         dialog stays black while its sound plays. This never-shown control makes
+         Kodi present each frame; the dialog's own videowindow decides where it
+         appears. On PCs the video is drawn in the GUI and this does nothing. -->
+    <control type="videowindow">
+      <left>0</left>
+      <top>0</top>
+      <width>1</width>
+      <height>1</height>
+      <visible>false</visible>
+    </control>
     <control type="image">
       <left>0</left>
       <top>0</top>

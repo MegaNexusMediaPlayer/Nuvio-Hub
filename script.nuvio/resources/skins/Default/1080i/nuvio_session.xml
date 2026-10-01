@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <window>
   <controls>
+    <!-- This is the active WINDOW under every Nuvio dialog. Kodi presents the
+         hardware video layer (CoreELEC/Amlogic, Android) only for the active
+         window's video controls, so without this never-shown control the Home
+         preview, IPTV preview, trailer and screensaver dialogs play sound over a
+         black picture. The dialog's own videowindow decides where video shows. -->
+    <control type="videowindow"><left>0</left><top>0</top><width>1</width><height>1</height><visible>false</visible></control>
     <control type="image"><left>0</left><top>0</top><width>1920</width><height>1080</height><texture colordiffuse="FF090B11">special://home/addons/script.nuvio/resources/media/white.png</texture></control>
     <control type="image"><left>0</left><top>0</top><width>1920</width><height>1080</height><aspectratio>scale</aspectratio><texture colordiffuse="55333333">$INFO[Window(10000).Property(nuvio.scene.art)]</texture></control>
   </controls>

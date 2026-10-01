@@ -2,8 +2,8 @@
 
 This is a four-component Kodi build: `plugin.video.nuviohub` (backend/service),
 `script.nuvio` (Python/XML frontend), `skin.nuvio` (Kodi shell), and
-`screensaver.nuvio` (screensaver entrypoint). The local 6.0.12 candidate is the
-baseline for this 6.0.13 candidate. Do not publish, push, or change live user
+`screensaver.nuvio` (screensaver entrypoint). The local 6.0.13 candidate is the
+baseline for this 6.0.14 candidate. Do not publish, push, or change live user
 profiles as a side effect of reviewing code.
 
 ## Required repository skills
@@ -15,7 +15,7 @@ claims that a runtime plugin or global agent skill has been installed.
 
 ## Before modifying code
 
-Read the relevant call sites, tests, and `docs/RELEASE-6.0.13.md` (and 6.0.12/6.0.11/6.0.10). Identify which
+Read the relevant call sites, tests, and `docs/RELEASE-6.0.14.md` (and 6.0.13 back to 6.0.10). Identify which
 Kodi process/interpreter owns the work. Keep existing public add-on IDs,
 profile paths, encrypted credentials and migration aliases. Never mass-rename
 legacy state keys or remove upstream license notices. Never replace an
@@ -41,6 +41,9 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
 * Home Back does not reveal HUB. HUB is explicit. Last-row Down stays put.
   Preserve focus by stable content identity across refreshes, not by a changed
   resume URL or unconditional `selectItem(0)`.
+* Video inside a Nuvio dialog needs a `videowindow` in the ACTIVE window too
+  (hidden ones exist in `nuvio_session.xml` and the skin Home/SkinSettings):
+  Kodi presents hardware video layers only via the active window's RenderEx.
 * IPTV: first click previews, second active-channel click enters native
   fullscreen, Esc returns to the same guide without EPG over fullscreen video.
   Do not change the user's global screen resolution or unrelated PVR settings.
@@ -60,10 +63,10 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
 ## Required checks (Python 3.9+ review environment)
 
 ```sh
-python review/check_613.py
-python review/check_608_rebrand_kodi22.py 6.0.13
-python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.13.zip
-python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.13.zip
+python review/check_614.py
+python review/check_608_rebrand_kodi22.py 6.0.14
+python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.14.zip
+python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.14.zip
 ```
 
 The first command runs the maintained unit suite, parses XML/JSON, and checks

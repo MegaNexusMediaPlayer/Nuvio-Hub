@@ -52,26 +52,6 @@ class TrailerWindow(xbmcgui.WindowXMLDialog):
         if action.getId() in (9,10,92,216,13):self.close()
 
 
-def _fullscreen_trailer(meta,url):
-    """Windowed video OFF: Kodi's normal fullscreen player, which shows video on
-    every device. Back/Stop returns to the same title page."""
-    item=xbmcgui.ListItem(label='Trailer: '+str(meta.get('name') or meta.get('title') or ''))
-    item.setProperty('IsPlayable','true')
-    monitor=xbmc.Monitor();player=xbmc.Player()
-    player.play(url,item)
-    seen=False;start=time.monotonic()
-    while not monitor.waitForAbort(.05):
-        full=xbmc.getCondVisibility('Window.IsActive(fullscreenvideo)')
-        if full:seen=True
-        if seen and not full:
-            if player.isPlayingVideo():player.stop()
-            break
-        if seen and not player.isPlaying():break
-        if not seen and time.monotonic()-start>10:break
-        if not seen and player.isPlayingVideo():xbmc.executebuiltin('ActivateWindow(fullscreenvideo)')
-    return seen
-
-
 def show_trailer(meta):
     """Resolve/cache first, then play a local clip above the existing details."""
     import xbmcaddon,uuid
@@ -93,9 +73,6 @@ def show_trailer(meta):
     if not url:
         # A resolution failure never reaches Kodi's playback queue.
         return False
-    from resources.lib import video_window
-    if not video_window.allowed():
-        return _fullscreen_trailer(meta,url)
     player=PreviewPlayer();player.token=uuid.uuid4().hex
     win=TrailerWindow('nuvio_trailer.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),'Default','1080i',meta=meta)
     monitor=xbmc.Monitor();home=xbmcgui.Window(10000)
