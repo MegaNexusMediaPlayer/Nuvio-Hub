@@ -161,7 +161,7 @@ class KoFi(unittest.TestCase):
         self.assertIn("'kofi_qr.png'", (ROOT / 'review/build_bundle.py').read_text())
         source = (ROOT / 'script.nuvio/nuvio_ui/settings.py').read_text()
         self.assertIn("https://ko-fi.com/master100janovic", source)
-        self.assertIn("('Support Nuvio Hub · Ko-fi',support)", source)
+        self.assertIn("('Support MegaNexus · Ko-fi',support)", source)
 
 
 class CinemetaRules(unittest.TestCase):

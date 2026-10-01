@@ -9,7 +9,7 @@
       <width>1920</width>
       <height>1080</height>
       <aspectratio>stretch</aspectratio>
-      <texture colordiffuse="FF090B11">special://home/addons/script.nuvio/resources/media/black.png</texture>
+      <texture colordiffuse="FF040F22">special://home/addons/script.nuvio/resources/media/black.png</texture>
     </control>
     <control type="videowindow">
       <left>640</left>
@@ -71,7 +71,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7000).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -137,7 +137,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7023).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -203,7 +203,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7022).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -269,7 +269,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7021).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -335,7 +335,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7020).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -401,7 +401,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7019).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -467,7 +467,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7018).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -533,7 +533,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7017).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -599,7 +599,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7016).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -665,7 +665,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7015).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -731,7 +731,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7014).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -797,7 +797,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7013).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -863,7 +863,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7012).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -929,7 +929,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7011).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -995,7 +995,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7010).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -1061,7 +1061,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7009).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -1127,7 +1127,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7008).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -1193,7 +1193,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7001).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -1259,7 +1259,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7002).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -1325,7 +1325,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7003).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -1391,7 +1391,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7004).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -1457,7 +1457,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7005).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -1523,7 +1523,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7006).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -1589,7 +1589,7 @@
         <width>980</width>
         <height>32</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Container(7007).ListItem.Property(meta_line)]</label>
       </control>
       <control type="textbox">
@@ -1613,20 +1613,20 @@
       </control>
     </control>
     <control type="image">
-      <left>70</left>
-      <top>24</top>
-      <width>240</width>
-      <height>76</height>
+      <left>60</left>
+      <top>15</top>
+      <width>284</width>
+      <height>90</height>
       <aspectratio>keep</aspectratio>
       <texture>special://home/addons/script.nuvio/resources/media/nuvio_wordmark.png</texture>
     </control>
     <control type="label">
-      <left>322</left>
+      <left>356</left>
       <top>40</top>
-      <width>80</width>
+      <width>60</width>
       <height>40</height>
       <font>font12</font>
-      <textcolor>FFC2ADFF</textcolor>
+      <textcolor>FFADD3FF</textcolor>
       <label>HUB</label>
     </control>
     <control type="button" id="101">
@@ -1638,9 +1638,9 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFCCD1DC</textcolor>
-      <focusedcolor>FF090B11</focusedcolor>
+      <focusedcolor>FF040F22</focusedcolor>
       <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22" colordiffuse="20232935">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <texturenofocus border="22" colordiffuse="2009234F">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
       <label>Home</label>
       <onleft>108</onleft>
       <onright>105</onright>
@@ -1656,9 +1656,9 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFCCD1DC</textcolor>
-      <focusedcolor>FF090B11</focusedcolor>
+      <focusedcolor>FF040F22</focusedcolor>
       <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22" colordiffuse="20232935">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <texturenofocus border="22" colordiffuse="2009234F">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
       <label>Search</label>
       <onleft>101</onleft>
       <ondown>7000</ondown>
@@ -1674,9 +1674,9 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFCCD1DC</textcolor>
-      <focusedcolor>FF090B11</focusedcolor>
+      <focusedcolor>FF040F22</focusedcolor>
       <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22" colordiffuse="20232935">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <texturenofocus border="22" colordiffuse="2009234F">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
       <label>Settings</label>
       <onright>108</onright>
       <ondown>7000</ondown>
@@ -1692,9 +1692,9 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFCCD1DC</textcolor>
-      <focusedcolor>FF090B11</focusedcolor>
+      <focusedcolor>FF040F22</focusedcolor>
       <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22" colordiffuse="20232935">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <texturenofocus border="22" colordiffuse="2009234F">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
       <label>HUB</label>
       <onright>101</onright>
       <ondown>7000</ondown>
@@ -1754,7 +1754,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -1811,7 +1811,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -1836,7 +1836,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7000)</visible>
             </control>
             <control type="label">
@@ -1886,7 +1886,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -1924,7 +1924,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -1966,7 +1966,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -2001,7 +2001,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7000)</visible>
             </control>
             <control type="label">
@@ -2022,7 +2022,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -2091,7 +2091,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -2148,7 +2148,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -2173,7 +2173,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7001)</visible>
             </control>
             <control type="label">
@@ -2223,7 +2223,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -2261,7 +2261,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -2303,7 +2303,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -2338,7 +2338,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7001)</visible>
             </control>
             <control type="label">
@@ -2359,7 +2359,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -2428,7 +2428,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -2485,7 +2485,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -2510,7 +2510,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7002)</visible>
             </control>
             <control type="label">
@@ -2560,7 +2560,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -2598,7 +2598,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -2640,7 +2640,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -2675,7 +2675,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7002)</visible>
             </control>
             <control type="label">
@@ -2696,7 +2696,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -2765,7 +2765,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -2822,7 +2822,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -2847,7 +2847,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7003)</visible>
             </control>
             <control type="label">
@@ -2897,7 +2897,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -2935,7 +2935,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -2977,7 +2977,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -3012,7 +3012,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7003)</visible>
             </control>
             <control type="label">
@@ -3033,7 +3033,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -3102,7 +3102,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -3159,7 +3159,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -3184,7 +3184,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7004)</visible>
             </control>
             <control type="label">
@@ -3234,7 +3234,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -3272,7 +3272,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -3314,7 +3314,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -3349,7 +3349,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7004)</visible>
             </control>
             <control type="label">
@@ -3370,7 +3370,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -3439,7 +3439,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -3496,7 +3496,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -3521,7 +3521,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7005)</visible>
             </control>
             <control type="label">
@@ -3571,7 +3571,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -3609,7 +3609,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -3651,7 +3651,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -3686,7 +3686,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7005)</visible>
             </control>
             <control type="label">
@@ -3707,7 +3707,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -3776,7 +3776,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -3833,7 +3833,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -3858,7 +3858,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7006)</visible>
             </control>
             <control type="label">
@@ -3908,7 +3908,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -3946,7 +3946,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -3988,7 +3988,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -4023,7 +4023,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7006)</visible>
             </control>
             <control type="label">
@@ -4044,7 +4044,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -4113,7 +4113,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -4170,7 +4170,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -4195,7 +4195,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7007)</visible>
             </control>
             <control type="label">
@@ -4245,7 +4245,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -4283,7 +4283,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -4325,7 +4325,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -4360,7 +4360,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7007)</visible>
             </control>
             <control type="label">
@@ -4381,7 +4381,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -4450,7 +4450,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -4507,7 +4507,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -4532,7 +4532,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7008)</visible>
             </control>
             <control type="label">
@@ -4582,7 +4582,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -4620,7 +4620,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -4662,7 +4662,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -4697,7 +4697,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7008)</visible>
             </control>
             <control type="label">
@@ -4718,7 +4718,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -4787,7 +4787,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -4844,7 +4844,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -4869,7 +4869,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7009)</visible>
             </control>
             <control type="label">
@@ -4919,7 +4919,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -4957,7 +4957,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -4999,7 +4999,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -5034,7 +5034,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7009)</visible>
             </control>
             <control type="label">
@@ -5055,7 +5055,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -5124,7 +5124,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -5181,7 +5181,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -5206,7 +5206,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7010)</visible>
             </control>
             <control type="label">
@@ -5256,7 +5256,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -5294,7 +5294,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -5336,7 +5336,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -5371,7 +5371,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7010)</visible>
             </control>
             <control type="label">
@@ -5392,7 +5392,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -5461,7 +5461,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -5518,7 +5518,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -5543,7 +5543,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7011)</visible>
             </control>
             <control type="label">
@@ -5593,7 +5593,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -5631,7 +5631,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -5673,7 +5673,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -5708,7 +5708,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7011)</visible>
             </control>
             <control type="label">
@@ -5729,7 +5729,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -5798,7 +5798,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -5855,7 +5855,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -5880,7 +5880,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7012)</visible>
             </control>
             <control type="label">
@@ -5930,7 +5930,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -5968,7 +5968,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -6010,7 +6010,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -6045,7 +6045,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7012)</visible>
             </control>
             <control type="label">
@@ -6066,7 +6066,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -6135,7 +6135,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -6192,7 +6192,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -6217,7 +6217,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7013)</visible>
             </control>
             <control type="label">
@@ -6267,7 +6267,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -6305,7 +6305,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -6347,7 +6347,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -6382,7 +6382,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7013)</visible>
             </control>
             <control type="label">
@@ -6403,7 +6403,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -6472,7 +6472,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -6529,7 +6529,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -6554,7 +6554,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7014)</visible>
             </control>
             <control type="label">
@@ -6604,7 +6604,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -6642,7 +6642,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -6684,7 +6684,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -6719,7 +6719,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7014)</visible>
             </control>
             <control type="label">
@@ -6740,7 +6740,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -6809,7 +6809,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -6866,7 +6866,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -6891,7 +6891,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7015)</visible>
             </control>
             <control type="label">
@@ -6941,7 +6941,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -6979,7 +6979,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -7021,7 +7021,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -7056,7 +7056,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7015)</visible>
             </control>
             <control type="label">
@@ -7077,7 +7077,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -7146,7 +7146,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -7203,7 +7203,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -7228,7 +7228,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7016)</visible>
             </control>
             <control type="label">
@@ -7278,7 +7278,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -7316,7 +7316,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -7358,7 +7358,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -7393,7 +7393,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7016)</visible>
             </control>
             <control type="label">
@@ -7414,7 +7414,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -7483,7 +7483,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -7540,7 +7540,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -7565,7 +7565,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7017)</visible>
             </control>
             <control type="label">
@@ -7615,7 +7615,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -7653,7 +7653,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -7695,7 +7695,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -7730,7 +7730,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7017)</visible>
             </control>
             <control type="label">
@@ -7751,7 +7751,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -7820,7 +7820,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -7877,7 +7877,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -7902,7 +7902,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7018)</visible>
             </control>
             <control type="label">
@@ -7952,7 +7952,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -7990,7 +7990,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -8032,7 +8032,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -8067,7 +8067,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7018)</visible>
             </control>
             <control type="label">
@@ -8088,7 +8088,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -8157,7 +8157,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -8214,7 +8214,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -8239,7 +8239,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7019)</visible>
             </control>
             <control type="label">
@@ -8289,7 +8289,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -8327,7 +8327,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -8369,7 +8369,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -8404,7 +8404,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7019)</visible>
             </control>
             <control type="label">
@@ -8425,7 +8425,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -8494,7 +8494,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -8551,7 +8551,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -8576,7 +8576,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7020)</visible>
             </control>
             <control type="label">
@@ -8626,7 +8626,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -8664,7 +8664,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -8706,7 +8706,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -8741,7 +8741,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7020)</visible>
             </control>
             <control type="label">
@@ -8762,7 +8762,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -8831,7 +8831,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -8888,7 +8888,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -8913,7 +8913,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7021)</visible>
             </control>
             <control type="label">
@@ -8963,7 +8963,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -9001,7 +9001,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -9043,7 +9043,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -9078,7 +9078,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7021)</visible>
             </control>
             <control type="label">
@@ -9099,7 +9099,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -9168,7 +9168,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -9225,7 +9225,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -9250,7 +9250,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7022)</visible>
             </control>
             <control type="label">
@@ -9300,7 +9300,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -9338,7 +9338,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -9380,7 +9380,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -9415,7 +9415,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7022)</visible>
             </control>
             <control type="label">
@@ -9436,7 +9436,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -9505,7 +9505,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -9562,7 +9562,7 @@
               <width>304</width>
               <height>171</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -9587,7 +9587,7 @@
               <width>312</width>
               <height>179</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
               <visible>Control.HasFocus(7023)</visible>
             </control>
             <control type="label">
@@ -9637,7 +9637,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -9675,7 +9675,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -9717,7 +9717,7 @@
               <width>192</width>
               <height>288</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FF202532">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
+              <texture colordiffuse="FF08204A">special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png</texture>
             </control>
             <control type="image">
               <left>10</left>
@@ -9752,7 +9752,7 @@
               <width>200</width>
               <height>296</height>
               <aspectratio>stretch</aspectratio>
-              <texture colordiffuse="FFE6DBFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+              <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
               <visible>Control.HasFocus(7023)</visible>
             </control>
             <control type="label">
@@ -9773,7 +9773,7 @@
               <info>ListItem.Property(progress)</info>
               <texturebg colordiffuse="A0454956">special://home/addons/script.nuvio/resources/media/white.png</texturebg>
               <lefttexture>-</lefttexture>
-              <midtexture colordiffuse="FFB799FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
+              <midtexture colordiffuse="FF99C9FF">special://home/addons/script.nuvio/resources/media/white.png</midtexture>
               <righttexture>-</righttexture>
               <overlaytexture>-</overlaytexture>
               <visible>String.IsEqual(ListItem.Property(has_progress),1)</visible>
@@ -9817,7 +9817,7 @@
       <width>1920</width>
       <height>42</height>
       <aspectratio>stretch</aspectratio>
-      <texture colordiffuse="FF090B11">special://home/addons/script.nuvio/resources/media/black.png</texture>
+      <texture colordiffuse="FF040F22">special://home/addons/script.nuvio/resources/media/black.png</texture>
     </control>
     <control type="label">
       <left>73</left>
@@ -9844,7 +9844,7 @@
         <width>90</width>
         <height>40</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Weather.Temperature]</label>
         <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
       </control>

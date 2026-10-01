@@ -49,8 +49,9 @@ assert not (BACK/'resources/skins').exists()
 assert not list(OUT.rglob('resource.language.ar_*'))
 assert not [p for p in OUT.rglob('*') if p.suffix.lower() in ('.ttf','.otf','.ttc','.woff','.woff2')]
 assert not list(OUT.rglob('default_movie_poster.png'))
-# 6.0.20: built-in MegaNexus screensaver loop referenced from nuvio_ui/saver.py.
-assert (OUT/'script.nuvio/resources/media/meganexus_saver.mp4').is_file()
+# 6.0.21: built-in MegaNexus animation layers (skin-drawn screensaver).
+for layer in ('bg','logo','glow','spark'):assert (OUT/'script.nuvio/resources/media'/f'meganexus_saver_{layer}.png').is_file()
+assert not list(OUT.rglob('*.mp4'))
 for group in json.loads((BACK/'resources/collections.json').read_text(encoding='utf-8')):
     assert group['id'] not in ('collections.world','collections.sports')
     for folder in group['folders']:

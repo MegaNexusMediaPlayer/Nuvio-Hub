@@ -8,7 +8,7 @@
       <width>1920</width>
       <height>1080</height>
       <aspectratio>scale</aspectratio>
-      <texture colordiffuse="FF090B11">special://home/addons/script.nuvio/resources/media/white.png</texture>
+      <texture colordiffuse="FF040F22">special://home/addons/script.nuvio/resources/media/white.png</texture>
     </control>
     <control type="image">
       <left>70</left>
@@ -44,7 +44,7 @@
         <width>110</width>
         <height>40</height>
         <font>font12</font>
-        <textcolor>FFC2ADFF</textcolor>
+        <textcolor>FFADD3FF</textcolor>
         <label>$INFO[Weather.Temperature]</label>
         <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
       </control>
@@ -215,7 +215,7 @@
       <width>860</width>
       <height>36</height>
       <font>font13</font>
-      <textcolor>FFBCA5FA</textcolor>
+      <textcolor>FFA5CDFA</textcolor>
       <label>$INFO[Window.Property(nuvio.playing)]</label>
     </control>
     <control type="label">
@@ -244,7 +244,7 @@
           <width>845</width>
           <height>30</height>
           <font>font12</font>
-          <textcolor>FFBCA5FA</textcolor>
+          <textcolor>FFA5CDFA</textcolor>
           <label>$INFO[ListItem.Label]</label>
         </control>
         <control type="label">
@@ -272,7 +272,7 @@
           <width>845</width>
           <height>30</height>
           <font>font12</font>
-          <textcolor>FFBCA5FA</textcolor>
+          <textcolor>FFA5CDFA</textcolor>
           <label>$INFO[ListItem.Label]</label>
         </control>
         <control type="label">
@@ -302,7 +302,7 @@
       <width>630</width>
       <height>32</height>
       <font>font12</font>
-      <textcolor>FFBCA5FA</textcolor>
+      <textcolor>FFA5CDFA</textcolor>
       <label>$INFO[Window.Property(nuvio.iptv.status)]</label>
     </control>
     <control type="button" id="502">
@@ -315,13 +315,13 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
-      <focusedcolor>FF090B11</focusedcolor>
+      <focusedcolor>FF040F22</focusedcolor>
       <onleft>504</onleft>
       <onright>503</onright>
       <onup>504</onup>
       <ondown>501</ondown>
       <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22" colordiffuse="FF252A38">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <texturenofocus border="22" colordiffuse="FF092554">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
     </control>
     <control type="button" id="503">
       <left>1300</left>
@@ -333,13 +333,13 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
-      <focusedcolor>FF090B11</focusedcolor>
+      <focusedcolor>FF040F22</focusedcolor>
       <onleft>502</onleft>
       <onright>506</onright>
       <onup>504</onup>
       <ondown>501</ondown>
       <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22" colordiffuse="FF252A38">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <texturenofocus border="22" colordiffuse="FF092554">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
     </control>
     <control type="button" id="506">
       <left>1590</left>
@@ -351,13 +351,13 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
-      <focusedcolor>FF090B11</focusedcolor>
+      <focusedcolor>FF040F22</focusedcolor>
       <onleft>503</onleft>
       <onright>501</onright>
       <onup>504</onup>
       <ondown>501</ondown>
       <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22" colordiffuse="FF252A38">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <texturenofocus border="22" colordiffuse="FF092554">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
     </control>
     <control type="label">
       <left>55</left>

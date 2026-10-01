@@ -8,7 +8,7 @@
       <width>1920</width>
       <height>1080</height>
       <aspectratio>scale</aspectratio>
-      <texture colordiffuse="FF090B11">special://home/addons/script.nuvio/resources/media/white.png</texture>
+      <texture colordiffuse="FF040F22">special://home/addons/script.nuvio/resources/media/white.png</texture>
     </control>
     <control type="group">
       <width>1920</width>
@@ -40,7 +40,7 @@
           <width>110</width>
           <height>40</height>
           <font>font12</font>
-          <textcolor>FFC2ADFF</textcolor>
+          <textcolor>FFADD3FF</textcolor>
           <label>$INFO[Weather.Temperature]</label>
           <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
         </control>
@@ -140,9 +140,9 @@
         <align>center</align>
         <aligny>center</aligny>
         <textcolor>FFFFFFFF</textcolor>
-        <focusedcolor>FF090B11</focusedcolor>
+        <focusedcolor>FF040F22</focusedcolor>
         <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-        <texturenofocus border="22" colordiffuse="FF252A38">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+        <texturenofocus border="22" colordiffuse="FF092554">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
         <onleft>500</onleft>
         <onright>500</onright>
         <ondown>500</ondown>

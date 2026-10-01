@@ -7,7 +7,7 @@
       <top>0</top>
       <width>1920</width>
       <height>1080</height>
-      <texture colordiffuse="FF090B11">special://home/addons/script.nuvio/resources/media/white.png</texture>
+      <texture colordiffuse="FF040F22">special://home/addons/script.nuvio/resources/media/white.png</texture>
     </control>
     <control type="label">
       <left>64</left>
@@ -42,7 +42,7 @@
           <width>355</width>
           <height>46</height>
           <font>font13</font>
-          <textcolor>FFD5C6FF</textcolor>
+          <textcolor>FFC6E1FF</textcolor>
           <label>$INFO[ListItem.Label]</label>
           <scroll>false</scroll>
         </control>
@@ -63,7 +63,7 @@
           <width>180</width>
           <height>46</height>
           <font>font13</font>
-          <textcolor>FFD5C6FF</textcolor>
+          <textcolor>FFC6E1FF</textcolor>
           <align>right</align>
           <label>$INFO[ListItem.Property(size)]</label>
         </control>
@@ -73,7 +73,7 @@
           <width>166</width>
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge0))</visible>
-          <texture border="22" colordiffuse="FF463966">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="22" colordiffuse="FF184C87">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
         </control>
         <control type="label">
           <left>22</left>
@@ -82,7 +82,7 @@
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge0))</visible>
           <font>font_flag</font>
-          <textcolor>FFF1EBFF</textcolor>
+          <textcolor>FFEBF4FF</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>$INFO[ListItem.Property(badge0)]</label>
@@ -93,7 +93,7 @@
           <width>166</width>
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge1))</visible>
-          <texture border="22" colordiffuse="FF463966">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="22" colordiffuse="FF184C87">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
         </control>
         <control type="label">
           <left>202</left>
@@ -102,7 +102,7 @@
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge1))</visible>
           <font>font_flag</font>
-          <textcolor>FFF1EBFF</textcolor>
+          <textcolor>FFEBF4FF</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>$INFO[ListItem.Property(badge1)]</label>
@@ -113,7 +113,7 @@
           <width>166</width>
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge2))</visible>
-          <texture border="22" colordiffuse="FF463966">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="22" colordiffuse="FF184C87">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
         </control>
         <control type="label">
           <left>382</left>
@@ -122,7 +122,7 @@
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge2))</visible>
           <font>font_flag</font>
-          <textcolor>FFF1EBFF</textcolor>
+          <textcolor>FFEBF4FF</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>$INFO[ListItem.Property(badge2)]</label>
@@ -133,7 +133,7 @@
           <width>166</width>
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge3))</visible>
-          <texture border="22" colordiffuse="FF463966">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="22" colordiffuse="FF184C87">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
         </control>
         <control type="label">
           <left>562</left>
@@ -142,7 +142,7 @@
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge3))</visible>
           <font>font_flag</font>
-          <textcolor>FFF1EBFF</textcolor>
+          <textcolor>FFEBF4FF</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>$INFO[ListItem.Property(badge3)]</label>
@@ -153,7 +153,7 @@
           <width>166</width>
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge4))</visible>
-          <texture border="22" colordiffuse="FF463966">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="22" colordiffuse="FF184C87">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
         </control>
         <control type="label">
           <left>742</left>
@@ -162,7 +162,7 @@
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge4))</visible>
           <font>font_flag</font>
-          <textcolor>FFF1EBFF</textcolor>
+          <textcolor>FFEBF4FF</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>$INFO[ListItem.Property(badge4)]</label>
@@ -173,7 +173,7 @@
           <width>166</width>
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge5))</visible>
-          <texture border="22" colordiffuse="FF463966">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="22" colordiffuse="FF184C87">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
         </control>
         <control type="label">
           <left>922</left>
@@ -182,7 +182,7 @@
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge5))</visible>
           <font>font_flag</font>
-          <textcolor>FFF1EBFF</textcolor>
+          <textcolor>FFEBF4FF</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>$INFO[ListItem.Property(badge5)]</label>
@@ -193,7 +193,7 @@
           <width>166</width>
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge6))</visible>
-          <texture border="22" colordiffuse="FF463966">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="22" colordiffuse="FF184C87">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
         </control>
         <control type="label">
           <left>1102</left>
@@ -202,7 +202,7 @@
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge6))</visible>
           <font>font_flag</font>
-          <textcolor>FFF1EBFF</textcolor>
+          <textcolor>FFEBF4FF</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>$INFO[ListItem.Property(badge6)]</label>
@@ -213,7 +213,7 @@
           <width>166</width>
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge7))</visible>
-          <texture border="22" colordiffuse="FF463966">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="22" colordiffuse="FF184C87">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
         </control>
         <control type="label">
           <left>1282</left>
@@ -222,7 +222,7 @@
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge7))</visible>
           <font>font_flag</font>
-          <textcolor>FFF1EBFF</textcolor>
+          <textcolor>FFEBF4FF</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>$INFO[ListItem.Property(badge7)]</label>
@@ -242,7 +242,7 @@
           <width>355</width>
           <height>46</height>
           <font>font13</font>
-          <textcolor>FFD5C6FF</textcolor>
+          <textcolor>FFC6E1FF</textcolor>
           <label>$INFO[ListItem.Label]</label>
           <scroll>true</scroll>
         </control>
@@ -263,7 +263,7 @@
           <width>180</width>
           <height>46</height>
           <font>font13</font>
-          <textcolor>FFD5C6FF</textcolor>
+          <textcolor>FFC6E1FF</textcolor>
           <align>right</align>
           <label>$INFO[ListItem.Property(size)]</label>
         </control>
@@ -273,7 +273,7 @@
           <width>166</width>
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge0))</visible>
-          <texture border="22" colordiffuse="FF463966">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="22" colordiffuse="FF184C87">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
         </control>
         <control type="label">
           <left>22</left>
@@ -282,7 +282,7 @@
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge0))</visible>
           <font>font_flag</font>
-          <textcolor>FFF1EBFF</textcolor>
+          <textcolor>FFEBF4FF</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>$INFO[ListItem.Property(badge0)]</label>
@@ -293,7 +293,7 @@
           <width>166</width>
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge1))</visible>
-          <texture border="22" colordiffuse="FF463966">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="22" colordiffuse="FF184C87">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
         </control>
         <control type="label">
           <left>202</left>
@@ -302,7 +302,7 @@
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge1))</visible>
           <font>font_flag</font>
-          <textcolor>FFF1EBFF</textcolor>
+          <textcolor>FFEBF4FF</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>$INFO[ListItem.Property(badge1)]</label>
@@ -313,7 +313,7 @@
           <width>166</width>
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge2))</visible>
-          <texture border="22" colordiffuse="FF463966">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="22" colordiffuse="FF184C87">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
         </control>
         <control type="label">
           <left>382</left>
@@ -322,7 +322,7 @@
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge2))</visible>
           <font>font_flag</font>
-          <textcolor>FFF1EBFF</textcolor>
+          <textcolor>FFEBF4FF</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>$INFO[ListItem.Property(badge2)]</label>
@@ -333,7 +333,7 @@
           <width>166</width>
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge3))</visible>
-          <texture border="22" colordiffuse="FF463966">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="22" colordiffuse="FF184C87">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
         </control>
         <control type="label">
           <left>562</left>
@@ -342,7 +342,7 @@
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge3))</visible>
           <font>font_flag</font>
-          <textcolor>FFF1EBFF</textcolor>
+          <textcolor>FFEBF4FF</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>$INFO[ListItem.Property(badge3)]</label>
@@ -353,7 +353,7 @@
           <width>166</width>
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge4))</visible>
-          <texture border="22" colordiffuse="FF463966">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="22" colordiffuse="FF184C87">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
         </control>
         <control type="label">
           <left>742</left>
@@ -362,7 +362,7 @@
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge4))</visible>
           <font>font_flag</font>
-          <textcolor>FFF1EBFF</textcolor>
+          <textcolor>FFEBF4FF</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>$INFO[ListItem.Property(badge4)]</label>
@@ -373,7 +373,7 @@
           <width>166</width>
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge5))</visible>
-          <texture border="22" colordiffuse="FF463966">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="22" colordiffuse="FF184C87">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
         </control>
         <control type="label">
           <left>922</left>
@@ -382,7 +382,7 @@
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge5))</visible>
           <font>font_flag</font>
-          <textcolor>FFF1EBFF</textcolor>
+          <textcolor>FFEBF4FF</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>$INFO[ListItem.Property(badge5)]</label>
@@ -393,7 +393,7 @@
           <width>166</width>
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge6))</visible>
-          <texture border="22" colordiffuse="FF463966">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="22" colordiffuse="FF184C87">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
         </control>
         <control type="label">
           <left>1102</left>
@@ -402,7 +402,7 @@
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge6))</visible>
           <font>font_flag</font>
-          <textcolor>FFF1EBFF</textcolor>
+          <textcolor>FFEBF4FF</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>$INFO[ListItem.Property(badge6)]</label>
@@ -413,7 +413,7 @@
           <width>166</width>
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge7))</visible>
-          <texture border="22" colordiffuse="FF463966">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="22" colordiffuse="FF184C87">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
         </control>
         <control type="label">
           <left>1282</left>
@@ -422,7 +422,7 @@
           <height>44</height>
           <visible>!String.IsEmpty(ListItem.Property(badge7))</visible>
           <font>font_flag</font>
-          <textcolor>FFF1EBFF</textcolor>
+          <textcolor>FFEBF4FF</textcolor>
           <align>center</align>
           <aligny>center</aligny>
           <label>$INFO[ListItem.Property(badge7)]</label>
@@ -433,7 +433,7 @@
           <width>1792</width>
           <height>110</height>
           <visible>Control.HasFocus(500)</visible>
-          <texture border="22" colordiffuse="FFD3C2FF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus.png</texture>
+          <texture border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus.png</texture>
         </control>
       </focusedlayout>
     </control>

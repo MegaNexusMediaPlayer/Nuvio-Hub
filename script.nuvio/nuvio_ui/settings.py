@@ -331,16 +331,25 @@ def performance():
     return page.show('Performance & image cache',rows,choose)
 
 
+def screensaver_label():
+    from .saver import ANIMATED,saver_mode
+    kind=saver_mode(ADDON)
+    if kind==ANIMATED:return 'MegaNexus animated'
+    if kind=='video':return 'Custom video'
+    return 'Custom image / GIF' if ADDON.getSetting('nuvio_screensaver_art') else 'MegaNexus image'
+
+
 def screensaver_media():
-    from .saver import BUILTIN_VIDEO
+    from .saver import ANIMATED,saver_mode
     def current():
-        kind=ADDON.getSetting('nuvio_screensaver_type') or 'image'
-        if kind=='video':return 1 if ADDON.getSetting('nuvio_screensaver_video')==BUILTIN_VIDEO else 3
+        kind=saver_mode(ADDON)
+        if kind==ANIMATED:return 1
+        if kind=='video':return 3
         return 2 if ADDON.getSetting('nuvio_screensaver_art') else 0
     def rows():
         selected=current()
         return [page.item(label,'Selected' if selected==i else '') for i,label in enumerate((
-                    'MegaNexus · standard image','MegaNexus · animated video',
+                    'MegaNexus · standard image','MegaNexus · animated',
                     'Custom image / animated GIF','Custom video · MP4, MKV, WebM, MOV'))]+[page.item('Back')]
     def choose(pick):
         if pick==4:return page.DONE
@@ -348,8 +357,8 @@ def screensaver_media():
             ADDON.setSetting('nuvio_screensaver_type','image')
             ADDON.setSetting('nuvio_screensaver_art','');ADDON.setSetting('nuvio_screensaver_video','')
         elif pick==1:
-            ADDON.setSetting('nuvio_screensaver_art','');ADDON.setSetting('nuvio_screensaver_video',BUILTIN_VIDEO)
-            ADDON.setSetting('nuvio_screensaver_type','video')
+            ADDON.setSetting('nuvio_screensaver_art','');ADDON.setSetting('nuvio_screensaver_video','')
+            ADDON.setSetting('nuvio_screensaver_type',ANIMATED)
         else:
             video=pick==3
             mask='.mp4|.m4v|.mkv|.webm|.mov|.avi|.ts|.m2ts' if video else '.png|.jpg|.jpeg|.webp|.gif'
@@ -376,7 +385,7 @@ def appearance():
             page.item('Automatic trailer settings',onoff('nuvio_auto_trailers')),
             page.item('Weather location / provider',xbmc.getInfoLabel('Weather.Location') or 'Not configured'),
             page.item('Nuvio screensaver',enabled=saver=='screensaver.nuvio'),
-            page.item('Screensaver media', 'Animated video' if ADDON.getSetting('nuvio_screensaver_type')=='video' else 'Image / GIF'),
+            page.item('Screensaver media', screensaver_label()),
             page.item('Kodi interface settings'),page.item('Collections layout and metadata'),
             page.item('Movie and series cards','Landscape' if ADDON.getSetting('nuvio_card_shape')=='landscape' else 'Portrait posters'),
             page.item('Ratings under the title (when the metadata add-on supplies them)',enabled=ADDON.getSetting('nuvio_show_ratings')!='false'),
@@ -465,7 +474,7 @@ def check_updates():
 def maintenance():
     def rows():return [page.item('Check for updates',xbmcaddon.Addon('script.nuvio').getAddonInfo('version')),
         page.item('Automatic updates from GitHub',enabled=ADDON.getSetting('nuvio_auto_update')!='false'),
-        page.item('Support Nuvio Hub · Ko-fi','QR code'),
+        page.item('Support MegaNexus · Ko-fi','QR code'),
         page.item('Run setup wizard'),page.item('Remove Nuvio build'),page.item('Back')]
     def choose(pick):
         if pick==0:
@@ -490,7 +499,7 @@ def run(back_command=''):
     actions=[('Accounts & tracking',tracking_accounts),('Add-ons',addons),('Collections',collections),
         ('IPTV',iptv_settings),('Playback',playback),('Subtitles',subtitle_settings),('Trailers',trailers),
         ('Home & appearance',appearance),('Performance & image cache',performance),('Maintenance & updates',maintenance),
-        ('Support Nuvio Hub · Ko-fi',support)]
+        ('Support MegaNexus · Ko-fi',support)]
     def rows():return [page.item(label) for label,_ in actions]+[page.item('Done')]
     def choose(pick):
         try:

@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addon id="screensaver.nuvio" name="Nuvio" version="6.0.20" provider-name="Nuvio community build">
+<addon id="screensaver.nuvio" name="Nuvio" version="6.0.21" provider-name="Nuvio community build">
   <requires>
     <import addon="xbmc.python" version="3.0.0" />
-    <import addon="script.nuvio" version="6.0.20" />
+    <import addon="script.nuvio" version="6.0.21" />
   </requires>
   <extension point="xbmc.ui.screensaver" library="default.py" />
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
     <license>MIT</license>
-    <summary lang="en_GB">Nuvio image, GIF or looping silent video screensaver.</summary>
-    <description lang="en_GB">Use custom artwork or a local/shared MP4, MKV, WebM, MOV and other supported video file. Video mode preserves paused media by falling back to artwork. Follows the shared weather and clock visibility preference.</description>
+    <summary lang="en_GB">MegaNexus image or animation, custom image/GIF or looping silent video screensaver.</summary>
+    <description lang="en_GB">Shows the MegaNexus logo, still or animated by the skin (no video player), or use custom artwork or a local/shared MP4, MKV, WebM, MOV and other supported video file. Video mode preserves paused media by falling back to artwork. Follows the shared weather and clock visibility preference.</description>
     <assets>
       <icon>resources/icon.png</icon>
       <fanart>resources/fanart.png</fanart>

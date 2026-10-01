@@ -19,16 +19,25 @@ from .home_trailers import PreviewPlayer
 from .system_setup import rpc
 
 DEFAULT_ART='special://home/addons/script.nuvio/resources/media/nuvio_banner.png'
-# Built-in animated MegaNexus loop (H.264, 1080p, 12 s, no audio track).
-BUILTIN_VIDEO='special://home/addons/script.nuvio/resources/media/meganexus_saver.mp4'
 VIDEO_EXTENSIONS=('.mp4','.m4v','.mkv','.webm','.mov','.avi','.ts','.m2ts')
+# The built-in MegaNexus animation is drawn by the skin (nuvio_screensaver.xml):
+# no player, no mute, no audio OSD, sharp at any resolution. 6.0.20 test builds
+# stored it as a bundled MP4 path; that value is read as the animation.
+ANIMATED='animated'
+_LEGACY_BUILTIN_VIDEO='/meganexus_saver.mp4'
+
+
+def saver_mode(addon):
+    kind=addon.getSetting('nuvio_screensaver_type') or 'image'
+    if kind=='video' and addon.getSetting('nuvio_screensaver_video').strip().endswith(_LEGACY_BUILTIN_VIDEO):return ANIMATED
+    return kind if kind in (ANIMATED,'video') else 'image'
 
 
 def video_file(addon):
     path=addon.getSetting('nuvio_screensaver_video').strip()
     # A chosen local/SMB file only. No arbitrary plugin routes, manifests or
     # streaming credentials are passed to the screensaver playback queue.
-    return path if addon.getSetting('nuvio_screensaver_type')=='video' and path.lower().endswith(VIDEO_EXTENSIONS) and xbmcvfs.exists(path) else ''
+    return path if saver_mode(addon)=='video' and path.lower().endswith(VIDEO_EXTENSIONS) and xbmcvfs.exists(path) else ''
 
 
 class SaverWindow(xbmcgui.WindowXMLDialog):
@@ -38,6 +47,7 @@ class SaverWindow(xbmcgui.WindowXMLDialog):
     def onInit(self):
         addon=xbmcaddon.Addon('plugin.video.nuviohub')
         self.setProperty('nuvio.background',addon.getSetting('nuvio_screensaver_art') or DEFAULT_ART)
+        if saver_mode(addon)==ANIMATED:self.setProperty('nuvio.saver.mode',ANIMATED)
         presentation_settings.sync()
         self.ready.set()
     def onAction(self,action):

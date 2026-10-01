@@ -66,11 +66,13 @@ class ScreensaverMedia(unittest.TestCase):
     def test_default_is_the_standard_meganexus_image(self):
         self.assertEqual(self.selected(self.page()), [0])
 
-    def test_animated_meganexus_selects_the_bundled_mp4(self):
+    def test_animated_meganexus_is_a_skin_animation_not_a_video(self):
+        # 6.0.21 contract: the built-in animation is drawn by the skin; the
+        # 6.0.20 bundled MP4 was replaced (player muted Kodi, showed the OSD).
         captured = self.page()
         captured['choose'](1)
-        self.assertEqual(self.values['nuvio_screensaver_type'], 'video')
-        self.assertEqual(self.values['nuvio_screensaver_video'], saver.BUILTIN_VIDEO)
+        self.assertEqual(self.values['nuvio_screensaver_type'], saver.ANIMATED)
+        self.assertEqual(self.values['nuvio_screensaver_video'], '')
         self.assertEqual(self.selected(captured), [1])
         captured['choose'](0)
         self.assertEqual((self.values['nuvio_screensaver_type'], self.values['nuvio_screensaver_video']), ('image', ''))
@@ -84,16 +86,13 @@ class ScreensaverMedia(unittest.TestCase):
         self.assertEqual(self.values['nuvio_screensaver_video'], '/media/loop.mkv')
         self.assertEqual(self.selected(captured), [3])
 
-    def test_bundled_video_passes_the_saver_file_check(self):
-        relative = saver.BUILTIN_VIDEO.split('special://home/addons/', 1)[1]
-        path = ROOT / relative
-        self.assertTrue(path.is_file())
-        self.assertTrue(saver.BUILTIN_VIDEO.lower().endswith(saver.VIDEO_EXTENSIONS))
-        addon = SimpleNamespace(getSetting={'nuvio_screensaver_type': 'video',
-                                            'nuvio_screensaver_video': saver.BUILTIN_VIDEO}.get)
+    def test_6020_bundled_mp4_setting_reads_as_the_animation(self):
+        values = {'nuvio_screensaver_type': 'video',
+                  'nuvio_screensaver_video': 'special://home/addons/script.nuvio/resources/media/meganexus_saver.mp4'}
+        addon = SimpleNamespace(getSetting=lambda k: values.get(k, ''))
+        self.assertEqual(saver.saver_mode(addon), saver.ANIMATED)
         with mock.patch.object(saver.xbmcvfs, 'exists', return_value=True):
-            self.assertEqual(saver.video_file(addon), saver.BUILTIN_VIDEO)
-        self.assertEqual(path.read_bytes()[4:8], b'ftyp')
+            self.assertEqual(saver.video_file(addon), '')
 
 
 class Logos(unittest.TestCase):

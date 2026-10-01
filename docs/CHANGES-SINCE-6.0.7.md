@@ -1,6 +1,6 @@
 # Nuvio Hub — changes since the published 6.0.7
 
-Summary for review of the local 6.0.8 – 6.0.20 candidates (details in each
+Summary for review of the local 6.0.8 – 6.0.21 candidates (details in each
 `docs/RELEASE-6.0.x.md`). None of these is published on GitHub yet.
 
 | Area | What changed |
@@ -12,8 +12,9 @@ Summary for review of the local 6.0.8 – 6.0.20 candidates (details in each
 | Playback | Video starts when the first stream add-on answers (slow ones are skipped), one stream add-on ON by default, one loading screen, faster return from the player. |
 | Trailers | IMDb trailers (stream directly, quality setting) besides YouTube with automatic fallback; Kodi never asks to install YouTube for its own trailer button. |
 | CoreELEC | Small video (Home preview, IPTV preview, trailer window, video screensaver) now shows its picture (hardware video layer driven through the active window); Nuvio's preview video stops before sleep. |
-| Screensaver | Seamless MP4 loop (no artwork flash, no reopen); MegaNexus standard image (default) or built-in MegaNexus animated MP4. |
-| Branding | MegaNexus logo, banner and icons; HUB buttons "MegaNexus", "IPTV Channels", "HUB Settings". Nuvio accounts and settings unchanged. |
+| Screensaver | Seamless MP4 loop (no artwork flash, no reopen); MegaNexus standard image (default) or built-in MegaNexus animation drawn by the skin (no player, no mute). |
+| Branding | MegaNexus logo, banner and icons; blue theme from the logo; HUB buttons "MegaNexus", "IPTV Channels", "HUB Settings"; "Support MegaNexus · Ko-fi". Nuvio accounts and settings unchanged. |
+| Distribution | `repository.meganexus` Kodi repository + static GitHub Pages site (File manager source). |
 | IPTV | Refresh guide / IPTV setup / HUB at the bottom; one HUB button. |
 | Details | No "Loading episodes" banner; ratings (IMDb/TMDb) under the Home title, switchable. |
 | Maintenance | Automatic updates from GitHub releases (checksum, rollback, "Restart Kodi now?" when no video plays and Nuvio is closed), Ko-fi QR, organised Configure page, working "Remove Nuvio build". |

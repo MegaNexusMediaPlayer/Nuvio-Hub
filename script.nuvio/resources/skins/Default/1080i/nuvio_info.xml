@@ -8,7 +8,7 @@
       <width>1920</width>
       <height>1080</height>
       <aspectratio>stretch</aspectratio>
-      <texture background="true" colordiffuse="FF0B0D14">special://home/addons/script.nuvio/resources/media/white.png</texture>
+      <texture background="true" colordiffuse="FF040F22">special://home/addons/script.nuvio/resources/media/white.png</texture>
     </control>
     <control type="label">
       <left>75</left>
@@ -50,11 +50,11 @@
       <onleft>102</onleft>
       <onright>503</onright>
       <showonepage>true</showonepage>
-      <texturesliderbackground colordiffuse="FF343541">special://home/addons/script.nuvio/resources/media/white.png</texturesliderbackground>
-      <texturesliderbar colordiffuse="FF343541">special://home/addons/script.nuvio/resources/media/white.png</texturesliderbar>
-      <textureslidernib colordiffuse="FF343541">special://home/addons/script.nuvio/resources/media/white.png</textureslidernib>
-      <texturesliderbarfocus colordiffuse="FFD3C2FF">special://home/addons/script.nuvio/resources/media/white.png</texturesliderbarfocus>
-      <textureslidernibfocus colordiffuse="FFD3C2FF">special://home/addons/script.nuvio/resources/media/white.png</textureslidernibfocus>
+      <texturesliderbackground colordiffuse="FF0C2E69">special://home/addons/script.nuvio/resources/media/white.png</texturesliderbackground>
+      <texturesliderbar colordiffuse="FF0C2E69">special://home/addons/script.nuvio/resources/media/white.png</texturesliderbar>
+      <textureslidernib colordiffuse="FF0C2E69">special://home/addons/script.nuvio/resources/media/white.png</textureslidernib>
+      <texturesliderbarfocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/white.png</texturesliderbarfocus>
+      <textureslidernibfocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/white.png</textureslidernibfocus>
     </control>
     <control type="label">
       <left>75</left>
@@ -62,7 +62,7 @@
       <width>1400</width>
       <height>36</height>
       <font>font12</font>
-      <textcolor>FFD3C2FF</textcolor>
+      <textcolor>FFC2DEFF</textcolor>
       <label>Cast &amp; crew</label>
       <scroll>true</scroll>
     </control>
@@ -95,7 +95,7 @@
           <width>88</width>
           <height>88</height>
           <aspectratio>keep</aspectratio>
-          <texture background="true" colordiffuse="FF343541">special://home/addons/script.nuvio/resources/media/person_circle.png</texture>
+          <texture background="true" colordiffuse="FF0C2E69">special://home/addons/script.nuvio/resources/media/person_circle.png</texture>
         </control>
         <control type="image">
           <left>47</left>
@@ -135,7 +135,7 @@
           <width>88</width>
           <height>88</height>
           <aspectratio>keep</aspectratio>
-          <texture background="true" colordiffuse="FF343541">special://home/addons/script.nuvio/resources/media/person_circle.png</texture>
+          <texture background="true" colordiffuse="FF0C2E69">special://home/addons/script.nuvio/resources/media/person_circle.png</texture>
         </control>
         <control type="image">
           <left>42</left>
@@ -188,9 +188,9 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFF3F4F8</textcolor>
-      <focusedcolor>FF12121C</focusedcolor>
-      <texturefocus border="22" colordiffuse="FFD3C2FF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22" colordiffuse="FF252733">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <focusedcolor>FF051229</focusedcolor>
+      <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturenofocus border="22" colordiffuse="FF09234F">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
       <onup>503</onup>
       <ondown>511</ondown>
       <onleft>511</onleft>

@@ -17,7 +17,7 @@
         <width>1920</width>
         <height>1080</height>
         <aspectratio>scale</aspectratio>
-        <texture colordiffuse="FF090B11">special://home/addons/script.nuvio/resources/media/white.png</texture>
+        <texture colordiffuse="FF040F22">special://home/addons/script.nuvio/resources/media/white.png</texture>
       </control>
       <control type="image">
         <left>0</left>

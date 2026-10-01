@@ -2,8 +2,8 @@
 
 This is a four-component Kodi build: `plugin.video.nuviohub` (backend/service),
 `script.nuvio` (Python/XML frontend), `skin.nuvio` (Kodi shell), and
-`screensaver.nuvio` (screensaver entrypoint). The local 6.0.19 candidate is the
-baseline for this 6.0.20 candidate. Do not publish, push, or change live user
+`screensaver.nuvio` (screensaver entrypoint). The local 6.0.20 candidate is the
+baseline for this 6.0.21 candidate. Do not publish, push, or change live user
 profiles as a side effect of reviewing code.
 
 ## Required repository skills
@@ -15,7 +15,7 @@ claims that a runtime plugin or global agent skill has been installed.
 
 ## Before modifying code
 
-Read the relevant call sites, tests, and `docs/RELEASE-6.0.20.md` (and 6.0.19 back to 6.0.10). Identify which
+Read the relevant call sites, tests, and `docs/RELEASE-6.0.21.md` (and 6.0.20 back to 6.0.10). Identify which
 Kodi process/interpreter owns the work. Keep existing public add-on IDs,
 profile paths, encrypted credentials and migration aliases. Never mass-rename
 legacy state keys or remove upstream license notices. Never replace an
@@ -63,15 +63,19 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
   `Nuvio-Hub-Complete-<version>.zip` (+ `.sha256`); `resources/lib/updater.py`
   reads exactly that naming for automatic updates.
 * Keep all four manifests and internal dependencies at one release version.
+  `repository.meganexus` (Kodi repository for GitHub Pages, built by
+  `review/build_repo_site.py`) has its own version and is never in the bundle.
+* Theme colours are the MegaNexus logo blues (`review/make_blue_theme.py`);
+  logo/banner/screensaver layers come from `review/make_meganexus_brand.py`.
   Retain Kodi Python 3 / GUI 5.17 compatibility gates; no removed-stdlib APIs.
 
 ## Required checks (Python 3.9+ review environment)
 
 ```sh
-python review/check_620.py
-python review/check_608_rebrand_kodi22.py 6.0.20
-python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.20.zip
-python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.20.zip
+python review/check_621.py
+python review/check_608_rebrand_kodi22.py 6.0.21
+python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.21.zip
+python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.21.zip
 ```
 
 The first command runs the maintained unit suite, parses XML/JSON, and checks
