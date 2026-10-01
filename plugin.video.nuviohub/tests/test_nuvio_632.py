@@ -289,8 +289,20 @@ class HeaderButtons(unittest.TestCase):
                 root = ET.parse(ROOT / 'script.nuvio/resources/skins' / folder / '1080i' / name).getroot()
                 for cid in ('101', '105', '107', '108'):
                     button = next(c for c in root.iter('control') if c.get('id') == cid)
-                    self.assertIsNone(button.find('texturenofocus'), (folder, name, cid))
+                    # Explicitly empty: a missing tag gets skin.nuvio's dark default
+                    # button texture (dark rectangles behind the labels).
+                    rest = button.find('texturenofocus')
+                    self.assertIsNotNone(rest, (folder, name, cid))
+                    self.assertFalse((rest.text or '').strip(), (folder, name, cid))
                     self.assertIn('nuvio_pill_', button.findtext('texturefocus'), (folder, name, cid))
+
+    def test_no_button_falls_back_to_the_skin_default_texture(self):
+        for folder in ('Default', 'Dark', 'Dim'):
+            for path in sorted((ROOT / 'script.nuvio/resources/skins' / folder / '1080i').glob('*.xml')):
+                for c in ET.parse(path).getroot().iter('control'):
+                    if c.get('type') in ('button', 'radiobutton', 'togglebutton'):
+                        for tag in ('texturefocus', 'texturenofocus'):
+                            self.assertIsNotNone(c.find(tag), (folder, path.name, c.get('id'), tag))
 
 
 if __name__ == '__main__':

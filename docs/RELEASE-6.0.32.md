@@ -31,7 +31,11 @@ Prepared 1 October 2026 from the 6.0.31 test build (not released).
   * When a catalog screen opens, the next page of every source is queued for
     the background refresher, so "Load more" opens from memory.
 * **Header buttons** Home / Search / Settings / HUB are plain text at rest;
-  the pill shows only on the focused button.
+  the pill shows only on the focused button. The rest texture is an explicit
+  empty `<texturenofocus />`: a missing tag is filled in from the active
+  skin's default button (skin.nuvio Defaults.xml, dark `button-nofo.png`),
+  which showed dark rectangles behind the labels in the first 6.0.32 test
+  build.
 
 Not changed: Kodi keeps decoded textures on the GPU and re-reads window XML
 on every open; Python cannot hold those.
@@ -42,7 +46,8 @@ unsupported formats; saver plays the copy without muting and keeps the muted
 seek loop otherwise; copy written once and old copies removed; page RAM by
 preset; details stay out of page RAM; prefetch loads once, no duplicate jobs,
 no retry storm, latest title wins, people skipped; next page queued only when
-missing; header buttons). The loop copy was also decoded with FFmpeg 9:
+missing; header buttons have an explicit empty rest texture and no button in
+any window falls back to the skin's default texture). The loop copy was also decoded with FFmpeg 9:
 H.264 with B-frames and HEVC/MOV, frame checksums equal the clip repeated,
 presentation timestamps strictly continuous. `python review/check_632.py`,
 release guard, builder, packaged smoke test.

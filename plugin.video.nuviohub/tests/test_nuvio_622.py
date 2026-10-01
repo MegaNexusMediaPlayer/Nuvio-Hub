@@ -1,6 +1,7 @@
 """6.0.22: phone setup - a local web page served by Kodi, opened from a QR code."""
 import importlib
 import json
+import time
 from pathlib import Path
 import tempfile
 import unittest
@@ -75,6 +76,11 @@ class Server(unittest.TestCase):
             code, body = request(self.service, '/api/save', {'display': {'card_shape': 'landscape'}})
         self.assertEqual((code, json.loads(body)), (200, {'ok': True}))
         self.assertEqual(seen, [{'display': {'card_shape': 'landscape'}}])
+        # The server thread marks the session finished just after answering.
+        for _ in range(200):
+            if self.service.saved:
+                break
+            time.sleep(.01)
         self.assertTrue(self.service.saved)
 
     def test_failed_action_reports_and_does_not_finish(self):

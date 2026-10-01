@@ -1640,6 +1640,7 @@
       <textcolor>FFCCD1DC</textcolor>
       <focusedcolor>FF000000</focusedcolor>
       <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_140x56_r22.png</texturefocus>
+      <texturenofocus />
       <label>Home</label>
       <onleft>108</onleft>
       <onright>105</onright>
@@ -1657,6 +1658,7 @@
       <textcolor>FFCCD1DC</textcolor>
       <focusedcolor>FF000000</focusedcolor>
       <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_160x56_r22.png</texturefocus>
+      <texturenofocus />
       <label>Search</label>
       <onleft>101</onleft>
       <ondown>7000</ondown>
@@ -1674,6 +1676,7 @@
       <textcolor>FFCCD1DC</textcolor>
       <focusedcolor>FF000000</focusedcolor>
       <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_170x56_r22.png</texturefocus>
+      <texturenofocus />
       <label>Settings</label>
       <onright>108</onright>
       <ondown>7000</ondown>
@@ -1691,6 +1694,7 @@
       <textcolor>FFCCD1DC</textcolor>
       <focusedcolor>FF000000</focusedcolor>
       <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_140x56_r22.png</texturefocus>
+      <texturenofocus />
       <label>HUB</label>
       <onright>101</onright>
       <ondown>7000</ondown>

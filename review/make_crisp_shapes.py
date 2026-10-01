@@ -117,12 +117,18 @@ LOGO = re.compile(r'<control type="image">(?:(?!</control>).)*?nuvio_wordmark(?:
 
 
 HEADER_IDS = ('101', '105', '107', '108')   # Home, Search, Settings, HUB
-HEADER = re.compile(r'(<control type="button" id="(?:%s)">(?:(?!</control>).)*?)\n[ \t]*<texturenofocus[^>]*>[^<]*</texturenofocus>'
-                    % '|'.join(HEADER_IDS), re.S)
+HEADER = re.compile(r'<control type="button" id="(?:%s)">(?:(?!</control>).)*?</control>' % '|'.join(HEADER_IDS), re.S)
+NOFOCUS = re.compile(r'\n[ \t]*<texturenofocus[^>]*?(?:/>|>[^<]*</texturenofocus>)')
 
 
 def plain_header(text):
-    return HEADER.sub(r'\1', text)
+    """No rest texture. An explicit empty <texturenofocus /> is required: a
+    missing tag is filled in from the active skin's <default type="button">
+    (skin.nuvio Defaults.xml: dark buttons/button-nofo.png)."""
+    def button(m):
+        block = NOFOCUS.sub('', m.group(0))
+        return re.sub(r'(\n([ \t]*)<texturefocus[^>]*>[^<]*</texturefocus>)', r'\1\n\2<texturenofocus />', block, count=1)
+    return HEADER.sub(button, text)
 
 
 def wordmark_name(w, h):
