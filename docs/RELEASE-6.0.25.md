@@ -23,6 +23,13 @@ Prepared 1 October 2026 from 6.0.24.
   fanart of all four add-ons now use new files (`meganexus_icon.png`,
   `meganexus_fanart.png`), so Kodi loads the MegaNexus artwork at once.
 
+## Add-on names
+
+* The program add-on (`script.nuvio`), the skin and the screensaver are now
+  named **MegaNexus** in Kodi (were "Nuvio"); provider is MegaNexus. Settings
+  rows say *Use MegaNexus skin* and *MegaNexus screensaver*. Add-on IDs are
+  unchanged, so updates and settings carry over.
+
 ## Wording and colours
 
 * "Welcome to Nuvio" is gone: the empty Home row says **Welcome to MegaNexus**

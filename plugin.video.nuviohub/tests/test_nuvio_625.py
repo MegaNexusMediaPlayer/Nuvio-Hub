@@ -59,6 +59,18 @@ class AddonIcons(unittest.TestCase):
                 self.assertEqual((ROOT / component / rel).read_bytes(), expected, (component, rel))
 
 
+class AddonNames(unittest.TestCase):
+    def test_skin_program_and_screensaver_are_named_meganexus(self):
+        import xml.etree.ElementTree as ET
+        for component in ('script.nuvio', 'skin.nuvio', 'screensaver.nuvio'):
+            root = ET.parse(ROOT / component / 'addon.xml').getroot()
+            self.assertEqual(root.get('name'), 'MegaNexus', component)
+            self.assertNotIn('Nuvio community build', root.get('provider-name'), component)
+        settings = (ROOT / 'script.nuvio/nuvio_ui/settings.py').read_text(encoding='utf-8')
+        self.assertIn("'Use MegaNexus skin'", settings)
+        self.assertIn("'MegaNexus screensaver'", settings)
+
+
 REMOTE = [{'id': 'g', 'title': 'Streaming', 'folders': [
     {'id': 'f', 'title': 'Netflix', 'catalogSources': [{'addonId': 'aio.meta', 'catalogId': 'netflix', 'type': 'movie'}]}]}]
 AIO = {'id': 'p-aio', 'name': 'AIOMetadata', 'manifest': {'id': 'aio.meta', 'resources': ['catalog', 'meta'], 'types': ['movie'],

@@ -46,4 +46,4 @@ def weather():
 
 def screensaver():
     rpc('Settings.SetSettingValue',{'setting':'screensaver.mode','value':'screensaver.nuvio'})
-    xbmcgui.Dialog().ok('Nuvio screensaver','Enabled. Set the idle delay in Kodi Settings > Interface > Screensaver.')
+    xbmcgui.Dialog().ok('MegaNexus screensaver','Enabled. Set the idle delay in Kodi Settings > Interface > Screensaver.')

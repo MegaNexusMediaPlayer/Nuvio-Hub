@@ -178,7 +178,7 @@ def run_video(token):
                     break  # Another caller owns playback.
                 if player:player.cancel();player._ended()
                 player=VideoPlayer();player.token=uuid.uuid4().hex;player.path=path
-                item=xbmcgui.ListItem(label='Nuvio screensaver')
+                item=xbmcgui.ListItem(label='MegaNexus screensaver')
                 item.setProperty('nuvio.preview',player.token);item.setProperty('IsPlayable','true')
                 home.setProperty('nuvio.preview.active',player.token)
                 home.setProperty('nuvio.preview.silent',player.token)

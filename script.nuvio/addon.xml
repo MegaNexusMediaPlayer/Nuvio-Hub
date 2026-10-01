@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addon id="script.nuvio" name="Nuvio" version="6.0.25" provider-name="Nuvio community build">
+<addon id="script.nuvio" name="MegaNexus" version="6.0.25" provider-name="MegaNexus">
   <requires>
     <import addon="xbmc.python" version="3.0.0" />
     <import addon="plugin.video.nuviohub" version="6.0.25" />
@@ -11,8 +11,8 @@
     <platform>all</platform>
     <language>en</language>
     <license>MegaNexus License (see LICENSE.txt)</license>
-    <summary lang="en_GB">Nuvio home, collections and simple settings.</summary>
-    <description lang="en_GB">Independent interface using Nuvio Hub for catalogs, account state and playback. Configured metadata supplies details and searchable catalogs; individually enabled stream add-ons supply ordered sources. Bundled local updates only.</description>
+    <summary lang="en_GB">MegaNexus home, collections and simple settings.</summary>
+    <description lang="en_GB">MegaNexus interface using the Nuvio Hub backend for catalogs, account state and playback. Configured metadata supplies details and searchable catalogs; individually enabled stream add-ons supply ordered sources. Bundled local updates only.</description>
     <assets>
       <icon>resources/media/meganexus_icon.png</icon>
       <fanart>resources/media/meganexus_fanart.png</fanart>

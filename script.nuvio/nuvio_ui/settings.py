@@ -403,14 +403,14 @@ def appearance():
     presentation_settings.sync()
     def rows():
         saver=(rpc('Settings.GetSettingValue',{'setting':'screensaver.mode'}) or {}).get('value','')
-        return [page.item('Use Nuvio skin','Active' if xbmc.getSkinDir()=='skin.nuvio' else 'Activate'),
+        return [page.item('Use MegaNexus skin','Active' if xbmc.getSkinDir()=='skin.nuvio' else 'Activate'),
             page.item('Home hero and description',enabled=not xbmc.getCondVisibility('Skin.HasSetting(nuvio.hidehero)')),
             page.item('Card titles',enabled=not xbmc.getCondVisibility('Skin.HasSetting(nuvio.hidetitles)')),
             page.item('Weather and clock · all Nuvio screens',enabled=not presentation_settings.hidden()),
             page.item('Animated collection art (focused card only)',enabled=ADDON.getSetting('nuvio_animated_art')=='true'),
             page.item('Automatic trailer settings',onoff('nuvio_auto_trailers')),
             page.item('Weather location / provider',xbmc.getInfoLabel('Weather.Location') or 'Not configured'),
-            page.item('Nuvio screensaver',enabled=saver=='screensaver.nuvio'),
+            page.item('MegaNexus screensaver',enabled=saver=='screensaver.nuvio'),
             page.item('Screensaver media', screensaver_label()),
             page.item('Kodi interface settings'),page.item('Collections layout and metadata'),
             page.item('Movie and series cards','Landscape' if ADDON.getSetting('nuvio_card_shape')=='landscape' else 'Portrait posters'),

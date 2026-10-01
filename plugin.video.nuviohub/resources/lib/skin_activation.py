@@ -8,7 +8,7 @@ def activate():
     if xbmc.getSkinDir()=='skin.nuvio':return True
     response=json.loads(xbmc.executeJSONRPC(json.dumps({'jsonrpc':'2.0','id':1,
         'method':'Settings.SetSettingValue','params':{'setting':'lookandfeel.skin','value':'skin.nuvio'}})))
-    if response.get('error'):raise RuntimeError('Kodi could not activate the Nuvio skin.')
+    if response.get('error'):raise RuntimeError('Kodi could not activate the MegaNexus skin.')
     monitor=xbmc.Monitor();start=time.monotonic();seen=False
     while time.monotonic()-start<30:
         visible=xbmc.getCondVisibility('Window.IsVisible(yesnodialog)')

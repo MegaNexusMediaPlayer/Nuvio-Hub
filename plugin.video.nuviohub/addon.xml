@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addon id="plugin.video.nuviohub" name="Nuvio Hub" version="6.0.25" provider-name="Nuvio Hub community build">
+<addon id="plugin.video.nuviohub" name="Nuvio Hub" version="6.0.25" provider-name="MegaNexus">
   <requires>
     <import addon="xbmc.python" version="3.0.0" />
     <import addon="xbmc.gui" version="5.17.0" />

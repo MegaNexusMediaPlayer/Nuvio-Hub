@@ -18,8 +18,8 @@ COLLECTION_MEDIA={value for group in json.loads((BACK/'resources/collections.jso
                   for folder in group['folders'] for key,value in folder.items()
                   if key in ('cover','backdrop','animation') and isinstance(value,str) and value.startswith('resources/media/collections/')}
 COLLECTION_MEDIA.update(json.loads((BACK/'resources/collection_animations.json').read_text(encoding='utf-8')).values())
-NAMES={'plugin.video.nuviohub':'Nuvio Hub','script.nuvio':'Nuvio',
-       'skin.nuvio':'Nuvio','screensaver.nuvio':'Nuvio'}
+NAMES={'plugin.video.nuviohub':'Nuvio Hub','script.nuvio':'MegaNexus',
+       'skin.nuvio':'MegaNexus','screensaver.nuvio':'MegaNexus'}
 
 
 def release_version(root=ROOT):
