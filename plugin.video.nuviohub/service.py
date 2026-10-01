@@ -732,9 +732,22 @@ if __name__ == '__main__':
     try:restore_seek()
     except Exception:xbmc.log('[Nuvio] Kodi seek migration will retry at next launch',xbmc.LOGWARNING)
 
+    def _stop_owned_preview():
+        """Stop a Nuvio trailer preview / screensaver video before the box sleeps.
+        A windowed video kept across suspend is a known way to come back with a
+        frozen picture on Amlogic boxes; user-started playback is never touched."""
+        try:
+            home=xbmcgui.Window(10000);token=home.getProperty('nuvio.preview.active')
+            player=xbmc.Player()
+            if token and player.isPlayingVideo() and player.getPlayingItem().getProperty('nuvio.preview')==token:
+                xbmc.executebuiltin('PlayerControl(Stop)')
+        except Exception as exc:
+            xbmc.log('[NuvioHub] sleep preview stop skipped: %s' % exc, xbmc.LOGDEBUG)
+
     class _NuvioHubMonitor(xbmc.Monitor):
         def onNotification(self,sender,method,data):
             if sender=='nuvio' and 'artcache.' in method:art_cache.notify(method)
+            elif method=='System.OnSleep':_stop_owned_preview()
         def onSettingsChanged(self):
             from resources.lib import settings_cache
             settings_cache.invalidate()

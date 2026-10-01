@@ -158,6 +158,7 @@ class OptionalSettings(unittest.TestCase):
         page=importlib.import_module('nuvio_ui.settings_page');rows=mock.Mock(return_value=[page.item('One')]);win=page.SettingsPage(title='Test',rows=rows,choose=lambda i:None)
         win._rendered_rows=rows();win.getControl=lambda cid:SimpleNamespace(getSelectedPosition=lambda:0);win.refresh=mock.Mock()
         def child_restored(i):win._refresh_version+=1
+        win.child=lambda fn,*a,**k:fn(*a,**k)  # 6.0.18: row actions run with the page hidden
         win.choose=child_restored;win.onClick(500);win.drain_events();rows.assert_called_once();win.refresh.assert_not_called()
 
 

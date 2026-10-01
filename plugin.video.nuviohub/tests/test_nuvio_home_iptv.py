@@ -136,7 +136,9 @@ class PersistentSettings(unittest.TestCase):
     def test_external_action_closes_settings_before_execution(self):
         page=settings.page;win=page.SettingsPage(title='Skin',rows=lambda:[page.item('Use skin')],choose=lambda i:'nuvio:activate_skin')
         control=mock.Mock();control.getSelectedPosition.return_value=0;win.getControl=lambda cid:control;win.close=mock.Mock();win._rendered_rows=win.rows()
+        win.child=mock.Mock(side_effect=lambda fn,*a,**k:fn(*a,**k))  # 6.0.18: row actions run with the page hidden
         win.onClick(500);win.drain_events();self.assertEqual(win.result,'nuvio:activate_skin');win.close.assert_called_once()
+        win.child.assert_called_once()
 
     def test_playback_switch_reflects_saved_state_immediately(self):
         values={'nuvio_autoplay':'false'}

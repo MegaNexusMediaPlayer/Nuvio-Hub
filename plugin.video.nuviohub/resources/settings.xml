@@ -1,5 +1,13 @@
 <settings>
   <category label="Nuvio Hub">
+    <setting type="lsep" label="Nuvio interface" />
+    <setting type="action" label="Open Nuvio settings" action="RunScript(script.nuvio,settings)" option="close" />
+    <setting type="action" label="Install or repair the Nuvio interface, skin and screensaver" action="RunPlugin(plugin://plugin.video.nuviohub/?action=nuvio_install)" option="close" />
+    <setting type="sep" />
+    <setting type="lsep" label="Updates · installed automatically from the Nuvio Hub GitHub releases" />
+    <setting type="action" label="Check for updates now" action="RunPlugin(plugin://plugin.video.nuviohub/?action=nuvio_update_check)" option="close" />
+    <setting id="nuvio_subtitle_language" type="text" default="" visible="false" />
+    <setting id="nuvio_subtitles_on_start" type="bool" default="false" visible="false" />
     <setting id="nuvio_metadata_providers" type="text" default="" visible="false" />
     <setting id="nuvio_progress_interval" type="text" default="60" visible="false" />
     <setting id="nuvio_stream_providers" type="text" default="" visible="false" />
@@ -7,11 +15,6 @@
     <setting id="nuvio_weather_clock_migrated" type="bool" default="false" visible="false" />
     <setting id="nuvio_screensaver_type" type="text" default="image" visible="false" />
     <setting id="nuvio_screensaver_video" type="text" default="" visible="false" />
-    <setting type="action" label="Open Nuvio settings" action="RunScript(script.nuvio,settings)" option="close" />
-    <setting type="action" label="Install or repair the bundled Nuvio interface and skin" action="RunPlugin(plugin://plugin.video.nuviohub/?action=nuvio_install)" option="close" />
-    <setting type="lsep" label="AIOMetadata: catalogs and posters. AIOStreams: stream filtering and sorting." />
-    <setting type="lsep" label="Updates: automatic from GitHub releases (Nuvio Settings &gt; Maintenance &amp; updates)." />
-    <setting type="action" label="Remove the Nuvio build (all four components, in the right order)" action="RunPlugin(plugin://plugin.video.nuviohub/?action=nuvio_uninstall)" option="close" />
     <setting id="providers_json" type="text" default="[]" visible="false" />
     <setting id="last_account_sync_at" type="text" default="0" visible="false" />
     <setting id="catalog_state_json" type="text" default="{}" visible="false" />
@@ -190,6 +193,9 @@
     <setting id="nuvio_screensaver_art" type="text" default="" visible="false" />
     <setting id="nuvio_screensaver_applied" type="text" default="false" visible="false" />
   </category>
-  <setting id="nuvio_subtitle_language" type="text" default="" visible="false" />
-  <setting id="nuvio_subtitles_on_start" type="bool" default="false" visible="false" />
+  <category label="Remove">
+    <setting type="lsep" label="Removes the Nuvio interface, skin, screensaver and Nuvio Hub in the right order." />
+    <setting type="lsep" label="Kodi switches back to Estuary; accounts and history can be kept." />
+    <setting type="action" label="Remove the Nuvio build" action="RunPlugin(plugin://plugin.video.nuviohub/?action=nuvio_uninstall)" option="close" />
+  </category>
 </settings>

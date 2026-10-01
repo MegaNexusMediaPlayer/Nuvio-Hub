@@ -45,12 +45,21 @@ class SettingsPage(Dialog):
         self._position=position
         revision=self._refresh_version
         self._busy=True
+        def act():
+            try:return self.choose(position)
+            except Exception as exc:
+                xbmcgui.Dialog().ok('Nuvio Settings',str(exc) if isinstance(exc,ValueError) else 'Could not save this change. Check the configuration and try again.')
+                return None
         try:
-            command=self.choose(position)
+            # A plain On/Off switch changes in place. Any other row may open Kodi
+            # dialogs (select, keyboard, add-on install/settings); this page is
+            # hidden meanwhile, so such a dialog can never end up BEHIND it -
+            # that looked like a frozen screen until OK was pressed.
+            row=self._rendered_rows[position]
+            if row.get('kind')=='toggle' or row.get('label') in ('Back','Done'):command=act()
+            else:command=self.child(act)
             if isinstance(command,str) and command:
                 self.result=None if command==DONE else command;self.close();return
-        except Exception as exc:
-            xbmcgui.Dialog().ok('Nuvio Settings',str(exc) if isinstance(exc,ValueError) else 'Could not save this change. Check the configuration and try again.')
         finally:self._busy=False
         if revision==self._refresh_version:self.refresh(position)
 
@@ -65,7 +74,8 @@ def show(title,rows,choose,back_result=None):
     parent=_STACK[-1] if _STACK else None
     _STACK.append(window)
     try:
-        if parent:parent.child(window.doModal)
+        # The parent is already hidden while it runs a row action (see onClick).
+        if parent and not parent._child_active:parent.child(window.doModal)
         else:window.doModal()
         return window.result
     finally:

@@ -24788,6 +24788,9 @@ def _dispatch():
     if action == 'nuvio_install':
         from .frontend_bridge import open_home
         return open_home(settings=True, repair=True)
+    if action == 'nuvio_update_check':
+        from .updater import interactive_check
+        return interactive_check()
     if action == 'nuvio_uninstall':
         from .nuvio_uninstall import prepare
         xbmc.executebuiltin(prepare())

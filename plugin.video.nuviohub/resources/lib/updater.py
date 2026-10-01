@@ -207,3 +207,45 @@ def check_and_update(addon, interactive=False, opener=urlopen):
         return 'error', info
     xbmc.executebuiltin('UpdateLocalAddons')
     return 'installed', info
+
+
+def interactive_check():
+    """Kodi > Add-ons > Nuvio Hub > Configure > Check for updates now."""
+    import xbmc
+    import xbmcaddon
+    import xbmcgui
+    import xbmcvfs
+    addon = xbmcaddon.Addon(BACKEND)
+    dialog = xbmcgui.Dialog()
+    current = addon.getAddonInfo('version')
+    busy = xbmcgui.DialogProgressBG()
+    busy.create('Nuvio Hub', 'Checking GitHub for updates')
+    try:
+        info = latest()
+    except Exception:
+        info = False
+    finally:
+        busy.close()
+    if info is False:
+        dialog.ok('Nuvio Hub updates', 'GitHub could not be reached. Check the connection and retry.\n' + RELEASES)
+        return
+    if not info or not newer(info['version'], current):
+        dialog.ok('Nuvio Hub updates', 'Nuvio Hub %s is up to date.' % current)
+        return
+    if not dialog.yesno('Nuvio Hub updates', 'Nuvio Hub %s is available (installed %s). Install it now?' % (info['version'], current)):
+        return
+    if xbmc.Player().isPlayingVideo() or xbmcgui.Window(10000).getProperty('nuvio.frontend.running'):
+        dialog.ok('Nuvio Hub updates', 'Stop playback and close the Nuvio interface, then retry.')
+        return
+    busy = xbmcgui.DialogProgressBG()
+    busy.create('Nuvio Hub', 'Installing %s' % info['version'])
+    try:
+        install(info, xbmcvfs.translatePath('special://home/addons'), xbmcvfs.translatePath(addon.getAddonInfo('profile')))
+    except Exception as exc:
+        busy.close()
+        dialog.ok('Nuvio Hub updates', 'The update could not be installed; your current version was kept.\n' + (str(exc) if isinstance(exc, ValueError) else ''))
+        return
+    busy.close()
+    xbmc.executebuiltin('UpdateLocalAddons')
+    if dialog.yesno('Nuvio Hub updates', 'Nuvio Hub %s is installed. Restart Kodi now to finish?' % info['version']):
+        xbmc.executebuiltin('RestartApp')

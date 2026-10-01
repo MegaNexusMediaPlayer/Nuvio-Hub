@@ -1,8 +1,8 @@
-# Nuvio Hub for Kodi — 6.0.17 test candidate
+# Nuvio Hub for Kodi — 6.0.18 review candidate
 
 A community-built Nuvio-style experience inside Kodi: browse collections, explore films and series, and return to what you were watching from a remote-friendly home screen.
 
-**6.0.17 is a local test candidate, not a verified Windows/CoreELEC runtime release.** It fixes "Remove Nuvio build" (see [6.0.17 changes](docs/RELEASE-6.0.17.md)); 6.0.16 added automatic updates from GitHub releases, Ko-fi support and smarter Cinemeta defaults; 6.0.15 made Nuvio open without any setup; 6.0.14 made small video windows and the video screensaver work on CoreELEC; 6.0.13 added IPTV buttons and a steadier loading screen; 6.0.12 fixed playback start/exit speed, trailers and details (see [6.0.12 changes](docs/RELEASE-6.0.12.md)). 6.0.11 focused on Home responsiveness: collections open from cache immediately, stale pages refresh in the background, the collection under the cursor is prefetched and collection sources load in parallel. See [6.0.11 changes](docs/RELEASE-6.0.11.md), [6.0.10 candidate changes and limitations](docs/RELEASE-6.0.10.md), [setup](docs/INSTALL.md) and [the engineering contract](AGENTS.md).
+**6.0.18 is the local review candidate, not a verified Windows/CoreELEC runtime release** (see [6.0.18 changes](docs/RELEASE-6.0.18.md) and the [summary since 6.0.7](docs/CHANGES-SINCE-6.0.7.md)); 6.0.17 fixed "Remove Nuvio build"; 6.0.16 added automatic updates from GitHub releases, Ko-fi support and smarter Cinemeta defaults; 6.0.15 made Nuvio open without any setup; 6.0.14 made small video windows and the video screensaver work on CoreELEC; 6.0.13 added IPTV buttons and a steadier loading screen; 6.0.12 fixed playback start/exit speed, trailers and details (see [6.0.12 changes](docs/RELEASE-6.0.12.md)). 6.0.11 focused on Home responsiveness: collections open from cache immediately, stale pages refresh in the background, the collection under the cursor is prefetched and collection sources load in parallel. See [6.0.11 changes](docs/RELEASE-6.0.11.md), [6.0.10 candidate changes and limitations](docs/RELEASE-6.0.10.md), [setup](docs/INSTALL.md) and [the engineering contract](AGENTS.md).
 
 This candidate adds validated collections, independently enabled metadata providers, a person page, corrected progress wire identities and timestamps, a frequent outbox-based sync cycle, persistent browse caching and bounded startup prewarming. Nuvio and Simkl accounts are optional. No internal collection set is silently installed as a substitute for your configuration.
 
@@ -25,7 +25,7 @@ Nuvio Hub brings a complete Nuvio-style experience to Kodi, combining browsing, 
 - A unified Kodi interface — access your addons, sources, metadata, subtitles, and playback through the Nuvio Hub skin.
 The experience depends on your connected accounts, configured addons, and available sources.
 
-[Download latest](https://github.com/MegaNexusMediaPlayer/Nuvio-Hub/releases/latest) · [View screenshots](docs/SCREENSHOTS.md) · [Installation](docs/INSTALL.md) · [Contribute](CONTRIBUTING.md) · [6.0.17 candidate notes](docs/RELEASE-6.0.17.md)
+[Download latest](https://github.com/MegaNexusMediaPlayer/Nuvio-Hub/releases/latest) · [View screenshots](docs/SCREENSHOTS.md) · [Installation](docs/INSTALL.md) · [Contribute](CONTRIBUTING.md) · [6.0.18 candidate notes](docs/RELEASE-6.0.18.md)
 
 ## What you need
 
@@ -44,9 +44,9 @@ Collection validation samples up to two items per catalog source. An empty, unre
 
 The project does not host films, series or subscription services. Configure sources you are authorized to access. A collection name or service logo does not provide access to that service.
 
-## Install the 6.0.17 test candidate
+## Install the 6.0.18 review candidate
 
-1. Back up your Kodi profile. Use **`Nuvio-Hub-Complete-6.0.17.zip`**, not GitHub's automatic source archive. This local candidate has not been published to GitHub Releases.
+1. Back up your Kodi profile. Use **`Nuvio-Hub-Complete-6.0.18.zip`**, not GitHub's automatic source archive. This local candidate has not been published to GitHub Releases.
 2. Stop playback, close Nuvio and select the bundle through **Add-ons → Install from zip file**.
 3. Open the backend **Nuvio Hub** once to update the three bundled components, then restart Kodi. Keep existing userdata; do not uninstall to update.
 4. Under **Nuvio Settings → Add-ons**, enable your metadata and stream providers separately.
@@ -70,7 +70,7 @@ Ko-fi support is optional. Contributions help cover development tools, AI token 
 
 ## Testing and current limits
 
-Run `python review/check_617.py`, the release guard, builder and packaged smoke test documented in [AGENTS.md](AGENTS.md). Results are in `review/results-6.0.17.json` and the candidate report. These checks use Kodi/HTTP stubs and local SQLite, not a native Kodi process or live user accounts. Unicode glyph coverage, two-device sync and visual/navigation behavior require the manual checklist. No target-device speed benchmark has been performed.
+Run `python review/check_618.py`, the release guard, builder and packaged smoke test documented in [AGENTS.md](AGENTS.md). Results are in `review/results-6.0.18.json` and the candidate report. These checks use Kodi/HTTP stubs and local SQLite, not a native Kodi process or live user accounts. Unicode glyph coverage, two-device sync and visual/navigation behavior require the manual checklist. No target-device speed benchmark has been performed.
 
 The screenshots use fictional demonstration content. One separate development capture has identifying content and collection artwork blurred. They illustrate the interface, not bundled playable media.
 
