@@ -161,7 +161,7 @@ def ensure_components(force=False):
     xbmc.executebuiltin('UpdateLocalAddons')
     monitor=xbmc.Monitor()
     for aid in ('script.nuvio','skin.nuvio','screensaver.nuvio'):
-        for attempt in range(20):
+        for attempt in range(60):  # slow boxes need up to ~30 s to discover new add-ons
             result=json.loads(xbmc.executeJSONRPC(json.dumps({'jsonrpc':'2.0','id':1,'method':'Addons.GetAddonDetails','params':{'addonid':aid,'properties':['enabled']}})))
             if result.get('result',{}).get('addon'):
                 enabled=json.loads(xbmc.executeJSONRPC(json.dumps({'jsonrpc':'2.0','id':1,'method':'Addons.SetAddonEnabled','params':{'addonid':aid,'enabled':True}})))

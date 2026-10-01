@@ -37,6 +37,11 @@ class StepByStepRemoval(unittest.TestCase):
                          ['skin.nuvio', 'screensaver.nuvio', 'script.nuvio', 'plugin.video.nuviohub'])
         self.assertEqual(self.kodi.dialogs[-1][0], 'MegaNexus removed')
 
+    def test_kept_settings_do_not_skip_the_next_first_start(self):
+        with mock.patch.dict(sys.modules, self.kodi.modules()):
+            self.helper.run()
+        self.assertEqual(self.kodi.addon_settings, {'nuvio_skin_applied': '', 'nuvio_screensaver_applied': '', 'nuvio_components_for': ''})
+
     def test_a_locked_folder_is_retried(self):
         real = self.helper.stage_removal
         calls = []
@@ -122,6 +127,51 @@ class NoReinstallAfterManualUninstall(unittest.TestCase):
         self.props['nuvio.uninstalling'] = '1'
         self.assertEqual(installer.auto_install(self.monitor, attempts=2), [])
         self.assertFalse((self.addons / 'script.nuvio').exists())
+
+
+class FirstOpen(unittest.TestCase):
+    """Opening the video add-on before installing: install, skin, then MegaNexus."""
+    def setUp(self):
+        self.bridge = importlib.import_module('resources.lib.frontend_bridge')
+        # The harness can load backend modules under two names; patch the copies
+        # the bridge itself imports.
+        installer = importlib.import_module(self.bridge.__package__ + '.bundle_installer')
+        self.installer = installer
+        self.values, self.builtins, self.calls = {}, [], []
+        addon = SimpleNamespace(getSetting=lambda k: self.values.get(k, ''), setSetting=lambda k, v: self.values.__setitem__(k, v))
+        self.busy = mock.Mock()
+        for patch in (mock.patch('xbmcaddon.Addon', return_value=addon),
+                      mock.patch.object(installer, 'paths', return_value=('p', 'a')),
+                      mock.patch.object(installer, 'outdated', return_value=['skin.nuvio']),
+                      mock.patch.object(installer, 'ensure_components', side_effect=lambda force=False: self.calls.append('install')),
+                      mock.patch.object(self.bridge.xbmcgui, 'DialogProgressBG', return_value=self.busy, create=True),
+                      mock.patch.object(self.bridge.xbmc, 'executebuiltin', side_effect=self.builtins.append),
+                      mock.patch.object(self.bridge.xbmc, 'getCondVisibility', return_value=False)):
+            patch.start();self.addCleanup(patch.stop)
+        self.activation = importlib.import_module(self.bridge.__package__ + '.skin_activation')
+
+    def test_installs_then_skin_then_opens(self):
+        with mock.patch.object(self.activation, 'activate', side_effect=lambda: self.calls.append('skin') or True):
+            self.bridge.open_home()
+        self.assertEqual(self.calls, ['install', 'skin'])
+        self.busy.create.assert_called_once()
+        self.busy.close.assert_called_once()
+        self.assertEqual(self.values['nuvio_skin_applied'], 'true')
+        self.assertEqual(self.builtins, ['RunScript(script.nuvio)'])
+
+    def test_declined_skin_is_offered_again(self):
+        with mock.patch.object(self.activation, 'activate', return_value=False):
+            self.bridge.open_home(settings=True)
+        self.assertNotEqual(self.values.get('nuvio_skin_applied'), 'true')
+        self.assertEqual(self.builtins, ['RunScript(script.nuvio,settings)'])
+
+    def test_install_error_is_shown_and_nothing_opens(self):
+        with mock.patch.object(self.installer, 'ensure_components', side_effect=RuntimeError('Kodi has not discovered skin.nuvio')), \
+                mock.patch.object(self.bridge.xbmcgui, 'Dialog') as dialog:
+            self.bridge.open_home()
+        dialog.return_value.ok.assert_called_once()
+        self.busy.close.assert_called_once()
+        self.assertEqual(self.builtins, [])
 
 
 if __name__ == '__main__':

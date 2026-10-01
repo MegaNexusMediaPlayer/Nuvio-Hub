@@ -141,6 +141,20 @@ def purge_bundle_profiles(profile_root, ids=None):
     for target in targets:shutil.rmtree(target)
 
 
+FIRST_START=('nuvio_skin_applied','nuvio_screensaver_applied','nuvio_components_for')
+
+
+def forget_first_start():
+    """Kept settings must not skip a reinstall's first start: the skin is
+    switched, the screensaver chosen and the components installed again."""
+    import xbmcaddon
+    try:
+        addon=xbmcaddon.Addon('plugin.video.nuviohub')
+        for key in FIRST_START:addon.setSetting(key,'')
+    except Exception:
+        pass
+
+
 def disable(aid, monitor):
     # Skin/services can remain in use briefly after the confirmed switch.
     for attempt in range(20):
@@ -182,6 +196,7 @@ def run():
     message='Accounts, settings and playback history will be kept.' if keep else 'Accounts, settings and history will be deleted. This cannot be undone.'
     if not dialog.yesno('Remove MegaNexus build','Remove these components?\n'+', '.join(order)+'\n'+message+' Shared and pre-existing add-ons are kept.'):return
     home.setProperty('nuvio.uninstalling','1')
+    forget_first_start()
     moved=[]
     root=Path(xbmcvfs.translatePath('special://home/addons')).resolve()
     try:restore=seek_restore(root)

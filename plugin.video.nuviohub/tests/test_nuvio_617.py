@@ -92,7 +92,9 @@ class FakeKodi:
                  'special://temp': self.home / 'temp'}
         vfs.translatePath = lambda p: str(paths.get(p.rstrip('/'), self.home / 'other'))
         addon_mod = types.ModuleType('xbmcaddon')
-        addon_mod.Addon = lambda aid=None: types.SimpleNamespace(getAddonInfo=lambda k: str(self.home / 'addon_data' / 'plugin.video.nuviohub'))
+        self.addon_settings = {'nuvio_skin_applied': 'true', 'nuvio_screensaver_applied': 'true', 'nuvio_components_for': '6.0.25'}
+        addon_mod.Addon = lambda aid=None: types.SimpleNamespace(getAddonInfo=lambda k: str(self.home / 'addon_data' / 'plugin.video.nuviohub'),
+                                                                 setSetting=lambda k, v: self.addon_settings.__setitem__(k, v))
         return {'xbmc': xbmc, 'xbmcgui': gui, 'xbmcvfs': vfs, 'xbmcaddon': addon_mod}
 
 
