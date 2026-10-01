@@ -36,11 +36,13 @@ def media_card(meta, provider=None, media_type='movie', next_episode=False):
         subtitle = 'S%s E%s' % (meta.get('season') or '', meta.get('episode') or '')
     ids = p.extract_ids(meta)
     from .trailer_support import trailer_url
+    rating = rating_label(meta)
     return {
         'trailer': trailer_url(meta),
         'title': title, 'subtitle': subtitle, 'poster': poster, 'fanart': fanart,
         'clearlogo': logo, 'plot': meta.get('description') or meta.get('overview') or meta.get('plot') or '',
-        'meta_line': '  |  '.join(x for x in (year, 'Series' if series else 'Movie') if x),
+        'meta_line': '  |  '.join(x for x in (year, 'Series' if series else 'Movie', rating) if x),
+        'rating': rating,
         'target': dict(media_type=media_type, canonical_id=mid, title=title,
                        source_provider_id=(provider or {}).get('id') or '',
                        season=meta.get('season') if next_episode else '',
@@ -51,6 +53,28 @@ def media_card(meta, provider=None, media_type='movie', next_episode=False):
                        ui_seed={'poster': poster, 'fanart': fanart, 'clearlogo': logo}),
         'is_folder': series and not next_episode,
     }
+
+
+def rating_label(meta):
+    """'IMDb 7.8' from the metadata add-on's own fields; '' when it supplies none
+    or ratings are switched off in Settings > Appearance."""
+    try:
+        from .settings_cache import cached_addon
+        if cached_addon().getSetting('nuvio_show_ratings') == 'false':
+            return ''
+    except Exception:
+        pass
+    meta = meta or {}
+    for label, value in (('IMDb', meta.get('imdbRating') or meta.get('imdb_rating')),
+                         ('IMDb', (meta.get('ratings') or {}).get('imdb') if isinstance(meta.get('ratings'), dict) else None),
+                         ('TMDb', meta.get('tmdbRating') or meta.get('vote_average'))):
+        try:
+            number = float(str(value).split('/')[0].replace(',', '.'))
+        except (TypeError, ValueError):
+            continue
+        if 0 < number <= 10:
+            return '%s %.1f' % (label, number)
+    return ''
 
 
 def initial_shelves(bucket=''):

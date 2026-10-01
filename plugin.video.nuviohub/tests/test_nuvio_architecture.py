@@ -37,7 +37,7 @@ class DirectAIOTests(unittest.TestCase):
         self.assertEqual(json.dumps(rows),original)  # raw provider data is unmodified
         self.assertEqual([{k:v for k,v in row.items() if k!='_nuvio_source'} for row in result],rows)
         self.assertTrue(all(row['_nuvio_source']['id']=='aio' for row in result))
-        self.assertEqual(found,dict(source,_nuvio_errors=[]))
+        self.assertEqual(found,dict(source,_nuvio_errors=[],_nuvio_slow=[]))  # 6.0.12: slow add-ons are reported apart
         self.assertEqual(get.call_args.kwargs['ttl_seconds'],0)
         self.assertEqual(get.call_args.kwargs['retry'],False)
 

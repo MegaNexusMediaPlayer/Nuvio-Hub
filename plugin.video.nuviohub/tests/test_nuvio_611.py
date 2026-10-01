@@ -887,8 +887,9 @@ class ImdbTrailers(unittest.TestCase):
         self.assertEqual(self.imdb.imdb_id({'imdb_id': '111161'}), 'tt0111161')
         self.assertEqual(self.imdb.imdb_id({'id': 'kitsu:1'}), '')
 
-    def test_source_setting_defaults_to_youtube(self):
-        for raw, expected in (('', 'youtube'), ('bogus', 'youtube'), ('imdb', 'imdb'), ('imdb_youtube', 'imdb_youtube')):
+    def test_source_setting_defaults_to_youtube_with_imdb_fallback(self):
+        for raw, expected in (('', 'youtube_imdb'), ('bogus', 'youtube_imdb'), ('youtube', 'youtube'),
+                              ('imdb', 'imdb'), ('imdb_youtube', 'imdb_youtube')):
             addon = mock.Mock(getSetting=lambda key, v=raw: v)
             self.assertEqual(self.imdb.source_setting(addon), expected)
 
@@ -909,12 +910,15 @@ class ImdbTrailers(unittest.TestCase):
         row = {'target': {'media_type': 'movie', 'canonical_id': 'tt1234567'}, 'trailer': 'https://cdn/t.mp4'}
         with mock.patch.object(self.imdb, 'source_setting', return_value='imdb_youtube'), \
                 mock.patch.object(self.imdb, 'resolve_all', return_value=['https://imdb/a.mp4']), \
-                mock.patch.object(self.support, '_provider_trailer') as provider:
-            self.assertEqual(self.support.selected_trailers(row), ['https://imdb/a.mp4'])
-        provider.assert_not_called()
+                mock.patch.object(self.support, '_provider_trailer', return_value='https://cdn/t.mp4') as provider:
+            candidates = self.support.selected_trailers(row)
+            self.assertEqual(next(candidates), 'https://imdb/a.mp4')
+            provider.assert_not_called()
+            # Only when the first candidate cannot be used is the next source asked.
+            self.assertEqual(list(candidates), ['https://cdn/t.mp4'])
         with mock.patch.object(self.imdb, 'source_setting', return_value='imdb_youtube'), \
                 mock.patch.object(self.imdb, 'resolve_all', return_value=[]):
-            self.assertEqual(self.support.selected_trailers(row), ['https://cdn/t.mp4'])
+            self.assertEqual(list(self.support.selected_trailers(row)), ['https://cdn/t.mp4'])
 
     def test_details_trailer_tries_the_next_candidate(self):
         trailers = importlib.import_module('nuvio_ui.trailers')

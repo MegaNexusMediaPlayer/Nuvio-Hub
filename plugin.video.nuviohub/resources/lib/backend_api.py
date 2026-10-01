@@ -58,6 +58,10 @@ def metadata(media_type, canonical_id, timeout=8, preferred=''):
     raise ValueError('No enabled metadata add-on returned matching details. Check the collection mapping and connection.')
 
 
+STREAM_TIMEOUT = 20
+STREAM_GRACE = 2.5
+
+
 def streams(media_type, video_id):
     """Query enabled providers independently and retain each provider's ordering."""
     from concurrent.futures import ThreadPoolExecutor
@@ -79,18 +83,42 @@ def streams(media_type, video_id):
         origin['name'] = origin['name'] or (source.get('manifest') or {}).get('name') or source['id']
         return [dict(row, _nuvio_source=origin) for row in rows]
 
-    rows, errors = [], []
-    with ThreadPoolExecutor(max_workers=min(4, len(sources))) as pool:
-        pending = [(source, pool.submit(fetch, source)) for source in sources]
-        for source, future in pending:
-            try:
-                rows.extend(future.result())
-            except Exception:
-                # Do not log configured URLs: they can contain account tokens.
-                errors.append(source.get('name') or source['id'])
-    if not rows and len(errors) == len(sources):
+    # Every add-on starts at once. As soon as one returns streams, the others
+    # get STREAM_GRACE more seconds; stragglers are skipped (they finish in the
+    # background) instead of holding "Loading video" for up to 20 seconds.
+    import time
+    from concurrent.futures import wait, FIRST_COMPLETED
+    results, errors, slow = {}, [], []
+    pool = ThreadPoolExecutor(max_workers=min(8, len(sources)), thread_name_prefix='NuvioStreams')
+    futures = {pool.submit(fetch, source): source for source in sources}
+    pending = set(futures)
+    deadline = time.monotonic() + STREAM_TIMEOUT
+    grace = None
+    try:
+        while pending:
+            remaining = (grace or deadline) - time.monotonic()
+            if remaining <= 0:
+                break
+            done, pending = wait(pending, timeout=remaining, return_when=FIRST_COMPLETED)
+            for future in done:
+                source = futures[future]
+                try:
+                    found = future.result()
+                except Exception:
+                    # Do not log configured URLs: they can contain account tokens.
+                    errors.append(source.get('name') or source['id'])
+                    continue
+                results[source['id']] = found
+                if found and grace is None:
+                    grace = min(deadline, time.monotonic() + STREAM_GRACE)
+    finally:
+        pool.shutdown(wait=False)
+    slow = [s.get('name') or s['id'] for s in (futures[f] for f in pending)]
+    # Keep the configured add-on order, not arrival order.
+    rows = [row for source in sources for row in results.get(source['id'], [])]
+    if not rows and len(errors) + len(slow) == len(sources):
         raise ValueError('Stream add-ons could not respond. Check their configuration and connection.')
-    return dict(sources[0], _nuvio_errors=errors), rows
+    return dict(sources[0], _nuvio_errors=errors, _nuvio_slow=slow), rows
 
 
 def playback_context(meta, row, source, season='', episode='', video_id='', resume_seconds=0):

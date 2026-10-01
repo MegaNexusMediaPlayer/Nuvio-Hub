@@ -21,7 +21,7 @@ class Details(Dialog):
         self._metadata_pending=kwargs.get('metadata_pending',False);self._metadata_job=None;self._metadata_error=False;self._after_metadata=None
         self._extra_jobs=[];self._extras_started=False
         self.context=kwargs.get('context') or {}
-        self.seasons=[];self.episodes=[];self.related=[];self._related_loaded=False;self._season=None;self._recommendations=queue.Queue();self._descriptions=queue.Queue();self._description_jobs=set()
+        self.seasons=[];self.episodes=[];self.related=list(kwargs.get('related') or []);self._related_loaded=bool(kwargs.get('related'));self._season=None;self._recommendations=queue.Queue();self._descriptions=queue.Queue();self._description_jobs=set()
         self.landscape=xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_card_shape')=='landscape'
 
     def onInit(self):
@@ -48,10 +48,13 @@ class Details(Dialog):
             self.getControl(501).reset()
             self.getControl(501).addItems([xbmcgui.ListItem(label=title_details.season_label(n)) for n in self.seasons])
             if self.seasons:
+                self.setProperty('nuvio.empty','')
                 requested=title_details.number(self.context.get('season'),1)
                 first=self.seasons.index(requested) if requested in self.seasons else 0
                 self.getControl(501).selectItem(first);self._episodes(first);self.setFocusId(501)
-            else:self.setProperty('nuvio.empty','Loading episodes…' if self._metadata_pending else 'No episodes supplied for this series.')
+            else:
+                # No loading banner over the episode row: rows appear when they arrive.
+                self.setProperty('nuvio.empty','' if self._metadata_pending else 'No episodes supplied for this series.')
         else:
             self.setProperty('nuvio.empty','')
         if self._metadata_pending:
@@ -417,6 +420,7 @@ def open_context(context,row=None):
     playing=bool(direct and choose_stream(meta,context))
     addon=xbmcaddon.Addon('script.nuvio')
     filename='nuvio_details_landscape.xml' if xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_card_shape')=='landscape' else 'nuvio_details.xml'
+    related=None
     while True:
         if playing:
             from .trailers import wait_for_playback
@@ -438,10 +442,12 @@ def open_context(context,row=None):
                 context.update(resume_seconds=saved.get('position') or 0,resume_percent=saved.get('percent') or 0)
             context['nuvio_refresh_local_resume']=True
             playing=False
-        window=Details(filename,addon.getAddonInfo('path'),'Default','1080i',meta=meta,context=context,metadata_pending=metadata_pending)
+        window=Details(filename,addon.getAddonInfo('path'),'Default','1080i',meta=meta,context=context,metadata_pending=metadata_pending,related=related)
         try:
             window.doModal();action=window.action;context=dict(window.context)
             meta=window.meta;metadata_pending=window._metadata_pending
+            # Returning from the player reuses loaded recommendations.
+            related=window.related if getattr(window,'_related_loaded',False) else None
         finally:window.close()
         if action=='playing':playing=True;continue
         return action

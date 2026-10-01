@@ -9780,6 +9780,15 @@ def _meta_info(meta):
                 trailer = 'plugin://plugin.video.youtube/play/?video_id=%s' % t['source']
             elif isinstance(t, str):
                 trailer = 'plugin://plugin.video.youtube/play/?video_id=%s' % t
+        if trailer and trailer.startswith('plugin://plugin.video.youtube/'):
+            # Kodi's own Trailer button would offer to install YouTube, or
+            # ignore an IMDb-only choice. Only hand it a link it can play.
+            try:
+                from .trailer_support import youtube_allowed
+                if not youtube_allowed():
+                    trailer = ''
+            except Exception:
+                trailer = ''
         if trailer:
             info['trailer'] = trailer
     if meta.get('certification'):

@@ -270,7 +270,8 @@ def trailers():
         page.item('Trailer focus delay',(ADDON.getSetting('nuvio_trailer_delay') or '6')+' seconds'),
         page.item('Trailer duration',('Full trailer' if ADDON.getSetting('nuvio_trailer_duration')=='0' else (ADDON.getSetting('nuvio_trailer_duration') or '90')+' seconds')),
         page.item('Trailer source',imdb_trailers.LABELS[imdb_trailers.source_setting(ADDON)]),
-        page.item('YouTube add-on','Configure' if xbmc.getCondVisibility('System.HasAddon(plugin.video.youtube)') else 'Install'),page.item('Back')]
+        page.item('IMDb trailer quality · no add-on needed',imdb_trailers.QUALITY_LABELS[imdb_trailers.quality_setting(ADDON)]),
+        page.item('YouTube add-on','Configure' if xbmc.getCondVisibility('System.HasAddon(plugin.video.youtube)') else 'Install (only for YouTube trailers)'),page.item('Back')]
     def choose(pick):
         if pick==0:toggle('nuvio_auto_trailers')
         elif pick in (1,2):
@@ -285,8 +286,12 @@ def trailers():
                             preselect=keys.index(current))
             if i>=0:ADDON.setSetting(imdb_trailers.SETTING,keys[i])
         elif pick==4:
+            keys=['480','720','1080'];current=imdb_trailers.quality_setting(ADDON)
+            i=dialog.select('IMDb trailer quality',[imdb_trailers.QUALITY_LABELS[k] for k in keys],preselect=keys.index(current))
+            if i>=0:ADDON.setSetting(imdb_trailers.QUALITY_SETTING,keys[i])
+        elif pick==5:
             if ensure_addon('plugin.video.youtube'):xbmcaddon.Addon('plugin.video.youtube').openSettings()
-        elif pick==5:return page.DONE
+        elif pick==6:return page.DONE
     return page.show('Trailers',rows,choose)
 
 
@@ -355,9 +360,16 @@ def appearance():
             page.item('Nuvio screensaver',enabled=saver=='screensaver.nuvio'),
             page.item('Screensaver media', 'Animated video' if ADDON.getSetting('nuvio_screensaver_type')=='video' else 'Image / GIF'),
             page.item('Kodi interface settings'),page.item('Collections layout and metadata'),
-            page.item('Movie and series cards','Landscape' if ADDON.getSetting('nuvio_card_shape')=='landscape' else 'Portrait posters'),page.item('Back')]
+            page.item('Movie and series cards','Landscape' if ADDON.getSetting('nuvio_card_shape')=='landscape' else 'Portrait posters'),
+            page.item('Ratings under the title (when the metadata add-on supplies them)',enabled=ADDON.getSetting('nuvio_show_ratings')!='false'),
+            page.item('Back')]
     def choose(pick):
-        if pick==12:return page.DONE
+        if pick==13:return page.DONE
+        if pick==12:
+            ADDON.setSetting('nuvio_show_ratings','false' if ADDON.getSetting('nuvio_show_ratings')!='false' else 'true')
+            from .browse_meta import clear
+            clear()
+            return None
         if pick==0:return 'nuvio:activate_skin'
         elif pick in (1,2):xbmc.executebuiltin('Skin.ToggleSetting(%s)'%{1:'nuvio.hidehero',2:'nuvio.hidetitles'}[pick],True)
         elif pick==3:presentation_settings.set_hidden(not presentation_settings.hidden())

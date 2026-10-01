@@ -1,4 +1,4 @@
-# Install and configure Nuvio Hub 6.0.11 candidate
+# Install and configure Nuvio Hub 6.0.12 candidate
 
 This is a supplied local test bundle, not an automatically published release.
 The supported code/API target is Kodi 21 and Kodi 22; actual rendering, native
@@ -7,9 +7,9 @@ playback and live synchronization still need device acceptance.
 ## Safe upgrade
 
 Back up your Kodi profile first. Stop playback and close the Nuvio frontend.
-Install `Nuvio-Hub-Complete-6.0.11.zip` via Add-ons → Install from zip file. Open
+Install `Nuvio-Hub-Complete-6.0.12.zip` via Add-ons → Install from zip file. Open
 backend **Nuvio Hub** once to update the interface, skin and screensaver, then
-restart Kodi. All four Nuvio components must report 6.0.11. Keep userdata; do
+restart Kodi. All four Nuvio components must report 6.0.12. Keep userdata; do
 not uninstall or delete credentials/settings to update. The source archive is
 for development and is not installable through Kodi's ZIP installer.
 

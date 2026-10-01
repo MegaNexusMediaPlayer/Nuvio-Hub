@@ -1,10 +1,11 @@
 """IMDb trailers as an alternative to YouTube.
 
 IMDb's public GraphQL endpoint (the one imdb.com itself uses) returns signed,
-direct MP4 files for a title's trailers, so no YouTube add-on is needed. The
-result is a plain HTTPS .mp4 URL that ``trailer_cache.prepare`` downloads and
-plays exactly like any other direct trailer. Lookups are cached per title and
-never raise: a failure just means "no IMDb trailer" and the other source is used.
+direct MP4 files for a title's trailers, so no YouTube add-on and no extra Kodi
+add-on is needed. The files come from IMDb's video CDN and are streamed by
+Kodi directly (see ``direct_stream``), so a trailer starts in about a second
+instead of waiting for a download. Lookups are cached per title and never
+raise: a failure just means "no IMDb trailer" and the other source is used.
 """
 import json
 import re
@@ -19,8 +20,14 @@ HEADERS = {'Content-Type': 'application/json', 'Accept': 'application/json',
                          'Chrome/120.0 Safari/537.36'}
 QUERY = ('query($id: ID!) { title(id: $id) { primaryVideos(first: 8) { edges { node { id '
          'contentType { id } playbackURLs { url videoMimeType videoDefinition } } } } } }')
-# Compact first: previews are cached whole on the device (32 MiB cap).
-PREFERRED = ('DEF_480p', 'DEF_SD', 'DEF_720p', 'DEF_1080p')
+QUALITIES = {'480': ('DEF_480p', 'DEF_SD', 'DEF_720p', 'DEF_1080p'),
+             '720': ('DEF_720p', 'DEF_480p', 'DEF_1080p', 'DEF_SD'),
+             '1080': ('DEF_1080p', 'DEF_720p', 'DEF_480p', 'DEF_SD')}
+QUALITY_LABELS = {'480': '480p · fastest start', '720': '720p', '1080': '1080p · most data'}
+QUALITY_SETTING = 'nuvio_imdb_trailer_quality'
+PREFERRED = QUALITIES['480']
+DEFAULT_SOURCE = 'youtube_imdb'
+CDN_SUFFIX = '.media-imdb.com'
 SOURCES = ('youtube', 'imdb', 'imdb_youtube', 'youtube_imdb')
 LABELS = {'youtube': 'YouTube', 'imdb': 'IMDb', 'imdb_youtube': 'IMDb, then YouTube',
           'youtube_imdb': 'YouTube, then IMDb'}
@@ -39,7 +46,25 @@ def source_setting(addon=None):
         value = (addon.getSetting(SETTING) or '').strip()
     except Exception:
         value = ''
-    return value if value in SOURCES else 'youtube'
+    return value if value in SOURCES else DEFAULT_SOURCE
+
+
+def quality_setting(addon=None):
+    try:
+        if addon is None:
+            import xbmcaddon
+            addon = xbmcaddon.Addon('plugin.video.nuviohub')
+        value = (addon.getSetting(QUALITY_SETTING) or '').strip()
+    except Exception:
+        value = ''
+    return value if value in QUALITIES else '480'
+
+
+def direct_stream(url):
+    """IMDb CDN files are complete MP4s that Kodi can stream immediately."""
+    from urllib.parse import urlsplit
+    parts = urlsplit(str(url or ''))
+    return parts.scheme == 'https' and (parts.hostname or '').endswith(CDN_SUFFIX) and parts.path.lower().endswith('.mp4')
 
 
 def order(source):
@@ -63,9 +88,9 @@ def imdb_id(*records):
     return ''
 
 
-def pick_all(nodes):
+def pick_all(nodes, preferred=PREFERRED):
     """MP4 files of the first trailer (any video when a title has no trailer),
-    most suitable first."""
+    in ``preferred`` quality order."""
     nodes = [n for n in nodes or [] if isinstance(n, dict)]
     trailers = [n for n in nodes if str((n.get('contentType') or {}).get('id') or '').endswith('.trailer')]
     for node in trailers or nodes:
@@ -75,8 +100,8 @@ def pick_all(nodes):
             if item.get('videoMimeType') == 'MP4' and url.startswith('https://'):
                 files.setdefault(item.get('videoDefinition'), url)
         if files:
-            ranked = [files[d] for d in PREFERRED if d in files]
-            return ranked + [u for d, u in files.items() if d not in PREFERRED]
+            ranked = [files[d] for d in preferred if d in files]
+            return ranked + [u for d, u in files.items() if d not in preferred]
     return []
 
 
@@ -85,14 +110,15 @@ def pick(nodes):
     return found[0] if found else ''
 
 
-def resolve_all(title_id, timeout=5, opener=urlopen):
+def resolve_all(title_id, timeout=5, opener=urlopen, quality=None):
     """Signed MP4 URLs for the title's trailer, best first ([] on any failure)."""
+    preferred = QUALITIES.get(quality or quality_setting(), PREFERRED)
     title_id = imdb_id({'id': title_id})
     if not title_id:
         return []
     now = time.monotonic()
     with _LOCK:
-        hit = _CACHE.get(title_id)
+        hit = _CACHE.get((title_id, preferred))
         if hit and hit[0] > now:
             return list(hit[1])
     urls = []
@@ -101,18 +127,18 @@ def resolve_all(title_id, timeout=5, opener=urlopen):
         with opener(Request(ENDPOINT, data=body, headers=HEADERS, method='POST'), timeout=timeout) as response:
             data = json.loads(response.read(2 * 1024 * 1024).decode('utf-8'))
         edges = ((((data or {}).get('data') or {}).get('title') or {}).get('primaryVideos') or {}).get('edges') or []
-        urls = pick_all([edge.get('node') for edge in edges if isinstance(edge, dict)])
+        urls = pick_all([edge.get('node') for edge in edges if isinstance(edge, dict)], preferred)
     except Exception:
         urls = []
     with _LOCK:
         # Misses are remembered briefly so a title without trailers is not re-queried per focus.
-        _CACHE[title_id] = (now + (_TTL if urls else 120), tuple(urls))
+        _CACHE[(title_id, preferred)] = (now + (_TTL if urls else 120), tuple(urls))
         while len(_CACHE) > 256:
             _CACHE.pop(next(iter(_CACHE)))
     return list(urls)
 
 
-def resolve(title_id, timeout=5, opener=urlopen):
+def resolve(title_id, timeout=5, opener=urlopen, quality=None):
     """Best signed MP4 URL for the title's trailer, or '' (never raises)."""
-    found = resolve_all(title_id, timeout, opener)
+    found = resolve_all(title_id, timeout, opener, quality)
     return found[0] if found else ''

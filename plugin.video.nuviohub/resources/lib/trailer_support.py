@@ -73,20 +73,19 @@ def _provider_trailer(row, direct_only):
 
 
 def selected_trailers(row,direct_only=False):
-    """Candidates for a Home card, in the chosen source order.
+    """Candidates for a Home card, in the chosen source order (a generator).
 
-    The second source is consulted only when the preferred one has nothing, so
-    a Home focus never costs both an IMDb query and a metadata request.
+    The next source is only looked up when the caller could not use the
+    previous candidates, so a Home focus normally costs one lookup - and a
+    YouTube trailer the device cannot resolve still falls back to IMDb.
     """
     from . import imdb_trailers
-    urls = []
     for source in imdb_trailers.order(imdb_trailers.source_setting()):
-        if urls:
-            break
         if source == 'imdb':
             title_id = imdb_trailers.imdb_id(row.get('target') or {}, row)
             if title_id:
-                urls = imdb_trailers.resolve_all(title_id)[:2]
+                for url in imdb_trailers.resolve_all(title_id)[:2]:
+                    yield url
         else:
             try:
                 url = _provider_trailer(row, direct_only)
@@ -95,10 +94,23 @@ def selected_trailers(row,direct_only=False):
             if url.startswith('plugin://plugin.video.youtube/') and not xbmc.getCondVisibility('System.HasAddon(plugin.video.youtube)'):
                 url = ''
             if url:
-                urls = [url]
-    return urls
+                yield url
+
+
+def playable(url, prepare, cancelled=None):
+    """Local cached clip for downloadable trailers; IMDb CDN files stream directly."""
+    from . import imdb_trailers
+    if imdb_trailers.direct_stream(url):
+        return url
+    return prepare({'trailer': url}, cancelled)
+
+
+def youtube_allowed():
+    """Kodi's own trailer buttons may use a YouTube link only when it can play it."""
+    from . import imdb_trailers
+    return (imdb_trailers.source_setting() != 'imdb' and
+            xbmc.getCondVisibility('System.HasAddon(plugin.video.youtube)'))
 
 
 def selected_trailer(row,direct_only=False):
-    urls = selected_trailers(row, direct_only)
-    return urls[0] if urls else ''
+    return next(iter(selected_trailers(row, direct_only)), '')

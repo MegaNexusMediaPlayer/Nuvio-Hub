@@ -21,6 +21,20 @@ def candidates(providers=None):
     return result
 
 
+def preferred(available):
+    """The single stream add-on to use when none was chosen: AIOStreams-style
+    aggregators first (one request covers many sources), else the first."""
+    import re
+    available = list(available or [])
+    for provider in available:
+        text = re.sub(r'[^a-z0-9]', '', ' '.join(str(x or '') for x in (
+            provider.get('id'), provider.get('name'), (provider.get('manifest') or {}).get('id'),
+            (provider.get('manifest') or {}).get('name'))).lower())
+        if 'aiostreams' in text:
+            return provider
+    return available[0] if available else None
+
+
 def _saved():
     raw = xbmcaddon.Addon('plugin.video.nuviohub').getSetting(SETTING)
     if not raw.strip():
@@ -37,12 +51,11 @@ def entries(providers=None):
     available = candidates(providers)
     saved = _saved()
     if saved is None:
-        # Never configured: keep a single earlier choice; with no such choice
-        # every stream add-on is ON so a fresh setup is not locked out.
-        legacy = backend_api.provider('streams', available)
-        if not legacy:
-            return [(p, True) for p in available]
-        return [(p, p.get('id') == legacy.get('id')) for p in available]
+        # Never configured: one stream add-on is ON (the earlier choice, else
+        # the preferred one). Every extra add-on adds its full response time to
+        # "Loading video", so more are only ever switched on by the user.
+        chosen = backend_api.provider('streams', available) or preferred(available)
+        return [(p, p.get('id') == (chosen or {}).get('id')) for p in available]
     by_id = {p['id']: p for p in available}
     result, seen = [], set()
     for row in saved:
@@ -76,3 +89,32 @@ def supports(provider, media_type, video_id):
 def enabled(media_type=None, video_id=''):
     return [p for p, on in entries() if on and
             (media_type is None or supports(p, media_type, video_id))]
+
+
+REPAIR_SETTING = 'nuvio_stream_switch_612'
+
+
+def repair_all_on():
+    """One-time 6.0.12 repair: the 6.0.11 test build switched every imported
+    stream add-on ON, which made "Loading video" wait for the slowest of them.
+    If every one of three or more add-ons is ON, keep only the preferred one.
+    Returns the kept provider, or None when nothing changed."""
+    addon = xbmcaddon.Addon('plugin.video.nuviohub')
+    if addon.getSetting(REPAIR_SETTING) == 'true':
+        return None
+    addon.setSetting(REPAIR_SETTING, 'true')
+    if _saved() is None:
+        return None
+    rows = entries()
+    on = [p for p, enabled in rows if enabled]
+    if len(on) < 3 or len(on) != len(rows):
+        return None
+    keep = preferred(on)
+    value = [{'id': p['id'], 'enabled': p['id'] == keep['id']} for p, _ in rows]
+    addon.setSetting(SETTING, json.dumps(value))
+    try:
+        from . import settings_cache
+        settings_cache.invalidate()
+    except Exception:
+        pass
+    return keep

@@ -262,9 +262,25 @@ def _refresher():
         return _REFRESH
 
 
+def playback_busy():
+    """A video is starting or playing (trailer previews do not count). Background
+    catalog/artwork work waits so it never competes with the stream."""
+    try:
+        import xbmc
+        import xbmcgui
+        home = xbmcgui.Window(10000)
+        if home.getProperty('nuvio.loading.active'):
+            return True
+        return xbmc.Player().isPlayingVideo() and not home.getProperty('nuvio.preview.active')
+    except Exception:
+        return False
+
+
 def _refresh_worker(jobs):
     while True:
         provider, catalog_row, extra, timeout = jobs.get()
+        while playback_busy():
+            time.sleep(2)
         try:
             catalog(provider, catalog_row, extra, timeout, force=True)
         except Exception:

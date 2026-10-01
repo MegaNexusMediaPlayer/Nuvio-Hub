@@ -87,12 +87,14 @@ class Controller:
         target=row.get('target') or {}
         cache_key=(target.get('media_type'),target.get('canonical_id'),direct_only,source_setting())
         cached=_CACHE.get(cache_key)
-        if cached and cached[0]>time.monotonic() and os.path.isfile(cached[1]):return cached[1]
+        if cached and cached[0]>time.monotonic() and (cached[1].startswith('https://') or os.path.isfile(cached[1])):return cached[1]
         from resources.lib.trailer_cache import prepare
+        from resources.lib.trailer_support import playable
+        stop=cancelled or self.resolve_cancel
         url=''
         for selected in selected_trailers(row,direct_only=direct_only):
-            url=prepare({'trailer':selected}, cancelled or self.resolve_cancel)
-            if url or (cancelled or self.resolve_cancel).is_set():break
+            url=playable(selected,prepare,stop)
+            if url or stop.is_set():break
         # Cancelled/busy resolution is not evidence that this title lacks a trailer.
         if url:_CACHE[cache_key]=(time.monotonic()+1800,url)
         while len(_CACHE)>64:_CACHE.popitem(last=False)

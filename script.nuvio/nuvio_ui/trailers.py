@@ -12,7 +12,7 @@ def wait_for_playback():
     monitor=xbmc.Monitor();seen=False;start=time.monotonic()
     home=xbmcgui.Window(10000);request=home.getProperty('nuvio.playback.started')
     xbmc.executebuiltin('ActivateWindow(fullscreenvideo)')
-    while not monitor.waitForAbort(.1):
+    while not monitor.waitForAbort(.05):
         playing=xbmc.Player().isPlayingVideo()
         full=xbmc.getCondVisibility('Window.IsActive(fullscreenvideo)')
         if full:seen=True
@@ -27,9 +27,11 @@ def wait_for_playback():
         home.clearProperty('nuvio.preview.active')
         # Let the service commit Stop before the details screen reads resume.
         # A missing service must not leave the UI waiting indefinitely.
-        for _ in range(30):
+        # The service saves progress and flags it within milliseconds; do not
+        # keep the user staring at an empty screen longer than 0.8 s.
+        for _ in range(40):
             if not request or home.getProperty('nuvio.playback.finished')==request:break
-            if monitor.waitForAbort(.05):break
+            if monitor.waitForAbort(.02):break
 
 def play_trailer(meta):
     return show_trailer(meta)
@@ -61,9 +63,9 @@ def show_trailer(meta):
     cancelled=threading.Event()
     def resolve():
         # Trailer source order from Settings > Trailers (YouTube and/or IMDb).
-        from resources.lib.trailer_support import trailer_candidates
+        from resources.lib.trailer_support import trailer_candidates,playable
         for candidate in trailer_candidates(trailer_url(meta),(meta,)):
-            path=prepare({'trailer':candidate},cancelled)
+            path=playable(candidate,prepare,cancelled)
             if path or cancelled.is_set():return path
         return ''
     try: url=job(resolve,meta,label='Preparing trailer')

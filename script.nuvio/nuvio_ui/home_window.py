@@ -11,6 +11,7 @@ import xbmcaddon
 import xbmcgui
 
 from resources.lib import art_cache
+from resources.lib import browse_cache
 from resources.lib import home_data
 from resources.lib import simkl_watched
 from .dialog import Dialog
@@ -24,6 +25,7 @@ SEED_DISK_ROWS = 6        # shelves that may read SQLite synchronously while pai
 PREFETCH_DWELL = .25      # seconds a collection tile must stay selected before prefetch
 PREFETCH_AGAIN = 240      # seconds before the same collection is prefetched again
 PREFETCH_ART = 6          # first cards whose artwork is warmed in the image proxy
+COLD_ART_IMAGES = 50      # fewer proxy images than this = RAM was emptied (restart/suspend)
 SHELF_MEMORY_SECONDS = 300
 
 
@@ -212,6 +214,8 @@ class HomeWindow(Dialog):
         if not getattr(self,'_watch_loaded',False):
             self._watch_loaded=True
             self._pool.submit(self._refresh_watched)
+        try:self._start_cold_art_warm()
+        except Exception:pass  # Optional warm-up never blocks Home.
         self._touch()
 
     def _queue_visible(self):
@@ -307,7 +311,7 @@ class HomeWindow(Dialog):
     def _maybe_prefetch(self):
         """Warm the collection under the cursor (and its neighbours) off the GUI
         thread once selection settles, so Select opens it from memory."""
-        if self._closed or self._suspended:return
+        if self._closed or self._suspended or browse_cache.playback_busy():return
         control_id=self.getFocusId();index=control_id-ROW_BASE
         if not 0<=index<len(self._shelves):return
         try:pos=self.getControl(control_id).getSelectedPosition()
@@ -348,6 +352,35 @@ class HomeWindow(Dialog):
             self._remember_rows(key,rows,epoch)
             self._warm_art(rows)
 
+    def _start_cold_art_warm(self):
+        """Once per Kodi session, when the image proxy's RAM is (nearly) empty -
+        after a restart or a suspend that dropped it - fill the first posters of
+        every collection in the background. Cached catalog pages only; no
+        catalog requests. Anything opened later fills in as usual."""
+        if self._bucket or getattr(self,'_cold_warm_started',False):return
+        self._cold_warm_started=True
+        home=xbmcgui.Window(10000)
+        base=home.getProperty('nuvio.art_cache.base')
+        if not base or home.getProperty('nuvio.art_warm.session')==base:return
+        try:images=int((home.getProperty('nuvio.art_cache.usage') or '0 · 0').split('·')[-1].split()[0])
+        except (ValueError,IndexError):images=0
+        if images>=COLD_ART_IMAGES:return
+        home.setProperty('nuvio.art_warm.session',base)
+        ids=[row['collection_id'] for shelf in self._shelves for row in shelf.get('rows') or [] if row.get('collection_id')]
+        threading.Thread(target=self._cold_art_warm,args=(ids,),name='NuvioArtWarm',daemon=True).start()
+
+    def _cold_art_warm(self, collection_ids):
+        from resources.lib.collections_home import collection_shelves
+        for collection_id in collection_ids:
+            if self._closed:return
+            try:shelves=collection_shelves(collection_id)
+            except Exception:continue
+            for shelf in shelves:
+                if self._closed:return
+                try:rows=home_data.load_catalog(shelf,cached_only=True)
+                except Exception:rows=None
+                if rows:self._warm_art(rows)
+
     def _warm_art(self, rows):
         """Pre-download the first visible cards into the bounded image proxy."""
         base=xbmcgui.Window(10000).getProperty('nuvio.art_cache.base')
@@ -356,6 +389,7 @@ class HomeWindow(Dialog):
         from urllib.request import Request, urlopen
         landscape=getattr(self,'_card_shape','poster')=='landscape'
         for row in [r for r in rows if r.get('target')][:PREFETCH_ART]:
+            while not self._closed and browse_cache.playback_busy():time.sleep(1)
             if self._closed or self._suspended:return
             url=str((row.get('landscape') or row.get('fanart') or row.get('poster')) if landscape else row.get('poster') or '')
             if not url.startswith(('https://','http://')) or '|' in url or url in self._warmed_art:continue

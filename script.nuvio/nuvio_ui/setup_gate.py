@@ -47,6 +47,13 @@ def offer_switch_on(module, kind, dialog=None):
 
 def ensure_ready():
     from . import settings, collection_editor
+    try:
+        kept = stream_providers.repair_all_on()
+    except Exception:
+        kept = None
+    if kept:
+        xbmcgui.Dialog().notification('Stream add-ons', 'Only %s is ON now for faster playback. Change it in Settings > Add-ons.'
+                                      % (kept.get('name') or kept['id']), time=6000)
     offer_switch_on(metadata_providers, 'metadata')
     offer_switch_on(stream_providers, 'stream')
     # Previously saved collections are kept; verify them without replacing layout.
