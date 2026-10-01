@@ -9,8 +9,9 @@ def execute_command(command):
     """Called only after the owning Nuvio modal window has closed."""
     while command:
         if command.startswith('nuvio:activate_skin'):
-            from resources.lib.skin_activation import activate
-            activate()
+            from resources.lib import skin_activation
+            xbmcgui.Window(10000).clearProperty(skin_activation.DECLINED)  # asked for it explicitly
+            if skin_activation.switch()=='failed':skin_activation.report_failure()
             if xbmc.getCondVisibility('Window.IsVisible(yesnodialog)'):return
             if command.endswith(':wizard'):
                 from .onboarding import run

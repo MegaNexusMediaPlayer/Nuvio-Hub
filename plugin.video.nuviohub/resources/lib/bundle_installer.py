@@ -168,15 +168,25 @@ def ensure_components(force=False):
     changed=install_components(packages,addons_dir,Path(xbmcvfs.translatePath(addon.getAddonInfo('profile')))/'installation-backups',force)
     xbmc.executebuiltin('UpdateLocalAddons')
     monitor=xbmc.Monitor()
+    versions={r['id']:r.get('version','') for r in desired}
     for aid in ('script.nuvio','skin.nuvio','screensaver.nuvio'):
+        found=None
         for attempt in range(60):  # slow boxes need up to ~30 s to discover new add-ons
-            result=json.loads(xbmc.executeJSONRPC(json.dumps({'jsonrpc':'2.0','id':1,'method':'Addons.GetAddonDetails','params':{'addonid':aid,'properties':['enabled']}})))
-            if result.get('result',{}).get('addon'):
-                enabled=json.loads(xbmc.executeJSONRPC(json.dumps({'jsonrpc':'2.0','id':1,'method':'Addons.SetAddonEnabled','params':{'addonid':aid,'enabled':True}})))
-                if enabled.get('error'):raise RuntimeError('Kodi could not enable '+aid+'. Restart Kodi and retry.')
-                break
+            result=json.loads(xbmc.executeJSONRPC(json.dumps({'jsonrpc':'2.0','id':1,'method':'Addons.GetAddonDetails','params':{'addonid':aid,'properties':['enabled','version']}})))
+            found=(result.get('result') or {}).get('addon') if isinstance(result.get('result'),dict) else None
+            # 6.0.33: wait for the NEW version, not just any. The skin requires
+            # script.nuvio of the same version; with the old one still loaded
+            # Kodi dropped the skin at the next start.
+            if found and (not versions.get(aid) or not found.get('version') or found.get('version')==versions[aid]):break
+            if found and attempt>=20:break  # still the old version after 10 s: the restart loads it
             if monitor.waitForAbort(0.5):return changed
-        else:raise RuntimeError('Kodi has not discovered '+aid+'. Restart Kodi and reopen Nuvio Hub.')
+        if not found:raise RuntimeError('Kodi has not discovered '+aid+'. Restart Kodi and reopen Nuvio Hub.')
+        if found.get('version') and versions.get(aid) and found['version']!=versions[aid]:
+            xbmc.log('[MegaNexus] Kodi still reports %s %s (installed %s); a restart loads it.'%(aid,found['version'],versions[aid]),xbmc.LOGWARNING)
+            changed=list(changed) if changed else []
+            if aid not in changed:changed.append(aid)  # triggers the restart question after updates
+        enabled=json.loads(xbmc.executeJSONRPC(json.dumps({'jsonrpc':'2.0','id':1,'method':'Addons.SetAddonEnabled','params':{'addonid':aid,'enabled':True}})))
+        if enabled.get('error'):raise RuntimeError('Kodi could not enable '+aid+'. Restart Kodi and retry.')
     # The original service uses some of the same legacy playback property names.
     # The profile has already been copied read-only by default.py; preserve its data.
     if not xbmc.Player().isPlayingVideo():

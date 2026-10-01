@@ -1,12 +1,12 @@
 # Nuvio Hub — changes since 6.0.7
 
-Summary of 6.0.8 – 6.0.32 (details in each `docs/RELEASE-6.0.x.md`).
+Summary of 6.0.8 – 6.0.33 (details in each `docs/RELEASE-6.0.x.md`).
 6.0.19 and 6.0.23 are published GitHub releases.
 
 | Area | What changed |
 |---|---|
 | Brand | Complete Nuvio Hub rename; the retired name appears nowhere (release guard enforces it); upgrade aliases are assembled at runtime in `legacy_names.py`. |
-| Entry | Nothing blocks opening Nuvio. With no setup, Cinemeta supplies metadata and default collections; your own add-ons' catalogs or imported collections take over automatically. |
+| Entry | Nothing blocks opening Nuvio. With no setup, Cinemeta supplies metadata and default collections; your own add-ons' catalogs or imported collections take over automatically. The MegaNexus skin is checked at every entry and Kodi start, saved at once and restored after an update or an Android restart, and a failed switch says why (6.0.33). |
 | Collections | Default collections (Cinemeta or numb3rs with setup help), Home rows show/hide, per-catalog On/Off, changes save immediately, catalog check is a report only. |
 | Speed | Stale-while-revalidate catalog cache (instant reopen), hover prefetch, parallel sources, memoized watched/provider data, keep-alive image proxy, posters preloaded into RAM after a reboot, all Home catalogs and title details kept in RAM with details of the title under the cursor and the next catalog page loaded ahead (6.0.32), background work yields to what you open and pauses during playback. |
 | Playback | Video starts when the first stream add-on answers (slow ones are skipped), one stream add-on ON by default, one loading screen, faster return from the player. |

@@ -1,4 +1,4 @@
-# Install and configure MegaNexus (Nuvio Hub) 6.0.32
+# Install and configure MegaNexus (Nuvio Hub) 6.0.33
 
 The supported code/API target is Kodi 21 and Kodi 22.
 
@@ -18,8 +18,8 @@ MegaNexus and choose **Set up on your phone** to configure it with a QR code.
 ## Manual ZIP
 
 Back up your Kodi profile first. Stop playback and close the Nuvio frontend.
-Install `Nuvio-Hub-Complete-6.0.32.zip` via Add-ons → Install from zip file.
-All four components must report 6.0.32. Keep userdata; do not uninstall or
+Install `Nuvio-Hub-Complete-6.0.33.zip` via Add-ons → Install from zip file.
+All four components must report 6.0.33. Keep userdata; do not uninstall or
 delete credentials/settings to update. The source archive is for development
 and is not installable through Kodi's ZIP installer.
 

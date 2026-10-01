@@ -156,7 +156,10 @@ class FirstOpen(unittest.TestCase):
         self.activation = importlib.import_module(self.bridge.__package__ + '.skin_activation')
 
     def test_installs_then_skin_then_opens(self):
-        with mock.patch.object(self.activation, 'activate', side_effect=lambda: self.calls.append('skin') or True):
+        def switch(addon):
+            self.calls.append('skin');addon.setSetting('nuvio_skin_applied', 'true');return 'ok'
+        with mock.patch.object(self.activation, 'wanted', return_value=True), \
+                mock.patch.object(self.activation, 'switch', side_effect=switch):
             self.bridge.open_home()
         self.assertEqual(self.calls, ['install', 'skin'])
         self.busy.create.assert_called_once()
@@ -164,11 +167,28 @@ class FirstOpen(unittest.TestCase):
         self.assertEqual(self.values['nuvio_skin_applied'], 'true')
         self.assertEqual(self.builtins, ['RunScript(script.nuvio)'])
 
-    def test_declined_skin_is_offered_again(self):
-        with mock.patch.object(self.activation, 'activate', return_value=False):
+    def test_declined_skin_still_opens_and_is_not_marked(self):
+        with mock.patch.object(self.activation, 'wanted', return_value=True), \
+                mock.patch.object(self.activation, 'switch', return_value='declined'):
             self.bridge.open_home(settings=True)
         self.assertNotEqual(self.values.get('nuvio_skin_applied'), 'true')
         self.assertEqual(self.builtins, ['RunScript(script.nuvio,settings)'])
+
+    def test_skin_is_checked_at_every_entry_not_only_the_first(self):
+        # 6.0.33: Kodi lost the skin after an update/restart; the flag alone hid it.
+        self.values['nuvio_skin_applied'] = 'true'
+        with mock.patch.object(self.activation, 'wanted', return_value=True), \
+                mock.patch.object(self.activation, 'switch', return_value='ok') as switch:
+            self.bridge.open_home()
+        switch.assert_called_once()
+
+    def test_failed_switch_explains_why(self):
+        with mock.patch.object(self.activation, 'wanted', return_value=True), \
+                mock.patch.object(self.activation, 'switch', return_value='failed'), \
+                mock.patch.object(self.activation, 'report_failure') as report:
+            self.bridge.open_home()
+        report.assert_called_once()
+        self.assertEqual(self.builtins, ['RunScript(script.nuvio)'])
 
     def test_install_error_is_shown_and_nothing_opens(self):
         with mock.patch.object(self.installer, 'ensure_components', side_effect=RuntimeError('Kodi has not discovered skin.nuvio')), \

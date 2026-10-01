@@ -23,13 +23,15 @@ def open_home(settings=False, repair=False):
         if busy:busy.close()
     import xbmcaddon
     addon=xbmcaddon.Addon('plugin.video.nuviohub')
-    if addon.getSetting('nuvio_skin_applied')!='true':
-        from .skin_activation import activate
-        # Remembered only once Kodi really kept the skin; declined or timed out
-        # means the next start asks again (before, it was never offered again).
-        try:ok=activate()
-        except Exception:ok=False
-        if ok:addon.setSetting('nuvio_skin_applied','true')
+    from . import skin_activation
+    # 6.0.33: checked at every entry, not only the first one - Kodi can lose the
+    # skin (killed before saving, or an update it had not finished loading).
+    # "No" in Kodi's keep-skin question is respected for this session.
+    if skin_activation.wanted(addon):
+        try:status=skin_activation.switch(addon)
+        except Exception as exc:
+            xbmc.log('[MegaNexus] Skin switch failed: %s'%exc,xbmc.LOGWARNING);status='failed'
+        if status=='failed':skin_activation.report_failure()
         if xbmc.getCondVisibility('Window.IsVisible(yesnodialog)'):return
     xbmc.executebuiltin('RunScript(script.nuvio%s)'%(',settings' if settings else ''))
 

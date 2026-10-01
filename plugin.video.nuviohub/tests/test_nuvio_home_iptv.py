@@ -55,13 +55,17 @@ class HomeBack(unittest.TestCase):
     def test_skin_confirmation_waits_for_the_user_instead_of_opening_ui(self):
         clock=[0]
         monitor=SimpleNamespace(waitForAbort=lambda n:clock.__setitem__(0,clock[0]+n) or False)
-        with mock.patch.object(activation.xbmc,'getSkinDir',side_effect=['skin.estuary','skin.nuvio'],create=True),mock.patch.object(activation.xbmc,'executeJSONRPC',return_value='{"result":true}',create=True),mock.patch.object(activation.xbmc,'getCondVisibility',side_effect=[False,True,True,False]),mock.patch.object(activation.xbmc,'Monitor',return_value=monitor),mock.patch.object(activation.time,'monotonic',side_effect=lambda:clock[0]):
-            self.assertTrue(activation.activate())
+        with mock.patch.object(activation.xbmc,'getSkinDir',side_effect=['skin.estuary','skin.nuvio'],create=True),mock.patch.object(activation.xbmc,'executeJSONRPC',return_value='{"result":true}',create=True),mock.patch.object(activation.xbmc,'getCondVisibility',side_effect=[False,True,True,False]),mock.patch.object(activation.xbmc,'Monitor',return_value=monitor),mock.patch.object(activation.time,'monotonic',side_effect=lambda:clock[0]),\
+                mock.patch.object(activation,'check',return_value=''),mock.patch.object(activation,'persist') as persist:
+            self.assertTrue(activation.activate(mock.Mock()))
+        persist.assert_called_once()  # 6.0.33: saved at once, survives Android killing Kodi
         self.assertGreaterEqual(clock[0],.3)
 
     def test_declined_skin_is_respected(self):
-        with mock.patch.object(activation.xbmc,'getSkinDir',return_value='skin.estuary',create=True),mock.patch.object(activation.xbmc,'executeJSONRPC',return_value='{"result":true}',create=True),mock.patch.object(activation.xbmc,'getCondVisibility',side_effect=[True,False]),mock.patch.object(activation.xbmc,'Monitor'):
-            self.assertFalse(activation.activate())
+        with mock.patch.object(activation.xbmc,'getSkinDir',return_value='skin.estuary',create=True),mock.patch.object(activation.xbmc,'executeJSONRPC',return_value='{"result":true}',create=True),mock.patch.object(activation.xbmc,'getCondVisibility',side_effect=[True,False]),mock.patch.object(activation.xbmc,'Monitor',return_value=SimpleNamespace(waitForAbort=lambda n:False)),\
+                mock.patch.object(activation,'check',return_value=''),mock.patch.object(activation,'persist') as persist:
+            self.assertEqual(activation.switch(mock.Mock()),'declined')
+        persist.assert_not_called()
 
 
 class IPTVBrowser(unittest.TestCase):

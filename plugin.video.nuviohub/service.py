@@ -832,6 +832,12 @@ if __name__ == '__main__':
             auto_install(mon, busy=_interactive_busy)
         except Exception as exc:
             xbmc.log('[NuvioHub] automatic component install skipped: %s' % exc, xbmc.LOGWARNING)
+        # 6.0.33: Kodi started without the MegaNexus skin the user chose.
+        try:
+            from resources.lib.skin_activation import restore_on_start
+            restore_on_start(mon, busy=_interactive_busy)
+        except Exception as exc:
+            xbmc.log('[NuvioHub] skin check skipped: %s' % exc, xbmc.LOGWARNING)
 
     try:
         import threading as _thr_upd
