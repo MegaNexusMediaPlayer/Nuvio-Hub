@@ -1,7 +1,9 @@
 """Bounded JSON-byte LRU with private, restart-safe disk backing.
 
-Forty MiB of serialized metadata plus 256 MiB of compressed image bytes form the
-RAM-200 cache preset. Python objects, SQLite pages and Kodi's decoded textures
+Catalog pages get 96 MiB of RAM with the default ram256 image preset (6.0.32:
+every Home catalog stays in memory; 40 MiB held only ~75 of ~130) and 40 MiB
+with smaller presets. Full title details use their own RAM pool
+(script.nuvio browse_meta) and only this cache's disk. Python objects, SQLite pages and Kodi's decoded textures
 are not included in these data budgets. Network work happens only in
 ``catalog``/``refresh`` worker calls, never in ``peek``.
 
@@ -22,7 +24,8 @@ import threading
 import time
 
 RAM_LIMIT = 40 * 1024 * 1024
-DISK_LIMIT = 128 * 1024 * 1024
+PAGE_RAM = {'ram256': 96 * 1024 * 1024}   # by image-cache preset (nuvio_art_cache)
+DISK_LIMIT = 192 * 1024 * 1024
 MAX_ENTRY = 2 * 1024 * 1024
 STALE_SECONDS = 7 * 24 * 3600
 FRESH_SECONDS = 3 * 3600  # catalog pages change slowly; fewer background refreshes
@@ -80,13 +83,14 @@ class Cache:
             _, old = self.memory.popitem(last=False)
             self.bytes -= len(old[0])
 
-    def get(self, key, memory_only=False):
+    def get(self, key, memory_only=False, remember=True):
         """Fresh value only; stale pages are available through ``lookup``."""
-        value, fresh = self.lookup(key, memory_only=memory_only)
+        value, fresh = self.lookup(key, memory_only=memory_only, remember=remember)
         return value if fresh else None
 
-    def lookup(self, key, memory_only=False):
-        """Return ``(value, fresh)``; ``(None, False)`` when absent or expired."""
+    def lookup(self, key, memory_only=False, remember=True):
+        """Return ``(value, fresh)``; ``(None, False)`` when absent or expired.
+        ``remember=False`` reads disk without promoting the entry into RAM."""
         now = self.clock()
         with self.lock:
             hit = self.memory.get(key)
@@ -103,7 +107,8 @@ class Cache:
                     if row:
                         db.execute('UPDATE cache SET touched=? WHERE key=?', (now, key))
                 if row:
-                    self._remember(key, bytes(row[0]), row[1], row[2])
+                    if remember:
+                        self._remember(key, bytes(row[0]), row[1], row[2])
                     return json.loads(row[0]), row[2] > now
             except (sqlite3.Error, ValueError, TypeError):
                 return None, False
@@ -137,14 +142,15 @@ class Cache:
                 pass
         return result
 
-    def put(self, key, value, ttl=900, stale=0):
+    def put(self, key, value, ttl=900, stale=0, remember=True):
         raw = json.dumps(value, ensure_ascii=False, separators=(',', ':'), default=str).encode('utf-8')
         if len(raw) > MAX_ENTRY or len(raw) > self.disk_limit or ttl <= 0:
             return False
         now = self.clock()
         fresh, expires = now + ttl, now + ttl + max(0, stale)
         with self.lock:
-            self._remember(key, raw, expires, fresh)
+            if remember:
+                self._remember(key, raw, expires, fresh)
             try:
                 with self._connect() as db:
                     db.execute('INSERT OR REPLACE INTO cache(key,value,expires,touched,bytes,fresh) VALUES(?,?,?,?,?,?)',
@@ -214,9 +220,18 @@ def instance():
             import xbmcvfs
             root = xbmcvfs.translatePath(xbmcaddon.Addon('plugin.video.nuviohub').getAddonInfo('profile'))
             folder = Path(root) / 'cache'
-            _CACHE = Cache(folder / 'browse611.db')
+            _CACHE = Cache(folder / 'browse611.db', ram_limit=page_ram())
             _CACHE.import_legacy(folder / 'browse610.db')
         return _CACHE
+
+
+def page_ram():
+    try:
+        import xbmcaddon
+        mode = xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_art_cache') or 'ram256'
+    except Exception:
+        mode = ''
+    return PAGE_RAM.get(mode, RAM_LIMIT)
 
 
 def key(*parts):

@@ -11,6 +11,8 @@ scaled up on 4K. Here:
   white, tinted by the existing ``colordiffuse``; glass pills use a 20 % white
   diffuse at rest and near-white when focused;
 * the glass capsule behind clock/weather is removed;
+* 6.0.32: the header buttons Home / Search / Settings / HUB are plain text at
+  rest (no pill); the pill shows only on the focused one;
 * every MegaNexus logo gets its own 2x wordmark (Lanczos from the 1600 px
   master) instead of the master shrunk 5-10x by Kodi.
 Large panels keep their 9-slice texture (a full-size 2x texture would waste
@@ -114,6 +116,15 @@ WORDMARK = 'nuvio_wordmark.png'   # master, 1600x507; phone page /logo.png
 LOGO = re.compile(r'<control type="image">(?:(?!</control>).)*?nuvio_wordmark(?:_\d+x\d+)?\.png</texture>(?:(?!</control>).)*?</control>', re.S)
 
 
+HEADER_IDS = ('101', '105', '107', '108')   # Home, Search, Settings, HUB
+HEADER = re.compile(r'(<control type="button" id="(?:%s)">(?:(?!</control>).)*?)\n[ \t]*<texturenofocus[^>]*>[^<]*</texturenofocus>'
+                    % '|'.join(HEADER_IDS), re.S)
+
+
+def plain_header(text):
+    return HEADER.sub(r'\1', text)
+
+
 def wordmark_name(w, h):
     return 'nuvio_wordmark_%dx%d.png' % (w, h)
 
@@ -155,6 +166,8 @@ def patch():
         new = CAPSULE.sub('', text)
         new = convert(new, made)
         new = logos(new, marks, w / h)
+        if path.name.startswith('nuvio_home'):
+            new = plain_header(new)
         if new != text:
             path.write_text(new, encoding='utf-8')
             changed.append(path.name)

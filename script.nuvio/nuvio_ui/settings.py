@@ -393,8 +393,23 @@ def screensaver_media():
             if path:
                 ADDON.setSetting('nuvio_screensaver_video' if video else 'nuvio_screensaver_art',path)
                 ADDON.setSetting('nuvio_screensaver_type','video' if video else 'image')
+                if video:prepare_saver_loop(path)
         settings_cache.invalidate()
     return page.show('Screensaver media · videos loop silently; paused media keeps artwork',rows,choose)
+
+
+def prepare_saver_loop(path):
+    """Write the seamless silent loop copy now, so the screensaver starts with it."""
+    from .saver import prepare_loop,LOOP_EXTENSIONS
+    if not path.lower().endswith(LOOP_EXTENSIONS):return
+    dialog=xbmcgui.DialogProgress()
+    dialog.create('Screensaver video','Preparing a seamless, silent loop…')
+    try:
+        ready=prepare_loop(path,progress=lambda done:dialog.update(int(done*100)),stopped=dialog.iscanceled)
+    finally:
+        dialog.close()
+    if not ready and not dialog.iscanceled():
+        xbmcgui.Dialog().notification('Screensaver video','This clip loops with a short pause (format not supported for seamless looping).',xbmcgui.NOTIFICATION_INFO,5000)
 
 
 def appearance():

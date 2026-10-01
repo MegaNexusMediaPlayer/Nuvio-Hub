@@ -35,4 +35,4 @@ The Home Resume video button is removed. Continue Watching cards still resume st
 6.0.7 places the local playback journal first (newest watch first), followed by remote-only titles. Only display ordering changes; stored progress, completion and metadata merge rules stay unchanged. The launcher Resume video button, icons and handler are removed.
 
 
-6.0.31 is a review candidate. See the repository release notes and AGENTS.md for automated checks, setup and device acceptance. Unicode fonts are provided by Kodi; this bundle does not include font binaries.
+6.0.32 is a review candidate. See the repository release notes and AGENTS.md for automated checks, setup and device acceptance. Unicode fonts are provided by Kodi; this bundle does not include font binaries.

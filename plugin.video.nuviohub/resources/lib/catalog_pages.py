@@ -39,6 +39,21 @@ def _page(job):
     return browse_cache.catalog(job['provider'], job['catalog'], extra, timeout=8)
 
 
+def prefetch_next(jobs):
+    """Queue the next page of every unfinished source for the background
+    refresher (6.0.32): "Load more" then opens from memory. Pages already
+    cached are left alone; the refresher waits while the user is loading."""
+    from . import browse_cache
+    queued=0
+    for job in jobs:
+        if job['done']:continue
+        extra=dict(job['extra'])
+        if job['offset']:extra['skip']=job['offset']
+        if browse_cache.peek(job['provider'],job['catalog'],extra,revalidate=False) is None:
+            queued+=bool(browse_cache.refresh(job['provider'],job['catalog'],extra,timeout=8))
+    return queued
+
+
 def fetch_page(jobs,stopped=None):
     """Next page of every unfinished source, fetched concurrently.
 

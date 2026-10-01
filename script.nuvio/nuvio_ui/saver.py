@@ -5,6 +5,7 @@ entry therefore wakes it before handing off to a separate ordinary script.
 That script owns its modal and only its own video; it never replaces paused
 media, clears playlists, or changes application fullscreen/resolution.
 """
+import hashlib
 import json
 import os
 import time
@@ -17,6 +18,7 @@ import xbmcvfs
 from resources.lib import presentation_settings, saver_state
 from .home_trailers import PreviewPlayer
 from .system_setup import rpc
+from . import mp4loop
 from resources.lib.theme import folder as theme_folder
 
 DEFAULT_ART='special://home/addons/script.nuvio/resources/media/nuvio_banner.png'
@@ -32,6 +34,65 @@ def saver_mode(addon):
     kind=addon.getSetting('nuvio_screensaver_type') or 'image'
     if kind=='video' and addon.getSetting('nuvio_screensaver_video').strip().endswith(_LEGACY_BUILTIN_VIDEO):return ANIMATED
     return kind if kind in (ANIMATED,'video') else 'image'
+
+
+# 6.0.32: MP4/MOV clips play from a silent copy that already contains the clip
+# back to back for an hour (nuvio_ui/mp4loop.py): no seek at the loop point (the
+# ~1 s stall) and no audio track, so Kodi is never muted. Other formats keep
+# the seek loop and the temporary mute.
+LOOP_DIR='special://profile/addon_data/script.nuvio/saver_loop/'
+LOOP_EXTENSIONS=('.mp4','.m4v','.mov')
+
+
+class _Reader:
+    def __init__(self,handle):self.handle=handle
+    def seek(self,pos):self.handle.seek(pos,0)
+    def read(self,count):return bytes(self.handle.readBytes(count))
+
+
+def _loop_paths(path):
+    stat=xbmcvfs.Stat(path)
+    key=hashlib.sha1(('%s|%s|%s'%(path,stat.st_size(),stat.st_mtime())).encode('utf-8')).hexdigest()[:16]
+    folder=xbmcvfs.translatePath(LOOP_DIR)
+    return folder,key,os.path.join(folder,key+'.mp4'),os.path.join(folder,key+'.unsupported')
+
+
+def prepare_loop(path,progress=None,stopped=None):
+    """Path of the seamless silent loop copy of ``path`` (written once per clip),
+    or '' when this clip keeps the seek loop."""
+    if not path or not path.lower().endswith(LOOP_EXTENSIONS):return ''
+    try:
+        folder,key,target,marker=_loop_paths(path)
+        if os.path.isfile(target):return target
+        if os.path.isfile(marker):return ''
+        os.makedirs(folder,exist_ok=True)
+    except Exception:return ''
+    temp=target+'.part';handle=None
+    try:
+        handle=xbmcvfs.File(path)
+        with open(temp,'wb') as out:
+            copies=mp4loop.write_loop(_Reader(handle),handle.size(),out,progress=progress,stopped=stopped)
+        os.replace(temp,target)
+        xbmc.log('[MegaNexus] Screensaver loop ready: %d copies of the clip.'%copies,xbmc.LOGINFO)
+    except mp4loop.Unsupported as exc:
+        xbmc.log('[MegaNexus] Screensaver clip keeps the seek loop: %s'%exc,xbmc.LOGINFO)
+        try:open(marker,'w').close()
+        except OSError:pass
+        return ''
+    except Exception as exc:
+        xbmc.log('[MegaNexus] Screensaver loop not prepared: %s'%exc,xbmc.LOGWARNING)
+        return ''
+    finally:
+        if handle is not None:handle.close()
+        if os.path.exists(temp):
+            try:os.remove(temp)
+            except OSError:pass
+    # One clip at a time: copies of earlier clips are removed.
+    for name in os.listdir(folder):
+        if not name.startswith(key):
+            try:os.remove(os.path.join(folder,name))
+            except OSError:pass
+    return target
 
 
 def video_file(addon):
@@ -165,14 +226,21 @@ def run_video(token):
         for _ in range(100):
             if win.ready.is_set() or win.closed or monitor.waitForAbort(.01):break
         if win.closed or not win.ready.is_set() or xbmc.Player().isPlaying():return
+        # Usually ready since the clip was chosen; otherwise written now while
+        # the artwork shows (a key press stops it).
+        loop=prepare_loop(path,stopped=lambda:win.closed or monitor.abortRequested())
+        if win.closed or xbmc.Player().isPlaying():return
         win.setProperty('nuvio.saver.mode','video')
-        original=(rpc('Application.GetProperties',{'properties':['muted']}) or {}).get('muted')
-        if original is False:
-            if rpc('Application.SetMute',{'mute':True}) is True:muted_by_us=True
-            else:path=''  # Silent video is required; do not play unexpected audio.
-        elif original is not True:
-            # Unknown sound state: display artwork rather than play audio.
-            path=''
+        if loop:
+            path=loop  # no audio track: nothing to mute
+        else:
+            original=(rpc('Application.GetProperties',{'properties':['muted']}) or {}).get('muted')
+            if original is False:
+                if rpc('Application.SetMute',{'mute':True}) is True:muted_by_us=True
+                else:path=''  # Silent video is required; do not play unexpected audio.
+            elif original is not True:
+                # Unknown sound state: display artwork rather than play audio.
+                path=''
         begin=0;started=False;seek_guard=0.0;gone_since=0.0;remaining=None
         while not win.closed and not monitor.abortRequested():
             if path and (player is None or player.ended):

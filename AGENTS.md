@@ -3,7 +3,7 @@
 This is a four-component Kodi build: `plugin.video.nuviohub` (backend/service),
 `script.nuvio` (Python/XML frontend), `skin.nuvio` (Kodi shell), and
 `screensaver.nuvio` (screensaver entrypoint). The 6.0.27 release is the
-baseline for this 6.0.31 candidate (6.0.28-6.0.30 unreleased). Do not publish, push, or change live user
+baseline for this 6.0.32 candidate (6.0.28-6.0.31 unreleased). Do not publish, push, or change live user
 profiles as a side effect of reviewing code.
 
 ## Required repository skills
@@ -15,7 +15,7 @@ claims that a runtime plugin or global agent skill has been installed.
 
 ## Before modifying code
 
-Read the relevant call sites, tests, and `docs/RELEASE-6.0.31.md` (and 6.0.30 back to 6.0.10). Identify which
+Read the relevant call sites, tests, and `docs/RELEASE-6.0.32.md` (and 6.0.31 back to 6.0.10). Identify which
 Kodi process/interpreter owns the work. Keep existing public add-on IDs,
 profile paths, encrypted credentials and migration aliases. Never mass-rename
 legacy state keys or remove upstream license notices. Since 6.0.24 the
@@ -87,7 +87,16 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
   of 9-slice (Kodi draws 9-slice borders 1:1, GUITexture.cpp); large panels
   keep 9-slice. Never ship 3x GUI textures: Kodi shrinks without mipmaps.
   Logos likewise use per-size 2x `nuvio_wordmark_<w>x<h>.png` (same script);
-  the 1600 px master is only for the phone page.
+  the 1600 px master is only for the phone page. Header buttons Home /
+  Search / Settings / HUB have no rest pill (6.0.32).
+* Screensaver video (6.0.32): MP4/MOV clips play from a silent loop copy
+  (`nuvio_ui/mp4loop.py`, samples listed back to back for an hour, audio
+  track dropped) - never seek-loop or mute when the copy exists; other formats
+  fall back to the muted seek loop.
+* RAM (6.0.32): catalog pages 96 MiB with ram256 (`browse_cache.page_ram`),
+  details in their own pool (`browse_meta`, `remember=False` on the shared
+  cache), cursor-rest details prefetch (latest wins, yields to foreground and
+  playback, failures back off) and next-page prefetch via the refresher.
   logo/banner/screensaver layers come from `review/make_meganexus_brand.py`.
 * Phone setup (`resources/lib/phone_setup.py`) listens only while its TV QR
   window is open; every API call needs the QR key; manifest URLs and tokens
@@ -97,10 +106,10 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
 ## Required checks (Python 3.9+ review environment)
 
 ```sh
-python review/check_631.py
-python review/check_608_rebrand_kodi22.py 6.0.31
-python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.31.zip
-python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.31.zip
+python review/check_632.py
+python review/check_608_rebrand_kodi22.py 6.0.32
+python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.32.zip
+python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.32.zip
 ```
 
 The first command runs the maintained unit suite, parses XML/JSON, and checks

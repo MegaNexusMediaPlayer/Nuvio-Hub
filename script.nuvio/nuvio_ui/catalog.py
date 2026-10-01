@@ -6,10 +6,13 @@ from resources.lib import catalog_pages
 from resources.lib import simkl_watched
 from .playback import _CATALOG
 from resources.lib.theme import folder as theme_folder
+from . import browse_meta
+import time
+DETAILS_DWELL=.6   # seconds on a title before its details load quietly (6.0.32)
 
 class Catalog(Dialog):
     def __init__(self,*args,**kwargs):
-        super().__init__(*args);self.params=kwargs['params'];self.rows=[];self.jobs=[];self.outcome='';self._initialized=False;self._selected=0;self._page_job=None;self._alive=True
+        super().__init__(*args);self.params=kwargs['params'];self.rows=[];self.jobs=[];self.outcome='';self._initialized=False;self._selected=0;self._page_job=None;self._alive=True;self._hover=(None,0.0)
     def onInit(self):
         self.setProperty('nuvio.title',self.params.get('label') or 'Browse all')
         if self._initialized:
@@ -31,7 +34,9 @@ class Catalog(Dialog):
         self._page_job=_CATALOG.submit(lambda:catalog_pages.fetch_page(self.jobs,stopped=lambda:not self._alive))
 
     def tick(self):
-        if not self._alive or self._page_job is None or not self._page_job.done():return
+        if not self._alive:return
+        self._hover_prefetch()
+        if self._page_job is None or not self._page_job.done():return
         future,self._page_job=self._page_job,None
         try:result=future.result()
         except Exception:
@@ -40,6 +45,21 @@ class Catalog(Dialog):
         rows,self.jobs=result
         self._append(rows)
         if self.rows:self.setFocusId(500)
+        jobs=[dict(j) for j in self.jobs]
+        if not all(j['done'] for j in jobs):_CATALOG.submit(lambda:catalog_pages.prefetch_next(jobs))
+
+    def _hover_prefetch(self):
+        """Details of the title the cursor rests on load before Select (6.0.32)."""
+        try:
+            if not self.rows or self.getFocusId()!=500:return
+            pos=self.getControl(500).getSelectedPosition()
+        except Exception:return
+        now=time.monotonic()
+        if self._hover[0]!=pos:
+            self._hover=(pos,now);return
+        if now-self._hover[1]>=DETAILS_DWELL and 0<=pos<len(self.rows):
+            row=self.rows[pos]
+            if row.get('target') and not row.get('person'):browse_meta.prefetch(row['target'])
 
     def close(self):
         self._alive=False

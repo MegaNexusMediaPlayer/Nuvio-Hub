@@ -1,8 +1,8 @@
-# MegaNexus (Nuvio Hub) for Kodi — 6.0.31
+# MegaNexus (Nuvio Hub) for Kodi — 6.0.32
 
 A community-built Nuvio-style experience inside Kodi: browse collections, explore films and series, and return to what you were watching from a remote-friendly home screen.
 
-**6.0.31 is the current release** (see [6.0.31 changes](docs/RELEASE-6.0.31.md), [6.0.30 changes](docs/RELEASE-6.0.30.md), [6.0.29 changes](docs/RELEASE-6.0.29.md), [6.0.28 changes](docs/RELEASE-6.0.28.md), [6.0.27 changes](docs/RELEASE-6.0.27.md), [6.0.26 changes](docs/RELEASE-6.0.26.md), [6.0.25 changes](docs/RELEASE-6.0.25.md), [6.0.24 changes](docs/RELEASE-6.0.24.md), [6.0.23 changes](docs/RELEASE-6.0.23.md), [6.0.22 changes](docs/RELEASE-6.0.22.md), [6.0.21 changes](docs/RELEASE-6.0.21.md), [6.0.20 changes](docs/RELEASE-6.0.20.md), [6.0.19 changes](docs/RELEASE-6.0.19.md), [6.0.18 changes](docs/RELEASE-6.0.18.md) and the [summary since 6.0.7](docs/CHANGES-SINCE-6.0.7.md)); 6.0.17 fixed "Remove Nuvio build"; 6.0.16 added automatic updates from GitHub releases, Ko-fi support and smarter Cinemeta defaults; 6.0.15 made Nuvio open without any setup; 6.0.14 made small video windows and the video screensaver work on CoreELEC; 6.0.13 added IPTV buttons and a steadier loading screen; 6.0.12 fixed playback start/exit speed, trailers and details (see [6.0.12 changes](docs/RELEASE-6.0.12.md)). 6.0.11 focused on Home responsiveness: collections open from cache immediately, stale pages refresh in the background, the collection under the cursor is prefetched and collection sources load in parallel. See [6.0.11 changes](docs/RELEASE-6.0.11.md), [6.0.10 candidate changes and limitations](docs/RELEASE-6.0.10.md), [setup](docs/INSTALL.md) and [the engineering contract](AGENTS.md).
+**6.0.32 is the current release** (see [6.0.32 changes](docs/RELEASE-6.0.32.md), [6.0.31 changes](docs/RELEASE-6.0.31.md), [6.0.30 changes](docs/RELEASE-6.0.30.md), [6.0.29 changes](docs/RELEASE-6.0.29.md), [6.0.28 changes](docs/RELEASE-6.0.28.md), [6.0.27 changes](docs/RELEASE-6.0.27.md), [6.0.26 changes](docs/RELEASE-6.0.26.md), [6.0.25 changes](docs/RELEASE-6.0.25.md), [6.0.24 changes](docs/RELEASE-6.0.24.md), [6.0.23 changes](docs/RELEASE-6.0.23.md), [6.0.22 changes](docs/RELEASE-6.0.22.md), [6.0.21 changes](docs/RELEASE-6.0.21.md), [6.0.20 changes](docs/RELEASE-6.0.20.md), [6.0.19 changes](docs/RELEASE-6.0.19.md), [6.0.18 changes](docs/RELEASE-6.0.18.md) and the [summary since 6.0.7](docs/CHANGES-SINCE-6.0.7.md)); 6.0.17 fixed "Remove Nuvio build"; 6.0.16 added automatic updates from GitHub releases, Ko-fi support and smarter Cinemeta defaults; 6.0.15 made Nuvio open without any setup; 6.0.14 made small video windows and the video screensaver work on CoreELEC; 6.0.13 added IPTV buttons and a steadier loading screen; 6.0.12 fixed playback start/exit speed, trailers and details (see [6.0.12 changes](docs/RELEASE-6.0.12.md)). 6.0.11 focused on Home responsiveness: collections open from cache immediately, stale pages refresh in the background, the collection under the cursor is prefetched and collection sources load in parallel. See [6.0.11 changes](docs/RELEASE-6.0.11.md), [6.0.10 candidate changes and limitations](docs/RELEASE-6.0.10.md), [setup](docs/INSTALL.md) and [the engineering contract](AGENTS.md).
 
 This candidate adds validated collections, independently enabled metadata providers, a person page, corrected progress wire identities and timestamps, a frequent outbox-based sync cycle, persistent browse caching and bounded startup prewarming. Nuvio and Simkl accounts are optional. No internal collection set is silently installed as a substitute for your configuration.
 
@@ -25,7 +25,7 @@ Nuvio Hub brings a complete Nuvio-style experience to Kodi, combining browsing, 
 - A unified Kodi interface — access your addons, sources, metadata, subtitles, and playback through the Nuvio Hub skin.
 The experience depends on your connected accounts, configured addons, and available sources.
 
-[Download latest](https://github.com/MegaNexusMediaPlayer/Nuvio-Hub/releases/latest) · [View screenshots](docs/SCREENSHOTS.md) · [Installation](docs/INSTALL.md) · [Contribute](CONTRIBUTING.md) · [6.0.31 notes](docs/RELEASE-6.0.31.md)
+[Download latest](https://github.com/MegaNexusMediaPlayer/Nuvio-Hub/releases/latest) · [View screenshots](docs/SCREENSHOTS.md) · [Installation](docs/INSTALL.md) · [Contribute](CONTRIBUTING.md) · [6.0.32 notes](docs/RELEASE-6.0.32.md)
 
 ## What you need
 
@@ -44,13 +44,13 @@ Collection validation samples up to two items per catalog source. An empty, unre
 
 The project does not host films, series or subscription services. Configure sources you are authorized to access. A collection name or service logo does not provide access to that service.
 
-## Install 6.0.31
+## Install 6.0.32
 
 **Easiest – MegaNexus repository (automatic updates):** in Kodi open **Settings → File manager → Add source**, enter `https://meganexusmediaplayer.github.io/Nuvio-Hub/` and name it `MegaNexus`. Then **Add-ons → Install from zip file → MegaNexus → repository.meganexus-1.0.0.zip**, and **Install from repository → MegaNexus Repository → Video add-ons → Nuvio Hub**.
 
 **Or manually:**
 
-1. Back up your Kodi profile. Use **`Nuvio-Hub-Complete-6.0.31.zip`** from [Releases](https://github.com/MegaNexusMediaPlayer/Nuvio-Hub/releases/latest), not GitHub's automatic source archive.
+1. Back up your Kodi profile. Use **`Nuvio-Hub-Complete-6.0.32.zip`** from [Releases](https://github.com/MegaNexusMediaPlayer/Nuvio-Hub/releases/latest), not GitHub's automatic source archive.
 2. Stop playback, close Nuvio and select the bundle through **Add-ons → Install from zip file**.
 3. Open the backend **Nuvio Hub** once to update the three bundled components, then restart Kodi. Keep existing userdata; do not uninstall to update.
 4. Under **HUB Settings → Set up on phone**, scan the QR code and configure accounts, add-ons and collections on your phone (or use **HUB Settings → Add-ons** with the remote).
@@ -74,7 +74,7 @@ Ko-fi support is optional. Contributions help cover development tools, AI token 
 
 ## Testing and current limits
 
-Run `python review/check_631.py`, the release guard, builder and packaged smoke test documented in [AGENTS.md](AGENTS.md). Results are in `review/results-6.0.31.json` and the candidate report. These checks use Kodi/HTTP stubs and local SQLite, not a native Kodi process or live user accounts. Unicode glyph coverage, two-device sync and visual/navigation behavior require the manual checklist. No target-device speed benchmark has been performed.
+Run `python review/check_632.py`, the release guard, builder and packaged smoke test documented in [AGENTS.md](AGENTS.md). Results are in `review/results-6.0.32.json` and the candidate report. These checks use Kodi/HTTP stubs and local SQLite, not a native Kodi process or live user accounts. Unicode glyph coverage, two-device sync and visual/navigation behavior require the manual checklist. No target-device speed benchmark has been performed.
 
 The screenshots are real captures of MegaNexus 6.0.23 with personal data and streaming-service/studio logos blurred. They illustrate the interface, not bundled playable media.
 

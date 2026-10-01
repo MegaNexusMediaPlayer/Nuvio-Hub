@@ -16,6 +16,7 @@ from resources.lib import home_data
 from resources.lib import simkl_watched
 from .dialog import Dialog
 from resources.lib.theme import folder as theme_folder
+from . import browse_meta
 
 ADDON = xbmcaddon.Addon('script.nuvio')
 BACK = {9, 10, 92, 216, 247, 257, 275, 61448, 61467}
@@ -24,6 +25,7 @@ NAV = {101: ''}
 LOAD_WORKERS = 4
 SEED_DISK_ROWS = 6        # shelves that may read SQLite synchronously while painting
 PREFETCH_DWELL = .25      # seconds a collection tile must stay selected before prefetch
+DETAILS_DWELL = .6        # seconds on a title before its details load quietly (6.0.32)
 PREFETCH_AGAIN = 240      # seconds before the same collection is prefetched again
 PREFETCH_ART = 10         # first cards whose artwork is warmed in the image proxy (a screen)
 COLD_ART_IMAGES = 600     # proxy RAM already this full: skip the session warm-up
@@ -323,6 +325,9 @@ class HomeWindow(Dialog):
             self._hover=((index,pos),now);return
         if now-self._hover[1]<PREFETCH_DWELL:return
         rows=self._shelves[index]['rows']
+        if 0<=pos<len(rows) and rows[pos].get('target') and not rows[pos].get('person'):
+            if now-self._hover[1]>=DETAILS_DWELL:browse_meta.prefetch(rows[pos]['target'])
+            return
         wanted=[rows[c]['collection_id'] for c in (pos,pos+1,pos-1)
                 if 0<=c<len(rows) and rows[c].get('collection_id')]
         wanted=[cid for cid in wanted if self._prefetched.get(cid,0)<=now]

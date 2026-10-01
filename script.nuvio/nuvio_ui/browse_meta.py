@@ -7,11 +7,19 @@ import threading
 import time
 from resources.lib import backend_api, settings_cache, browse_cache, metadata_providers
 
-_CACHE=OrderedDict()
+_CACHE=OrderedDict()          # key -> (expires, meta, json bytes)
 _PENDING={}
 _LOCK=threading.RLock()
 _BYTES=0
 _GENERATION=0
+_WANTED=[None,None]           # title the cursor rests on, its queued prefetch
+_PREFETCH_POOL=None
+META_TTL=1800
+META_RAM={'ram256':32*1024*1024}   # full details in RAM, by image-cache preset
+META_RAM_SMALL=12*1024*1024
+PREFETCH_WAIT=.3
+PREFETCH_RETRY=120
+_FAILED={}
 
 
 def identity(context):
@@ -30,14 +38,59 @@ def seed(context,row=None):
             'releaseInfo':row.get('subtitle') if str(row.get('subtitle') or '')[:4].isdigit() else ''}
 
 
+def _ram_limit():
+    try:mode=settings_cache.cached_addon().getSetting('nuvio_art_cache') or 'ram256'
+    except Exception:mode=''
+    return META_RAM.get(mode,META_RAM_SMALL)
+
+
+def _remember(key,meta):
+    """Keep full details in this pool's RAM (6.0.32: separate from catalog pages,
+    so opening titles no longer pushes collections out of memory)."""
+    global _BYTES
+    size=len(json.dumps(meta,ensure_ascii=False,separators=(',',':'),default=str))
+    limit=_ram_limit()
+    if size>limit:return
+    with _LOCK:
+        old=_CACHE.pop(key,None)
+        if old:_BYTES-=old[2]
+        _CACHE[key]=(time.monotonic()+META_TTL,deepcopy(meta),size);_BYTES+=size
+        while _BYTES>limit and _CACHE:
+            _BYTES-=_CACHE.popitem(last=False)[1][2]
+
+
 def cached(context):
     key=identity(context)
     with _LOCK:
         entry=_CACHE.get(key)
         if not entry or entry[0]<time.monotonic():
-            return browse_cache.instance().get(browse_cache.key('metadata', *key), memory_only=True)
+            return None
         _CACHE.move_to_end(key)
         return deepcopy(entry[1])
+
+
+def _load(context,key,generation):
+    disk_key=browse_cache.key('metadata', *key)
+    hit=browse_cache.instance().get(disk_key,remember=False)
+    if hit is not None:
+        _remember(key,hit);return hit
+    options={'preferred':context['source_provider_id']} if context.get('source_provider_id') else {}
+    meta=backend_api.metadata(key[1],key[2],**options)
+    if not meta:return None
+    with _LOCK:
+        if generation == _GENERATION:
+            browse_cache.instance().put(disk_key, meta, ttl=META_TTL, remember=False)
+            _remember(key,meta)
+    return meta
+
+
+def _track(key,future):
+    _PENDING[key]=future
+    def done(result):
+        with _LOCK:
+            if _PENDING.get(key) is result:_PENDING.pop(key,None)
+    future.add_done_callback(done)
+    return future
 
 
 def request(context):
@@ -49,31 +102,56 @@ def request(context):
         previous=_PENDING.get(key)
         if previous is not None and not previous.done():return previous
         generation=_GENERATION
-        def load():
-            global _BYTES
-            disk_key=browse_cache.key('metadata', *key)
-            hit=browse_cache.instance().get(disk_key)
-            if hit is not None:return hit
-            options={'preferred':context['source_provider_id']} if context.get('source_provider_id') else {}
-            meta=backend_api.metadata(key[1],key[2],**options)
-            if not meta:return None
-            with _LOCK:
-                if generation == _GENERATION:
-                    browse_cache.instance().put(browse_cache.key('metadata', *key), meta, ttl=1800)
-            return meta
         from .playback import _JOBS
-        future=_JOBS.submit(load);_PENDING[key]=future
-        def done(result):
-            with _LOCK:
-                if _PENDING.get(key) is result:_PENDING.pop(key,None)
-        future.add_done_callback(done)
-        return future
+        return _track(key,_JOBS.submit(lambda:_load(context,key,generation)))
+
+
+def prefetch(context):
+    """Details of the title under the cursor, loaded quietly before it is opened
+    (6.0.32). Latest wins: a title the cursor already left is skipped. Waits
+    while a catalog the user opened is loading or a video plays; an open of the
+    same title shares the running request."""
+    global _PREFETCH_POOL
+    if not context or context.get('person'):return
+    key=identity(context)
+    if not key[2]:return
+    with _LOCK:
+        if cached(context) is not None or key in _PENDING:return
+        if _WANTED[0]==key and _WANTED[1] is not None and not _WANTED[1].done():return  # already queued
+        if time.monotonic()<_FAILED.get(key,0):return  # no retry storm for a title that failed
+        if _PREFETCH_POOL is None:
+            from concurrent.futures import ThreadPoolExecutor
+            _PREFETCH_POOL=ThreadPoolExecutor(max_workers=1,thread_name_prefix='NuvioDetailsPrefetch')
+        _WANTED[0]=key
+        _WANTED[1]=_PREFETCH_POOL.submit(_prefetch_job,dict(context),key,_GENERATION)
+
+
+def _prefetch_job(context,key,generation):
+    for _ in range(100):
+        if _WANTED[0]!=key or generation!=_GENERATION:return
+        if not (browse_cache.foreground_busy() or browse_cache.playback_busy()):break
+        time.sleep(PREFETCH_WAIT)
+    else:
+        return
+    with _LOCK:
+        if _WANTED[0]!=key or key in _PENDING or cached(context) is not None:return
+        future=_track(key,Future())
+    try:
+        result=_load(context,key,generation)
+    except Exception as exc:
+        result=None;future.set_exception(exc)
+    else:
+        future.set_result(result)
+    if result is None:
+        with _LOCK:
+            if len(_FAILED)>256:_FAILED.clear()
+            _FAILED[key]=time.monotonic()+PREFETCH_RETRY
 
 
 def clear(persistent=False):
     global _BYTES,_GENERATION
     with _LOCK:
-        _GENERATION+=1;_CACHE.clear();_BYTES=0
+        _GENERATION+=1;_CACHE.clear();_BYTES=0;_WANTED[0]=None;_FAILED.clear()
         if persistent:browse_cache.instance().clear()
         for future in list(_PENDING.values()):future.cancel()
         _PENDING.clear()

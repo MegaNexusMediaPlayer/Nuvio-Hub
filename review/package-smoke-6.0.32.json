@@ -1,0 +1,12 @@
+{
+  "extracted_to": "(temporary folder)",
+  "imported_packaged_modules": 53,
+  "validated_xml_asset_refs": 4409,
+  "unified_version": "6.0.32",
+  "components": [
+    "script.nuvio",
+    "skin.nuvio",
+    "screensaver.nuvio"
+  ],
+  "result": "PASS"
+}
