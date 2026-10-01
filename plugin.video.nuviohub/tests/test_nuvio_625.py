@@ -46,6 +46,19 @@ class SettingsFocus(unittest.TestCase):
             self.assertFalse(235 <= h * 360 <= 300 and s > 0.12, rgb)
 
 
+class AddonIcons(unittest.TestCase):
+    def test_new_icon_paths_so_kodi_has_no_cached_nuvio_logo(self):
+        import xml.etree.ElementTree as ET
+        icon = (ROOT / 'script.nuvio/resources/media/nuvio_mark.png').read_bytes()
+        banner = (ROOT / 'script.nuvio/resources/media/nuvio_banner.png').read_bytes()
+        for component in SHIPPED:
+            assets = ET.parse(ROOT / component / 'addon.xml').getroot().find(".//assets")
+            for tag, expected in (('icon', icon), ('fanart', banner)):
+                rel = assets.findtext(tag)
+                self.assertTrue(Path(rel).name.startswith('meganexus_'), (component, rel))
+                self.assertEqual((ROOT / component / rel).read_bytes(), expected, (component, rel))
+
+
 REMOTE = [{'id': 'g', 'title': 'Streaming', 'folders': [
     {'id': 'f', 'title': 'Netflix', 'catalogSources': [{'addonId': 'aio.meta', 'catalogId': 'netflix', 'type': 'movie'}]}]}]
 AIO = {'id': 'p-aio', 'name': 'AIOMetadata', 'manifest': {'id': 'aio.meta', 'resources': ['catalog', 'meta'], 'types': ['movie'],

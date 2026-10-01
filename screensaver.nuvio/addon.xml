@@ -11,8 +11,8 @@
     <summary lang="en_GB">MegaNexus image or animation, custom image/GIF or looping silent video screensaver.</summary>
     <description lang="en_GB">Shows the MegaNexus logo, still or animated by the skin (no video player), or use custom artwork or a local/shared MP4, MKV, WebM, MOV and other supported video file. Video mode preserves paused media by falling back to artwork. Follows the shared weather and clock visibility preference.</description>
     <assets>
-      <icon>resources/icon.png</icon>
-      <fanart>resources/fanart.png</fanart>
+      <icon>resources/meganexus_icon.png</icon>
+      <fanart>resources/meganexus_fanart.png</fanart>
     </assets>
   </extension>
 </addon>

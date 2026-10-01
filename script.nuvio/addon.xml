@@ -14,8 +14,8 @@
     <summary lang="en_GB">Nuvio home, collections and simple settings.</summary>
     <description lang="en_GB">Independent interface using Nuvio Hub for catalogs, account state and playback. Configured metadata supplies details and searchable catalogs; individually enabled stream add-ons supply ordered sources. Bundled local updates only.</description>
     <assets>
-      <icon>resources/media/nuvio_mark.png</icon>
-      <fanart>resources/media/nuvio_banner.png</fanart>
+      <icon>resources/media/meganexus_icon.png</icon>
+      <fanart>resources/media/meganexus_fanart.png</fanart>
     </assets>
   </extension>
 </addon>

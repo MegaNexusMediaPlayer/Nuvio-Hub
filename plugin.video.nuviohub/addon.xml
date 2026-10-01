@@ -18,8 +18,8 @@
     <disclaimer lang="en_GB">The author of this addon does not host any of the content which is found and has no affiliation with any of the content providers. The author is in no way affiliated with Kodi, Team Kodi, or the XBMC Foundation.</disclaimer>
     <news>Nuvio Hub 6.0.25 review candidate: after an automatic update Kodi asks "Nuvio Hub X is installed. Restart Kodi now?" once no video plays and Nuvio is closed; Later asks again at the next Nuvio entry. Includes all 6.0.18 changes. Device acceptance remains required.</news>
     <assets>
-      <icon>resources/media/icon.png</icon>
-      <fanart>resources/media/nuvio_banner.png</fanart>
+      <icon>resources/media/meganexus_icon.png</icon>
+      <fanart>resources/media/meganexus_fanart.png</fanart>
     </assets>
   </extension>
 </addon>

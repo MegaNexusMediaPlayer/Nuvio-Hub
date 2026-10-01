@@ -13,8 +13,8 @@
     <summary lang="en_GB">Nuvio interface with Nuvio Hub as its backend.</summary>
     <description lang="en_GB">Independent Nuvio home, rounded posters, collections and simplified settings. Kodi dialogs and playback controls are based on Estuary from Kodi 21.3.</description>
     <assets>
-      <icon>resources/icon.png</icon>
-      <fanart>resources/fanart.png</fanart>
+      <icon>resources/meganexus_icon.png</icon>
+      <fanart>resources/meganexus_fanart.png</fanart>
     </assets>
   </extension>
 </addon>

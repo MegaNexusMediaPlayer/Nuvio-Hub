@@ -16,6 +16,13 @@ Prepared 1 October 2026 from 6.0.24.
   the profile buttons appear and choosing one imports it. The page shows what
   was imported and which metadata add-ons were switched on.
 
+## Add-on icons
+
+* Kodi kept showing the old Nuvio Hub logo for the add-ons: its thumbnail
+  cache keys add-on art by path, and the paths had not changed. The icons and
+  fanart of all four add-ons now use new files (`meganexus_icon.png`,
+  `meganexus_fanart.png`), so Kodi loads the MegaNexus artwork at once.
+
 ## Wording and colours
 
 * "Welcome to Nuvio" is gone: the empty Home row says **Welcome to MegaNexus**
