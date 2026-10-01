@@ -407,6 +407,7 @@ def appearance():
         from resources.lib import theme
         return [page.item('Use MegaNexus skin','Active' if xbmc.getSkinDir()=='skin.nuvio' else 'Activate'),
             page.item('Theme',theme.LABELS[theme.current(ADDON)]),
+            page.item('Poster and catalog transparency',theme.OPACITY_LABELS[theme.card_opacity(ADDON)]),
             page.item('Home hero and description',enabled=not xbmc.getCondVisibility('Skin.HasSetting(nuvio.hidehero)')),
             page.item('Card titles',enabled=not xbmc.getCondVisibility('Skin.HasSetting(nuvio.hidetitles)')),
             page.item('Weather and clock · all Nuvio screens',enabled=not presentation_settings.hidden()),
@@ -421,7 +422,8 @@ def appearance():
             page.item('Back')]
     def choose(pick):
         if pick==1:return choose_theme()
-        if pick>1:pick-=1  # rows after Theme keep their earlier numbers
+        if pick==2:return choose_card_opacity()
+        if pick>2:pick-=2  # rows after Theme and transparency keep their earlier numbers
         if pick==13:return page.DONE
         if pick==12:
             ADDON.setSetting('nuvio_show_ratings','false' if ADDON.getSetting('nuvio_show_ratings')!='false' else 'true')
@@ -453,6 +455,15 @@ def choose_theme():
     if pick>=0 and keys[pick]!=current:
         theme.apply(keys[pick],ADDON)
         xbmcgui.Dialog().notification('MegaNexus','Theme: '+theme.LABELS[keys[pick]].split(' · ')[0],xbmcgui.NOTIFICATION_INFO,2500)
+    return None
+
+
+def choose_card_opacity():
+    """Posters and catalog art slightly see-through over the glass boxes (Off/10/20/30 %)."""
+    from resources.lib import theme
+    keys=list(theme.OPACITY_LEVELS);current=theme.card_opacity(ADDON)
+    pick=xbmcgui.Dialog().select('Poster and catalog transparency',[theme.OPACITY_LABELS[k] for k in keys],preselect=keys.index(current))
+    if pick>=0:theme.set_card_opacity(keys[pick],ADDON)
     return None
 
 

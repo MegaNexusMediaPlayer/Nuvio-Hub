@@ -196,6 +196,7 @@
     <setting id="nuvio_screensaver_applied" type="text" default="false" visible="false" />
     <setting id="nuvio_components_for" type="text" default="" visible="false" />
     <setting id="nuvio_theme" type="text" default="light" visible="false" />
+    <setting id="nuvio_card_opacity" type="text" default="10" visible="false" />
   </category>
   <category label="Remove">
     <setting type="lsep" label="Removes the MegaNexus interface, skin, screensaver and Nuvio Hub in the right order." />

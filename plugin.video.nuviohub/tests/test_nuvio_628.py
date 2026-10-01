@@ -88,12 +88,13 @@ class Variants(unittest.TestCase):
         self.assertIn('colordiffuse="%s">special://home/addons/script.nuvio/resources/media/nuvio_bottom_fade.png' % variants.BOTTOM_BLUE, dim)
         self.assertIn('meganexus_saver_bg_dim.png', (SKINS / 'Dim/1080i/nuvio_screensaver.xml').read_text(encoding='utf-8'))
 
-    def test_catalog_card_boxes_keep_the_original_colour_in_every_theme(self):
+    def test_catalog_card_boxes_are_the_same_in_every_theme(self):
+        # 6.0.29: the grey box became a theme-independent glass box (no colour tint).
         for folder in ('Default', 'Dark', 'Dim'):
             for name in ('nuvio_home.xml', 'nuvio_home_compact.xml'):
                 text = (SKINS / folder / '1080i' / name).read_text(encoding='utf-8')
-                colours = set(re.findall(r'colordiffuse="([0-9A-F]{8})">special://home/addons/script\.nuvio/resources/media/nuvio_(?:tile|poster)_mask', text))
-                self.assertEqual(colours, {'FF202532'}, (folder, name))
+                self.assertNotIn('colordiffuse="FF202532"', text, (folder, name))
+                self.assertEqual(text.count('nuvio_tile_glass.png') + text.count('nuvio_poster_glass.png'), 96, (folder, name))
 
     def test_hero_gradients_follow_the_theme_background(self):
         for folder, colour in (('Default', 'FF040F22'), ('Dark', 'FF000000'), ('Dim', 'FF000000')):
@@ -147,6 +148,7 @@ class Wiring(unittest.TestCase):
             self.assertIn('nuvio/' + banner, home)
             self.assertTrue((ROOT / 'skin.nuvio/media/nuvio' / banner).is_file())
         self.assertNotIn('FF092554', home)
+        self.assertIn('nuvio/nuvio_pill_glass.png', home)  # 6.0.29 glass buttons
         for name in ('defaults.xml', 'dark.xml', 'dim.xml'):
             names = {c.get('name') for c in ET.parse(ROOT / 'skin.nuvio/colors' / name).getroot()}
             self.assertTrue({'nuvio_pill', 'nuvio_bg'} <= names, name)

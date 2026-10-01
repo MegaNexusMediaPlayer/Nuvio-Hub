@@ -169,6 +169,11 @@ def prepare():
             browse_cache.refresh(provider, catalog, extra)
     report = {'cached': len(all_jobs) - len(missing), 'loaded': 0, 'failed': 0, 'deferred': len(missing), 'posters': 0}
     base = art_cold()
+    home = xbmcgui.Window(10000)
+    if base and base in (home.getProperty('nuvio.art_warm.front'), home.getProperty('nuvio.art_warm.session')):
+        # Posters of this image session are already loaded (or loading in the
+        # background): coming back from HUB must not show the screen again.
+        base = ''
     if not missing and not base:
         return report
     window = Loading('nuvio_loading.xml', ROOT, theme_folder(),'1080i',

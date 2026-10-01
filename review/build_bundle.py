@@ -14,7 +14,9 @@ OMIT_UI={'home_window.py','home_trailers.py','source_browser.py','sources_loadin
 BACK_MEDIA={'icon.png','nuvio_mark.png','nuvio_banner.png','meganexus_icon.png','meganexus_fanart.png'}
 UI_MEDIA={'nuvio_video_vignette.png','kofi_qr.png','nuvio_poster_mask_v2.png','nuvio_poster_focus_v2.png','nuvio_tile_mask_v2.png','nuvio_tile_focus_v2.png','person.png','person_circle.png','person_ring.png','black.png','white.png','nuvio_mark.png','nuvio_wordmark.png','nuvio_banner.png','nuvio_hero_shade.png','nuvio_hero_fade.png',
           'nuvio_pill.png','nuvio_poster_mask.png','nuvio_poster_focus.png','nuvio_poster_blank.png','nuvio_tile_mask.png','nuvio_tile_focus.png','meganexus_saver_bg.png','meganexus_saver_logo.png','meganexus_saver_glow.png','meganexus_saver_spark.png','meganexus_icon.png','meganexus_fanart.png',
-          'nuvio_banner_dark.png','nuvio_banner_dim.png','meganexus_saver_bg_dark.png','meganexus_saver_bg_dim.png','nuvio_bottom_fade.png'}
+          'nuvio_banner_dark.png','nuvio_banner_dim.png','meganexus_saver_bg_dark.png','meganexus_saver_bg_dim.png','nuvio_bottom_fade.png',
+          'nuvio_tile_glass.png','nuvio_poster_glass.png','nuvio_tile_shadow.png','nuvio_poster_shadow.png',
+          'nuvio_tile_focus_glass.png','nuvio_poster_focus_glass.png','nuvio_pill_glass.png','nuvio_pill_glass_focus.png'}
 COLLECTION_MEDIA={value for group in json.loads((BACK/'resources/collections.json').read_text(encoding='utf-8'))
                   for folder in group['folders'] for key,value in folder.items()
                   if key in ('cover','backdrop','animation') and isinstance(value,str) and value.startswith('resources/media/collections/')}

@@ -16,6 +16,12 @@ MEDIA = 'special://home/addons/script.nuvio/resources/media/'
 BANNERS = {'light': 'nuvio_banner.png', 'dark': 'nuvio_banner_dark.png', 'dim': 'nuvio_banner_dim.png'}
 SKIN_COLORS = {'light': 'SKINDEFAULT', 'dark': 'dark', 'dim': 'dim'}  # skin.nuvio/colors/<name>.xml
 SKIN_STRING = 'nuvio.theme'
+# Posters and catalog art are drawn slightly see-through over the glass boxes.
+OPACITY_SETTING = 'nuvio_card_opacity'
+OPACITY_LEVELS = ('0', '10', '20', '30')   # percent transparency; '0' = off
+OPACITY_DEFAULT = '10'
+OPACITY_LABELS = {'0': 'Off', '10': '10 % · subtle', '20': '20 %', '30': '30 %'}
+OPACITY_PROPERTY = 'nuvio.card_opacity'    # read by the windows (Window(Home).Property)
 
 
 def _addon(addon=None):
@@ -42,6 +48,27 @@ def banner(addon=None):
     return MEDIA + BANNERS[current(addon)]
 
 
+def card_opacity(addon=None):
+    try:
+        value = (_addon(addon).getSetting(OPACITY_SETTING) or '').strip()
+    except Exception:
+        value = ''
+    return value if value in OPACITY_LEVELS else OPACITY_DEFAULT
+
+
+def set_card_opacity(level, addon=None):
+    if level not in OPACITY_LEVELS:
+        raise ValueError('Unknown transparency.')
+    addon = _addon(addon)
+    addon.setSetting(OPACITY_SETTING, level)
+    _publish_opacity(level)
+
+
+def _publish_opacity(level):
+    import xbmcgui
+    xbmcgui.Window(10000).setProperty(OPACITY_PROPERTY, level)
+
+
 def _rpc(method, params):
     import json
     import xbmc
@@ -54,6 +81,7 @@ def sync(addon=None):
     Only touches Kodi's colour-theme setting while the MegaNexus skin is active."""
     import xbmc
     theme = current(addon)
+    _publish_opacity(card_opacity(addon))
     if xbmc.getInfoLabel('Skin.String(%s)' % SKIN_STRING) != theme:
         xbmc.executebuiltin('Skin.SetString(%s,%s)' % (SKIN_STRING, theme))
     if xbmc.getSkinDir() != 'skin.nuvio':

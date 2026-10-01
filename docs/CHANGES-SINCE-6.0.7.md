@@ -1,6 +1,6 @@
 # Nuvio Hub — changes since 6.0.7
 
-Summary of 6.0.8 – 6.0.28 (details in each `docs/RELEASE-6.0.x.md`).
+Summary of 6.0.8 – 6.0.29 (details in each `docs/RELEASE-6.0.x.md`).
 6.0.19 and 6.0.23 are published GitHub releases.
 
 | Area | What changed |
@@ -15,6 +15,7 @@ Summary of 6.0.8 – 6.0.28 (details in each `docs/RELEASE-6.0.x.md`).
 | Screensaver | Seamless MP4 loop (no artwork flash, no reopen); MegaNexus standard image (default) or built-in MegaNexus animation drawn by the skin (no player, no mute). |
 | Cinemeta | Always installed; ON only while nothing else supplies metadata; Cinemeta collections when there is no other layout. |
 | Themes | Light (MegaNexus blue), Dark (black, OLED) and Semi-dark (dark top, blue bottom) for the interface, HUB skin and screensaver; chosen in HUB Settings or on the phone (6.0.28). |
+| Glass look | Glass card boxes with shadows, glass focus ring, glass HUB and header buttons, clock/weather capsule; posters 10 % transparent by default (Off/10/20/30 %) (6.0.29). |
 | Branding | MegaNexus logo, banner and icons; blue theme from the logo; HUB buttons "MegaNexus", "IPTV Channels", "HUB Settings"; "Support MegaNexus · Ko-fi". Nuvio accounts and settings unchanged. |
 | Nuvio connect | Signing in imports add-ons, progress and collections and switches ON the metadata add-ons the collections use (6.0.25). |
 | Phone setup | QR code → local page served by Kodi: Nuvio sign-in/import, add-ons, collections, display; Save starts MegaNexus and stops the service. |

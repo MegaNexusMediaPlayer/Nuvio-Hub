@@ -78,6 +78,9 @@
             <height>258</height>
             <aspectratio scalediffuse="false">keep</aspectratio>
             <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[Window.Property(nuvio.poster)]</texture>
+            <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
+            <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
+            <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
           </control>
           <control type="image">
             <left>207</left>
@@ -130,7 +133,7 @@
             <textcolor>FFF3F4F8</textcolor>
             <focusedcolor>FF051229</focusedcolor>
             <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-            <texturenofocus border="22" colordiffuse="FF09234F">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+            <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
             <onup>100</onup>
             <ondown condition="String.IsEqual(Window.Property(nuvio.series),1)">501</ondown>
             <onleft>102</onleft>
@@ -150,7 +153,7 @@
             <textcolor>FFF3F4F8</textcolor>
             <focusedcolor>FF051229</focusedcolor>
             <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-            <texturenofocus border="22" colordiffuse="FF09234F">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+            <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
             <onup>100</onup>
             <ondown condition="String.IsEqual(Window.Property(nuvio.series),1)">501</ondown>
             <onleft>100</onleft>
@@ -170,7 +173,7 @@
             <textcolor>FFF3F4F8</textcolor>
             <focusedcolor>FF051229</focusedcolor>
             <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-            <texturenofocus border="22" colordiffuse="FF09234F">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+            <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
             <onup>100</onup>
             <ondown condition="String.IsEqual(Window.Property(nuvio.series),1)">501</ondown>
             <onleft>103</onleft>
@@ -190,7 +193,7 @@
             <textcolor>FFF3F4F8</textcolor>
             <focusedcolor>FF051229</focusedcolor>
             <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-            <texturenofocus border="22" colordiffuse="FF09234F">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+            <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
             <onup>100</onup>
             <ondown condition="String.IsEqual(Window.Property(nuvio.series),1)">501</ondown>
             <onleft>101</onleft>
@@ -210,7 +213,7 @@
             <textcolor>FFF3F4F8</textcolor>
             <focusedcolor>FF051229</focusedcolor>
             <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-            <texturenofocus border="22" colordiffuse="FF09234F">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+            <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
             <onup>100</onup>
             <ondown condition="String.IsEqual(Window.Property(nuvio.series),1)">501</ondown>
             <onleft>104</onleft>
@@ -230,7 +233,7 @@
             <textcolor>FFF3F4F8</textcolor>
             <focusedcolor>FF051229</focusedcolor>
             <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-            <texturenofocus border="22" colordiffuse="FF09234F">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+            <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
             <onup>100</onup>
             <ondown condition="String.IsEqual(Window.Property(nuvio.series),1)">501</ondown>
             <onleft>106</onleft>
@@ -320,6 +323,9 @@
                 <height>198</height>
                 <aspectratio scalediffuse="false">keep</aspectratio>
                 <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png">$INFO[ListItem.Art(thumb)]</texture>
+                <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
+                <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
+                <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
               </control>
               <control type="image">
                 <left>331</left>
@@ -377,6 +383,9 @@
                 <height>198</height>
                 <aspectratio scalediffuse="false">keep</aspectratio>
                 <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png">$INFO[ListItem.Art(thumb)]</texture>
+                <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
+                <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
+                <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
               </control>
               <control type="image">
                 <left>13</left>
@@ -587,7 +596,7 @@
             <textcolor>FFF3F4F8</textcolor>
             <focusedcolor>FF051229</focusedcolor>
             <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-            <texturenofocus border="22" colordiffuse="FF09234F">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+            <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
             <onup condition="!String.IsEmpty(Window.Property(nuvio.has_people))">503</onup>
             <ondown>504</ondown>
             <onleft>105</onleft>
@@ -629,6 +638,9 @@
                 <height>198</height>
                 <aspectratio scalediffuse="false">keep</aspectratio>
                 <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png">$INFO[ListItem.Art(thumb)]</texture>
+                <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
+                <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
+                <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
               </control>
               <control type="image">
                 <left>331</left>
@@ -676,6 +688,9 @@
                 <height>198</height>
                 <aspectratio scalediffuse="false">keep</aspectratio>
                 <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png">$INFO[ListItem.Art(thumb)]</texture>
+                <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
+                <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
+                <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
               </control>
               <control type="image">
                 <left>13</left>
