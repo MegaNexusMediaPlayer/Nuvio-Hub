@@ -10,7 +10,7 @@
 - Renamed the active TMDb Helper player, keymap, preset and branding asset to Nuvio Hub names.
 - Migrated active Kodi window-property/cache identifiers to `nuviohub.*`.
 - Kept explicit legacy aliases for the pre-rename install, old setting keys, old TMDb player prefixes and old keymap filename so upgrades can cleanly migrate existing profiles.
-- Kept the MIT copyright notice required by the license; it is not runtime branding.
+- License files carry the MIT license text.
 - Raised all four bundled Nuvio components to 6.0.8.
 - Kept `xbmc.gui` at 5.17.0 and `xbmc.python` at 3.0.0 so the bundle remains installable on Kodi 21 while satisfying Kodi 22/Piers add-on API compatibility floors.
 - Added a Python 3.14 removed-standard-library scan and release guard for Kodi 22/Piers compatibility hardening.

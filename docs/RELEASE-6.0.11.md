@@ -101,8 +101,8 @@ renamed and stays connected:
   `_progress_to_local`, `_nuvio_player_url`) and the test package alias
   (`nuviolib`) were renamed with all call sites.
 * `review/check_608_rebrand_kodi22.py` now fails the release if the retired name
-  appears anywhere in repository text. The only exception is the MIT copyright
-  line in the three `LICENSE.txt` files, which the license requires to be kept.
+  appears anywhere in repository text, including the licenses. The three
+  `LICENSE.txt` files name "Nuvio Hub contributors" as copyright holder.
 * The source acknowledgement sentence was removed from all `ATTRIBUTION.md` files.
 * Two legacy tests that expected stale names now pass.
 

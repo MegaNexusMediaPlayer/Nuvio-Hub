@@ -8,7 +8,7 @@
     "component_json": 4
   },
   "unit_tests": 384,
-  "unit_seconds": 2.541,
+  "unit_seconds": 2.591,
   "test_modules": [
     "test_nuvio_601",
     "test_nuvio_602",

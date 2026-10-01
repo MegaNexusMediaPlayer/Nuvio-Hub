@@ -75,8 +75,8 @@ for base in ('plugin.video.nuviohub', 'script.nuvio', 'skin.nuvio', 'screensaver
                 disallowed.append(f'{p.relative_to(ROOT)}:{line_no}')
 ok('retired brand absent from runtime sources', not disallowed, '; '.join(disallowed[:20]))
 
-# The whole tree (docs, tests, review tools) must not spell the retired brand
-# either. The only exception is the MIT copyright line the license requires.
+# The whole tree (docs, tests, review tools, licenses) must not spell the
+# retired brand either. No exceptions.
 spelled = []
 for p in ROOT.rglob('*'):
     if not p.is_file() or '.git' in p.parts or '__pycache__' in p.parts:
@@ -88,7 +88,7 @@ for p in ROOT.rglob('*'):
     except Exception:
         continue
     for line_no, line in enumerate(text.splitlines(), 1):
-        if RETIRED_RE.search(line) and not (p.name == 'LICENSE.txt' and line.startswith('Copyright (c)')):
+        if RETIRED_RE.search(line):
             spelled.append(f'{p.relative_to(ROOT)}:{line_no}')
 ok('retired brand absent from repository text', not spelled, '; '.join(spelled[:20]))
 

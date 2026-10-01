@@ -29,7 +29,6 @@ Active runtime branding now uses Nuvio Hub / `nuviohub` names. Retired pre-renam
 - cleanup of old TMDb Helper player/keymap names;
 - import of old configuration keys;
 - hidden legacy setting aliases used during upgrade;
-- the MIT copyright line required by LICENSE.txt.
 
 These exceptions must not be removed by a blind global search-and-replace.
 
