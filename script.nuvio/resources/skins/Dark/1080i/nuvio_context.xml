@@ -39,8 +39,8 @@
       <aligny>center</aligny>
       <textcolor>FFF3F4F8</textcolor>
       <focusedcolor>FF121212</focusedcolor>
-      <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturenofocus>
       <onup>102</onup>
       <ondown>101</ondown>
       <onleft>100</onleft>
@@ -58,8 +58,8 @@
       <aligny>center</aligny>
       <textcolor>FFF3F4F8</textcolor>
       <focusedcolor>FF121212</focusedcolor>
-      <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturenofocus>
       <onup>100</onup>
       <ondown>102</ondown>
       <onleft>101</onleft>
@@ -77,8 +77,8 @@
       <aligny>center</aligny>
       <textcolor>FFF3F4F8</textcolor>
       <focusedcolor>FF121212</focusedcolor>
-      <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturenofocus>
       <onup>101</onup>
       <ondown>100</ondown>
       <onleft>102</onleft>

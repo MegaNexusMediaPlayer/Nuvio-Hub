@@ -3,6 +3,7 @@ from pathlib import Path
 import hashlib
 import argparse
 import json
+import re
 import xml.etree.ElementTree as ET
 import zipfile
 
@@ -16,7 +17,8 @@ UI_MEDIA={'nuvio_video_vignette.png','kofi_qr.png','nuvio_poster_mask_v2.png','n
           'nuvio_pill.png','nuvio_poster_mask.png','nuvio_poster_focus.png','nuvio_poster_blank.png','nuvio_tile_mask.png','nuvio_tile_focus.png','meganexus_saver_bg.png','meganexus_saver_logo.png','meganexus_saver_glow.png','meganexus_saver_spark.png','meganexus_icon.png','meganexus_fanart.png',
           'nuvio_banner_dark.png','nuvio_banner_dim.png','meganexus_saver_bg_dark.png','meganexus_saver_bg_dim.png','nuvio_bottom_fade.png',
           'nuvio_tile_glass.png','nuvio_poster_glass.png',
-          'nuvio_tile_focus_glass.png','nuvio_poster_focus_glass.png','nuvio_pill_glass.png','nuvio_pill_glass_focus.png'}
+          'nuvio_tile_focus_glass.png','nuvio_poster_focus_glass.png'}
+CRISP_PILL=re.compile(r'nuvio_(?:pill_\d+x\d+_r\d+|wordmark_\d+x\d+)\.png$')  # per-size pills and logos (review/make_crisp_shapes.py)
 COLLECTION_MEDIA={value for group in json.loads((BACK/'resources/collections.json').read_text(encoding='utf-8'))
                   for folder in group['folders'] for key,value in folder.items()
                   if key in ('cover','backdrop','animation') and isinstance(value,str) and value.startswith('resources/media/collections/')}
@@ -53,7 +55,7 @@ def files_for(source):
             if 'skins' in rel.parts or path.name in OMIT_UI:continue
             if rel.as_posix().startswith('resources/media/') and path.name not in BACK_MEDIA:continue
         elif source.name=='script.nuvio':
-            if rel.as_posix().startswith('resources/media/') and 'collections' not in rel.parts and path.name not in UI_MEDIA:continue
+            if rel.as_posix().startswith('resources/media/') and 'collections' not in rel.parts and path.name not in UI_MEDIA and not CRISP_PILL.match(path.name):continue
             if 'collections' in rel.parts and rel.as_posix() not in COLLECTION_MEDIA:continue
         elif source.name=='skin.nuvio':
             if rel.parts[0]=='colors' and path.name not in ('defaults.xml','dark.xml','dim.xml'):continue  # light/dark/dim themes

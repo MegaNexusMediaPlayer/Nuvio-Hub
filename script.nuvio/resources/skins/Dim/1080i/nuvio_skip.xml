@@ -17,8 +17,8 @@
       <onright>10</onright>
       <onup>10</onup>
       <ondown>10</ondown>
-      <texturefocus border="22" colordiffuse="FF3381DB">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="FF3381DB">special://home/addons/script.nuvio/resources/media/nuvio_pill_290x76_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_290x76_r22.png</texturenofocus>
     </control>
     <control type="image">
       <left>1557</left>
@@ -43,8 +43,8 @@
       <onright>10</onright>
       <onup>11</onup>
       <ondown>11</ondown>
-      <texturefocus border="22" colordiffuse="FF3381DB">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="FF3381DB">special://home/addons/script.nuvio/resources/media/nuvio_pill_410x76_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_410x76_r22.png</texturenofocus>
       <visible>String.IsEqual(Window.Property(nuvio.next_available),1)</visible>
     </control>
     <control type="image">

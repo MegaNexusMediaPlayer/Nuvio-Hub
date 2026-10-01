@@ -63,8 +63,8 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
-      <texturefocus colordiffuse="FF226BBE">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus colordiffuse="FF232323">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <texturefocus colordiffuse="FF226BBE">special://home/addons/script.nuvio/resources/media/nuvio_pill_260x46_r22.png</texturefocus>
+      <texturenofocus colordiffuse="FF232323">special://home/addons/script.nuvio/resources/media/nuvio_pill_260x46_r22.png</texturenofocus>
       <onleft>500</onleft>
       <onright>502</onright>
       <onup>510</onup>
@@ -149,8 +149,8 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
-      <texturefocus colordiffuse="FF226BBE">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus colordiffuse="FF232323">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <texturefocus colordiffuse="FF226BBE">special://home/addons/script.nuvio/resources/media/nuvio_pill_260x46_r22.png</texturefocus>
+      <texturenofocus colordiffuse="FF232323">special://home/addons/script.nuvio/resources/media/nuvio_pill_260x46_r22.png</texturenofocus>
       <onleft>501</onleft>
       <onright>503</onright>
       <onup>500</onup>
@@ -225,8 +225,8 @@
       <font>font13</font>
       <align>center</align>
       <textcolor>FFFFFFFF</textcolor>
-      <texturefocus colordiffuse="FF226BBE">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus colordiffuse="FF232323">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <texturefocus colordiffuse="FF226BBE">special://home/addons/script.nuvio/resources/media/nuvio_pill_190x56_r22.png</texturefocus>
+      <texturenofocus colordiffuse="FF232323">special://home/addons/script.nuvio/resources/media/nuvio_pill_190x56_r22.png</texturenofocus>
       <ondown>500</ondown>
       <onleft>500</onleft>
       <onright>502</onright>

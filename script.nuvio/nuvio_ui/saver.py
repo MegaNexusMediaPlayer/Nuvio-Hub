@@ -73,7 +73,12 @@ class SaverMonitor(xbmc.Monitor):
 
 
 LOOP_RESTART_GRACE=3.0
-LOOP_SEEK_BEFORE_END=0.35  # seconds: jump back to 0 before EOF, so Kodi never reopens the file
+# 6.0.31: jump back to 0 a full second before EOF and poll fast near the end,
+# so a 15 s clip runs 0-14 s in an endless loop without Kodi closing/reopening
+# the file (that reopen was the black break). 0.35 s was missed on slow boxes.
+LOOP_SEEK_BEFORE_END=1.0
+LOOP_FAST_POLL=0.02        # seconds between checks during the last LOOP_FAST_WINDOW
+LOOP_FAST_WINDOW=2.5
 VIDEO_GAP_GRACE=2.0        # a brief pause in video (seek, decoder refill) is not the end
 
 
@@ -168,7 +173,7 @@ def run_video(token):
         elif original is not True:
             # Unknown sound state: display artwork rather than play audio.
             path=''
-        begin=0;started=False;seek_guard=0.0;gone_since=0.0
+        begin=0;started=False;seek_guard=0.0;gone_since=0.0;remaining=None
         while not win.closed and not monitor.abortRequested():
             if path and (player is None or player.ended):
                 if xbmc.Player().isPlaying():
@@ -197,14 +202,15 @@ def run_video(token):
                     # Kodi close and reopen the file (that gap showed the artwork).
                     try:
                         total=player.getTotalTime();position=player.getTime()
-                        if total>2 and total-position<LOOP_SEEK_BEFORE_END and now>seek_guard:
-                            player.seekTime(0);seek_guard=now+1.5
-                    except Exception:pass  # No duration yet: Kodi's EOF path still loops.
+                        remaining=total-position if total>2 else None
+                        if remaining is not None and remaining<LOOP_SEEK_BEFORE_END and now>seek_guard:
+                            player.seekTime(0);seek_guard=now+1.5;remaining=None
+                    except Exception:remaining=None  # No duration yet: Kodi's EOF path still loops.
                 elif started and player.isPlayingVideo() and not player.owns():break
                 elif started and not player.ended and not player.isPlayingVideo():
                     if not gone_since:gone_since=now
                     elif now-gone_since>VIDEO_GAP_GRACE:break
-            monitor.waitForAbort(.05)
+            monitor.waitForAbort(LOOP_FAST_POLL if remaining is not None and remaining<LOOP_FAST_WINDOW else .05)
     finally:
         if player:
             saver_state.cancel_play(player.token)

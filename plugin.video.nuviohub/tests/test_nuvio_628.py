@@ -148,7 +148,7 @@ class Wiring(unittest.TestCase):
             self.assertIn('nuvio/' + banner, home)
             self.assertTrue((ROOT / 'skin.nuvio/media/nuvio' / banner).is_file())
         self.assertNotIn('FF092554', home)
-        self.assertIn('nuvio/nuvio_pill_glass.png', home)  # 6.0.29 glass buttons
+        self.assertIn('nuvio/nuvio_pill_315x70_r22.png', home)  # 6.0.31 crisp glass buttons
         for name in ('defaults.xml', 'dark.xml', 'dim.xml'):
             names = {c.get('name') for c in ET.parse(ROOT / 'skin.nuvio/colors' / name).getroot()}
             self.assertTrue({'nuvio_pill', 'nuvio_bg'} <= names, name)

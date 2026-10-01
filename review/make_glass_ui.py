@@ -58,25 +58,11 @@ def focus_glass(ring, out, pad=12, glow=9):
                '-compose', 'copyopacity', '-composite', '-depth', '8', '-strip', 'PNG32:%s' % out)
 
 
-def pills():
-    """64x64 9-slice pills (border 22): glass at rest, bright glass when focused."""
-    with tempfile.TemporaryDirectory() as t:
-        t = Path(t)
-        base = MEDIA / 'nuvio_pill.png'
-        rest, focus = t / 'rest.png', t / 'focus.png'
-        glass_from_mask(base, rest, top=0.20, bottom=0.10)
-        glass_from_mask(base, focus, top=0.97, bottom=0.82)
-        for folder in (MEDIA, SKIN_MEDIA):
-            magick(rest, folder / 'nuvio_pill_glass.png')
-            magick(focus, folder / 'nuvio_pill_glass_focus.png')
-
-
 def assets():
     glass_from_mask(MEDIA / 'nuvio_tile_mask_v2.png', MEDIA / 'nuvio_tile_glass.png')
     glass_from_mask(MEDIA / 'nuvio_poster_mask_v2.png', MEDIA / 'nuvio_poster_glass.png')
     focus_glass(MEDIA / 'nuvio_tile_focus_v2.png', MEDIA / 'nuvio_tile_focus_glass.png')
     focus_glass(MEDIA / 'nuvio_poster_focus_v2.png', MEDIA / 'nuvio_poster_focus_glass.png')
-    pills()
 
 
 BOX = re.compile(r'(?P<indent>[ \t]*)<control type="image">\s*<left>(?P<l>-?\d+)</left>\s*<top>(?P<t>-?\d+)</top>\s*'

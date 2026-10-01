@@ -83,15 +83,6 @@
         <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
       </control>
     </control>
-    <control type="image">
-      <!-- Glass capsule behind weather and clock. -->
-      <left>1596</left>
-      <top>30</top>
-      <width>276</width>
-      <height>58</height>
-      <texture border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texture>
-      <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
-    </control>
     <control type="label">
       <left>1750</left>
       <top>39</top>

@@ -194,8 +194,8 @@
       <aligny>center</aligny>
       <textcolor>FFF3F4F8</textcolor>
       <focusedcolor>FF121212</focusedcolor>
-      <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_250x56_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_250x56_r22.png</texturenofocus>
       <onup>503</onup>
       <ondown>511</ondown>
       <onleft>511</onleft>

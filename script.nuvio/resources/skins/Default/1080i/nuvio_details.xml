@@ -36,7 +36,7 @@
         <width>155</width>
         <height>48</height>
         <aspectratio>keep</aspectratio>
-        <texture background="true">special://home/addons/script.nuvio/resources/media/nuvio_wordmark.png</texture>
+        <texture background="true">special://home/addons/script.nuvio/resources/media/nuvio_wordmark_303x96.png</texture>
       </control>
       <control type="label">
         <left>1580</left>
@@ -126,8 +126,8 @@
             <aligny>center</aligny>
             <textcolor>FFF3F4F8</textcolor>
             <focusedcolor>FF051229</focusedcolor>
-            <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-            <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+            <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_225x56_r22.png</texturefocus>
+            <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_225x56_r22.png</texturenofocus>
             <onup>100</onup>
             <ondown condition="String.IsEqual(Window.Property(nuvio.series),1)">501</ondown>
             <onleft>102</onleft>
@@ -146,8 +146,8 @@
             <aligny>center</aligny>
             <textcolor>FFF3F4F8</textcolor>
             <focusedcolor>FF051229</focusedcolor>
-            <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-            <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+            <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_190x56_r22.png</texturefocus>
+            <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_190x56_r22.png</texturenofocus>
             <onup>100</onup>
             <ondown condition="String.IsEqual(Window.Property(nuvio.series),1)">501</ondown>
             <onleft>100</onleft>
@@ -166,8 +166,8 @@
             <aligny>center</aligny>
             <textcolor>FFF3F4F8</textcolor>
             <focusedcolor>FF051229</focusedcolor>
-            <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-            <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+            <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_250x56_r22.png</texturefocus>
+            <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_250x56_r22.png</texturenofocus>
             <onup>100</onup>
             <ondown condition="String.IsEqual(Window.Property(nuvio.series),1)">501</ondown>
             <onleft>103</onleft>
@@ -186,8 +186,8 @@
             <aligny>center</aligny>
             <textcolor>FFF3F4F8</textcolor>
             <focusedcolor>FF051229</focusedcolor>
-            <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-            <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+            <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_250x56_r22.png</texturefocus>
+            <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_250x56_r22.png</texturenofocus>
             <onup>100</onup>
             <ondown condition="String.IsEqual(Window.Property(nuvio.series),1)">501</ondown>
             <onleft>101</onleft>
@@ -206,8 +206,8 @@
             <aligny>center</aligny>
             <textcolor>FFF3F4F8</textcolor>
             <focusedcolor>FF051229</focusedcolor>
-            <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-            <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+            <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_175x56_r22.png</texturefocus>
+            <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_175x56_r22.png</texturenofocus>
             <onup>100</onup>
             <ondown condition="String.IsEqual(Window.Property(nuvio.series),1)">501</ondown>
             <onleft>104</onleft>
@@ -226,8 +226,8 @@
             <aligny>center</aligny>
             <textcolor>FFF3F4F8</textcolor>
             <focusedcolor>FF051229</focusedcolor>
-            <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-            <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+            <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_175x56_r22.png</texturefocus>
+            <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_175x56_r22.png</texturenofocus>
             <onup>100</onup>
             <ondown condition="String.IsEqual(Window.Property(nuvio.series),1)">501</ondown>
             <onleft>106</onleft>
@@ -593,8 +593,8 @@
             <aligny>center</aligny>
             <textcolor>FFF3F4F8</textcolor>
             <focusedcolor>FF051229</focusedcolor>
-            <texturefocus border="22" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-            <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+            <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_340x56_r22.png</texturefocus>
+            <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_340x56_r22.png</texturenofocus>
             <onup condition="!String.IsEmpty(Window.Property(nuvio.has_people))">503</onup>
             <ondown>504</ondown>
             <onleft>105</onleft>

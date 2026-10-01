@@ -16,7 +16,7 @@
       <width>225</width>
       <height>72</height>
       <aspectratio>scale</aspectratio>
-      <texture>special://home/addons/script.nuvio/resources/media/nuvio_wordmark.png</texture>
+      <texture>special://home/addons/script.nuvio/resources/media/nuvio_wordmark_454x144.png</texture>
     </control>
     <control type="label">
       <left>320</left>
@@ -48,15 +48,6 @@
         <label>$INFO[Weather.Temperature]</label>
         <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
       </control>
-    </control>
-    <control type="image">
-      <!-- Glass capsule behind weather and clock. -->
-      <left>1596</left>
-      <top>30</top>
-      <width>276</width>
-      <height>58</height>
-      <texture border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texture>
-      <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
     </control>
     <control type="label">
       <left>1750</left>
@@ -113,7 +104,7 @@
           <top>0</top>
           <width>277</width>
           <height>56</height>
-          <texture border="18" colordiffuse="FF363636">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture colordiffuse="FF363636">special://home/addons/script.nuvio/resources/media/nuvio_pill_277x56_r18.png</texture>
           <visible>Control.HasFocus(501)</visible>
         </control>
         <control type="label">
@@ -171,7 +162,7 @@
           <top>0</top>
           <width>617</width>
           <height>78</height>
-          <texture border="18" colordiffuse="FF363636">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture colordiffuse="FF363636">special://home/addons/script.nuvio/resources/media/nuvio_pill_617x78_r18.png</texture>
           <visible>Control.HasFocus(500)</visible>
         </control>
         <control type="image">
@@ -272,7 +263,7 @@
           <top>0</top>
           <width>872</width>
           <height>72</height>
-          <texture border="18" colordiffuse="FF363636">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture colordiffuse="FF363636">special://home/addons/script.nuvio/resources/media/nuvio_pill_872x72_r18.png</texture>
           <visible>Control.HasFocus(504)</visible>
         </control>
         <control type="label">
@@ -329,8 +320,8 @@
       <onright>503</onright>
       <onup>504</onup>
       <ondown>501</ondown>
-      <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass_focus.png</texturefocus>
-      <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_265x58_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_265x58_r22.png</texturenofocus>
     </control>
     <control type="button" id="503">
       <left>1300</left>
@@ -347,8 +338,8 @@
       <onright>506</onright>
       <onup>504</onup>
       <ondown>501</ondown>
-      <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass_focus.png</texturefocus>
-      <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_265x58_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_265x58_r22.png</texturenofocus>
     </control>
     <control type="button" id="506">
       <left>1590</left>
@@ -365,8 +356,8 @@
       <onright>501</onright>
       <onup>504</onup>
       <ondown>501</ondown>
-      <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass_focus.png</texturefocus>
-      <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_265x58_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_265x58_r22.png</texturenofocus>
     </control>
     <control type="label">
       <left>55</left>

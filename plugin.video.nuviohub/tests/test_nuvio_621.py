@@ -63,7 +63,7 @@ class Logo(unittest.TestCase):
     def test_home_header_logo_is_larger_and_hub_label_does_not_overlap(self):
         for name in ('nuvio_home.xml', 'nuvio_home_compact.xml'):
             root = ET.parse(SKIN / name).getroot()
-            logo = next(c for c in root.iter('control') if (c.findtext('texture') or '').endswith('nuvio_wordmark.png'))
+            logo = next(c for c in root.iter('control') if 'nuvio_wordmark' in (c.findtext('texture') or ''))
             left, width, height = (int(logo.findtext(k)) for k in ('left', 'width', 'height'))
             self.assertEqual((width, height), (284, 90))
             hub = next(c for c in root.iter('control') if c.get('type') == 'label' and c.findtext('label') == 'HUB')

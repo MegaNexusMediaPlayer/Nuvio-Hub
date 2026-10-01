@@ -37,14 +37,12 @@ def png_size(path):
 
 class GlassAssets(unittest.TestCase):
     def test_assets_ship_and_have_room_for_glow_and_shadow(self):
-        for name in ('nuvio_tile_glass.png', 'nuvio_poster_glass.png', 'nuvio_tile_focus_glass.png', 'nuvio_poster_focus_glass.png', 'nuvio_pill_glass.png',
-                     'nuvio_pill_glass_focus.png'):
+        for name in ('nuvio_tile_glass.png', 'nuvio_poster_glass.png', 'nuvio_tile_focus_glass.png', 'nuvio_poster_focus_glass.png'):
             self.assertTrue((MEDIA / name).is_file(), name)
         self.assertEqual(png_size(MEDIA / 'nuvio_tile_glass.png'), png_size(MEDIA / 'nuvio_tile_mask_v2.png'))
-        self.assertEqual(png_size(MEDIA / 'nuvio_tile_focus_glass.png'), (936 + 24, 537 + 24))
+        self.assertEqual(png_size(MEDIA / 'nuvio_tile_focus_glass.png'), (624 + 16, 358 + 16))  # 6.0.31: 2x
         self.assertFalse((MEDIA / 'nuvio_tile_shadow.png').exists(), '6.0.30: shadows removed')
-        for name in ('nuvio_pill_glass.png', 'nuvio_pill_glass_focus.png'):
-            self.assertTrue((ROOT / 'skin.nuvio/media/nuvio' / name).is_file())
+        # 6.0.31: pills are per-size crisp textures (test_nuvio_631).
 
 
 class Windows(unittest.TestCase):
@@ -70,17 +68,16 @@ class Windows(unittest.TestCase):
                     'Window(Home).Property(nuvio.card_opacity),%s)">Conditional</animation>' % (alpha, alpha, key))
             self.assertEqual(home.count(line), art, key)
 
-    def test_clock_and_weather_sit_on_glass(self):
+    def test_clock_and_weather_have_no_capsule(self):
         for name in ('nuvio_home.xml', 'nuvio_home_compact.xml'):
             text = (DEFAULT / name).read_text(encoding='utf-8')
-            self.assertEqual(text.count('Glass capsule behind weather and clock'), 1, name)
-            self.assertLess(text.index('Glass capsule'), text.index('System.Time(hh:mm)'))
+            self.assertNotIn('Glass capsule', text, name)  # 6.0.31: removed, unnecessary
 
     def test_hub_buttons_are_glass(self):
         for name in ('Home.xml', 'SkinSettings.xml'):
             text = (ROOT / 'skin.nuvio/xml' / name).read_text(encoding='utf-8')
             self.assertNotIn('nuvio/nuvio_pill.png<', text, name)
-            self.assertIn('nuvio/nuvio_pill_glass_focus.png', text, name)
+            self.assertIn('<texturefocus colordiffuse="F2FFFFFF">nuvio/nuvio_pill_', text, name)
 
     def test_dark_and_dim_carry_the_glass_look(self):
         for folder in ('Dark', 'Dim'):

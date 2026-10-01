@@ -50,8 +50,8 @@
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
       <focusedcolor>nuvio_bg</focusedcolor>
-      <texturefocus border="22">nuvio/nuvio_pill_glass_focus.png</texturefocus>
-      <texturenofocus border="22">nuvio/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="F2FFFFFF">nuvio/nuvio_pill_315x70_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">nuvio/nuvio_pill_315x70_r22.png</texturenofocus>
       <onclick>RunScript(script.nuvio)</onclick>
       <onleft>104</onleft>
       <onright>101</onright>
@@ -68,8 +68,8 @@
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
       <focusedcolor>nuvio_bg</focusedcolor>
-      <texturefocus border="22">nuvio/nuvio_pill_glass_focus.png</texturefocus>
-      <texturenofocus border="22">nuvio/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="F2FFFFFF">nuvio/nuvio_pill_315x70_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">nuvio/nuvio_pill_315x70_r22.png</texturenofocus>
       <onclick>RunScript(script.nuvio,iptv)</onclick>
       <onleft>100</onleft>
       <onright>102</onright>
@@ -86,8 +86,8 @@
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
       <focusedcolor>nuvio_bg</focusedcolor>
-      <texturefocus border="22">nuvio/nuvio_pill_glass_focus.png</texturefocus>
-      <texturenofocus border="22">nuvio/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="F2FFFFFF">nuvio/nuvio_pill_315x70_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">nuvio/nuvio_pill_315x70_r22.png</texturenofocus>
       <onclick>RunScript(script.nuvio,settings)</onclick>
       <onleft>101</onleft>
       <onright>103</onright>
@@ -104,8 +104,8 @@
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
       <focusedcolor>nuvio_bg</focusedcolor>
-      <texturefocus border="22">nuvio/nuvio_pill_glass_focus.png</texturefocus>
-      <texturenofocus border="22">nuvio/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="F2FFFFFF">nuvio/nuvio_pill_315x70_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">nuvio/nuvio_pill_315x70_r22.png</texturenofocus>
       <onclick>ActivateWindow(settings)</onclick>
       <onleft>102</onleft>
       <onright>104</onright>
@@ -122,8 +122,8 @@
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
       <focusedcolor>nuvio_bg</focusedcolor>
-      <texturefocus border="22">nuvio/nuvio_pill_glass_focus.png</texturefocus>
-      <texturenofocus border="22">nuvio/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="F2FFFFFF">nuvio/nuvio_pill_315x70_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">nuvio/nuvio_pill_315x70_r22.png</texturenofocus>
       <onclick>ActivateWindow(shutdownmenu)</onclick>
       <onleft>103</onleft>
       <onright>100</onright>

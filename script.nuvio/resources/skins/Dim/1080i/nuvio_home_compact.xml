@@ -1626,7 +1626,7 @@
       <width>284</width>
       <height>90</height>
       <aspectratio>keep</aspectratio>
-      <texture>special://home/addons/script.nuvio/resources/media/nuvio_wordmark.png</texture>
+      <texture>special://home/addons/script.nuvio/resources/media/nuvio_wordmark_568x180.png</texture>
     </control>
     <control type="label">
       <left>356</left>
@@ -1647,8 +1647,8 @@
       <aligny>center</aligny>
       <textcolor>FFCCD1DC</textcolor>
       <focusedcolor>FF000000</focusedcolor>
-      <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass_focus.png</texturefocus>
-      <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_140x56_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_140x56_r22.png</texturenofocus>
       <label>Home</label>
       <onleft>108</onleft>
       <onright>105</onright>
@@ -1665,8 +1665,8 @@
       <aligny>center</aligny>
       <textcolor>FFCCD1DC</textcolor>
       <focusedcolor>FF000000</focusedcolor>
-      <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass_focus.png</texturefocus>
-      <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_160x56_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_160x56_r22.png</texturenofocus>
       <label>Search</label>
       <onleft>101</onleft>
       <ondown>7000</ondown>
@@ -1683,8 +1683,8 @@
       <aligny>center</aligny>
       <textcolor>FFCCD1DC</textcolor>
       <focusedcolor>FF000000</focusedcolor>
-      <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass_focus.png</texturefocus>
-      <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_170x56_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_170x56_r22.png</texturenofocus>
       <label>Settings</label>
       <onright>108</onright>
       <ondown>7000</ondown>
@@ -1701,22 +1701,13 @@
       <aligny>center</aligny>
       <textcolor>FFCCD1DC</textcolor>
       <focusedcolor>FF000000</focusedcolor>
-      <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass_focus.png</texturefocus>
-      <texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texturenofocus>
+      <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_140x56_r22.png</texturefocus>
+      <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_140x56_r22.png</texturenofocus>
       <label>HUB</label>
       <onright>101</onright>
       <ondown>7000</ondown>
       <onup>108</onup>
       <onleft>107</onleft>
-    </control>
-    <control type="image">
-      <!-- Glass capsule behind weather and clock. -->
-      <left>1596</left>
-      <top>30</top>
-      <width>276</width>
-      <height>58</height>
-      <texture border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill_glass.png</texture>
-      <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
     </control>
     <control type="label">
       <left>1750</left>
@@ -1810,7 +1801,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -1895,7 +1886,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -1980,7 +1971,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -2088,7 +2079,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -2177,7 +2168,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -2262,7 +2253,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -2347,7 +2338,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -2455,7 +2446,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -2544,7 +2535,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -2629,7 +2620,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -2714,7 +2705,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -2822,7 +2813,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -2911,7 +2902,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -2996,7 +2987,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -3081,7 +3072,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -3189,7 +3180,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -3278,7 +3269,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -3363,7 +3354,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -3448,7 +3439,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -3556,7 +3547,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -3645,7 +3636,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -3730,7 +3721,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -3815,7 +3806,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -3923,7 +3914,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -4012,7 +4003,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -4097,7 +4088,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -4182,7 +4173,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -4290,7 +4281,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -4379,7 +4370,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -4464,7 +4455,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -4549,7 +4540,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -4657,7 +4648,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -4746,7 +4737,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -4831,7 +4822,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -4916,7 +4907,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -5024,7 +5015,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -5113,7 +5104,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -5198,7 +5189,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -5283,7 +5274,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -5391,7 +5382,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -5480,7 +5471,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -5565,7 +5556,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -5650,7 +5641,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -5758,7 +5749,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -5847,7 +5838,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -5932,7 +5923,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -6017,7 +6008,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -6125,7 +6116,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -6214,7 +6205,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -6299,7 +6290,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -6384,7 +6375,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -6492,7 +6483,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -6581,7 +6572,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -6666,7 +6657,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -6751,7 +6742,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -6859,7 +6850,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -6948,7 +6939,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -7033,7 +7024,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -7118,7 +7109,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -7226,7 +7217,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -7315,7 +7306,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -7400,7 +7391,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -7485,7 +7476,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -7593,7 +7584,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -7682,7 +7673,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -7767,7 +7758,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -7852,7 +7843,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -7960,7 +7951,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -8049,7 +8040,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -8134,7 +8125,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -8219,7 +8210,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -8327,7 +8318,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -8416,7 +8407,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -8501,7 +8492,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -8586,7 +8577,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -8694,7 +8685,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -8783,7 +8774,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -8868,7 +8859,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -8953,7 +8944,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -9061,7 +9052,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -9150,7 +9141,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -9235,7 +9226,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -9320,7 +9311,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -9428,7 +9419,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -9517,7 +9508,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -9602,7 +9593,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -9687,7 +9678,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -9795,7 +9786,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -9884,7 +9875,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -9969,7 +9960,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -10054,7 +10045,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -10162,7 +10153,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -10251,7 +10242,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -10336,7 +10327,7 @@
               <top>18</top>
               <width>294</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_294x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -10421,7 +10412,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
@@ -10529,7 +10520,7 @@
               <top>18</top>
               <width>182</width>
               <height>66</height>
-              <texture border="12" colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+              <texture colordiffuse="EE1976D2">special://home/addons/script.nuvio/resources/media/nuvio_pill_182x66_r12.png</texture>
               <visible>!String.IsEmpty(ListItem.Property(airing_banner))</visible>
             </control>
             <control type="textbox">
