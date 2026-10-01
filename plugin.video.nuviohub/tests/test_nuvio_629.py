@@ -37,30 +37,24 @@ def png_size(path):
 
 class GlassAssets(unittest.TestCase):
     def test_assets_ship_and_have_room_for_glow_and_shadow(self):
-        for name in ('nuvio_tile_glass.png', 'nuvio_poster_glass.png', 'nuvio_tile_shadow.png', 'nuvio_poster_shadow.png',
-                     'nuvio_tile_focus_glass.png', 'nuvio_poster_focus_glass.png', 'nuvio_pill_glass.png',
+        for name in ('nuvio_tile_glass.png', 'nuvio_poster_glass.png', 'nuvio_tile_focus_glass.png', 'nuvio_poster_focus_glass.png', 'nuvio_pill_glass.png',
                      'nuvio_pill_glass_focus.png'):
             self.assertTrue((MEDIA / name).is_file(), name)
         self.assertEqual(png_size(MEDIA / 'nuvio_tile_glass.png'), png_size(MEDIA / 'nuvio_tile_mask_v2.png'))
         self.assertEqual(png_size(MEDIA / 'nuvio_tile_focus_glass.png'), (936 + 24, 537 + 24))
-        self.assertEqual(png_size(MEDIA / 'nuvio_tile_shadow.png'), (912 + 36, 513 + 54))
+        self.assertFalse((MEDIA / 'nuvio_tile_shadow.png').exists(), '6.0.30: shadows removed')
         for name in ('nuvio_pill_glass.png', 'nuvio_pill_glass_focus.png'):
             self.assertTrue((ROOT / 'skin.nuvio/media/nuvio' / name).is_file())
 
 
 class Windows(unittest.TestCase):
-    def test_every_grey_box_became_glass_with_a_shadow_behind(self):
+    def test_every_grey_box_became_glass_without_shadow(self):
         for path in DEFAULT.glob('*.xml'):
             text = path.read_text(encoding='utf-8')
             self.assertIsNone(glass.BOX.search(text), path.name)
             self.assertIsNone(glass.FOCUS.search(text), path.name)
             self.assertIsNone(glass.PILL_REST.search(text), path.name)
-        home = (DEFAULT / 'nuvio_home.xml').read_text(encoding='utf-8')
-        for kind in ('tile', 'poster'):
-            shadows = [m.start() for m in re.finditer('nuvio_%s_shadow.png' % kind, home)]
-            boxes = [m.start() for m in re.finditer('nuvio_%s_glass.png' % kind, home)]
-            self.assertEqual(len(shadows), len(boxes))
-            self.assertTrue(all(s < b for s, b in zip(shadows, boxes)), 'shadow is drawn first')
+            self.assertNotIn('_shadow.png', text, path.name)  # 6.0.30: odd edge, removed
 
     def test_focus_ring_grew_by_the_glow_room(self):
         home = (DEFAULT / 'nuvio_home.xml').read_text(encoding='utf-8')
@@ -71,7 +65,7 @@ class Windows(unittest.TestCase):
     def test_posters_follow_the_transparency_setting(self):
         home = (DEFAULT / 'nuvio_home.xml').read_text(encoding='utf-8')
         art = len(re.findall(r'diffuse="[^"]*nuvio_(?:tile|poster)_mask_v2\.png">', home))
-        for key, alpha in (('10', 90), ('20', 80), ('30', 70)):
+        for key, alpha in (('10', 90), ('20', 80), ('30', 70), ('40', 60), ('50', 50)):
             line = ('<animation effect="fade" start="%d" end="%d" time="0" condition="String.IsEqual('
                     'Window(Home).Property(nuvio.card_opacity),%s)">Conditional</animation>' % (alpha, alpha, key))
             self.assertEqual(home.count(line), art, key)
@@ -105,7 +99,7 @@ class Transparency(unittest.TestCase):
             theme.set_card_opacity('0', settings)
             self.assertEqual((settings.values['nuvio_card_opacity'], props['nuvio.card_opacity']), ('0', '0'))
             with self.assertRaises(ValueError):
-                theme.set_card_opacity('50', settings)
+                theme.set_card_opacity('60', settings)
 
     def test_sync_publishes_the_level(self):
         props = {}
@@ -119,14 +113,14 @@ class Transparency(unittest.TestCase):
         captured = {}
         def show(title, rows, choose, **kwargs):
             captured['rows'] = rows();captured['choose'] = choose
-        dialog = mock.Mock();dialog.select.return_value = 3
+        dialog = mock.Mock();dialog.select.return_value = 5
         with mock.patch.object(settings.page, 'show', side_effect=show), mock.patch.object(settings, 'rpc', return_value={}), \
                 mock.patch.object(settings.xbmcgui, 'Dialog', return_value=dialog), \
                 mock.patch.object(theme, 'set_card_opacity') as setter:
             settings.appearance()
             self.assertEqual(captured['rows'][2]['label'], 'Poster and catalog transparency')
             captured['choose'](2)
-        self.assertEqual(setter.call_args.args[0], '30')
+        self.assertEqual(setter.call_args.args[0], '50')  # up to 50 % (6.0.30)
 
 
 class NoRepeatedPosterScreen(unittest.TestCase):

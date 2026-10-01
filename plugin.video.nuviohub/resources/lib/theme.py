@@ -18,9 +18,9 @@ SKIN_COLORS = {'light': 'SKINDEFAULT', 'dark': 'dark', 'dim': 'dim'}  # skin.nuv
 SKIN_STRING = 'nuvio.theme'
 # Posters and catalog art are drawn slightly see-through over the glass boxes.
 OPACITY_SETTING = 'nuvio_card_opacity'
-OPACITY_LEVELS = ('0', '10', '20', '30')   # percent transparency; '0' = off
+OPACITY_LEVELS = ('0', '10', '20', '30', '40', '50')   # percent transparency; '0' = off
 OPACITY_DEFAULT = '10'
-OPACITY_LABELS = {'0': 'Off', '10': '10 % · subtle', '20': '20 %', '30': '30 %'}
+OPACITY_LABELS = {'0': 'Off', '10': '10 % · subtle', '20': '20 %', '30': '30 %', '40': '40 %', '50': '50 %'}
 OPACITY_PROPERTY = 'nuvio.card_opacity'    # read by the windows (Window(Home).Property)
 
 

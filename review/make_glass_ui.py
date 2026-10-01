@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Glass look (6.0.29): card boxes, shadows, focus rings, pills, clock capsule.
+"""Glass look (6.0.29): card boxes, focus rings, pills, clock capsule.
+
+6.0.30: no drop shadows and no rim lines (they showed an odd edge around
+pills and frames) - plain translucent glass only; transparency up to 50 %.
 
 Renders the PNG assets (ImageMagick 7) and patches the Light windows in
 script.nuvio/resources/skins/Default plus the HUB skin buttons. Idempotent:
@@ -20,7 +23,7 @@ MEDIA = ROOT / 'script.nuvio/resources/media'
 SKIN_MEDIA = ROOT / 'skin.nuvio/media/nuvio'
 DEFAULT = ROOT / 'script.nuvio/resources/skins/Default/1080i'
 URL = 'special://home/addons/script.nuvio/resources/media/'
-OPACITY = (('10', 90), ('20', 80), ('30', 70))  # Settings: card transparency
+OPACITY = (('10', 90), ('20', 80), ('30', 70), ('40', 60), ('50', 50))  # Settings: card transparency
 OPACITY_PROPERTY = 'Window(Home).Property(nuvio.card_opacity)'
 
 
@@ -28,7 +31,7 @@ def magick(*args):
     subprocess.run(['magick', *map(str, args)], check=True)
 
 
-def glass_from_mask(mask, out, top=0.10, bottom=0.03, rim=0.50, rim_px=4):
+def glass_from_mask(mask, out, top=0.10, bottom=0.03, rim=0.0, rim_px=4):
     """Translucent white fill (brighter at the top) inside the mask, light rim."""
     with tempfile.TemporaryDirectory() as t:
         t = Path(t)
@@ -42,17 +45,6 @@ def glass_from_mask(mask, out, top=0.10, bottom=0.03, rim=0.50, rim_px=4):
                '-composite', t / 'alpha.png')
         magick('-size', '%dx%d' % (w, h), 'xc:white', t / 'alpha.png', '-alpha', 'off', '-compose', 'copyopacity',
                '-composite', '-depth', '8', '-strip', 'PNG32:%s' % out)
-
-
-def shadow_from_mask(mask, out, pad=18, bottom_pad=36, blur=12, opacity=0.6):
-    """Soft drop shadow; the PNG has room around the shape (pad left/top/right, more below)."""
-    with tempfile.TemporaryDirectory() as t:
-        t = Path(t)
-        magick(mask, '-alpha', 'extract', '-background', 'black', '-gravity', 'northwest', '-splice', '%dx%d' % (pad, pad),
-               '-gravity', 'southeast', '-splice', '%dx%d' % (pad, bottom_pad), '-blur', '0x%d' % blur,
-               '-evaluate', 'multiply', str(opacity), t / 'a.png')
-        magick(t / 'a.png', '(', '+clone', '-fill', 'black', '-colorize', '100', ')', '+swap', '-alpha', 'off',
-               '-compose', 'copyopacity', '-composite', '-depth', '8', '-strip', 'PNG32:%s' % out)
 
 
 def focus_glass(ring, out, pad=12, glow=9):
@@ -72,8 +64,8 @@ def pills():
         t = Path(t)
         base = MEDIA / 'nuvio_pill.png'
         rest, focus = t / 'rest.png', t / 'focus.png'
-        glass_from_mask(base, rest, top=0.20, bottom=0.10, rim=0.45, rim_px=2)
-        glass_from_mask(base, focus, top=0.97, bottom=0.82, rim=1.0, rim_px=2)
+        glass_from_mask(base, rest, top=0.20, bottom=0.10)
+        glass_from_mask(base, focus, top=0.97, bottom=0.82)
         for folder in (MEDIA, SKIN_MEDIA):
             magick(rest, folder / 'nuvio_pill_glass.png')
             magick(focus, folder / 'nuvio_pill_glass_focus.png')
@@ -82,8 +74,6 @@ def pills():
 def assets():
     glass_from_mask(MEDIA / 'nuvio_tile_mask_v2.png', MEDIA / 'nuvio_tile_glass.png')
     glass_from_mask(MEDIA / 'nuvio_poster_mask_v2.png', MEDIA / 'nuvio_poster_glass.png')
-    shadow_from_mask(MEDIA / 'nuvio_tile_mask_v2.png', MEDIA / 'nuvio_tile_shadow.png')
-    shadow_from_mask(MEDIA / 'nuvio_poster_mask_v2.png', MEDIA / 'nuvio_poster_shadow.png')
     focus_glass(MEDIA / 'nuvio_tile_focus_v2.png', MEDIA / 'nuvio_tile_focus_glass.png')
     focus_glass(MEDIA / 'nuvio_poster_focus_v2.png', MEDIA / 'nuvio_poster_focus_glass.png')
     pills()
@@ -101,17 +91,14 @@ ART = re.compile(r'(?P<indent>[ \t]*)(?P<tex><texture background="true" diffuse=
 
 def box(m):
     i, l, t, w, h, kind = m['indent'], int(m['l']), int(m['t']), int(m['w']), int(m['h']), m['kind']
-    # Shadow PNG: shape inset 6 px (left/top/right) and 12 px below at Kodi scale (pad 18/36 at 3x).
-    scale_x, scale_y = w / (912 / 3 if kind == 'tile' else 576 / 3), h / (513 / 3 if kind == 'tile' else 864 / 3)
-    sl, st = l - round(6 * scale_x), t - round(6 * scale_y) + 4
-    sw, sh = w + round(12 * scale_x), h + round(18 * scale_y)
     inner = i + '  '
     return ('%s<control type="image">\n%s<left>%d</left>\n%s<top>%d</top>\n%s<width>%d</width>\n%s<height>%d</height>\n'
-            '%s<aspectratio>stretch</aspectratio>\n%s<texture>%snuvio_%s_shadow.png</texture>\n%s</control>\n'
-            '%s<control type="image">\n%s<left>%d</left>\n%s<top>%d</top>\n%s<width>%d</width>\n%s<height>%d</height>\n'
             '%s<aspectratio>stretch</aspectratio>\n%s<texture>%snuvio_%s_glass.png</texture>\n%s</control>'
-            % (i, inner, sl, inner, st, inner, sw, inner, sh, inner, inner, URL, kind, i,
-               i, inner, l, inner, t, inner, w, inner, h, inner, inner, URL, kind, i))
+            % (i, inner, l, inner, t, inner, w, inner, h, inner, inner, URL, kind, i))
+
+
+SHADOW = re.compile(r'[ \t]*<control type="image">(?:(?!</control>).)*?nuvio_(?:tile|poster)_shadow\.png</texture>\s*</control>\n', re.S)
+FADE = re.compile(r'\n[ \t]*<animation effect="fade" start="\d+" end="\d+" time="0" condition="String\.IsEqual\(Window\(Home\)\.Property\(nuvio\.card_opacity\),\d+\)">Conditional</animation>')
 
 
 def focus(m):
@@ -122,12 +109,10 @@ def focus(m):
 
 
 def art(m):
-    if 'nuvio.card_opacity' in m['rest']:
-        return m.group(0)
     pad = m['indent']
     fades = ''.join('\n%s<animation effect="fade" start="%d" end="%d" time="0" condition="String.IsEqual(%s,%s)">Conditional</animation>'
                     % (pad, alpha, alpha, OPACITY_PROPERTY, key) for key, alpha in OPACITY)
-    return pad + m['tex'] + m['rest'] + fades + m['end']
+    return pad + m['tex'] + FADE.sub('', m['rest']) + fades + m['end']
 
 
 PILL_REST = re.compile(r'<texturenofocus border="22" colordiffuse="[0-9A-F]{8}">' + re.escape(URL) + r'nuvio_pill\.png</texturenofocus>')
@@ -148,7 +133,8 @@ def patch_windows():
     changed = []
     for path in sorted(DEFAULT.glob('*.xml')):
         text = path.read_text(encoding='utf-8')
-        new = BOX.sub(box, text)
+        new = SHADOW.sub('', text)  # 6.0.30: shadows removed
+        new = BOX.sub(box, new)
         new = FOCUS.sub(focus, new)
         new = ART.sub(art, new)
         new = PILL_REST.sub('<texturenofocus border="22">%snuvio_pill_glass.png</texturenofocus>' % URL, new)

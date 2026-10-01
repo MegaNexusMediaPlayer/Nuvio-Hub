@@ -38,6 +38,8 @@
       <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
       <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
       <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+      <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+      <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
     </control>
     <control type="textbox" id="510">
       <left>345</left>

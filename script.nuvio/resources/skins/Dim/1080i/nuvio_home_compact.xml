@@ -1766,14 +1766,6 @@
           <onright>7000</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.0.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -1791,6 +1783,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -1834,14 +1828,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.0.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -1859,6 +1845,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -1871,6 +1859,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -1923,14 +1913,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.0.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -1948,6 +1930,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -2014,14 +1998,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.0.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -2039,6 +2015,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -2051,6 +2029,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -2153,14 +2133,6 @@
           <onright>7001</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.1.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -2178,6 +2150,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -2221,14 +2195,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.1.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -2246,6 +2212,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -2258,6 +2226,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -2310,14 +2280,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.1.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -2335,6 +2297,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -2401,14 +2365,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.1.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -2426,6 +2382,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -2438,6 +2396,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -2540,14 +2500,6 @@
           <onright>7002</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.2.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -2565,6 +2517,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -2608,14 +2562,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.2.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -2633,6 +2579,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -2645,6 +2593,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -2697,14 +2647,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.2.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -2722,6 +2664,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -2788,14 +2732,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.2.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -2813,6 +2749,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -2825,6 +2763,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -2927,14 +2867,6 @@
           <onright>7003</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.3.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -2952,6 +2884,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -2995,14 +2929,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.3.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -3020,6 +2946,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -3032,6 +2960,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -3084,14 +3014,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.3.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -3109,6 +3031,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -3175,14 +3099,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.3.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -3200,6 +3116,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -3212,6 +3130,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -3314,14 +3234,6 @@
           <onright>7004</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.4.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -3339,6 +3251,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -3382,14 +3296,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.4.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -3407,6 +3313,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -3419,6 +3327,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -3471,14 +3381,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.4.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -3496,6 +3398,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -3562,14 +3466,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.4.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -3587,6 +3483,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -3599,6 +3497,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -3701,14 +3601,6 @@
           <onright>7005</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.5.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -3726,6 +3618,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -3769,14 +3663,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.5.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -3794,6 +3680,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -3806,6 +3694,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -3858,14 +3748,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.5.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -3883,6 +3765,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -3949,14 +3833,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.5.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -3974,6 +3850,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -3986,6 +3864,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -4088,14 +3968,6 @@
           <onright>7006</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.6.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -4113,6 +3985,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -4156,14 +4030,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.6.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -4181,6 +4047,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -4193,6 +4061,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -4245,14 +4115,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.6.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -4270,6 +4132,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -4336,14 +4200,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.6.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -4361,6 +4217,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -4373,6 +4231,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -4475,14 +4335,6 @@
           <onright>7007</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.7.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -4500,6 +4352,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -4543,14 +4397,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.7.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -4568,6 +4414,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -4580,6 +4428,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -4632,14 +4482,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.7.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -4657,6 +4499,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -4723,14 +4567,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.7.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -4748,6 +4584,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -4760,6 +4598,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -4862,14 +4702,6 @@
           <onright>7009</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.8.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -4887,6 +4719,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -4930,14 +4764,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.8.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -4955,6 +4781,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -4967,6 +4795,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -5019,14 +4849,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.8.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -5044,6 +4866,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -5110,14 +4934,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.8.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -5135,6 +4951,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -5147,6 +4965,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -5249,14 +5069,6 @@
           <onright>7009</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.9.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -5274,6 +5086,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -5317,14 +5131,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.9.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -5342,6 +5148,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -5354,6 +5162,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -5406,14 +5216,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.9.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -5431,6 +5233,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -5497,14 +5301,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.9.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -5522,6 +5318,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -5534,6 +5332,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -5636,14 +5436,6 @@
           <onright>7010</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.10.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -5661,6 +5453,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -5704,14 +5498,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.10.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -5729,6 +5515,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -5741,6 +5529,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -5793,14 +5583,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.10.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -5818,6 +5600,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -5884,14 +5668,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.10.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -5909,6 +5685,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -5921,6 +5699,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -6023,14 +5803,6 @@
           <onright>7011</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.11.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -6048,6 +5820,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -6091,14 +5865,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.11.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -6116,6 +5882,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -6128,6 +5896,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -6180,14 +5950,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.11.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -6205,6 +5967,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -6271,14 +6035,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.11.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -6296,6 +6052,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -6308,6 +6066,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -6410,14 +6170,6 @@
           <onright>7012</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.12.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -6435,6 +6187,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -6478,14 +6232,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.12.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -6503,6 +6249,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -6515,6 +6263,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -6567,14 +6317,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.12.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -6592,6 +6334,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -6658,14 +6402,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.12.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -6683,6 +6419,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -6695,6 +6433,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -6797,14 +6537,6 @@
           <onright>7013</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.13.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -6822,6 +6554,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -6865,14 +6599,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.13.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -6890,6 +6616,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -6902,6 +6630,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -6954,14 +6684,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.13.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -6979,6 +6701,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -7045,14 +6769,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.13.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -7070,6 +6786,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -7082,6 +6800,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -7184,14 +6904,6 @@
           <onright>7014</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.14.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -7209,6 +6921,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -7252,14 +6966,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.14.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -7277,6 +6983,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -7289,6 +6997,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -7341,14 +7051,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.14.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -7366,6 +7068,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -7432,14 +7136,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.14.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -7457,6 +7153,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -7469,6 +7167,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -7571,14 +7271,6 @@
           <onright>7015</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.15.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -7596,6 +7288,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -7639,14 +7333,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.15.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -7664,6 +7350,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -7676,6 +7364,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -7728,14 +7418,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.15.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -7753,6 +7435,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -7819,14 +7503,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.15.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -7844,6 +7520,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -7856,6 +7534,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -7958,14 +7638,6 @@
           <onright>7016</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.16.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -7983,6 +7655,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -8026,14 +7700,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.16.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -8051,6 +7717,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -8063,6 +7731,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -8115,14 +7785,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.16.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -8140,6 +7802,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -8206,14 +7870,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.16.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -8231,6 +7887,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -8243,6 +7901,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -8345,14 +8005,6 @@
           <onright>7017</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.17.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -8370,6 +8022,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -8413,14 +8067,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.17.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -8438,6 +8084,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -8450,6 +8098,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -8502,14 +8152,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.17.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -8527,6 +8169,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -8593,14 +8237,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.17.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -8618,6 +8254,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -8630,6 +8268,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -8732,14 +8372,6 @@
           <onright>7018</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.18.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -8757,6 +8389,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -8800,14 +8434,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.18.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -8825,6 +8451,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -8837,6 +8465,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -8889,14 +8519,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.18.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -8914,6 +8536,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -8980,14 +8604,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.18.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -9005,6 +8621,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -9017,6 +8635,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -9119,14 +8739,6 @@
           <onright>7019</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.19.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -9144,6 +8756,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -9187,14 +8801,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.19.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -9212,6 +8818,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -9224,6 +8832,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -9276,14 +8886,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.19.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -9301,6 +8903,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -9367,14 +8971,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.19.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -9392,6 +8988,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -9404,6 +9002,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -9506,14 +9106,6 @@
           <onright>7020</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.20.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -9531,6 +9123,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -9574,14 +9168,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.20.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -9599,6 +9185,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -9611,6 +9199,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -9663,14 +9253,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.20.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -9688,6 +9270,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -9754,14 +9338,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.20.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -9779,6 +9355,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -9791,6 +9369,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -9893,14 +9473,6 @@
           <onright>7021</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.21.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -9918,6 +9490,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -9961,14 +9535,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.21.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -9986,6 +9552,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -9998,6 +9566,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -10050,14 +9620,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.21.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -10075,6 +9637,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -10141,14 +9705,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.21.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -10166,6 +9722,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -10178,6 +9736,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -10280,14 +9840,6 @@
           <onright>7022</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.22.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -10305,6 +9857,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -10348,14 +9902,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.22.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -10373,6 +9919,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -10385,6 +9933,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -10437,14 +9987,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.22.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -10462,6 +10004,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -10528,14 +10072,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.22.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -10553,6 +10089,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -10565,6 +10103,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -10667,14 +10207,6 @@
           <onright>7023</onright>
           <itemlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.23.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -10692,6 +10224,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="label">
               <left>10</left>
@@ -10735,14 +10269,6 @@
           </itemlayout>
           <focusedlayout width="330" height="214" condition="String.IsEqual(Window.Property(nuvio.row.23.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>316</width>
-              <height>189</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>304</width>
@@ -10760,6 +10286,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -10772,6 +10300,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>2</left>
@@ -10824,14 +10354,6 @@
           </focusedlayout>
           <itemlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.23.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -10849,6 +10371,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
@@ -10915,14 +10439,6 @@
           </itemlayout>
           <focusedlayout width="218" height="330" condition="!String.IsEqual(Window.Property(nuvio.row.23.shape),landscape)">
             <control type="image">
-              <left>4</left>
-              <top>4</top>
-              <width>204</width>
-              <height>306</height>
-              <aspectratio>stretch</aspectratio>
-              <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_shadow.png</texture>
-            </control>
-            <control type="image">
               <left>10</left>
               <top>6</top>
               <width>192</width>
@@ -10940,6 +10456,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="image">
               <left>10</left>
@@ -10952,6 +10470,8 @@
               <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
               <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
               <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+              <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+              <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
             </control>
             <control type="textbox">
               <left>23</left>
