@@ -12,11 +12,11 @@ Nuvio Hub for Kodi starts its public development from version 6.0.7. Contributio
 
 ## Workflow
 
-Open an issue before a substantial change so we can agree on scope. Fork the repository, create a focused branch and submit a pull request describing the problem, resulting behavior and validation. Include before/after screenshots for visible UI changes, with fictional content or identifying artwork blurred.
+Open an issue before a substantial change so we can agree on scope. Fork the repository on GitHub only to prepare a pull request (publishing it as a separate project is not permitted by the license), create a focused branch and submit a pull request describing the problem, resulting behavior and validation. Include before/after screenshots for visible UI changes, with fictional content or identifying artwork blurred.
 
 Anyone can submit a pull request. Trusted ongoing contributors may receive a collaborator invitation from the repository owner. This gives write access after acceptance; use feature branches and reviewed pull requests for shared work.
 
-Keep component licenses and upstream notices. Do not include personal profiles, account credentials, personalized provider URLs or debug databases. Generated installer archives belong in Releases.
+By submitting a contribution you agree it is used under the [MegaNexus License](LICENSE.md) (see *Contributions* there). Keep component licenses and upstream notices. Do not include personal profiles, account credentials, personalized provider URLs or debug databases. Generated installer archives belong in Releases.
 
 ## Source layout
 

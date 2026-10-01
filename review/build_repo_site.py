@@ -44,7 +44,8 @@ def repository_zip(out_dir, base):
     target = out_dir / ('repository.meganexus-%s.zip' % version)
     with zipfile.ZipFile(target, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
         for name, data in (('addon.xml', text.encode('utf-8')), ('icon.png', (REPO / 'icon.png').read_bytes()),
-                           ('fanart.png', (REPO / 'fanart.png').read_bytes())):
+                           ('fanart.png', (REPO / 'fanart.png').read_bytes()),
+                           ('LICENSE.txt', (REPO / 'LICENSE.txt').read_bytes())):
             info = zipfile.ZipInfo('repository.meganexus/' + name, date_time=STAMP)
             info.compress_type = zipfile.ZIP_DEFLATED;info.external_attr = 0o644 << 16
             z.writestr(info, data)

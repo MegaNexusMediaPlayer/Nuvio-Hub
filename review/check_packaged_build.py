@@ -52,6 +52,9 @@ assert not list(OUT.rglob('default_movie_poster.png'))
 # 6.0.21: built-in MegaNexus animation layers (skin-drawn screensaver).
 for layer in ('bg','logo','glow','spark'):assert (OUT/'script.nuvio/resources/media'/f'meganexus_saver_{layer}.png').is_file()
 assert not list(OUT.rglob('*.mp4'))
+# 6.0.24: own components carry the MegaNexus License; bundled python-qrcode keeps BSD.
+for component in ('plugin.video.nuviohub','script.nuvio','screensaver.nuvio'):assert (OUT/component/'LICENSE.txt').read_text(encoding='utf-8').startswith('MegaNexus License'),component
+assert (OUT/'plugin.video.nuviohub/resources/lib/qrcode/LICENSE').is_file()
 for group in json.loads((BACK/'resources/collections.json').read_text(encoding='utf-8')):
     assert group['id'] not in ('collections.world','collections.sports')
     for folder in group['folders']:

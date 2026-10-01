@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addon id="skin.nuvio" version="6.0.23" name="Nuvio" provider-name="Nuvio community build; Kodi foundation by Team Kodi">
+<addon id="skin.nuvio" version="6.0.24" name="Nuvio" provider-name="Nuvio community build; Kodi foundation by Team Kodi">
   <requires>
     <import addon="xbmc.gui" version="5.17.0" />
-    <import addon="script.nuvio" version="6.0.23" />
+    <import addon="script.nuvio" version="6.0.24" />
   </requires>
   <extension point="xbmc.gui.skin" debugging="false">
     <res width="1920" height="1080" aspect="16:9" default="true" folder="xml" />
   </extension>
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
-    <license>GPL-2.0; CC BY-SA 4.0; GPL-3.0 Nuvio artwork</license>
+    <license>GPL-2.0 (based on Estuary); CC BY-SA 4.0 artwork</license>
     <summary lang="en_GB">Nuvio interface with Nuvio Hub as its backend.</summary>
     <description lang="en_GB">Independent Nuvio home, rounded posters, collections and simplified settings. Kodi dialogs and playback controls are based on Estuary from Kodi 21.3.</description>
     <assets>

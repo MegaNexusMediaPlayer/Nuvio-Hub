@@ -9,7 +9,7 @@
   </extension>
   <extension point="xbmc.addon.metadata">
     <platform>all</platform>
-    <license>MIT</license>
+    <license>MegaNexus License (see LICENSE.txt)</license>
     <summary lang="en_GB">MegaNexus add-ons for Kodi.</summary>
     <description lang="en_GB">Installs and updates the MegaNexus build (Nuvio Hub backend, interface, skin and screensaver) from GitHub Pages. Kodi checks this repository for updates automatically.</description>
     <assets>
