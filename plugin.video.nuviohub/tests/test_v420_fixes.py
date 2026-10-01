@@ -116,21 +116,21 @@ class TestUsenetClassification(unittest.TestCase):
     def test_nzb_indexer_names_hit(self):
         classify = self._classify()
         for name in ('NZBGeek', 'abNZB', 'DrunkenSlug', 'NZBFinder', 'althub'):
-            row = {'name': 'Dexstreams', 'description': 'via %s | 12.3 GB' % name}
-            self.assertEqual(classify(row, 'Dexstreams')[0], 'usenet', name)
+            row = {'name': 'Vidstreams', 'description': 'via %s | 12.3 GB' % name}
+            self.assertEqual(classify(row, 'Vidstreams')[0], 'usenet', name)
 
     def test_structural_type_field_hits(self):
         classify = self._classify()
-        row = {'name': '[TB+] Dexstreams 4K', 'type': 'usenet',
+        row = {'name': '[TB+] Vidstreams 4K', 'type': 'usenet',
                'description': '4K REMUX | 60 GB'}
-        self.assertEqual(classify(row, 'Dexstreams')[0], 'usenet')
-        row2 = {'name': '[TB+] Dexstreams', 'behaviorHints': {'sourceType': 'Usenet'}}
-        self.assertEqual(classify(row2, 'Dexstreams')[0], 'usenet')
+        self.assertEqual(classify(row, 'Vidstreams')[0], 'usenet')
+        row2 = {'name': '[TB+] Vidstreams', 'behaviorHints': {'sourceType': 'Usenet'}}
+        self.assertEqual(classify(row2, 'Vidstreams')[0], 'usenet')
 
     def test_debrid_rows_still_debrid(self):
         classify = self._classify()
-        row = {'name': '[RD+] Dexstreams', 'description': 'WEB-DL | Instant'}
-        self.assertEqual(classify(row, 'Dexstreams')[0], 'debrid')
+        row = {'name': '[RD+] Vidstreams', 'description': 'WEB-DL | Instant'}
+        self.assertEqual(classify(row, 'Vidstreams')[0], 'debrid')
 
 
 class TestWiringV420(unittest.TestCase):

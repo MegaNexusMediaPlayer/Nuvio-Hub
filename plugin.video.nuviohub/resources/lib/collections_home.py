@@ -65,7 +65,39 @@ def folder_shelf(folder, providers, media_type=None, title=None):
             'rows': [hd.placeholder('Loading titles', 'Loading your collection.', path)]}
 
 
-def tiles(group):
+_ANIMATIONS = {}
+
+
+def _built_in_animations(addon):
+    path = os.path.join(addon.getAddonInfo('path'), 'resources', 'collection_animations.json')
+    try:
+        stamp = os.stat(path).st_mtime_ns
+    except OSError:
+        return {}
+    if _ANIMATIONS.get('key') != (path, stamp):
+        try:
+            with open(path, encoding='utf-8') as stream:
+                data = json.load(stream)
+        except (OSError, ValueError):
+            data = {}
+        _ANIMATIONS.clear()
+        _ANIMATIONS.update(key=(path, stamp), data=data if isinstance(data, dict) else {})
+    return _ANIMATIONS['data']
+
+
+def tile_settings():
+    """Read artwork settings once per Home build instead of per collection group."""
+    addon = xbmcaddon.Addon('plugin.video.nuviohub')
+    animated = addon.getSetting('nuvio_animated_art') == 'true'
+    try:
+        overrides = json.loads(addon.getSetting('nuvio_animation_map') or '{}')
+    except ValueError:
+        overrides = {}
+    return {'animated': animated, 'built_in': _built_in_animations(addon) if animated else {},
+            'overrides': overrides if isinstance(overrides, dict) else {}}
+
+
+def tiles(group, settings=None):
     from .home_data import placeholder
     rows = []
     shape='poster' if group.get('id') in ('collections.genres','collections.themes') or str(group.get('title','')).lower() in ('genres','themes') else 'landscape'
@@ -73,14 +105,8 @@ def tiles(group):
     def art(value):
         if value.startswith(('http://','https://','special://')) or os.path.isabs(value):return value
         return os.path.join(base,value).replace('\\','/') if value else ''
-    animated=xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_animated_art')=='true'
-    built_in={}
-    if animated:
-        try:
-            with open(os.path.join(xbmcaddon.Addon('plugin.video.nuviohub').getAddonInfo('path'),'resources','collection_animations.json'),encoding='utf-8') as stream:built_in=json.load(stream)
-        except (OSError,ValueError):pass
-    try:overrides=json.loads(xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_animation_map') or '{}')
-    except ValueError:overrides={}
+    settings = settings or tile_settings()
+    animated, built_in, overrides = settings['animated'], settings['built_in'], settings['overrides']
     for folder in group['folders']:
         if folder.get('hidden'):continue
         animation=folder.get('animation') or ''
@@ -98,8 +124,8 @@ def tiles(group):
 
 
 def home_rows():
-    from .nuviohub import store
-    rows=[tiles(group) for group in groups()]
+    settings=tile_settings()
+    rows=[tiles(group,settings) for group in groups()]
     return [row for row in rows if row['rows']]
 
 

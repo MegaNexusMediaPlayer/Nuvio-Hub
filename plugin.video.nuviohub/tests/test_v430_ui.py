@@ -101,10 +101,10 @@ class TestOriginLineDedupe(unittest.TestCase):
     def test_distinct_parts_survive(self):
         line = origin_line(
             {'addon': 'MediaFusion', 'service': 'ElfHosted', 'indexer': 'Comet'},
-            'Dexstreams')
-        for part in ('Dexstreams', 'MediaFusion', 'ElfHosted', 'Comet'):
+            'Vidstreams')
+        for part in ('Vidstreams', 'MediaFusion', 'ElfHosted', 'Comet'):
             self.assertIn(part, line)
-        self.assertEqual(line.count('Dexstreams'), 1)
+        self.assertEqual(line.count('Vidstreams'), 1)
 
     def test_repeated_word_inside_token_collapses(self):
         line = origin_line({}, 'Plex Plex')
@@ -162,7 +162,7 @@ class TestV431Fixes(unittest.TestCase):
         anchor = ns['_bidi_anchor']
         # digit-leading release names get pinned LTR
         self.assertTrue(anchor('3840X2160_ALQ-8_SDR_FINAL MKV').startswith('\u200e'))
-        self.assertTrue(anchor('[TB+] Dexstreams 4K').startswith('\u200e'))
+        self.assertTrue(anchor('[TB+] Vidstreams 4K').startswith('\u200e'))
         # Arabic-leading labels stay untouched
         self.assertEqual(anchor('مسلسلات أشاهدها'), 'مسلسلات أشاهدها')
         self.assertEqual(anchor(''), '')

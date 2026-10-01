@@ -10,7 +10,7 @@ import time
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-OLD_ID = 'plugin.video.dexhub'
+from .legacy_names import OLD_ADDON_ID as OLD_ID
 NEW_ID = 'plugin.video.nuviohub'
 
 

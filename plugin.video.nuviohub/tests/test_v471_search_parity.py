@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""v4.7.1 — Stremio-parity catalog search + Dex Crimson default.
+"""v4.7.1 — Stremio-parity catalog search + Nuvio Crimson default.
 
 The addon search kept returning alphabetical "letter A" results because
 every search request attached an UNDECLARED `limit` prop to the extra
@@ -21,7 +21,7 @@ client = kodi_stub.import_lib_module('nuviohub.client')
 PLUGIN = io.open(os.path.join(ROOT, 'resources', 'lib', 'plugin.py'), encoding='utf-8').read()
 
 
-class TestDeclaredExtrasOnly(unittest.TestCase):
+class TestExtrasMustBeDeclared(unittest.TestCase):
     def test_no_search_call_carries_limit(self):
         """THE regression guard for the letter-A results."""
         self.assertIsNone(re.search(r"'search':\s*query[^\n]*'limit'", PLUGIN))
@@ -64,7 +64,7 @@ class TestResourceUrlShape(unittest.TestCase):
         self.assertIn('/search=x.json?key=abc', url)
 
 
-class TestDexCrimsonDefault(unittest.TestCase):
+class TestNuvioCrimsonDefault(unittest.TestCase):
     def test_settings_default_is_preset_one(self):
         import xml.etree.ElementTree as ET
         d = {s.get('id'): s.get('default')
@@ -72,10 +72,10 @@ class TestDexCrimsonDefault(unittest.TestCase):
                                ).getroot().iter('setting')}
         self.assertEqual(d['theme_preset'], '1')
 
-    def test_preset_one_is_dex_crimson(self):
+    def test_preset_one_is_nuvio_crimson(self):
         skin_theme = kodi_stub.import_lib_module('skin_theme')
         preset = skin_theme.THEME_PRESETS['1']
-        self.assertEqual(preset['name'], 'Dex Crimson')
+        self.assertEqual(preset['name'], 'Nuvio Crimson')
         self.assertEqual(preset['accent'], 'FFE0314A')
 
 

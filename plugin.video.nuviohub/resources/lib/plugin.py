@@ -179,7 +179,10 @@ def SourcesLoadingDialog(*args, **kwargs):
             from .sources_loading import SourcesLoadingDialog as _Cinematic
             return _Cinematic(*args, **kwargs)
         except Exception as exc:
-            log.warn('SEARCH_UI', 'cinematic loading window unavailable: %s' % exc)
+            # The cinematic window is not shipped in the Kodi bundle; fall back
+            # to the native dialog instead of failing with NameError here.
+            from .log import log as _log
+            _log.warn('SEARCH_UI', 'cinematic loading window unavailable: %s' % exc)
     from .native_loading import SourcesLoadingDialog as _Dialog
     return _Dialog(*args, **kwargs)
 # ─────────────────────────────────────────────────────────────────────
@@ -191,6 +194,8 @@ def SourcesLoadingDialog(*args, **kwargs):
 # namespace.  The one-shot clean-defaults migration is triggered explicitly
 # below so it can never run twice from multiple importers.
 from .context import *  # noqa: F401,F403
+from .log import log  # noqa: E402  (used by fallback/except paths below)
+from . import legacy_names as _legacy_names  # noqa: E402
 from .context import (
     ADDON, HANDLE, BASE_URL, WINDOW_ID, PROP, SERIES_PROP_PREFIX, SUBS_DIR,
     LANG_MAP, FILTER_NAMES, HEX_ENTITIES, SPECIAL_BLANKS,
@@ -467,7 +472,7 @@ def _mark_tmdbh_handoff(seconds=45):
 
     TMDb Helper can immediately re-open its player route if Kodi receives a
     second click/resolve event while our source dialog is still active. A short
-    scoped cooldown keeps every internal Nuvio Hub click on the Dex path until
+    scoped cooldown keeps every internal Nuvio Hub click on the Nuvio Hub path until
     playback starts, cancel/no-source occurs, or the cooldown expires.
     """
     try:
@@ -743,7 +748,7 @@ def _is_plex_like_playback(ctx=None):
     sig = _playback_provider_signature(ctx)
     if not sig:
         return False
-    return any(marker in sig for marker in ('plex', 'plexio', 'emby', 'jellyfin', 'streambridge', 'dexbridge'))
+    return any(marker in sig for marker in ('plex', 'plexio', 'emby', 'jellyfin', 'streambridge') + _legacy_names.BRIDGE_MARKERS)
 
 
 def _is_cancellable_plex_selector(ctx=None, stream_url=''):
@@ -965,8 +970,8 @@ def _art_value_looks_rating_proxy(value):
 def _art_value_looks_overlay_proxy(value):
     text = str(value or '').lower()
     return _art_value_looks_rating_proxy(text) or any(token in text for token in (
-        'plexio', 'plexbridge', 'plex.dexworld', 'plexio.dexworld',
-        'sb.dexworld', 'dexbridge',
+        'plexio', 'plexbridge',
+    ) + _legacy_names.BRIDGE_HOSTS + _legacy_names.BRIDGE_MARKERS + (
         '/:/transcode', 'composite', 'overlay', 'photo/:/transcode',
         '/photo/', '/composite/',
         '/items/', '/emby/', '/jellyfin/',
@@ -2026,7 +2031,7 @@ def _provider_is_plexio(provider):
         str(manifest.get('id') or ''),
         str(manifest.get('description') or ''),
     ]).lower()
-    return any(h in haystack for h in ('plexio', 'plexbridge', 'com.stremio.plexio', 'com.stremio.plexbridge', 'sb.dexworld', 'dexbridge'))
+    return any(h in haystack for h in ('plexio', 'plexbridge', 'com.stremio.plexio', 'com.stremio.plexbridge') + _legacy_names.BRIDGE_HOSTS + _legacy_names.BRIDGE_MARKERS)
 
 
 def _provider_prefers_native_art(provider):
@@ -2041,11 +2046,11 @@ def _provider_prefers_native_art(provider):
         str(manifest.get('id') or ''),
         str(manifest.get('description') or ''),
     ]).lower()
-    # Plex / Emby / Plexio / DexBridge all build poster URLs that include
+    # Plex / Emby / Plexio / bridge add-ons all build poster URLs that include
     # auth tokens or session-bound paths. Kodi's image loader strips query
     # strings, expires the cache aggressively, and chokes on long URLs —
     # so for ANY of these providers we prefer remote (TMDb-based) art.
-    return any(h in haystack for h in ('plex', 'plexio', 'emby', 'jellyfin', 'dexbridge'))
+    return any(h in haystack for h in ('plex', 'plexio', 'emby', 'jellyfin') + _legacy_names.BRIDGE_MARKERS)
 
 
 _ART_URL_KEYS = (
@@ -2246,7 +2251,7 @@ def _normalize_meta_art_urls(provider, meta):
 
     primary = out.get('poster') or out.get('thumbnail') or out.get('thumb') or out.get('image') or ''
 
-    # Plexio/DexWorld rule: never replace the poster that came from the
+    # Plexio rule: never replace the poster that came from the
     # metadata payload. Version 3.8.8 rewrote plain no-overlay Plexio posters
     # into a synthetic /photo/:/transcode URL; on some Kodi/Plexio setups that
     # makes every poster blank. Keep the original primary artwork exactly like
@@ -2672,7 +2677,7 @@ def _resolve_meta_art_inner(provider, media_type, meta, fallback_art=None, force
     meta_source_id = _meta_source_id_from_meta(meta)
     if _meta_art_is_strict(meta) or (meta_source_id and meta_source_id not in ('auto', 'native')):
         # Strict explicit source: the poster/thumb/icon must come only from the
-        # selected metadata payload. For Plexio/DexWorld we still allow the
+        # selected metadata payload. For Plexio we still allow the
         # Composite-style non-poster artwork layer (clearlogo/backdrop) to fill
         # missing logo/background without replacing the poster.
         if _provider_is_plexio(provider):
@@ -3434,7 +3439,7 @@ def _hub_provider_rank(provider):
         rank = min(rank, 5)
     if 'cinemeta' in blob:
         rank = min(rank, 10)
-    if 'dexworld' in blob or 'dex hub' in blob or 'nuviohub' in blob:
+    if 'nuviohub' in blob or any(m in blob for m in _legacy_names.SELF_MARKERS):
         rank = min(rank, 15)
     if 'plexio' in blob or 'plex' in blob or 'streambridge' in blob or 'emby' in blob:
         rank = min(rank, 20)
@@ -5102,7 +5107,7 @@ def hub_search_menu(query=''):
         pass
 
     # v4.9.0: TMDb used to short-circuit this route. As soon as it returned
-    # one row DexWorld, Plex and Emby were never searched at all. TMDb is now
+    # one row IPTV, Plex and Emby were never searched at all. TMDb is now
     # one bounded parallel job in the same coordinator as every other source.
     rows = store.list_providers()
     return _hub_search_unified_render(query, rows, include_tmdb=True)
@@ -6891,18 +6896,14 @@ def first_run_wizard():
     return open_home(settings=True)
 
 
-def dexworld_info():
-    """Show public DexWorld service links without embedding private manifests."""
-    msg = tr(
-        '[B]DexWorld Services[/B]\n\n'
-        'Plexio / Plex: https://plexio.dexworld.cc/\n'
-        'StreamBridge / Emby: https://sb.dexworld.cc/\n'
-        'IPTV: https://dexworld.cc/\n'
-        'Subtitles: https://dexworld.cc/subtitles/stremio/configure\n\n'
+def subtitle_service_info():
+    """Show the external AI-subtitles/IPTV service links without embedding private manifests."""
+    lines = ''.join('%s: %s\n' % (label, url) for label, url in _legacy_names.SERVICE_SITES)
+    msg = tr('[B]AI Subtitles & IPTV services[/B]\n\n') + lines + '\n' + tr(
         'Features: catalogs, Continue Watching, Next Up, playback links, IPTV, and external subtitles for Kodi and Stremio.\n\n'
         'After creating any service, copy your manifest.json URL and add it via: Add Manifest URL.'
     )
-    xbmcgui.Dialog().ok(tr('DexWorld — Free trial & support'), msg)
+    xbmcgui.Dialog().ok(tr('AI Subtitles & IPTV — trial & support'), msg)
     return home()
 
 
@@ -6998,7 +6999,8 @@ def config_import():
     if not isinstance(snapshot, dict):
         error(tr('Invalid file format'))
         return
-    if int(snapshot.get('nuviohub_export_version') or snapshot.get('dexhub_export_version') or 0) < 1:
+    from . import legacy_names as _legacy
+    if int(snapshot.get('nuviohub_export_version') or snapshot.get(_legacy.OLD_EXPORT_VERSION_KEY) or 0) < 1:
         error(tr('Unsupported file version'))
         return
     # Restore providers — we keep the existing addition flow so all
@@ -7029,11 +7031,7 @@ def config_import():
         pass
     restored_settings = 0
     try:
-        _legacy_setting_ids = {
-            'dexhub_defaults_rev': 'nuviohub_defaults_rev',
-            'dexhub_v510_defaults_applied': 'nuviohub_v510_defaults_applied',
-            'dexhub_v520_defaults_applied': 'nuviohub_v520_defaults_applied',
-        }
+        _legacy_setting_ids = _legacy.SETTING_ALIAS_MAP
         for sid, sval in (snapshot.get('settings') or {}).items():
             sid = _legacy_setting_ids.get(sid, sid)
             # Skip the two settings whose state is captured by other
@@ -7382,18 +7380,18 @@ def reset_first_run_wizard():
 
 
 # ────────────────────────────────────────────────────────────────────────────
-# v3.9.106: DexWorld AI Subtitles + IPTV one-tap link
+# v3.9.106: AI Subtitles + IPTV service one-tap link
 # ────────────────────────────────────────────────────────────────────────────
-# The user runs a self-hosted DexWorld backend (see ai_subtitles.js + server.js)
+# The user runs a self-hosted AI-subtitles/IPTV backend (ai_subtitles.js + server.js)
 # that exposes TWO Stremio-standard manifests per API key:
 #
 #   * Subtitles + AI translation:
 #       {base}/subtitles/stremio/{apiKey}/manifest.json
-#       Manifest id: "org.dexsubtitles.aggregator"
+#       Manifest id: legacy_names.SERVICE_MANIFEST_IDS
 #
 #   * IPTV (live channels + Xtream VOD/series via Stremio addon SDK):
 #       {base}/{apiKey}/manifest.json
-#       Manifest id: "org.dexworld.v50.alpha"
+#       Manifest id: legacy_names.SERVICE_MANIFEST_IDS
 #
 # Both are Stremio addons → no special integration needed beyond what
 # `add_provider_from_url` already does. This is purely a UX wrapper that
@@ -7401,47 +7399,47 @@ def reset_first_run_wizard():
 # (b) registers them as NuvioHub providers in one tap, and
 # (c) cleanly removes them on unlink (detected by their stable manifest IDs).
 
-_DEXWORLD_MANIFEST_IDS = ('org.dexsubtitles.aggregator', 'org.dexworld.v50.alpha')
+_SERVICE_MANIFEST_IDS = _legacy_names.SERVICE_MANIFEST_IDS
 
 
-def _dexworld_base_url():
-    raw = (ADDON.getSetting('dexworld_base_url') or 'https://dexworld.cc').strip()
+def _service_base_url():
+    raw = (ADDON.getSetting('nuviohub_service_base_url') or _legacy_names.SERVICE_BASE_URL).strip()
     # Strip trailing slashes; tolerate the user pasting a URL with a path.
     return raw.rstrip('/')
 
 
-def _dexworld_api_key():
-    return (ADDON.getSetting('dexworld_api_key') or '').strip()
+def _service_api_key():
+    return (ADDON.getSetting('nuviohub_service_api_key') or '').strip()
 
 
-def _dexworld_build_urls(api_key=None, base=None):
-    api_key = (api_key or _dexworld_api_key()).strip()
-    base = (base or _dexworld_base_url()).rstrip('/')
+def _service_build_urls(api_key=None, base=None):
+    api_key = (api_key or _service_api_key()).strip()
+    base = (base or _service_base_url()).rstrip('/')
     if not api_key or not base:
         return []
     return [
-        ('DexWorld AI Subtitles', '%s/subtitles/stremio/%s/manifest.json' % (base, api_key)),
-        ('DexWorld IPTV',         '%s/%s/manifest.json'                   % (base, api_key)),
+        ('AI Subtitles', '%s/subtitles/stremio/%s/manifest.json' % (base, api_key)),
+        ('IPTV Service',  '%s/%s/manifest.json'                   % (base, api_key)),
     ]
 
 
-def _dexworld_installed_providers():
-    """Return NuvioHub providers whose manifest id matches a known DexWorld id."""
+def _service_installed_providers():
+    """Return NuvioHub providers whose manifest id matches a known AI-subtitles/IPTV service id."""
     out = []
     try:
         for prov in (store.list_providers() or []):
             mfst = prov.get('manifest') or {}
-            if mfst.get('id') in _DEXWORLD_MANIFEST_IDS:
+            if mfst.get('id') in _SERVICE_MANIFEST_IDS:
                 out.append(prov)
     except Exception:
         pass
     return out
 
 
-def _dexworld_state():
+def _service_state():
     """For the menu badge: linked / partial / not linked."""
-    api_key = _dexworld_api_key()
-    installed = _dexworld_installed_providers()
+    api_key = _service_api_key()
+    installed = _service_installed_providers()
     return {
         'has_key': bool(api_key),
         'installed_count': len(installed),
@@ -7457,32 +7455,33 @@ def _dexworld_state():
 # polling on Kodi/CoreELEC devices.
 # ────────────────────────────────────────────────────────────────────────────
 
-def dexworld_link():
-    """One-tap: install both DexWorld manifests as NuvioHub providers.
+def subtitle_service_link():
+    """One-tap: install both service manifests as NuvioHub providers.
 
     Safe to invoke from RunPlugin (settings action button) — does not try to
     render a directory listing, just notifies and refreshes containers."""
-    api_key = _dexworld_api_key()
+    api_key = _service_api_key()
     if not api_key:
+        # No settings field exposes the key; ask for it here and keep it.
         try:
-            xbmcgui.Dialog().ok(
-                'Nuvio Hub • DexWorld',
-                tr('Enter your DexWorld API key first in the\n"DexWorld API Key" field on this page.'),
-            )
+            api_key = (xbmcgui.Dialog().input(tr('AI Subtitles & IPTV API key')) or '').strip()
         except Exception:
-            notify(tr('Enter your DexWorld API key first'))
-        return
+            api_key = ''
+        if not api_key:
+            notify(tr('Enter your AI Subtitles & IPTV API key first'))
+            return
+        ADDON.setSetting('nuviohub_service_api_key', api_key)
 
-    urls = _dexworld_build_urls()
+    urls = _service_build_urls()
     if not urls:
-        notify(tr('Could not build DexWorld links'))
+        notify(tr('Could not build service links'))
         return
 
-    # Make linking idempotent — remove any old DexWorld providers first so a
+    # Make linking idempotent — remove any old service providers first so a
     # re-link picks up the latest manifest (handy when the user rotates keys
     # or upgrades the backend).
     try:
-        for prov in _dexworld_installed_providers():
+        for prov in _service_installed_providers():
             try:
                 store.remove_provider(prov.get('id') or '')
             except Exception:
@@ -7499,18 +7498,18 @@ def dexworld_link():
             installed_names.append(display_name)
         except Exception as exc:
             try:
-                xbmc.log('[NuvioHub] DexWorld link failed for %s: %s'
+                xbmc.log('[NuvioHub] service link failed for %s: %s'
                          % (display_name, exc), xbmc.LOGWARNING)
             except Exception:
                 pass
             failed.append((display_name, str(exc)))
 
     if installed_names and not failed:
-        notify(tr('DexWorld linked ✓ (%d add-ons)') % len(installed_names))
+        notify(tr('AI Subtitles & IPTV linked ✓ (%d add-ons)') % len(installed_names))
     elif installed_names and failed:
         try:
             xbmcgui.Dialog().ok(
-                'Nuvio Hub • DexWorld',
+                'Nuvio Hub • AI Subtitles & IPTV',
                 tr('Partially linked:\n✓ %s\n✗ %s\n\nCheck the key and the server address.')
                   % (', '.join(installed_names),
                      ', '.join('%s (%s)' % (n, e[:60]) for n, e in failed)),
@@ -7521,14 +7520,14 @@ def dexworld_link():
         try:
             err_msg = '\n'.join('• %s: %s' % (n, e[:80]) for n, e in failed)
             xbmcgui.Dialog().ok(
-                'Nuvio Hub • DexWorld',
+                'Nuvio Hub • AI Subtitles & IPTV',
                 tr('Linking failed completely:\n\n%s\n\nCheck:\n'
                    '1. The API key is correct\n'
                    '2. The server address is correct\n'
                    '3. Your subscription is active') % err_msg,
             )
         except Exception:
-            notify(tr('DexWorld linking failed'))
+            notify(tr('Service linking failed'))
 
     try:
         xbmc.executebuiltin('Container.Refresh')
@@ -7537,19 +7536,19 @@ def dexworld_link():
     return
 
 
-def dexworld_unlink():
-    """Remove NuvioHub providers that came from DexWorld.
+def subtitle_service_unlink():
+    """Remove NuvioHub providers that came from the AI-subtitles/IPTV service.
 
     Safe to invoke from RunPlugin (settings action button) — does not try to
     render a directory listing."""
-    installed = _dexworld_installed_providers()
+    installed = _service_installed_providers()
     if not installed:
-        notify(tr('No DexWorld add-ons registered'))
+        notify(tr('No AI Subtitles & IPTV add-ons registered'))
         return
     try:
         confirmed = xbmcgui.Dialog().yesno(
-            'Nuvio Hub • DexWorld',
-            tr('Remove %d DexWorld add-ons? Your key stays saved.') % len(installed),
+            'Nuvio Hub • AI Subtitles & IPTV',
+            tr('Remove %d AI Subtitles & IPTV add-ons? Your key stays saved.') % len(installed),
             yeslabel=tr('Delete'),
             nolabel=tr('Cancel'),
         )
@@ -7564,7 +7563,7 @@ def dexworld_unlink():
             removed += 1
         except Exception:
             pass
-    notify(tr('Removed %d DexWorld add-ons') % removed)
+    notify(tr('Removed %d AI Subtitles & IPTV add-ons') % removed)
     try:
         xbmc.executebuiltin('Container.Refresh')
     except Exception:
@@ -10465,7 +10464,7 @@ def catalog(provider_id, media_type, catalog_id, label='', page='0', genre='', y
     except Exception:
         show_genre_folders = True
     has_preset = bool(preset_filters)
-    # Issue #5: DexWorld Pro internal sub-catalogs should ALWAYS open as
+    # Issue #5: the Pro IPTV provider internal sub-catalogs should ALWAYS open as
     # folders. Flip the gate on regardless of the global setting and
     # regardless of whether the user already opened the catalog before.
     force_folders = _force_folders_for_provider(provider)
@@ -10506,7 +10505,7 @@ def catalog(provider_id, media_type, catalog_id, label='', page='0', genre='', y
         if any_folders:
             _catalog_toolbar(provider, provider_id, media_type, catalog_id, catalog_def, state, force_remote=force_remote)
             # Hide the "show everything unfiltered" escape hatch when folders
-            # are mandatory (DexWorld Pro). The user explicitly wants the
+            # are mandatory (the Pro IPTV provider). The user explicitly wants the
             # internal sub-catalogs to always be the entry point.
             if not force_folders:
                 add_item(
@@ -11491,6 +11490,7 @@ def _stream_provider_targets(media_type, canonical_id, meta=None, season=None, e
             # v3.9.219: an IMDb id alone is enough — /find resolves it and
             # returns the item in English. Without this the log showed
             # "titles=1": only the Arabic name ever reached Plex.
+            from . import tmdb_direct
             try:
                 for _en in tmdb_direct.titles_for_imdb(
                         _pl_ids.get('imdb_id') or '',
@@ -12220,7 +12220,7 @@ def _filter_targets_by_source_mode(targets, source_provider_id='', source_mode='
     return primary if primary else fallback
 
 
-def _dex_player_url(media_type='movie', canonical_id='', title='', season='', episode='', video_id='', source_provider_id='', source_mode=''):
+def _nuvio_player_url(media_type='movie', canonical_id='', title='', season='', episode='', video_id='', source_provider_id='', source_mode=''):
     media_type = str(media_type or 'movie').strip().lower()
     if media_type in ('series', 'anime', 'show', 'tv') and season not in (None, '', 0, '0') and episode not in (None, '', 0, '0'):
         return build_url(
@@ -12262,8 +12262,8 @@ def _build_player_chooser_menu(media_type='movie', canonical_id='', title='', tm
 
 
 def choose_player(media_type='movie', canonical_id='', title='', tmdb_id='', imdb_id='', tvdb_id='', season='', episode='', video_id='', source_provider_id=''):
-    dex_url = _dex_player_url(media_type=media_type, canonical_id=canonical_id, title=title, season=season, episode=episode, video_id=video_id, source_provider_id=source_provider_id or '')
-    options = [('Nuvio Hub', dex_url)]
+    player_url = _nuvio_player_url(media_type=media_type, canonical_id=canonical_id, title=title, season=season, episode=episode, video_id=video_id, source_provider_id=source_provider_id or '')
+    options = [('Nuvio Hub', player_url)]
     if _has_tmdbhelper():
         route_ids = _resolve_routing_ids(media_type=media_type, canonical_id=canonical_id, title=title or canonical_id, tmdb_id=tmdb_id, imdb_id=imdb_id, tvdb_id=tvdb_id, season=season, episode=episode)
         tmdbh_url = _tmdbh_url_from_ids(media_type=media_type, tmdb_id=route_ids.get('tmdb_id') or '', imdb_id=route_ids.get('imdb_id') or '', tvdb_id=route_ids.get('tvdb_id') or '', title=title, season=season, episode=episode)
@@ -15125,7 +15125,7 @@ def _append_stream_entries_from_data(entries, data, provider, request_id, media_
         stream_url = _stream_play_url_from_row(row)
         if not stream_url:
             # v3.9.262: a row with no url/magnet/infoHash is unplayable and is
-            # skipped — but count and LOG it, so "addon returned 3, Dex shows 1"
+            # skipped — but count and LOG it, so "addon returned 3, Nuvio Hub shows 1"
             # can be diagnosed from kodi.log instead of guessed at.
             _dropped_no_url += 1
             # v4.7.5: this fired 486 times in ONE session of the user's log.
@@ -19299,11 +19299,11 @@ def collection_set_import_backup():
         elif isinstance(data, list):
             # A Nuvio Hub backup list has rows with `entries`. Nuvio/Fusion
             # profile backups are also top-level lists, but they use
-            # `folders[]`/`catalogSources[]`; importing those as a Dex backup
+            # `folders[]`/`catalogSources[]`; importing those as a configuration backup
             # silently produced 0 groups. Detect that shape and parse it as a
             # normal collection JSON instead.
-            looks_like_dex_backup = any(isinstance(r, dict) and isinstance(r.get('entries'), list) for r in data)
-            if looks_like_dex_backup:
+            looks_like_entry_backup = any(isinstance(r, dict) and isinstance(r.get('entries'), list) for r in data)
+            if looks_like_entry_backup:
                 imported = _collections_mod.import_sets(data)
             else:
                 name = os.path.splitext(os.path.basename(path))[0]
@@ -23555,10 +23555,10 @@ def fav_sync_trakt():
     xbmc.executebuiltin('Container.Refresh')
 
 
-# ─── DexWorld Pro mandatory folders (Issue #5) ──────────────────────────
+# ─── Pro IPTV mandatory folders (Issue #5) ──────────────────────────────
 
-def _provider_is_dexworld_pro(provider):
-    """True if this provider is the DexWorld Pro IPTV/catalog backend.
+def _provider_is_pro_iptv(provider):
+    """True if this provider is the Pro IPTV/catalog backend of the external service.
 
     Detection is loose on purpose so user-renamed installs still match.
     """
@@ -23571,22 +23571,23 @@ def _provider_is_dexworld_pro(provider):
         str((provider.get('manifest') or {}).get('name') or ''),
         str((provider.get('manifest') or {}).get('id') or ''),
     ]).lower()
-    return ('dexworld' in haystack and 'pro' in haystack) or 'dexworld_pro' in haystack or 'dexworld-pro' in haystack
+    marker = _legacy_names.SERVICE_MARKER
+    return (marker in haystack and 'pro' in haystack) or any(m in haystack for m in _legacy_names.PRO_IPTV_MARKERS)
 
 
 def _force_folders_for_provider(provider):
-    """Some providers (DexWorld Pro) ship internal sub-catalogs that should
+    """Some providers (Pro IPTV) ship internal sub-catalogs that should
     ALWAYS be presented as folders, never as a flat list. The setting can
     be flipped off; default is on per the user's request."""
     if not provider:
         return False
-    # Default OFF: custom DexWorld/Plexio home sections are usually real
+    # Default OFF: custom IPTV/Plexio home sections are usually real
     # catalog entries. Forcing them into Genre/Year/internal folders can make
     # the home-page sections appear but fail to open. Users can still enable
     # folder view from settings/context menu if their manifest supports it.
-    if (ADDON.getSetting('dexworld_force_folders') or 'false').lower() == 'false':
+    if (ADDON.getSetting('nuviohub_iptv_force_folders') or 'false').lower() == 'false':
         return False
-    return _provider_is_dexworld_pro(provider)
+    return _provider_is_pro_iptv(provider)
 
 
 # ── v3.9.0 handlers: search history, people, calendar, etc. ──────────────
@@ -23843,11 +23844,11 @@ def calendar_view(scope='my', days='14'):
 
 
 def subs_feedback_bad(sub_id='', stream_key='', lang='', source=''):
-    """User said the AI subtitle was bad. Send feedback to DexWorld backend."""
+    """User said the AI subtitle was bad. Send feedback to the AI-subtitles backend."""
     if not sub_id:
         return
     try:
-        from . import subs_feedback as _sfb
+        from . import subtitle_feedback as _sfb
         _sfb.report_bad(sub_id=sub_id, stream_key=stream_key, lang=lang, source=source)
     except Exception:
         pass
@@ -24761,7 +24762,13 @@ def _dispatch():
     if action == 'catalog_all':
         from .backend_listing import render
         return render(params)
-    if action in ('providers', 'dexworld_info', 'dexworld_link', 'dexworld_unlink', 'badge_settings', 'source_sort_menu'):
+    if action == 'subtitle_service_info':
+        return subtitle_service_info()
+    if action == 'subtitle_service_link':
+        return subtitle_service_link()
+    if action == 'subtitle_service_unlink':
+        return subtitle_service_unlink()
+    if action in ('providers', 'badge_settings', 'source_sort_menu'):
         return first_run_wizard()
     _fast = _fast_dispatch_mod.dispatch(action, params, sys.modules[__name__])
     if _fast is not _fast_dispatch_mod._NOT_HANDLED:
@@ -24785,8 +24792,6 @@ def _dispatch():
         return add_provider(manifest_url=params.get('manifest_url', ''))
     if action == 'first_run_wizard':
         return first_run_wizard()
-    if action == 'dexworld_info':
-        return dexworld_info()
     if action == 'providers':
         return providers()
     # v3.9.34: provider reorder actions, fired from context menu in
@@ -25228,10 +25233,6 @@ def _dispatch():
         return apply_performance_preset()
     if action == 'apply_recommended_preset':
         return apply_recommended_preset()
-    if action == 'dexworld_link':
-        return dexworld_link()
-    if action == 'dexworld_unlink':
-        return dexworld_unlink()
     if action == 'tmdbh_uninstall':
         return tmdbh_uninstall()
     if action == 'play':

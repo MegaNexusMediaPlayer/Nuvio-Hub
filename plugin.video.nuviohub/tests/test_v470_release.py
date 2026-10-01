@@ -47,7 +47,7 @@ class TestReleaseDefaults(unittest.TestCase):
         self.assertEqual(DEFAULTS.get('search_style'), '0')
 
     def test_deliberate_defaults_unchanged(self):
-        self.assertEqual(DEFAULTS.get('theme_preset'), '1')       # Dex Crimson (4.7.1)
+        self.assertEqual(DEFAULTS.get('theme_preset'), '1')       # Nuvio Crimson (4.7.1)
         self.assertEqual(DEFAULTS.get('home_style'), '1')         # fork: rounded-poster home
         self.assertEqual(DEFAULTS.get('simkl_mark_watched'), 'true')
 

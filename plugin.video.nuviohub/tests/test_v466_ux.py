@@ -36,11 +36,11 @@ class TestAddonWheelOrder(unittest.TestCase):
         return [{'provider_name_raw': n} for n in names]
 
     def test_all_first_then_count_desc_then_first_seen(self):
-        rows = self._rows('Arabmedia', 'Dexstreams', 'Dexstreams',
-                          'Plex', 'Dexstreams', 'Plex')
-        # counts: Dexstreams 3 · Plex 2 · Arabmedia 1
+        rows = self._rows('Arabmedia', 'Vidstreams', 'Vidstreams',
+                          'Plex', 'Vidstreams', 'Plex')
+        # counts: Vidstreams 3 · Plex 2 · Arabmedia 1
         self.assertEqual(sb_mod._group_cycle_values(rows),
-                         ['ALL', 'V:DEXSTREAMS', 'V:PLEX', 'V:ARABMEDIA'])
+                         ['ALL', 'V:VIDSTREAMS', 'V:PLEX', 'V:ARABMEDIA'])
 
     def test_tie_breaks_on_first_seen_and_empty_rows(self):
         rows = self._rows('B', 'A')

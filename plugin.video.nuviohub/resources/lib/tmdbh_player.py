@@ -24,7 +24,8 @@ from .i18n import tr
 TMDBH_ID = 'plugin.video.themoviedb.helper'
 ADDON_ID = 'plugin.video.nuviohub'
 PLAYER_FILENAME = 'nuviohub.json'
-_STALE_PLAYER_PREFIXES = ('nuviohub', 'plugin.video.nuviohub', 'dexhub', 'dex_hub')
+from .legacy_names import OLD_PLAYER_NAME, OLD_PLAYER_PREFIXES
+_STALE_PLAYER_PREFIXES = ('nuviohub', 'plugin.video.nuviohub') + OLD_PLAYER_PREFIXES
 
 
 def _addon():
@@ -67,7 +68,7 @@ def _is_nuviohub_player_file(folder, filename):
         import json
         data = json.loads(raw)
         return (str(data.get('plugin') or '').strip() == ADDON_ID or
-                str(data.get('name') or '').strip().lower() == 'dex hub')  # legacy player name
+                str(data.get('name') or '').strip().lower() == OLD_PLAYER_NAME)  # pre-rename player
     except Exception:
         return ADDON_ID in raw
 

@@ -118,7 +118,7 @@ def import_lib_module(name):
     imports (`from . import x`, `from .nuviohub...`) resolve like inside Kodi."""
     install()
     import importlib
-    pkg_name = 'dexlib'
+    pkg_name = 'nuviolib'
     if pkg_name not in sys.modules:
         pkg = types.ModuleType(pkg_name)
         pkg.__path__ = [LIB]

@@ -55,6 +55,7 @@ def enabled(kind=None, content_id='', preferred='', providers=None):
 
 
 def set_enabled(provider_id, on):
+    _SIGNATURE.clear()
     rows = entries()
     if not any(p['id'] == provider_id for p, _ in rows):
         raise ValueError('This add-on does not advertise metadata.')
@@ -65,10 +66,34 @@ def set_enabled(provider_id, on):
     settings_cache.invalidate()
 
 
+_SIGNATURE = {}
+
+
 def signature(providers=None):
-    """Opaque cache namespace: configuration changes cannot reuse other profiles."""
+    """Opaque cache namespace: configuration changes cannot reuse other profiles.
+
+    Hashing every manifest is expensive on low-power devices, so the stored
+    provider configuration's result is reused until providers.json or the
+    switches change.
+    """
+    memo = None
+    if providers is None:
+        from .nuviohub import store
+        stored = store.list_providers()
+        addon = xbmcaddon.Addon('plugin.video.nuviohub')
+        # Provider dicts are the store's cached objects; stored alongside so ids stay unique.
+        memo = (store._PROVIDERS_MTIME, store._PROVIDERS_CACHE, tuple(map(id, stored)), stored,
+                addon.getSetting(SETTING), addon.getSetting('nuvio_metadata_provider'))
+        cached = _SIGNATURE.get('memo')
+        if (cached and cached[0] == memo[0] and cached[1] is memo[1] and
+                cached[2] == memo[2] and cached[4:] == memo[4:]):
+            return _SIGNATURE['value']
+        providers = stored
     rows = entries(providers)
     value = [(p['id'], on, p.get('manifest_url'), p.get('base_url'), p.get('manifest'))
              for p, on in rows]
-    return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False,
-                                     default=str).encode('utf-8')).hexdigest()
+    result = hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False,
+                                       default=str).encode('utf-8')).hexdigest()
+    if memo is not None and memo[0] is not None:
+        _SIGNATURE.update(memo=memo, value=result)
+    return result

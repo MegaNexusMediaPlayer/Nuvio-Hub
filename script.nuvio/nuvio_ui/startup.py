@@ -32,8 +32,14 @@ def jobs():
 def prepare():
     all_jobs = jobs()
     cache = browse_cache.instance()
-    missing = [job for job in all_jobs if cache.get(job[0]) is None]
-    # Reading warmed disk pages promotes them to the bounded in-process LRU.
+    # One SQLite read promotes warmed disk pages to the bounded in-process LRU.
+    # Stale pages count as present: Home shows them at once and they are
+    # revalidated one by one in the background instead of behind a loading screen.
+    state = cache.lookup_many([job[0] for job in all_jobs])
+    missing = [job for job in all_jobs if job[0] not in state]
+    for key, provider, catalog, extra in all_jobs:
+        if state.get(key) is False:
+            browse_cache.refresh(provider, catalog, extra)
     if not missing:
         return {'cached': len(all_jobs), 'loaded': 0, 'failed': 0, 'deferred': 0}
     window = Loading('nuvio_loading.xml', ROOT, 'Default', '1080i',

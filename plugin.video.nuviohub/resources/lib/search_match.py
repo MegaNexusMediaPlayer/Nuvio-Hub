@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"Search relevance matching — pure, dependency-free, unit-testable.\n\nv4.8.4: lifted out of plugin.py (25.8k lines) unchanged. Two reasons this\nmodule exists rather than another block in there:\n\n  * these are the functions that decide whether a search result is shown\n    at all, and they were only ever covered by tests that grep the source\n    for a string. Here they can be called directly;\n  * the relevance FILTER used to be inline in two different render\n    functions, so a fix had to be applied twice — one of the ways a patch\n    silently missed a site earlier in this cycle.\n\nPorted from the DexWorld Pro server's arabicNorm/titleMatchScore\n(server.js), which is tuned against this catalogue. Two of its rules are\nload-bearing: a digit in the query must appear verbatim (\"\u0627\u0644\u0645\u0648\u0633\u0645 5\" must\nnever match \"\u0627\u0644\u0645\u0648\u0633\u0645 50\"), and a single-word query must hit a WHOLE word\nrather than a fragment.\n"
+"Search relevance matching — pure, dependency-free, unit-testable.\n\nv4.8.4: lifted out of plugin.py (25.8k lines) unchanged. Two reasons this\nmodule exists rather than another block in there:\n\n  * these are the functions that decide whether a search result is shown\n    at all, and they were only ever covered by tests that grep the source\n    for a string. Here they can be called directly;\n  * the relevance FILTER used to be inline in two different render\n    functions, so a fix had to be applied twice — one of the ways a patch\n    silently missed a site earlier in this cycle.\n\nPorted from the Pro IPTV server's arabicNorm/titleMatchScore\n(server.js), which is tuned against this catalogue. Two of its rules are\nload-bearing: a digit in the query must appear verbatim (\"\u0627\u0644\u0645\u0648\u0633\u0645 5\" must\nnever match \"\u0627\u0644\u0645\u0648\u0633\u0645 50\"), and a single-word query must hit a WHOLE word\nrather than a fragment.\n"
 
 # ── v4.8.2: Arabic-first search matching ─────────────────────────────────
-# Ported from the DexWorld Pro server's own titleMatchScore/arabicNorm
+# Ported from the Pro IPTV server's own titleMatchScore/arabicNorm
 # (server.js), which is already tuned against this catalogue: hamza forms,
 # ta-marbuta and alef-maqsura are folded, tashkeel dropped, and a
 # Damerau/OSA edit distance forgives one or two typos. Two rules from that
@@ -111,7 +111,7 @@ def _has_arabic(text):
 
 @lru_cache(maxsize=8192)
 def _phonetic_skeleton(token):
-    """Small Arabic/Latin phonetic key, ported from the DexWorld server."""
+    """Small Arabic/Latin phonetic key, ported from the IPTV server."""
     raw = str(token or '').casefold()
     if _has_arabic(raw):
         mapped = ''.join(_ARABIC_REPLACEMENTS.get(ch, ch if ch.isdigit() else '')

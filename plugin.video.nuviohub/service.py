@@ -475,23 +475,12 @@ def _migrate_subtitle_broker_defaults():
 
 
 def _migrate_legacy_brand_settings():
-    """Carry hidden migration sentinels forward from Dex Hub-era profiles."""
+    """Carry hidden migration sentinels forward from pre-rename profiles."""
     try:
         import xbmcaddon
-        addon = xbmcaddon.Addon('plugin.video.nuviohub')
-        pairs = (
-            ('dexhub_defaults_rev', 'nuviohub_defaults_rev', 'text'),
-            ('dexhub_v510_defaults_applied', 'nuviohub_v510_defaults_applied', 'bool'),
-            ('dexhub_v520_defaults_applied', 'nuviohub_v520_defaults_applied', 'bool'),
-        )
-        for old_key, new_key, kind in pairs:
-            old = (addon.getSetting(old_key) or '').strip()
-            new = (addon.getSetting(new_key) or '').strip()
-            if kind == 'bool':
-                if old.lower() == 'true' and new.lower() != 'true':
-                    addon.setSetting(new_key, 'true')
-            elif old and not new:
-                addon.setSetting(new_key, old)
+        from resources.lib import legacy_names
+        from resources.lib.nuviohub.common import profile_path
+        legacy_names.carry_forward(xbmcaddon.Addon('plugin.video.nuviohub'), profile_path())
     except Exception as exc:
         xbmc.log('[NuvioHub] legacy brand-settings migration failed: %s' % exc, xbmc.LOGDEBUG)
 

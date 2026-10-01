@@ -6,11 +6,11 @@
 
 - Removed the `resource.language.ar_sa` UI locale and the old runtime Arabic-to-English translation table. English is now the single bundled UI language.
 - Converted remaining Arabic UI labels/messages in the Python source to English.
-- Renamed the active internal Python namespace from `resources.lib.dexhub` to `resources.lib.nuviohub`.
+- Renamed the active internal Python namespace to `resources.lib.nuviohub`.
 - Renamed the active TMDb Helper player, keymap, preset and branding asset to Nuvio Hub names.
-- Migrated active Kodi window-property/cache identifiers from `dexhub.*` to `nuviohub.*`.
-- Kept explicit legacy aliases for the old `plugin.video.dexhub` install, old setting keys, old TMDb player prefixes and old keymap filename so upgrades can cleanly migrate existing profiles.
-- Kept original Dex Hub copyright/attribution notices as required provenance; these are not runtime branding.
+- Migrated active Kodi window-property/cache identifiers to `nuviohub.*`.
+- Kept explicit legacy aliases for the pre-rename install, old setting keys, old TMDb player prefixes and old keymap filename so upgrades can cleanly migrate existing profiles.
+- Kept the MIT copyright notice required by the license; it is not runtime branding.
 - Raised all four bundled Nuvio components to 6.0.8.
 - Kept `xbmc.gui` at 5.17.0 and `xbmc.python` at 3.0.0 so the bundle remains installable on Kodi 21 while satisfying Kodi 22/Piers add-on API compatibility floors.
 - Added a Python 3.14 removed-standard-library scan and release guard for Kodi 22/Piers compatibility hardening.

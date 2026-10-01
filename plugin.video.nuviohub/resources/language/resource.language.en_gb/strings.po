@@ -92,8 +92,8 @@ msgid "Hide empty collection entries"
 msgstr "Hide empty collection entries"
 
 msgctxt "#30119"
-msgid "DexWorld Pro: force folder view for internal catalogs"
-msgstr "DexWorld Pro: force folder view for internal catalogs"
+msgid "Pro IPTV: force folder view for internal catalogs"
+msgstr "Pro IPTV: force folder view for internal catalogs"
 
 msgctxt "#30120"
 msgid "Add custom home folder..."
@@ -153,8 +153,8 @@ msgid "MDBList API Key (optional, for MDBList lists)"
 msgstr "MDBList API Key (optional, for MDBList lists)"
 
 msgctxt "#30139"
-msgid "DexWorld API key (for AI subtitles + quality feedback)"
-msgstr "DexWorld API key (for AI subtitles + quality feedback)"
+msgid "AI Subtitles & IPTV API key (for AI subtitles + quality feedback)"
+msgstr "AI Subtitles & IPTV API key (for AI subtitles + quality feedback)"
 
 msgctxt "#30140"
 msgid "Clear metadata cache now"

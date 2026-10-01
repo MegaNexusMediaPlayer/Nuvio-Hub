@@ -31,20 +31,43 @@ def jobs_for(params):
     if not jobs:raise ValueError('Enable this collection’s catalog in your metadata provider.')
     return jobs
 
+def _page(job):
+    from . import browse_cache
+    extra=dict(job['extra'])
+    if job['offset']:extra['skip']=job['offset']
+    return browse_cache.catalog(job['provider'], job['catalog'], extra, timeout=8)
+
+
 def fetch_page(jobs,stopped=None):
-    from .nuviohub.client import fetch_catalog
-    from .home_data import media_card
-    rows=[];states=[]
+    """Next page of every unfinished source, fetched concurrently.
+
+    A failed source stays unfinished for the next "Load more"; the page fails
+    only when every requested source failed.
+    """
+    from .home_data import media_card, _api
+    active=[job for job in jobs if not job['done']]
+    if stopped and stopped():return None
+    results={}
+    if len(active)==1:
+        results[id(active[0])]=_page(active[0])
+    elif active:
+        from concurrent.futures import ThreadPoolExecutor
+        with ThreadPoolExecutor(max_workers=min(4,len(active)),thread_name_prefix='NuvioPage') as pool:
+            futures={id(job):pool.submit(_page,job) for job in active}
+            errors=[]
+            for key,future in futures.items():
+                try:results[key]=future.result()
+                except Exception as exc:errors.append(exc)
+        if errors and len(errors)==len(active):raise errors[0]
+    if stopped and stopped():return None
+    p=_api();rows=[];states=[]
     for job in jobs:
-        if stopped and stopped():return None
         updated=dict(job)
-        if job['done']:states.append(updated);continue
-        c=job['catalog'];extra=dict(job['extra'])
-        if job['offset']:extra['skip']=job['offset']
-        from . import browse_cache
-        data=browse_cache.catalog(job['provider'], c, extra, timeout=8)
-        raw=(data or {}).get('metas') or []
-        rows.extend(media_card(m,job['provider'],c['type']) for m in raw if isinstance(m,dict) and m.get('id'))
+        if job['done'] or id(job) not in results:states.append(updated);continue
+        c=job['catalog']
+        raw=(results[id(job)] or {}).get('metas') or []
+        rows.extend(media_card(p._normalize_meta_art_urls(job['provider'],m),job['provider'],c['type'])
+                    for m in raw if isinstance(m,dict) and m.get('id'))
         updated['offset']+=len(raw)
         updated['done']=not raw or not any((x.get('name') if isinstance(x,dict) else x)=='skip' for x in c.get('extra') or [])
         states.append(updated)

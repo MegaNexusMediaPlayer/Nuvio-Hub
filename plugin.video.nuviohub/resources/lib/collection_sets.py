@@ -31,6 +31,7 @@ import uuid
 from .nuviohub.common import profile_path
 from . import store as _store
 from .client import validate_manifest
+from .legacy_names import BRIDGE_ADDON_IDS, BRIDGE_HOSTS, BRIDGE_MARKERS
 
 SETS_FILE = os.path.join(profile_path(), 'collection_sets.json')
 
@@ -41,8 +42,6 @@ SETS_FILE = os.path.join(profile_path(), 'collection_sets.json')
 # win over this table.
 # Private Plexio/StreamBridge manifests must be added by the user from the
 # public setup sites. Never bundle per-user instance URLs or tokens here.
-DEXWORLD_PLEXIO_SITE = 'https://plexio.dexworld.cc/'
-DEXWORLD_STREAMBRIDGE_SITE = 'https://sb.dexworld.cc/'
 
 KNOWN_ADDON_MANIFESTS = {
     # Streaming Catalogs — used by Nuvio profiles for Netflix/HBO/Disney/etc.
@@ -58,10 +57,8 @@ CONFIG_REQUIRED_ADDONS = {
     'plexio',
     'plexbridge',
     'streambridge',
-    'dexbridge',
     'com.stremio.streambridge',
-    'com.stremio.dexbridge',
-}
+} | set(BRIDGE_MARKERS) | set(BRIDGE_ADDON_IDS)
 
 _CACHE_ROWS = None
 _CACHE_MTIME = None
@@ -456,7 +453,7 @@ def find_provider_by_addon_id(addon_id):
         return None
     addon_id = str(addon_id).strip().lower()
     wants_plexio = 'plexio' in addon_id or addon_id in ('com.stremio.plexio', 'com.stremio.plexbridge', 'plexbridge') or 'plexbridge' in addon_id
-    wants_streambridge = addon_id.startswith('streambridge') or addon_id in ('com.stremio.streambridge', 'com.stremio.dexbridge', 'dexbridge') or 'streambridge' in addon_id or 'dexbridge' in addon_id or addon_id.startswith('sb.')
+    wants_streambridge = addon_id.startswith('streambridge') or addon_id in ('com.stremio.streambridge',) + BRIDGE_ADDON_IDS + BRIDGE_MARKERS or 'streambridge' in addon_id or any(m in addon_id for m in BRIDGE_MARKERS) or addon_id.startswith('sb.')
     for row in _store.list_providers():
         manifest = row.get('manifest') or {}
         mid = str(manifest.get('id') or '').strip().lower()
@@ -466,7 +463,7 @@ def find_provider_by_addon_id(addon_id):
             return row
         if wants_plexio and (mid in ('com.stremio.plexbridge', 'com.stremio.plexio') or 'plexio' in manifest_url or 'plexio' in name or 'plexbridge' in name):
             return row
-        if wants_streambridge and (mid in ('com.stremio.streambridge', 'com.stremio.dexbridge') or 'sb.dexworld.cc' in manifest_url or 'streambridge' in manifest_url or 'streambridge' in name or 'dexbridge' in name or 'emby' in name):
+        if wants_streambridge and (mid in ('com.stremio.streambridge',) + BRIDGE_ADDON_IDS or any(h in manifest_url for h in BRIDGE_HOSTS) or 'streambridge' in manifest_url or 'streambridge' in name or any(m in name for m in BRIDGE_MARKERS) or 'emby' in name):
             return row
     return None
 
@@ -498,7 +495,7 @@ def addon_requires_configuration(addon_id):
         'plexio' in addon_id or
         'plexbridge' in addon_id or
         'streambridge' in addon_id or
-        'dexbridge' in addon_id or
+        any(m in addon_id for m in BRIDGE_MARKERS) or
         addon_id.startswith('sb.')
     )
 
@@ -601,7 +598,7 @@ def collect_referenced_addon_ids(entries):
 def derive_addon_manifest_url(share_url, addon_id):
     """Return a useful manifest hint for collection imports.
 
-    Plexio/DexWorld collection URLs live next to the configured manifest, so
+    Plexio collection URLs live next to the configured manifest, so
     /collections.json can be promoted to /manifest.json automatically. For
     Stremiolab/Nuvio collection hosts we still return the host prefix as a
     manual hint because their share token does not expose a manifest URL.
@@ -625,7 +622,7 @@ def add_set_from_url(url, name=None, manifest_resolver=None):
     """Fetch a collection JSON, parse it, and persist it.
 
     For each unique addonId referenced by the entries, attempt to register
-    the addon. Plexio/DexWorld collections.json URLs are also registered as a
+    the addon. Plexio collections.json URLs are also registered as a
     normal provider by swapping /collections.json -> /manifest.json, so opening
     the imported collection can play immediately without asking for the same
     manifest URL again.

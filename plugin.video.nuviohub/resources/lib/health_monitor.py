@@ -100,9 +100,10 @@ def _collect_endpoints():
             str(manifest.get('name') or ''),
             str(manifest.get('id') or ''),
         ]).lower()
+        from .legacy_names import BRIDGE_MARKERS
         is_relevant = any(h in haystack for h in (
-            'plex', 'plexio', 'plexbridge', 'emby', 'streambridge', 'jellyfin', 'dexbridge'
-        ))
+            'plex', 'plexio', 'plexbridge', 'emby', 'streambridge', 'jellyfin'
+        ) + BRIDGE_MARKERS)
         if not is_relevant:
             continue
         # Best ping target is the manifest URL — guaranteed to exist for a

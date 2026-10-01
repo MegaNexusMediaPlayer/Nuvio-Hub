@@ -28,7 +28,7 @@ SYNC = io.open(os.path.join(ROOT, 'resources', 'lib', 'nuviohub',
 
 
 class TestLibraryMappers(unittest.TestCase):
-    def test_dex_to_nuvio_uses_the_documented_row_shape(self):
+    def test_local_to_nuvio_uses_the_documented_row_shape(self):
         out = sync.Nuvio._library_to_nuvio([{
             'canonical_id': 'tt123', 'media_type': 'series', 'title': 'Show',
             'poster': 'p.jpg', 'background': 'b.jpg', 'plot': 'desc',
@@ -51,8 +51,8 @@ class TestLibraryMappers(unittest.TestCase):
         out = sync.Nuvio._library_to_nuvio([{'canonical_id': 'y', 'media_type': 'movie'}])
         self.assertEqual(out[0]['content_type'], 'movie')
 
-    def test_nuvio_to_dex_accepts_both_key_casings(self):
-        rows = sync.Nuvio._library_to_dex([
+    def test_nuvio_to_local_accepts_both_key_casings(self):
+        rows = sync.Nuvio._library_to_local([
             {'content_id': 'tt1', 'content_type': 'movie', 'name': 'A',
              'release_info': '1999', 'poster': 'p'},
             {'contentId': 'tt2', 'contentType': 'series', 'title': 'B'},
@@ -62,7 +62,7 @@ class TestLibraryMappers(unittest.TestCase):
         self.assertEqual(rows[1]['media_type'], 'series')
 
     def test_rows_without_an_id_are_dropped_not_crashed(self):
-        self.assertEqual(sync.Nuvio._library_to_dex([{'name': 'no id'}, {}]), [])
+        self.assertEqual(sync.Nuvio._library_to_local([{'name': 'no id'}, {}]), [])
         self.assertEqual(sync.Nuvio._library_to_nuvio([{'title': 'no id'}]), [])
 
     def test_duplicates_collapse_on_push(self):

@@ -1079,7 +1079,7 @@ def _row_provider_filter(row):
 
 
 def _row_group_name(row):
-    """v4.6.1: TOP-LEVEL provider (the addon the user installed — Dexstreams,
+    """v4.6.1: TOP-LEVEL provider (the addon the user installed — for example
     Arabmedia, Plex…), as opposed to _row_provider_filter's inner scraper
     (EASYNEWS SEARCH 1080P, MEDIAFUSION…). The chips strip groups on this."""
     return str((row or {}).get('provider_name_raw')
@@ -1721,7 +1721,7 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
             if value and value not in seen:
                 seen.add(value)
                 values.append(value)
-        # v4.6.1: top-level addon group (Dexstreams / Arabmedia / …). These
+        # v4.6.1: top-level addon group (Arabmedia / …). These
         # back the chips strip (list 2300); they must live in self.filters or
         # _apply_session_payload resets an active V: filter to ALL on every
         # live-session refresh.
@@ -1808,7 +1808,7 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
     def _build_provider_chips(self):
         """v4.6.1: interactive provider chips (list 2300) above the results.
 
-        One chip per TOP-LEVEL addon (Dexstreams, Arabmedia, …) — not the
+        One chip per TOP-LEVEL addon (Arabmedia, …) — not the
         inner scrapers, which produced six near-identical "EASYNEWS SEARCH"
         chips — plus a leading "All". Selecting a chip applies/clears the V:
         filter (see onClick). Colours are the same stable identity slots as

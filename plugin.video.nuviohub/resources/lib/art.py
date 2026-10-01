@@ -2,6 +2,7 @@
 import os
 import re
 from .log import log
+from .legacy_names import FRAGILE_ART_HOSTS, FRAGILE_ART_MARKERS
 
 import xbmcaddon
 
@@ -423,7 +424,7 @@ def hybrid_meta_art(meta, media_type='movie', fallback_art=None):
 
 
 def composite_style_meta_art(meta, media_type='movie', fallback_art=None):
-    """Composite-like artwork for Plexio/DexWorld items.
+    """Composite-like artwork for Plexio items.
 
     - Poster/thumb/icon stay from the active metadata payload (native_meta_art).
     - Background/landscape use item-native artwork first, then TMDb Helper DB.
@@ -546,8 +547,8 @@ def _wrap_tokenized_url(url):
             'x-plex-token', 'api_key=', 'token=', 'access_token=', 'apikey=',
             '/:/', 'plex', 'emby', 'jellyfin', 'plexio', 'overlay', 'composite',
             'transcode', 'thumb=', 'url=', 'minsize=', 'upscale=', 'width=', 'height=', 'format=',
-            'dexworld', 'dexbridge', '/items/',
-        )
+            '/items/',
+        ) + FRAGILE_ART_MARKERS
         needs_wrap = any(token in lower for token in fragile_tokens)
     # Overlay/composite posters from Plexio/Plex hosts should always be
     # wrapped — their URLs contain path-based routing that Kodi's texture
@@ -560,7 +561,7 @@ def _wrap_tokenized_url(url):
     # image endpoints return dynamic content without a file extension that
     # Kodi's texture cache requires to work reliably.
     if not needs_wrap:
-        fragile_hosts = ('plexio.', 'plex.tv', 'plexapp.com', 'dexworld.cc', 'emby.', 'jellyfin.')
+        fragile_hosts = ('plexio.', 'plex.tv', 'plexapp.com', 'emby.', 'jellyfin.') + FRAGILE_ART_HOSTS
         needs_wrap = any(token in lower for token in fragile_hosts)
     if len(text) > 250:
         needs_wrap = True

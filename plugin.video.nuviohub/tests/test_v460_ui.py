@@ -202,7 +202,7 @@ class TestProviderColours(unittest.TestCase):
             self.assertRegex(col, r'^FF[0-9A-F]{6}$')
 
     def test_index_deterministic_case_insensitive_in_range(self):
-        for name in ('Dexstreams', 'Arabmedia', 'Plexio (ARPX)', 'DexWorld Pro'):
+        for name in ('Vidstreams', 'Arabmedia', 'Plexio (ARPX)', 'IPTV Pro'):
             idx = skin_theme.provider_color_index(name)
             self.assertTrue(1 <= idx <= 8, name)
             self.assertEqual(idx, skin_theme.provider_color_index(name.upper()))
@@ -261,26 +261,26 @@ class TestLoadingDashboard(unittest.TestCase):
 
     def test_cards_prepopulate_as_waiting(self):
         dlg = _dialog_with_fake_win(title='t',
-                                    provider_names=['Dexstreams', 'Arabmedia'])
+                                    provider_names=['Vidstreams', 'Arabmedia'])
         p = dlg._win.props
-        self.assertEqual(p['pv1_name'], 'Dexstreams')
+        self.assertEqual(p['pv1_name'], 'Vidstreams')
         self.assertEqual(p['pv1_state'], 'wait')
         self.assertEqual(p['pv1_count'], '')
         self.assertEqual(p['pv2_name'], 'Arabmedia')
         self.assertEqual(p['pv3_name'], '')
         self.assertEqual(p['pv1_coloridx'],
-                         str(skin_theme.provider_color_index('Dexstreams')))
+                         str(skin_theme.provider_color_index('Vidstreams')))
 
     def test_update_marks_provider_done_and_zero_when_empty(self):
         dlg = _dialog_with_fake_win(title='t',
-                                    provider_names=['Dexstreams', 'Arabmedia'])
+                                    provider_names=['Vidstreams', 'Arabmedia'])
         # iter_parallel yields a provider when it FINISHED answering
         dlg.update(provider_name='Arabmedia', index=1)
         self.assertEqual(dlg._win.props['pv2_state'], 'zero')  # done, 0 results
-        dlg.add_results(3, provider_name='Dexstreams')
+        dlg.add_results(3, provider_name='Vidstreams')
         self.assertEqual(dlg._win.props['pv1_state'], 'done')
         self.assertEqual(dlg._win.props['pv1_count'], '3')
-        dlg.add_results(2, provider_name='Dexstreams')
+        dlg.add_results(2, provider_name='Vidstreams')
         self.assertEqual(dlg._win.props['pv1_count'], '5')
 
     def test_unknown_provider_appends_and_overflow_counts(self):

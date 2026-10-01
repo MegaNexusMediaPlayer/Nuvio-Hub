@@ -12,11 +12,11 @@ def install():
     resources=types.ModuleType('resources')
     resources.__path__=[str(root/'resources')]
     sys.modules['resources']=resources
-    resources.lib=sys.modules['dexlib']
+    resources.lib=sys.modules['nuviolib']
     sys.modules['resources.lib']=resources.lib
     # Mirror lazily added backend modules into the production namespace too.
     for name in ('resource_support','metadata_providers','collection_validation','browse_cache','display_text','progress_model','nuvio_progress','progress_sync'):
         kodi_stub.import_lib_module(name)
     for key,value in list(sys.modules.items()):
-        if key.startswith('dexlib.'):
-            sys.modules['resources.lib'+key[len('dexlib'):]]=value
+        if key.startswith('nuviolib.'):
+            sys.modules['resources.lib'+key[len('nuviolib'):]]=value

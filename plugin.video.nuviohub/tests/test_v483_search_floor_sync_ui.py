@@ -10,7 +10,7 @@
 2. "Search still returns unrelated titles in alphabetical order." Ranking
    alone was never enough: an addon that ignores the search extra answers
    with its plain catalogue, and those rows were still RENDERED, just below
-   the real hits. The DexWorld Pro server drops them outright
+   the real hits. The Pro IPTV server drops them outright
    (`.filter(x => x.score > 0)`) and falls back to the unfiltered set only
    when nothing scores at all. Both search paths now do the same.
 """

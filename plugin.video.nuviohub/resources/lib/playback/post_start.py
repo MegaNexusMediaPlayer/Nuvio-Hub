@@ -370,7 +370,7 @@ def _discover_and_attach(player, job, stream_key):
             if rid:
                 existing_ids.add(rid)
         # AI rows stay manual-only: automatic preparation would trigger
-        # generation and consume the user's DexWorld token.
+        # generation and consume the user's AI subtitle token.
         extras = automatic_rows(extras)
         if not extras:
             return

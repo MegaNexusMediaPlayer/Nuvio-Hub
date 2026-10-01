@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-"""v4.8.8 — subtitles reached the DexWorld engine in a shape it cannot serve.
+"""v4.8.8 — subtitles reached the AI subtitles engine in a shape it cannot serve.
 
 Verified against the engine's own source (ai_subtitles.js), which serves:
 
     GET /subtitles/stremio/:apiKey/manifest.json
-    -> { id: "org.dexsubtitles.aggregator", resources: ["subtitles"],
+    -> { id: <AI subtitles aggregator id>, resources: ["subtitles"],
          types: ["movie","series"], idPrefixes: ["tt"] }
 
 `idPrefixes: ["tt"]` is the point: the addon answers IMDb ids only, and so

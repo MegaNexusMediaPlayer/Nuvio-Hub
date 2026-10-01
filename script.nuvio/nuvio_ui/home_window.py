@@ -1,7 +1,6 @@
-from resources.lib import art_cache
-from .dialog import Dialog
 """Remote-friendly Nuvio-style shelves, with cancellable background catalog loading."""
 import queue
+import threading
 import time
 import json
 import traceback
@@ -11,14 +10,21 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
+from resources.lib import art_cache
 from resources.lib import home_data
 from resources.lib import simkl_watched
-import xbmcaddon
+from .dialog import Dialog
 
 ADDON = xbmcaddon.Addon('script.nuvio')
 BACK = {9, 10, 92, 216, 247, 257, 275, 61448, 61467}
 ROW_BASE = 7000
 NAV = {101: ''}
+LOAD_WORKERS = 4
+SEED_DISK_ROWS = 6        # shelves that may read SQLite synchronously while painting
+PREFETCH_DWELL = .25      # seconds a collection tile must stay selected before prefetch
+PREFETCH_AGAIN = 240      # seconds before the same collection is prefetched again
+PREFETCH_ART = 6          # first cards whose artwork is warmed in the image proxy
+SHELF_MEMORY_SECONDS = 300
 
 
 def home_xml():
@@ -55,11 +61,23 @@ class HomeWindow(Dialog):
         self._previews = None
         self._suspended = False
         self._shelf_memory={}
+        self._memory_lock=threading.Lock()
+        self._memory_epoch=0
+        self._prefetch_pool=None
+        self._prefetch_futures=[]
+        self._prefetched={}
+        self._hover=(None,0)
+        self._warmed_art=set()
         self._scheduled=set()
         self._watch_loaded=False
         self._progress_revision=xbmcgui.Window(10000).getProperty('nuvio.progress.revision')
         self._last_progress_check=0
         self._bucket = kwargs.get('bucket') or ''
+        self._entered=False
+        # open_home passes the revision read before it built the shelves, so a
+        # progress write racing that build is still detected in onInit.
+        self._continue_fresh='progress_revision' in kwargs
+        if self._continue_fresh:self._progress_revision=kwargs['progress_revision']
 
     def onInit(self):
         self.setProperty('nuvio.home.error','')
@@ -76,11 +94,16 @@ class HomeWindow(Dialog):
             if not self._bucket and self._shelves and self._shelves[0].get('continue_job'):
                 # Every Home entry starts this shelf at its newest title, even
                 # after a restart/import or when another view consumed revision.
-                reset_continue=True
-                self._shelves[0]=home_data.continue_shelf()
+                # Returning from Details/Settings keeps the selected title.
+                entry=not self._entered
+                reset_continue=entry
+                # open_home built this shelf moments ago; rebuild only if progress changed.
+                if not (entry and self._continue_fresh) or revision!=self._progress_revision:
+                    self._shelves[0]=home_data.continue_shelf()
                 self._progress_revision=revision
-                if self._focus_memory.get('home',[0,0])[0]==0:self._focus_memory['home']=[0,0]
+                if entry and self._focus_memory.get('home',[0,0])[0]==0:self._focus_memory['home']=[0,0]
                 window.setProperty('nuvio.home.progress_seen',revision)
+            self._entered=True
             self._paint(self._shelves)
             if reset_continue:self.getControl(ROW_BASE).selectItem(0)
         except Exception:
@@ -115,10 +138,40 @@ class HomeWindow(Dialog):
         jobs=shelf.get('collection_job') or ([(*shelf['job'],shelf.get('extra') or {})] if shelf.get('job') else [])
         return json.dumps([(p.get('id'),c.get('type'),c.get('id'),extra) for p,c,extra in jobs],sort_keys=True) if jobs else ''
 
+    def _remembered(self, key):
+        if not key:return None
+        with self._memory_lock:
+            saved=self._shelf_memory.get(key)
+            if saved and saved[0]>time.monotonic():return saved[1]
+        return None
+
+    def _remember_rows(self, key, rows, epoch=None):
+        if not key or not any(row.get('target') for row in rows or []):return
+        with self._memory_lock:
+            if epoch is not None and epoch!=self._memory_epoch:return  # Settings changed meanwhile.
+            self._shelf_memory.pop(key,None)
+            self._shelf_memory[key]=(time.monotonic()+SHELF_MEMORY_SECONDS,rows)
+            while len(self._shelf_memory)>32:self._shelf_memory.pop(next(iter(self._shelf_memory)))
+
+    def _forget_rows(self):
+        with self._memory_lock:
+            self._memory_epoch+=1;self._shelf_memory.clear()
+        self._prefetched.clear()
+
+    @staticmethod
+    def _seed(shelf, index):
+        """Paint cached catalog pages synchronously so an opened collection is
+        never a wall of 'Loading' cards. Point lookups only, no network."""
+        if shelf.get('_loaded') or not (shelf.get('job') or shelf.get('collection_job')):return
+        try:rows=home_data.load_catalog(shelf,cached_only=True if index<SEED_DISK_ROWS else 'memory')
+        except Exception:return
+        if rows:shelf.update(rows=rows,_loaded=True)
+
     def _paint(self, shelves):
-        for shelf in shelves:
-            saved=self._shelf_memory.get(self._shelf_key(shelf))
-            if saved and saved[0]>time.monotonic():shelf.update(rows=saved[1],_loaded=True)
+        for index,shelf in enumerate(shelves):
+            saved=self._remembered(self._shelf_key(shelf))
+            if saved:shelf.update(rows=saved,_loaded=True)
+            elif index<home_data.MAX_ROWS:self._seed(shelf,index)
         self._card_shape=xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_card_shape') or 'poster'
         shelves = [dict(s, rows=s.get('rows') or [home_data.placeholder(
             'No titles yet', 'Open Settings to connect your metadata provider.')]) for s in shelves[:home_data.MAX_ROWS]]
@@ -154,7 +207,7 @@ class HomeWindow(Dialog):
         self.setFocusId(ROW_BASE+row)
         self.getControl(ROW_BASE + row).selectItem(min(max(0, int(saved[1])), len(shelves[row]['rows']) - 1))
         if self._pool is None:
-            self._pool = ThreadPoolExecutor(max_workers=2)
+            self._pool = ThreadPoolExecutor(max_workers=LOAD_WORKERS, thread_name_prefix='NuvioHome')
         self._queue_visible()
         if not getattr(self,'_watch_loaded',False):
             self._watch_loaded=True
@@ -230,6 +283,9 @@ class HomeWindow(Dialog):
             except Exception:
                 self._previews.close()
                 xbmc.log('[Nuvio] Preview stopped after a player error.',xbmc.LOGWARNING)
+        try:self._maybe_prefetch()
+        except Exception:
+            xbmc.log('[Nuvio] Collection prefetch skipped: '+traceback.format_exc(),xbmc.LOGDEBUG)
         # Workers only enqueue data. The window owner applies Kodi controls.
         for _ in range(32):
             try:
@@ -240,13 +296,75 @@ class HomeWindow(Dialog):
             if len(update)>3 and update[3] is not None and update[3]!=self._progress_revision:continue
             if index==-1:self._watched_badges();continue
             rows = rows or [home_data.placeholder('No titles found', 'Try another collection or check Settings.')]
+            unchanged=self._shelves[index].get('_loaded') and rows==self._shelves[index].get('rows')
             self._shelves[index]['rows'] = rows
             self._shelves[index]['_loaded'] = True
-            key=self._shelf_key(self._shelves[index])
-            if key and any(row.get('target') for row in rows):
-                self._shelf_memory[key]=(time.monotonic()+300,rows)
-                if len(self._shelf_memory)>32:self._shelf_memory.pop(next(iter(self._shelf_memory)))
-            self._set_rows(index, rows)
+            self._remember_rows(self._shelf_key(self._shelves[index]),rows)
+            # A cache-seeded shelf that reloads identical data keeps its items,
+            # textures and selection: no flicker and no wasted GUI work.
+            if not unchanged:self._set_rows(index, rows)
+
+    def _maybe_prefetch(self):
+        """Warm the collection under the cursor (and its neighbours) off the GUI
+        thread once selection settles, so Select opens it from memory."""
+        if self._closed or self._suspended:return
+        control_id=self.getFocusId();index=control_id-ROW_BASE
+        if not 0<=index<len(self._shelves):return
+        try:pos=self.getControl(control_id).getSelectedPosition()
+        except Exception:return
+        now=time.monotonic()
+        if self._hover[0]!=(index,pos):
+            self._hover=((index,pos),now);return
+        if now-self._hover[1]<PREFETCH_DWELL:return
+        rows=self._shelves[index]['rows']
+        wanted=[rows[c]['collection_id'] for c in (pos,pos+1,pos-1)
+                if 0<=c<len(rows) and rows[c].get('collection_id')]
+        wanted=[cid for cid in wanted if self._prefetched.get(cid,0)<=now]
+        if not wanted:return
+        # The cursor moved on: queued work for tiles it left is dropped, so
+        # the single worker always serves the tile the user is looking at.
+        pending=[]
+        for cid,future in self._prefetch_futures:
+            if future.done():continue
+            if future.cancel():self._prefetched.pop(cid,None)
+            else:pending.append((cid,future))
+        self._prefetch_futures=pending
+        if self._prefetch_pool is None:
+            self._prefetch_pool=ThreadPoolExecutor(max_workers=1,thread_name_prefix='NuvioPrefetch')
+        for collection_id in wanted:
+            self._prefetched[collection_id]=now+PREFETCH_AGAIN
+            if len(self._prefetched)>256:self._prefetched.pop(next(iter(self._prefetched)))
+            self._prefetch_futures.append((collection_id,self._prefetch_pool.submit(self._prefetch_collection,collection_id,self._memory_epoch)))
+
+    def _prefetch_collection(self, collection_id, epoch):
+        if self._closed or epoch!=self._memory_epoch:return
+        from resources.lib.collections_home import collection_shelves
+        for shelf in collection_shelves(collection_id):
+            if self._closed or epoch!=self._memory_epoch:return
+            key=self._shelf_key(shelf)
+            if not key or self._remembered(key):continue
+            try:rows=home_data.load_catalog(shelf,stopped=lambda:self._closed or epoch!=self._memory_epoch)
+            except Exception:continue  # Opening the collection retries normally.
+            self._remember_rows(key,rows,epoch)
+            self._warm_art(rows)
+
+    def _warm_art(self, rows):
+        """Pre-download the first visible cards into the bounded image proxy."""
+        base=xbmcgui.Window(10000).getProperty('nuvio.art_cache.base')
+        if not base.startswith('http://127.0.0.1:'):return
+        from urllib.parse import quote
+        from urllib.request import Request, urlopen
+        landscape=getattr(self,'_card_shape','poster')=='landscape'
+        for row in [r for r in rows if r.get('target')][:PREFETCH_ART]:
+            if self._closed or self._suspended:return
+            url=str((row.get('landscape') or row.get('fanart') or row.get('poster')) if landscape else row.get('poster') or '')
+            if not url.startswith(('https://','http://')) or '|' in url or url in self._warmed_art:continue
+            self._warmed_art.add(url)
+            if len(self._warmed_art)>2048:self._warmed_art.clear()
+            try:
+                with urlopen(Request(base+'/image?url='+quote(url,safe=''),method='HEAD'),timeout=2) as response:
+                    response.read(0)
+            except Exception:pass
 
     def _set_rows(self, index, rows):
         control = self.getControl(ROW_BASE + index)
@@ -409,7 +527,7 @@ class HomeWindow(Dialog):
             self._suspended=False
             from .browse_meta import clear
             clear()
-            self._shelf_memory.clear()
+            self._forget_rows()
         if command:self._pending=command;self._finish();return
         from .setup_gate import ready
         if not ready():self._pending='reload';self._finish();return
@@ -432,6 +550,9 @@ class HomeWindow(Dialog):
         if self._pool:
             for future in self._futures:future.cancel()
             self._pool.shutdown(wait=False)  # Kodi Windows still embeds Python 3.8.
+        if self._prefetch_pool:
+            for _,future in self._prefetch_futures:future.cancel()
+            self._prefetch_pool.shutdown(wait=False)
         self.close()
 
 
@@ -444,18 +565,22 @@ def open_home():
     monitor=xbmc.Monitor()
     bucket='';search_query=''
     while not monitor.abortRequested():
+        extra={}
         if bucket.startswith('collection:'):
             from resources.lib.collections_home import collection_shelves
             shelves=collection_shelves(bucket.split(':',1)[1])
         elif bucket=='search':shelves=home_data.search_shelves(search_query)
-        else:shelves=home_data.initial_shelves(bucket)
-        window=HomeWindow(home_xml(),ADDON.getAddonInfo('path'),'Default','1080i',shelves=shelves,bucket=bucket)
+        else:
+            revision=xbmcgui.Window(10000).getProperty('nuvio.progress.revision')
+            shelves=home_data.initial_shelves(bucket)
+            extra={'progress_revision':revision}
+        window=HomeWindow(home_xml(),ADDON.getAddonInfo('path'),'Default','1080i',shelves=shelves,bucket=bucket,**extra)
         window._search_query=search_query
         try:
             window.show_ready()
             while not window._closed and not monitor.abortRequested():
                 window.drain_updates()
-                monitor.waitForAbort(.1)
+                monitor.waitForAbort(.05)
             pending=window._pending;bucket=window._bucket;search_query=getattr(window,'_search_query','')
         finally:
             window._finish()

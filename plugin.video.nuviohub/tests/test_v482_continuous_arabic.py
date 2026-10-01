@@ -8,7 +8,7 @@ due. Every NuvioHub write (favourite, watch progress) raises a dirty flag, so
 outbound changes travel in seconds. Idle ticks cost nothing: run_sync
 already pushes deltas and skips sections whose fingerprint is unchanged.
 
-SEARCH: the scorer is ported from the DexWorld Pro server's own
+SEARCH: the scorer is ported from the Pro IPTV server's own
 titleMatchScore/arabicNorm — already tuned against this catalogue. Beyond
 folding hamza/ta-marbuta/alef-maqsura and stripping tashkeel, two rules
 carry over verbatim: a query digit must appear EXACTLY (so "الموسم 5" never

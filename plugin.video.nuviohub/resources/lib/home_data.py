@@ -116,18 +116,67 @@ def initial_shelves(bucket=''):
     return shelves[:MAX_ROWS]
 
 
-def load_catalog(shelf, stopped=None):
-    if stopped and stopped():return []
+def _job_rows(provider, catalog, extra, data):
     p = _api()
+    mt = catalog.get('type') or 'movie'
+    metas = [m for m in (data or {}).get('metas', []) if isinstance(m, dict) and m.get('id')][:PAGE_SIZE]
+    # AIOMetadata owns these catalogs and their metadata. No second enrichment layer.
+    return [media_card(p._normalize_meta_art_urls(provider, m), provider, mt) for m in metas]
+
+
+def _fetch_job(provider, catalog, extra, cached_only=False):
+    from . import browse_cache
+    if cached_only:
+        return browse_cache.peek(provider, catalog, extra or {}, memory_only=cached_only == 'memory')
+    return browse_cache.catalog(provider, catalog, extra or {},
+                                timeout=8 if (extra or {}).get('search') else 4)
+
+
+def _collection_batches(jobs, stopped=None, cached_only=False):
+    """Fetch every collection source concurrently; one failed source is not fatal."""
+    if cached_only:
+        batches = []
+        for provider, catalog, extra in jobs:
+            data = _fetch_job(provider, catalog, extra, True)
+            if data is None:
+                return None
+            batches.append(_job_rows(provider, catalog, extra, data))
+        return batches
+    if len(jobs) == 1:
+        provider, catalog, extra = jobs[0]
+        return [_job_rows(provider, catalog, extra, _fetch_job(provider, catalog, extra))]
+    from concurrent.futures import ThreadPoolExecutor
+    batches, errors = [], []
+    with ThreadPoolExecutor(max_workers=min(4, len(jobs)), thread_name_prefix='NuvioCollection') as pool:
+        futures = [(job, pool.submit(_fetch_job, *job)) for job in jobs]
+        for (provider, catalog, extra), future in futures:
+            if stopped and stopped():
+                for _, pending in futures:
+                    pending.cancel()
+                return []
+            try:
+                batches.append(_job_rows(provider, catalog, extra, future.result()))
+            except Exception as exc:
+                errors.append(exc)
+                batches.append([])
+    if errors and len(errors) == len(jobs):
+        raise errors[0]
+    return batches
+
+
+def load_catalog(shelf, stopped=None, cached_only=False):
+    """Rows for one Home shelf. ``cached_only`` (True, or 'memory' to skip the
+    disk) never touches the network and returns ``None`` unless every source
+    already has a cached page."""
+    if stopped and stopped():return []
     if shelf.get('people_job'):
+        if cached_only:return None
         from .search_catalogs import search_people
         return search_people(shelf['people_job']) or [placeholder('No actors found','Try another name.')]
     if shelf.get('collection_job'):
-        results = []
-        for provider, catalog, extra in shelf['collection_job']:
-            if stopped and stopped():return []
-            rows = load_catalog({'job': (provider, catalog), 'extra': extra, 'path': shelf['path'], 'no_more': True},stopped)
-            results.append(rows)
+        results = _collection_batches(shelf['collection_job'], stopped, cached_only)
+        if results is None:return None
+        if stopped and stopped():return []
         # Alternate films and series so both configured sources are represented.
         rows, seen = [], set()
         for index in range(PAGE_SIZE):
@@ -140,16 +189,15 @@ def load_catalog(shelf, stopped=None):
                         rows.append(row)
                         seen.add(key)
         rows = rows[:PAGE_SIZE]
+        if cached_only and not rows:return None
         rows.append(placeholder('Browse all', 'Open movies and series with the collection filters.', shelf['path']))
         return rows
     provider, catalog = shelf['job']
-    mt = catalog.get('type') or 'movie'
-    from . import browse_cache
-    data = browse_cache.catalog(provider, catalog, shelf.get('extra') or {},
-                                timeout=8 if shelf.get('extra', {}).get('search') else 4)
-    metas = [m for m in (data or {}).get('metas', []) if isinstance(m, dict) and m.get('id')][:PAGE_SIZE]
-    # AIOMetadata owns these catalogs and their metadata. No second enrichment layer.
-    rows = [media_card(p._normalize_meta_art_urls(provider, m), provider, mt) for m in metas]
+    extra = shelf.get('extra') or {}
+    data = _fetch_job(provider, catalog, extra, cached_only)
+    if data is None and cached_only:return None
+    rows = _job_rows(provider, catalog, extra, data)
+    if cached_only and not rows:return None
     # Full listing owns per-provider metadata enrichment and pagination.
     if not shelf.get('no_more'):
         rows.append(placeholder('Browse all', 'Open the full catalog with your metadata settings and filters.', shelf['path']))

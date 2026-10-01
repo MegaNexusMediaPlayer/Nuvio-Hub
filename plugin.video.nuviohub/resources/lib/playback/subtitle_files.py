@@ -889,15 +889,15 @@ def _subtitle_pick_for_stream_key(stream_key, current=None):
 
 
 def _publish_subtitle_bridge_properties(ctx, is_ep):
-    """Publish content IDs for service.subtitles.dexworld (fallback path).
+    """Publish content IDs for external subtitle services (fallback path).
 
     Extracted verbatim from _play_with_context. The subtitle service reads
     these Window(10000) properties before VideoPlayer.* infolabels are
     populated, so it always has the content IDs. Failures are swallowed
     exactly as before.
     """
-    # ── DexWorld subtitle service bridge ────────────────────────────────
-    # service.subtitles.dexworld reads VideoPlayer.* infolabels. Kodi only
+    # ── External subtitle service bridge ────────────────────────────────
+    # external subtitle services reads VideoPlayer.* infolabels. Kodi only
     # populates those AFTER the player starts, and only when setInfo() has
     # been processed. As an extra safety net we also write the IDs as
     # Window(10000) properties; the subtitle service reads these as fallback

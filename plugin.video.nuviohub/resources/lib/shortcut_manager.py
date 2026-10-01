@@ -19,7 +19,7 @@ import xbmcvfs
 ADDON_ID = 'plugin.video.nuviohub'
 WINDOW_ID = 10000
 KEYMAP_FILENAME = 'nuviohub-switch-source.xml'
-LEGACY_KEYMAP_FILENAMES = ('dexhub-switch-source.xml',)
+from .legacy_names import OLD_KEYMAP_FILENAMES as LEGACY_KEYMAP_FILENAMES
 SETTING_ID = 'switch_source_keymap_data'
 ACTION = 'RunPlugin(plugin://plugin.video.nuviohub/?action=switch_source)'
 

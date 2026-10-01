@@ -19,7 +19,9 @@
     <setting id="bucket_art_map" type="text" default="{}" visible="false" />
     <setting id="poster_source_mode" type="text" default="Local only" visible="false" />
     <setting id="ui_lang_autodetected" type="text" default="" visible="false" />
-    <setting id="dexworld_force_folders" type="bool" default="false" visible="false" />
+    <setting id="nuviohub_iptv_force_folders" type="bool" default="false" visible="false" />
+    <setting id="nuviohub_service_api_key" type="text" default="" visible="false" />
+    <setting id="nuviohub_service_base_url" type="text" default="" visible="false" />
     <setting id="source_sort_mode" type="text" default="S:DEFAULT" visible="false" />
     <setting id="source_priority_order" type="text" default="" visible="false" />
     <setting id="trakt_client_id" type="text" default="" visible="false" />
@@ -37,10 +39,6 @@
     <setting id="nuviohub_defaults_rev" type="text" default="" visible="false" />
     <setting id="nuviohub_v510_defaults_applied" type="bool" default="false" visible="false" />
     <setting id="nuviohub_v520_defaults_applied" type="bool" default="false" visible="false" />
-    <!-- Legacy 5.x/6.0.7 migration aliases; hidden and never shown in the UI. -->
-    <setting id="dexhub_defaults_rev" type="text" default="" visible="false" />
-    <setting id="dexhub_v510_defaults_applied" type="bool" default="false" visible="false" />
-    <setting id="dexhub_v520_defaults_applied" type="bool" default="false" visible="false" />
     <setting id="nuvio_wizard_applied" type="bool" default="false" visible="false" />
     <setting id="nuvio_setup_v110_done" type="bool" default="false" visible="false" />
     <setting id="nuvio_setup_offered" type="bool" default="false" visible="false" />

@@ -1,4 +1,4 @@
-# Install and configure Nuvio Hub 6.0.10 candidate
+# Install and configure Nuvio Hub 6.0.11 candidate
 
 This is a supplied local test bundle, not an automatically published release.
 The supported code/API target is Kodi 21 and Kodi 22; actual rendering, native
@@ -7,9 +7,9 @@ playback and live synchronization still need device acceptance.
 ## Safe upgrade
 
 Back up your Kodi profile first. Stop playback and close the Nuvio frontend.
-Install `Nuvio-Hub-Complete-6.0.10.zip` via Add-ons → Install from zip file. Open
+Install `Nuvio-Hub-Complete-6.0.11.zip` via Add-ons → Install from zip file. Open
 backend **Nuvio Hub** once to update the interface, skin and screensaver, then
-restart Kodi. All four Nuvio components must report 6.0.10. Keep userdata; do
+restart Kodi. All four Nuvio components must report 6.0.11. Keep userdata; do
 not uninstall or delete credentials/settings to update. The source archive is
 for development and is not installable through Kodi's ZIP installer.
 
@@ -34,6 +34,10 @@ sanity check, not exhaustive proof for every item. Empty/unreachable catalogs
 cannot be verified during initial setup. A failed or canceled import does not
 replace the previous collection file.
 
+To use the built-in collection presets, configure AIOMetadata with
+https://numb3rs.stream (the preset catalogs match that setup), or set up your
+collections in Nuvio web and import them from your Nuvio account.
+
 A metadata toggle or configuration change invalidates the validation proof.
 Revalidate or update affected collections before returning to Home. A source
 providing catalogs only may use a separately enabled compatible metadata addon.
@@ -55,6 +59,12 @@ remote delete-event/delta consumption is not implemented in this candidate.
 A missing item in a remote snapshot is deliberately not treated as deletion.
 
 ## Performance, display and trailers
+
+Collections open from the local catalog cache. Pages stay fresh for 30 minutes
+and remain usable for up to 7 days; an older page is shown immediately and
+refreshed in the background, so the next visit shows the new titles. Keeping a
+collection tile selected briefly prefetches it (and its neighbours) together
+with its first posters.
 
 Performance & image cache offers **RAM 200 MiB**: 160 MiB compressed artwork
 payload plus 40 MiB serialized browse payload, with a 128 MiB logical browse

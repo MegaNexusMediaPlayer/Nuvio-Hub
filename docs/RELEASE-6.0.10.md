@@ -128,7 +128,7 @@ U sourceu su dodani `AGENTS.md`,
 `.agents/skills/kodi-performance/SKILL.md`.
 Sadrže pravila pregleda koda, privatnosti, migracija, provider identiteta,
 GUI-thread discipline, sinkronizacije, cachea, pakiranja, mjerenja i ručne
-acceptance provjere. To su repo upute za Codex, ne instalirani globalni plugin.
+acceptance provjere. To su repo upute za AI agente, ne instalirani globalni plugin.
 `review/check_610.py` pokreće održavanu regresijsku provjeru i parse/grammar gate.
 
 ## 7. Izvedene automatizirane provjere

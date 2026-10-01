@@ -9,6 +9,8 @@ import time
 import xml.etree.ElementTree as ET
 import zipfile
 
+from .legacy_names import OLD_ADDON_ID
+
 ALLOWED = {'script.nuvio', 'skin.nuvio', 'screensaver.nuvio'}
 
 
@@ -111,10 +113,10 @@ def ensure_components(force=False):
     # The profile has already been copied read-only by default.py; preserve its data.
     if not xbmc.Player().isPlayingVideo():
         old=json.loads(xbmc.executeJSONRPC(json.dumps({'jsonrpc':'2.0','id':1,'method':'Addons.GetAddonDetails',
-            'params':{'addonid':'plugin.video.dexhub','properties':['enabled']}})))
+            'params':{'addonid':OLD_ADDON_ID,'properties':['enabled']}})))
         if old.get('result',{}).get('addon',{}).get('enabled'):
             xbmc.executeJSONRPC(json.dumps({'jsonrpc':'2.0','id':1,'method':'Addons.SetAddonEnabled',
-                'params':{'addonid':'plugin.video.dexhub','enabled':False}}))
+                'params':{'addonid':OLD_ADDON_ID,'enabled':False}}))
     if addon.getSetting('nuvio_screensaver_applied')!='true':
         result=json.loads(xbmc.executeJSONRPC(json.dumps({'jsonrpc':'2.0','id':1,'method':'Settings.SetSettingValue','params':{'setting':'screensaver.mode','value':'screensaver.nuvio'}})))
         if not result.get('error'):addon.setSetting('nuvio_screensaver_applied','true')

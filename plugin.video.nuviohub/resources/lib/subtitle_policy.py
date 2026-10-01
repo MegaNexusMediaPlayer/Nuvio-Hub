@@ -2,7 +2,7 @@
 """Subtitle automation policy.
 
 AI rows remain discoverable for manual selection, but are never downloaded,
-prepared, attached or activated automatically. This prevents DexWorld AI token
+prepared, attached or activated automatically. This prevents AI subtitle token
 usage unless the user explicitly chooses that row.
 """
 from __future__ import absolute_import
@@ -25,9 +25,10 @@ def is_ai_subtitle(row):
                 'artificial intelligence',"\u062a\u0631\u062c\u0645\u0629 ai","\u0630\u0643\u0627\u0621 \u0627\u0635\u0637\u0646\u0627\u0639\u064a")
     if any(x in text for x in explicit):
         return True
-    # DexWorld exposes both normal/provider subtitles and AI. Only classify it
-    # as AI when the row itself also says AI/translation/generated.
-    if 'dexworld' in text and any(x in text for x in ('ai','generated','translate','translation',"\u0645\u062a\u0631\u062c\u0645")):
+    # The AI-subtitles service exposes both normal/provider subtitles and AI.
+    # Only classify it as AI when the row itself also says AI/translation/generated.
+    from .legacy_names import SERVICE_MARKER
+    if SERVICE_MARKER in text and any(x in text for x in ('ai','generated','translate','translation',"\u0645\u062a\u0631\u062c\u0645")):
         return True
     return False
 

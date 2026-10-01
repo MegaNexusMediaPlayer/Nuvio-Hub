@@ -64,15 +64,26 @@ def save(data, validation=None):
     from .nuviohub.safe_io import write_json
     write_json(str(path), groups)
     write_json(str(path.with_suffix('.verified.json')), proof)
+    _LOADED.clear()  # Coarse file timestamps must not hide a same-size rewrite.
     return sum(len(g['folders']) for g in groups)
 
 
+_LOADED={}
+
+
 def load():
+    """Normalized profile; parsed once per file change. Each call gets a fresh copy."""
     path=profile_file()
-    if path.exists():
-        try:return normalize(json.loads(path.read_text(encoding='utf-8-sig')))
-        except (ValueError,OSError):pass
-    return []
+    try:
+        stat=path.stat()
+        memo=(str(path),stat.st_mtime_ns,stat.st_size)
+    except OSError:
+        return []
+    if _LOADED.get('key')!=memo:
+        try:groups=normalize(json.loads(path.read_text(encoding='utf-8-sig')))
+        except (ValueError,OSError):return []
+        _LOADED.clear();_LOADED.update(key=memo,text=json.dumps(groups,ensure_ascii=False))
+    return json.loads(_LOADED['text'])
 
 
 def defaults():

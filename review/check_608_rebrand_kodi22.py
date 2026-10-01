@@ -9,6 +9,8 @@ import sys
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
+RETIRED = bytes((100, 101, 120)).decode('ascii')  # retired brand prefix, never spelled out
+RETIRED_RE = re.compile(r'(?<![nN])' + RETIRED, re.I)
 EXPECTED = sys.argv[1] if len(sys.argv)>1 else '6.0.8'
 COMPONENTS = ('plugin.video.nuviohub', 'script.nuvio', 'skin.nuvio', 'screensaver.nuvio')
 
@@ -47,7 +49,7 @@ ok('English locale has no Arabic UI option', 'msgid "Arabic"' not in po)
 
 # Nuvio Hub runtime namespace / assets.
 paths = [str(p.relative_to(ROOT)).lower() for p in (ROOT / 'plugin.video.nuviohub').rglob('*')]
-ok('no Dex Hub-named runtime paths', not any('dexhub' in p for p in paths), ', '.join(p for p in paths if 'dexhub' in p)[:500])
+ok('no retired-brand runtime paths', not any(RETIRED_RE.search(p) for p in paths), ', '.join(p for p in paths if RETIRED_RE.search(p))[:500])
 ok('Nuvio Hub runtime package exists', (ROOT / 'plugin.video.nuviohub/resources/lib/nuviohub').is_dir())
 ok('Nuvio Hub TMDb player exists', (ROOT / 'plugin.video.nuviohub/resources/players/nuviohub.json').is_file())
 player = json.loads((ROOT / 'plugin.video.nuviohub/resources/players/nuviohub.json').read_text(encoding='utf-8'))
@@ -68,20 +70,41 @@ for base in ('plugin.video.nuviohub', 'script.nuvio', 'skin.nuvio', 'screensaver
             text = p.read_text(encoding='utf-8')
         except Exception:
             continue
-        for pat in ('resources.lib.dexhub', 'from dexhub', 'import dexhub', 'Window.Property(dexhub.', "setProperty('dexhub.", "getProperty('dexhub."):
-            if pat in text:
-                disallowed.append(f'{p.relative_to(ROOT)}:{pat}')
-ok('old active Dex Hub namespace removed', not disallowed, '; '.join(disallowed[:20]))
+        for line_no, line in enumerate(text.splitlines(), 1):
+            if RETIRED_RE.search(line):
+                disallowed.append(f'{p.relative_to(ROOT)}:{line_no}')
+ok('retired brand absent from runtime sources', not disallowed, '; '.join(disallowed[:20]))
+
+# The whole tree (docs, tests, review tools) must not spell the retired brand
+# either. The only exception is the MIT copyright line the license requires.
+spelled = []
+for p in ROOT.rglob('*'):
+    if not p.is_file() or '.git' in p.parts or '__pycache__' in p.parts:
+        continue
+    if p.suffix.lower() not in {'.py', '.xml', '.json', '.txt', '.po', '.md', '.yml', '.yaml', '.cfg', '.ini'}:
+        continue
+    try:
+        text = p.read_text(encoding='utf-8')
+    except Exception:
+        continue
+    for line_no, line in enumerate(text.splitlines(), 1):
+        if RETIRED_RE.search(line) and not (p.name == 'LICENSE.txt' and line.startswith('Copyright (c)')):
+            spelled.append(f'{p.relative_to(ROOT)}:{line_no}')
+ok('retired brand absent from repository text', not spelled, '; '.join(spelled[:20]))
 
 # Intentional compatibility hooks must remain so an in-place update does not strand old profiles.
+legacy = (ROOT / 'plugin.video.nuviohub/resources/lib/legacy_names.py').read_text(encoding='utf-8')
 fork = (ROOT / 'plugin.video.nuviohub/resources/lib/fork_profile.py').read_text(encoding='utf-8')
 bundle = (ROOT / 'plugin.video.nuviohub/resources/lib/bundle_installer.py').read_text(encoding='utf-8')
 tmdbh = (ROOT / 'plugin.video.nuviohub/resources/lib/tmdbh_player.py').read_text(encoding='utf-8')
 shortcut = (ROOT / 'plugin.video.nuviohub/resources/lib/shortcut_manager.py').read_text(encoding='utf-8')
-ok('legacy addon migration retained', "OLD_ID = 'plugin.video.dexhub'" in fork)
-ok('legacy addon disable retained', "'plugin.video.dexhub'" in bundle)
-ok('legacy TMDb player cleanup retained', "'dexhub'" in tmdbh and "'dex_hub'" in tmdbh)
-ok('legacy keymap cleanup retained', "'dexhub-switch-source.xml'" in shortcut)
+ok('legacy prefix assembled at runtime', 'bytes((100, 101, 120))' in legacy)
+ok('legacy addon migration retained', 'OLD_ADDON_ID as OLD_ID' in fork)
+ok('legacy addon disable retained', 'OLD_ADDON_ID' in bundle)
+ok('legacy TMDb player cleanup retained', 'OLD_PLAYER_PREFIXES' in tmdbh and 'OLD_PLAYER_NAME' in tmdbh)
+ok('legacy keymap cleanup retained', 'OLD_KEYMAP_FILENAMES' in shortcut)
+service = (ROOT / 'plugin.video.nuviohub/service.py').read_text(encoding='utf-8')
+ok('legacy settings migration retained', 'legacy_names.carry_forward' in service)
 
 # Python 3.14 removed-stdlib audit. Kodi 22 Beta 2 moved to Python 3.14.7.
 removed_modules = {

@@ -254,7 +254,7 @@ class Nuvio:
         return out
 
     @staticmethod
-    def _addons_to_dex(addons):
+    def _addons_to_local(addons):
         out, seen = [], set()
         for a in addons or []:
             url = (a.get('url') or a.get('transportUrl') or a.get('manifestUrl')
@@ -274,7 +274,7 @@ class Nuvio:
         return [value for value in (to_wire(r) for r in rows or [] if isinstance(r, dict)) if value is not None]
 
     @staticmethod
-    def _progress_to_dex(entries):
+    def _progress_to_local(entries):
         from resources.lib.progress_model import from_wire
         return [value for value in (from_wire(e) for e in entries or []) if value is not None]
 
@@ -360,7 +360,7 @@ class Nuvio:
             rows = Nuvio._rest_get(
                 '/rest/v1/addons?profile_id=eq.%d'
                 '&select=url,name,enabled,sort_order&order=sort_order.asc' % addon_pid)
-            remote_dex, disabled = [], 0
+            remote_local, disabled = [], 0
             for r in (rows if isinstance(rows, list) else []):
                 if not isinstance(r, dict):
                     continue
@@ -370,10 +370,10 @@ class Nuvio:
                 if r.get('enabled') is False:
                     disabled += 1
                     continue
-                remote_dex.append({'manifest_url': url, 'name': str(r.get('name') or '')})
+                remote_local.append({'manifest_url': url, 'name': str(r.get('name') or '')})
             _log('nuvio addons pull: %d enabled, %d disabled skipped (profile %s)'
-                 % (len(remote_dex), disabled, pid))
-            merged = _merge_by_url(merged, remote_dex)
+                 % (len(remote_local), disabled, pid))
+            merged = _merge_by_url(merged, remote_local)
         if direction != 'pull':
             addons = Nuvio._addons_to_nuvio(merged)
             if addons:
@@ -453,7 +453,7 @@ class Nuvio:
         return out
 
     @staticmethod
-    def _library_to_dex(rows):
+    def _library_to_local(rows):
         out = []
         for r in rows or []:
             if not isinstance(r, dict):
@@ -495,9 +495,9 @@ class Nuvio:
                 if len(batch) < Nuvio._LIB_PAGE:
                     break
                 offset += Nuvio._LIB_PAGE
-            remote_dex = Nuvio._library_to_dex(remote_rows)
-            _log('nuvio library pull: %d item(s)' % len(remote_dex))
-            merged = _merge_library(merged, remote_dex)
+            remote_local = Nuvio._library_to_local(remote_rows)
+            _log('nuvio library pull: %d item(s)' % len(remote_local))
+            merged = _merge_library(merged, remote_local)
         if direction != 'pull':
             items = Nuvio._library_to_nuvio(merged)
             if items:
@@ -524,7 +524,7 @@ class Nuvio:
             payload = rpc('sync_pull_watch_progress', {'p_profile_id': pid})
             if not isinstance(payload, list):
                 raise ValueError('Invalid Nuvio progress response; previous local progress was kept.')
-            remote = Nuvio._progress_to_dex(payload)
+            remote = Nuvio._progress_to_local(payload)
         by_id = {model.identity(r): r for r in remote}
         push, deletes, acknowledged = [], [], []
         for row in local:
@@ -619,7 +619,7 @@ class Stremio:
 
     # ── mappers ──
     @staticmethod
-    def _addons_to_dex(addons):
+    def _addons_to_local(addons):
         out = []
         for a in addons or []:
             manifest = a.get('manifest') or {}
@@ -636,7 +636,7 @@ class Stremio:
             return None
 
     @staticmethod
-    def _library_to_dex(items):
+    def _library_to_local(items):
         out = []
         for it in items or []:
             if not it or it.get('removed'):
@@ -709,7 +709,7 @@ class Stremio:
         remote = Stremio._api('addonCollectionGet', {'authKey': key, 'update': True}) or {}
         remote_addons = remote.get('addons') or []
         if direction != 'push':
-            merged = _merge_by_url(providers, Stremio._addons_to_dex(remote_addons))
+            merged = _merge_by_url(providers, Stremio._addons_to_local(remote_addons))
         if direction != 'pull':
             # build collection: keep protected/existing, fetch manifests for new
             remote_by_url = {}
@@ -748,7 +748,7 @@ class Stremio:
             if it and it.get('_id'):
                 by_id[it['_id']] = it
         if direction != 'push':
-            merged = _merge_progress(rows, Stremio._library_to_dex(items))
+            merged = _merge_progress(rows, Stremio._library_to_local(items))
         if direction != 'pull':
             changes = Stremio._progress_to_stremio(merged, by_id)
             # v4.4.2: never push a datetime stremio-core would choke on —

@@ -1,7 +1,7 @@
 """Bounded image-byte cache. Kodi retains ownership of decoded GUI textures.
 
 Only presentation URLs pass through this cache; provider/playback metadata never
-stores loopback URLs. Four HTTP workers cap concurrent upstream downloads.
+stores loopback URLs. Six HTTP workers on a keep-alive pool cap concurrent upstream downloads.
 """
 from collections import OrderedDict
 from concurrent.futures import ThreadPoolExecutor
@@ -28,12 +28,34 @@ def image_type(data):
     return ''
 
 
+def _pool():
+    """Shared keep-alive pool: posters come from a few CDNs, so reusing TLS
+    connections removes a handshake from nearly every image. None = urllib."""
+    try:
+        from .nuviohub.client import _ensure_pool
+        return _ensure_pool()
+    except Exception:
+        return None
+
+
 def fetch(url):
     if urlsplit(url).scheme not in ('http','https'):raise ValueError('Not a remote image')
-    with urlopen(Request(url,headers={'User-Agent':'Nuvio/6.0'}),timeout=5) as response:
-        size=int(response.headers.get('Content-Length') or 0)
-        if size>MAX_IMAGE:raise ValueError('Image too large')
-        data=response.read(MAX_IMAGE+1)
+    headers={'User-Agent':'Nuvio/6.0'}
+    pool=_pool()
+    if pool is not None:
+        response=pool.request('GET',url,headers=headers,timeout=5.0,retries=False,redirect=True,preload_content=False)
+        try:
+            if response.status>=400:raise ValueError('Image HTTP %d'%response.status)
+            size=int(response.headers.get('Content-Length') or 0)
+            if size>MAX_IMAGE:raise ValueError('Image too large')
+            data=response.read(MAX_IMAGE+1)
+        finally:
+            response.release_conn()
+    else:
+        with urlopen(Request(url,headers=headers),timeout=5) as response:
+            size=int(response.headers.get('Content-Length') or 0)
+            if size>MAX_IMAGE:raise ValueError('Image too large')
+            data=response.read(MAX_IMAGE+1)
     if len(data)>MAX_IMAGE or not image_type(data):raise ValueError('Unsupported image')
     return data
 
@@ -147,8 +169,10 @@ class Server(HTTPServer):
     allow_reuse_address=True
     request_queue_size=16
     def __init__(self,address,cache):
-        self.cache=cache;self.pool=ThreadPoolExecutor(max_workers=4,thread_name_prefix='NuvioArt')
-        self.slots=threading.BoundedSemaphore(8)
+        # Kodi loads a screen of posters, fanart and logos at once. Queue them
+        # instead of dropping the ninth connection, which left blank cards.
+        self.cache=cache;self.pool=ThreadPoolExecutor(max_workers=6,thread_name_prefix='NuvioArt')
+        self.slots=threading.BoundedSemaphore(48)
         super().__init__(address,Handler)
     def process_request(self,request,address):
         if not self.slots.acquire(False):

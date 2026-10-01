@@ -57,8 +57,8 @@ class TestClassicOnlyLook(unittest.TestCase):
         self.assertNotIn('6E000000', SKIN)   # fanart light dim is gone
         self.assertNotIn('<animation', SKIN.split('<controls>')[-1].split('>')[0])
 
-    def test_dex_crimson_is_addon_default(self):
-        # v4.7.1 user decision: Dex Crimson (preset 1) is the brand default
+    def test_nuvio_crimson_is_addon_default(self):
+        # v4.7.1 user decision: Nuvio Crimson (preset 1) is the brand default
         # (was Amber Cinema through 4.4-4.7.0).
         seg = SETTINGS.split('id="theme_preset"')[1][:220]
         self.assertIn('default="1"', seg)

@@ -34,6 +34,7 @@ import xbmcaddon
 from .nuviohub import store as _store
 from .nuviohub.client import fetch_meta
 from .art import extract_ids
+from .legacy_names import BRIDGE_HOSTS, BRIDGE_MARKERS
 
 # --- nuviohub-401-patch ---
 try:
@@ -369,10 +370,10 @@ def _provider_supports_meta(provider):
     return False
 
 
-# --- Stream-only detection (Plex/Emby/Plexio/Jellyfin/DexBridge) --------
+# --- Stream-only detection (Plex/Emby/Plexio/Jellyfin/bridge add-ons) --
 # These providers have private-token poster URLs that Kodi can't reliably
 # load, so 'auto' meta-source mode auto-replaces them with remote art.
-_STREAM_ONLY_HINTS = ('plex', 'plexio', 'emby', 'jellyfin', 'dexbridge')
+_STREAM_ONLY_HINTS = ('plex', 'plexio', 'emby', 'jellyfin') + BRIDGE_MARKERS
 
 # Negative hints for meta-source picker — these addons CAN report meta but
 # the user almost never wants them as the *primary* metadata source for
@@ -399,8 +400,7 @@ def _provider_is_plexio(provider):
     haystack = _provider_haystack(provider)
     return any(hint in haystack for hint in (
         'plexio', 'plexbridge', 'com.stremio.plexio', 'com.stremio.plexbridge',
-        'plexio.dexworld.cc'
-    ))
+    ) + BRIDGE_HOSTS)
 
 
 def _provider_looks_like_meta_source(provider):
@@ -703,7 +703,7 @@ def override_virtual_meta(target_key, media_type, meta):
 
 
 def override_meta(provider, media_type, meta):
-    "Apply per-provider metadata override.\n\n    'native' is treated as a STRICT no-op — the provider's own meta is\n    returned untouched, even if it looks sparse. This is what '\u0627\u062d\u062a\u0631\u0627\u0645\n    \u0627\u062e\u062a\u064a\u0627\u0631 \u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645' means for users that explicitly prefer Plexio/DexBridge\n    meta because their setup already has rich local artwork.\n    "
+    "Apply per-provider metadata override.\n\n    'native' is treated as a STRICT no-op — the provider's own meta is\n    returned untouched, even if it looks sparse. This is what '\u0627\u062d\u062a\u0631\u0627\u0645\n    \u0627\u062e\u062a\u064a\u0627\u0631 \u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645' means for users that explicitly prefer Plexio/bridge add-on\n    meta because their setup already has rich local artwork.\n    "
     if not provider:
         return meta
     source_id = get_meta_source_for(provider.get('id'))

@@ -217,13 +217,16 @@ def apply_clean_defaults_once():
     try:
         rev = (_fresh.getSetting('nuviohub_defaults_rev') or '').strip()
         if not rev:
-            legacy_rev = (_fresh.getSetting('dexhub_defaults_rev') or '').strip()
-            if legacy_rev:
-                rev = legacy_rev
-                try:
-                    ADDON.setSetting('nuviohub_defaults_rev', legacy_rev)
-                except Exception:
-                    pass
+            from . import legacy_names
+            from .nuviohub.common import profile_path
+            try:
+                # Same rule as below: never write while Kodi's settings dialog
+                # holds its own copy of these values.
+                if (not xbmc.getCondVisibility('Window.IsVisible(addonsettings)') and
+                        legacy_names.carry_forward(_fresh, profile_path())):
+                    rev = (_fresh.getSetting('nuviohub_defaults_rev') or '').strip()
+            except Exception:
+                pass
     except Exception:
         rev = ''
     if rev == '470-release-defaults':

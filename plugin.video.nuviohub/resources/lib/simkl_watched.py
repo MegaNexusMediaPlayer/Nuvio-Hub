@@ -5,6 +5,7 @@ import time
 import copy
 from . import simkl
 _MEM={}
+_NO_ACCOUNT={'items':{}}  # Shared, never mutated: snapshot() deep-copies it.
 
 def _invalidate_view():
     # An open Home must remove progress that was marked watched on Simkl too.
@@ -21,7 +22,7 @@ def _path():return os.path.join(os.path.dirname(simkl.TOKEN_PATH),'simkl_watched
 
 def _remote_snapshot():
     account=_account()
-    if not account:return {'items':{}}
+    if not account:return _NO_ACCOUNT
     path=_path()
     try:stamp=os.stat(path).st_mtime_ns
     except OSError:stamp=0
@@ -31,15 +32,28 @@ def _remote_snapshot():
     _MEM.update(key=memo,data=data if data.get('account')==account else {'account':account,'items':{}})
     return _MEM['data']
 
+_MERGED={}
+
+
 def snapshot():
-    local=copy.deepcopy(_remote_snapshot())
+    """Merged watched view. Read-only: callers that change it must deep-copy.
+
+    Rebuilt only when the Simkl file or the local playback database changes, so
+    painting every Home shelf does not deep-copy the whole watched history.
+    """
+    remote=_remote_snapshot()
     try:
         from . import playback_store
-        for identity,entry in playback_store.watched_snapshot().items():
-            target=local.setdefault('items',{}).setdefault(identity,{'watched':False,'seasons':[],'episodes':[]})
-            target['watched']=bool(target.get('watched') or entry.get('watched'))
-            target['episodes']=sorted(set(target.get('episodes',[]))|set(entry.get('episodes',[])))
-    except Exception:pass
+        watched=playback_store.watched_snapshot()
+    except Exception:watched=None
+    if _MERGED.get('remote') is remote and _MERGED.get('watched') is watched and 'data' in _MERGED:
+        return _MERGED['data']
+    local=copy.deepcopy(remote)
+    for identity,entry in (watched or {}).items():
+        target=local.setdefault('items',{}).setdefault(identity,{'watched':False,'seasons':[],'episodes':[]})
+        target['watched']=bool(target.get('watched') or entry.get('watched'))
+        target['episodes']=sorted(set(target.get('episodes',[]))|set(entry.get('episodes',[])))
+    _MERGED.clear();_MERGED.update(remote=remote,watched=watched,data=local)
     return local
 
 

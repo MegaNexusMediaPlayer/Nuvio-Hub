@@ -8,7 +8,7 @@ properties that NuvioHub's WindowXML dialogs bind to. The result: NuvioHub adopt
 the host skin's identity instead of looking like a foreign add-on.
 
 Supported skins get their real accent read directly; any unknown skin falls
-back to the DexWorld brand palette so nothing ever looks broken.
+back to the Nuvio brand palette so nothing ever looks broken.
 
 Published properties (Window 10000):
     nuviohub.theme.accent        AARRGGBB  primary accent
@@ -31,7 +31,7 @@ import xbmcgui
 
 HOME = xbmcgui.Window(10000)
 
-# DexWorld brand palette — the fallback identity when the skin is unknown
+# Nuvio brand palette — the fallback identity when the skin is unknown
 # or exposes no usable accent.
 BRAND_ACCENT = 'FF8B5CF6'     # refined violet
 BRAND_SECONDARY = 'FF22D3EE'  # crisp cyan
@@ -311,7 +311,7 @@ def clear_theme():
 # --------------------------------------------------------------------------- #
 #  v4.6.0: stable per-provider identity colours                               #
 #                                                                             #
-#  Every provider (Dexstreams, Arabmedia, Plex, ...) gets ONE colour that is  #
+#  Every provider (Arabmedia, Plex, ...) gets ONE colour that is  #
 #  identical on the loading dashboard, the results rows, and the filter       #
 #  chips — session after session — because it is derived from the provider    #
 #  NAME (crc32), not from arrival order. Eight hues, tuned to stay readable   #

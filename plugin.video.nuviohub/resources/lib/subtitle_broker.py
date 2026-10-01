@@ -178,7 +178,7 @@ def _candidate_ids(ctx):
 
     Never emit ``imdb:tt...`` and never append S/E to an ID that already
     contains an episode suffix. Those malformed variants were accepted by
-    some addons but interpreted literally by Dex subtitles, producing values
+    some addons but interpreted literally by some subtitle add-ons, producing values
     such as ``imdb:tt1981558:1:1`` or ``tt...:1:1:1:1``.
     """
     def _imdb(value):
@@ -385,7 +385,7 @@ def search_subtitles(ctx, initial_subtitles=None, max_results=12):
     candidates = _candidate_ids(ctx)
     if not candidates or not any(c.startswith('tt') for c in candidates):
         # v4.8.8: resolve the IMDb id when we do not already have one.
-        # Verified against the DexWorld subtitles engine (ai_subtitles.js):
+        # Verified against the AI subtitles engine (ai_subtitles.js):
         # its manifest declares idPrefixes ["tt"], so a request carrying only
         # tmdb:/tvdb: ids can never be answered — and NuvioHub has deferred
         # IMDb resolution since 4.5.0, which means the common case reached

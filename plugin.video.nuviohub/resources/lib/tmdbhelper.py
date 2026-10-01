@@ -263,7 +263,7 @@ def get_external_ids_from_db(tmdb_id='', media_type='movie', imdb_id='', tvdb_id
     This is intentionally read-only and API-free.  Stremio stream addons such
     as Torrentio/AIOStreams usually resolve best with IMDb `tt...` ids, while
     Kodi/TMDb Helper handoffs often start as `tmdb:123`.  Stremio itself sends
-    the configured addon the canonical id that the Stremio catalogue has; Dex
+    the configured addon the canonical id that the Stremio catalogue has; Nuvio
     Hub must recreate that by enriching ids locally before calling /stream.
     """
     mt = _normalize_media_type(media_type)

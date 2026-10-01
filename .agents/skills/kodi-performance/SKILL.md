@@ -17,10 +17,21 @@ has a 128 MiB logical browse-payload budget; pages, Python objects and decoded
 Kodi/GPU textures add overhead. Separate Kodi interpreters can own separate
 cache instances. Do not advertise this as a global 200 MiB process cap.
 
-Home startup checks/promotes persisted first pages, warms misses with at most
-four workers and a 40-second total foreground budget, and lets Back skip.
-Warm-up covers each configured catalog's initial page, not all pagination or
-full details of every title. Poster priming is bounded and cancellation-aware.
+Home startup checks/promotes persisted first pages with one SQLite read, warms
+misses with at most four workers and a 40-second total foreground budget, and
+lets Back skip. Warm-up covers each configured catalog's initial page, not all
+pagination or full details of every title. Poster priming is bounded and
+cancellation-aware.
+
+Catalog pages are stale-while-revalidate (6.0.11): fresh for 30 minutes, then
+usable as stale for 7 days while one daemon worker with a 64-entry queue
+revalidates them. Stale pages never trigger the loading screen. `peek` and
+`load_catalog(cached_only=...)` are network-free; Home paints cached shelves
+synchronously (disk point lookups only for the first six shelves). A collection
+tile that stays selected for 250 ms is prefetched with its neighbours on one
+worker; moving on cancels queued prefetches. Identical reloads do not rebuild a
+list. `simkl_watched.snapshot()` and `metadata_providers.signature()` are
+memoized and must be treated as read-only.
 
 ## Preferred optimizations
 

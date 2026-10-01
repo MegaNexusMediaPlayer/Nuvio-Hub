@@ -66,7 +66,7 @@ class CollectionsTests(unittest.TestCase):
         api = SimpleNamespace(_home_row_visible=lambda key:key=='continue',
                               _setting=lambda *args:'false',
                               _home_payload=lambda **kw:{'continue':[]},build_url=lambda **kw:'plugin://plugin.video.nuviohub/?'+kw['action'])
-        with mock.patch.object(h,'_api',return_value=api), mock.patch('dexlib.backend_api.provider',return_value={'id':'meta'}):
+        with mock.patch.object(h,'_api',return_value=api), mock.patch('nuviolib.backend_api.provider',return_value={'id':'meta'}):
             shelves=h.initial_shelves()
         self.assertEqual([r['title'] for r in shelves[:4]],['Continue Watching','Discover','Streaming Services','Genres'])
         self.assertEqual(shelves[2]['rows'][0]['title'],'Netflix')
