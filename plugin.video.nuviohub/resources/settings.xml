@@ -1,7 +1,7 @@
 <settings>
   <category label="Nuvio Hub">
     <setting type="lsep" label="Nuvio interface" />
-    <setting type="action" label="Open Nuvio settings" action="RunScript(script.nuvio,settings)" option="close" />
+    <setting type="action" label="Open HUB settings" action="RunScript(script.nuvio,settings)" option="close" />
     <setting type="action" label="Install or repair the Nuvio interface, skin and screensaver" action="RunPlugin(plugin://plugin.video.nuviohub/?action=nuvio_install)" option="close" />
     <setting type="sep" />
     <setting type="lsep" label="Updates · installed automatically from the Nuvio Hub GitHub releases" />

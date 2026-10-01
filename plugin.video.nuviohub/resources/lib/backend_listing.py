@@ -7,7 +7,7 @@ def render(params):
     from .nuviohub.client import fetch_catalog
     source=backend_api.provider('metadata')
     if not source:
-        p.add_item('Connect AIOMetadata in Nuvio Settings',p.build_url(action='first_run_wizard'),is_folder=False)
+        p.add_item('Connect AIOMetadata in HUB Settings',p.build_url(action='first_run_wizard'),is_folder=False)
         return p.end_dir(content='files',cache=False)
     mt=params.get('media_type') or 'movie';cid=params.get('catalog_id') or ''
     catalog=next((c for c in (source.get('manifest') or {}).get('catalogs') or [] if c.get('id')==cid and c.get('type')==mt),None)

@@ -38,7 +38,7 @@ def _summary():
     return '\n'.join(['Nuvio account: '+('Connected' if sync.Nuvio.is_linked() else 'Skipped'),
                       'Metadata: '+name(meta),'Streams: '+name(streams),
                       'Simkl: '+('Connected' if simkl.authorized() else 'Skipped'),
-                      '', 'You can change every choice in Nuvio Settings.'])
+                      '', 'You can change every choice in HUB Settings.'])
 
 
 def _finish():

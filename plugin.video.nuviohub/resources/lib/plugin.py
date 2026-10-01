@@ -6551,8 +6551,8 @@ def _home_bucket_visible(bucket):
 
 def home():
     # Only a small recovery directory sits behind the independent Nuvio UI.
-    add_item('Open Nuvio', build_url(action='home_xml'))
-    add_item('Nuvio Settings', build_url(action='first_run_wizard'), is_folder=False)
+    add_item('MegaNexus', build_url(action='home_xml'))
+    add_item('HUB Settings', build_url(action='first_run_wizard'), is_folder=False)
     add_item('Repair Nuvio installation', build_url(action='nuvio_install'), is_folder=False)
     add_item('Remove Nuvio build', build_url(action='nuvio_uninstall'), is_folder=False)
     end_dir(content='files', cache=False)

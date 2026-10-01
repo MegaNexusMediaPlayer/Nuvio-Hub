@@ -19,6 +19,8 @@ from .home_trailers import PreviewPlayer
 from .system_setup import rpc
 
 DEFAULT_ART='special://home/addons/script.nuvio/resources/media/nuvio_banner.png'
+# Built-in animated MegaNexus loop (H.264, 1080p, 12 s, no audio track).
+BUILTIN_VIDEO='special://home/addons/script.nuvio/resources/media/meganexus_saver.mp4'
 VIDEO_EXTENSIONS=('.mp4','.m4v','.mkv','.webm','.mov','.avi','.ts','.m2ts')
 
 

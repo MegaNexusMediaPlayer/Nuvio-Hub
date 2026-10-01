@@ -218,4 +218,4 @@ def run():
 if __name__=='__main__':
     import xbmcgui
     try:run()
-    except Exception as exc:xbmcgui.Dialog().ok('Nuvio removal',str(exc) if isinstance(exc,ValueError) else 'Removal could not finish. Restart Kodi, then retry from Nuvio Settings.')
+    except Exception as exc:xbmcgui.Dialog().ok('Nuvio removal',str(exc) if isinstance(exc,ValueError) else 'Removal could not finish. Restart Kodi, then retry from HUB Settings.')

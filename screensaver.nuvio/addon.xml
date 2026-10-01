@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addon id="screensaver.nuvio" name="Nuvio" version="6.0.19" provider-name="Nuvio community build">
+<addon id="screensaver.nuvio" name="Nuvio" version="6.0.20" provider-name="Nuvio community build">
   <requires>
     <import addon="xbmc.python" version="3.0.0" />
-    <import addon="script.nuvio" version="6.0.19" />
+    <import addon="script.nuvio" version="6.0.20" />
   </requires>
   <extension point="xbmc.ui.screensaver" library="default.py" />
   <extension point="xbmc.addon.metadata">

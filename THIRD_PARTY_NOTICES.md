@@ -4,7 +4,7 @@ The baseline includes the original source notices and license texts. Relevant or
 
 - Backend: MIT license, see `plugin.video.nuviohub/LICENSE.txt`.
 - [Kodi 21.3 Estuary](https://github.com/xbmc/xbmc/tree/21.3-Omega/addons/skin.estuary): the skin foundation, standard dialogs, fonts and OSD. Code and artwork have the licenses described in `skin.nuvio/LICENSE.txt`.
-- [NuvioTV](https://github.com/NuvioMedia/NuvioTV): original Nuvio mark/wordmark assets. Existing attribution records commit `71632b9271e8bce6783e415d64f34cfa4e8b894c` and includes its GPL-3.0 text.
+- [NuvioTV](https://github.com/NuvioMedia/NuvioTV): Nuvio mark/wordmark assets used up to 6.0.19 (commit `71632b9271e8bce6783e415d64f34cfa4e8b894c`); its GPL-3.0 text stays included. Since 6.0.20 the logos are the project's own MegaNexus artwork.
 - [stremio-perfect-setup](https://github.com/luckynumb3rs/stremio-perfect-setup): the origin recorded for supplied collection artwork/configuration. Its inclusion is an attribution, not a claim that this project owns third-party media or service marks.
 
 The four component directories contain the detailed notices. Third-party Python code and skin assets retain their individual headers and license files. Do not remove them when redistributing or contributing.

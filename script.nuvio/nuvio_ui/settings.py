@@ -310,7 +310,7 @@ def trailers():
 def performance():
     from resources.lib.art_cache import selected_mode
     keys=['ram200','disk246','disk512','off']
-    labels=['RAM · 200 MiB (160 images + 40 metadata)','Internal disk images · 246 MiB','Internal disk images · 512 MiB','Images off · Kodi texture cache only']
+    labels=['RAM · 200 MiB','Internal disk images · 246 MiB','Internal disk images · 512 MiB','Images off · Kodi texture cache only']
     def rows():
         mode=selected_mode(ADDON)
         label=labels[keys.index(mode)] if mode in keys else labels[-1]
@@ -323,8 +323,6 @@ def performance():
             index=xbmcgui.Dialog().select('Cache limit · downloaded images',labels,preselect=keys.index(mode) if mode in keys else 0)
             if index>=0:
                 ADDON.setSetting('nuvio_art_cache',keys[index]);xbmc.executebuiltin('NotifyAll(nuvio,artcache.configure)')
-        elif pick==1:
-            xbmcgui.Dialog().ok('Image cache','RAM 200: 160 MiB of image bytes plus 40 MiB of serialized metadata. Metadata also has a 128 MiB disk budget. Kodi decoded textures and Python overhead are separate. Startup warms first catalog pages, not every title in an unlimited catalog. Missing pages load on demand.')
         elif pick==2:
             from . import browse_meta
             browse_meta.clear(persistent=True)
@@ -334,18 +332,26 @@ def performance():
 
 
 def screensaver_media():
-    def rows():
+    from .saver import BUILTIN_VIDEO
+    def current():
         kind=ADDON.getSetting('nuvio_screensaver_type') or 'image'
-        return [page.item('Image / animated GIF','Selected' if kind!='video' else ''),
-                page.item('Animated video · MP4, MKV, WebM, MOV','Selected' if kind=='video' else ''),
-                page.item('Restore default Nuvio artwork'),page.item('Back')]
+        if kind=='video':return 1 if ADDON.getSetting('nuvio_screensaver_video')==BUILTIN_VIDEO else 3
+        return 2 if ADDON.getSetting('nuvio_screensaver_art') else 0
+    def rows():
+        selected=current()
+        return [page.item(label,'Selected' if selected==i else '') for i,label in enumerate((
+                    'MegaNexus · standard image','MegaNexus · animated video',
+                    'Custom image / animated GIF','Custom video · MP4, MKV, WebM, MOV'))]+[page.item('Back')]
     def choose(pick):
-        if pick==3:return page.DONE
-        if pick==2:
+        if pick==4:return page.DONE
+        if pick==0:
             ADDON.setSetting('nuvio_screensaver_type','image')
             ADDON.setSetting('nuvio_screensaver_art','');ADDON.setSetting('nuvio_screensaver_video','')
+        elif pick==1:
+            ADDON.setSetting('nuvio_screensaver_art','');ADDON.setSetting('nuvio_screensaver_video',BUILTIN_VIDEO)
+            ADDON.setSetting('nuvio_screensaver_type','video')
         else:
-            video=pick==1
+            video=pick==3
             mask='.mp4|.m4v|.mkv|.webm|.mov|.avi|.ts|.m2ts' if video else '.png|.jpg|.jpeg|.webp|.gif'
             path=xbmcgui.Dialog().browseSingle(1,'Choose screensaver video' if video else 'Choose image / animated GIF','files',mask)
             if path:
@@ -493,7 +499,7 @@ def run(back_command=''):
             return result if isinstance(result,str) else None
         except Exception as exc:xbmcgui.Dialog().ok('Nuvio',str(exc) if isinstance(exc,ValueError) else 'This operation could not finish. Check the configuration and connection, then retry.')
         finally:settings_cache.invalidate()
-    return page.show('Nuvio Settings',rows,choose,back_result=back_command)
+    return page.show('HUB Settings',rows,choose,back_result=back_command)
 
 
 def subtitle_settings():

@@ -28,7 +28,7 @@
       <width>315</width>
       <height>70</height>
       <font>font13</font>
-      <label>Open Nuvio</label>
+      <label>MegaNexus</label>
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
@@ -46,7 +46,7 @@
       <width>315</width>
       <height>70</height>
       <font>font13</font>
-      <label>Open IPTV</label>
+      <label>IPTV Channels</label>
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
@@ -64,7 +64,7 @@
       <width>315</width>
       <height>70</height>
       <font>font13</font>
-      <label>Nuvio Settings</label>
+      <label>HUB Settings</label>
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>

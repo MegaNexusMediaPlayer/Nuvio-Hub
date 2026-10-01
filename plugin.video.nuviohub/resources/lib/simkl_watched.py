@@ -112,7 +112,7 @@ def refresh(force=False, max_age=900):
     return result
 
 def mark(ctx,scope='title',season=None,episode=None):
-    if not simkl.authorized():raise ValueError('Connect Simkl in Nuvio Settings first.')
+    if not simkl.authorized():raise ValueError('Connect Simkl in HUB Settings first.')
     ids=simkl._ids_from_ctx(ctx)
     if not ids:raise ValueError('This title has no IMDb, TMDb or TVDb ID for Simkl.')
     account=_account();media='movie' if ctx.get('media_type')=='movie' else 'series'

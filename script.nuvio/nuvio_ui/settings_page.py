@@ -48,7 +48,7 @@ class SettingsPage(Dialog):
         def act():
             try:return self.choose(position)
             except Exception as exc:
-                xbmcgui.Dialog().ok('Nuvio Settings',str(exc) if isinstance(exc,ValueError) else 'Could not save this change. Check the configuration and try again.')
+                xbmcgui.Dialog().ok('HUB Settings',str(exc) if isinstance(exc,ValueError) else 'Could not save this change. Check the configuration and try again.')
                 return None
         try:
             # A plain On/Off switch changes in place. Any other row may open Kodi

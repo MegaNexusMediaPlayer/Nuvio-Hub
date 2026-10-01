@@ -40,7 +40,7 @@ NUMB3RS_HELP = (
     'The numb3rs collections use catalogs from AIOMetadata set up the numb3rs way.\n\n'
     '1. Open ' + NUMB3RS_URL + ' on a phone or PC and follow its AIOMetadata setup.\n'
     '2. Copy your AIOMetadata manifest URL (it ends with /manifest.json).\n'
-    '3. Nuvio Settings > Add-ons > Add configured manifest URL, then switch it ON\n'
+    '3. HUB Settings > Add-ons > Add configured manifest URL, then switch it ON\n'
     '   under Metadata add-ons.\n\n'
     'Until then those collections stay empty; Cinemeta keeps working. You can also\n'
     'set collections up in Nuvio web and import them from your Nuvio account.')

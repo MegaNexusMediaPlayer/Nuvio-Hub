@@ -13,7 +13,7 @@ PACKAGES.mkdir(parents=True,exist_ok=True)
 OMIT_UI={'home_window.py','home_trailers.py','source_browser.py','sources_loading.py','skin_theme.py','search_window.py'}
 BACK_MEDIA={'icon.png','nuvio_mark.png','nuvio_banner.png'}
 UI_MEDIA={'nuvio_video_vignette.png','kofi_qr.png','nuvio_poster_mask_v2.png','nuvio_poster_focus_v2.png','nuvio_tile_mask_v2.png','nuvio_tile_focus_v2.png','person.png','person_circle.png','person_ring.png','black.png','white.png','nuvio_mark.png','nuvio_wordmark.png','nuvio_banner.png','nuvio_hero_shade.png','nuvio_hero_fade.png',
-          'nuvio_pill.png','nuvio_poster_mask.png','nuvio_poster_focus.png','nuvio_poster_blank.png','nuvio_tile_mask.png','nuvio_tile_focus.png'}
+          'nuvio_pill.png','nuvio_poster_mask.png','nuvio_poster_focus.png','nuvio_poster_blank.png','nuvio_tile_mask.png','nuvio_tile_focus.png','meganexus_saver.mp4'}
 COLLECTION_MEDIA={value for group in json.loads((BACK/'resources/collections.json').read_text(encoding='utf-8'))
                   for folder in group['folders'] for key,value in folder.items()
                   if key in ('cover','backdrop','animation') and isinstance(value,str) and value.startswith('resources/media/collections/')}

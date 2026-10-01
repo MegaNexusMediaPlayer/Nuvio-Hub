@@ -350,7 +350,7 @@ def history_payload(ctx):
 
 def add_to_library(ctx):
     """Save a whole title to Simkl Plan to Watch; never mark episodes watched."""
-    if not authorized():raise ValueError('Connect Simkl in Nuvio Settings first.')
+    if not authorized():raise ValueError('Connect Simkl in HUB Settings first.')
     ids = _ids_from_ctx(ctx)
     if not ids:raise ValueError('This title has no IMDb, TMDb or TVDb ID for Simkl.')
     kind = 'shows' if ctx.get('media_type') in ('series','tv','show','tvshow','anime','episode') else 'movies'
