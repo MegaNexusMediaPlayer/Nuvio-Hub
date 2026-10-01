@@ -172,6 +172,7 @@
     <setting id="nuvio_imdb_trailer_quality" type="text" default="480" visible="false" />
     <setting id="nuvio_show_ratings" type="bool" default="true" visible="false" />
     <setting id="nuvio_stream_switch_612" type="bool" default="false" visible="false" />
+    <setting id="nuvio_home_continue" type="bool" default="true" visible="false" />
     <setting id="nuvio_animated_art" type="text" default="false" visible="false" />
     <setting id="nuvio_art_cache" type="text" default="ram200" visible="false" />
     <setting id="nuvio_card_shape" type="text" default="poster" visible="false" />

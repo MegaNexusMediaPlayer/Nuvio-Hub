@@ -6,13 +6,15 @@ import re
 import xbmcaddon
 
 
-def groups():
+def groups(include_hidden=False):
+    """Collection groups; rows hidden in Settings > Collections > Home rows are
+    left out of Home unless ``include_hidden``."""
     from .collection_profile import load
-    return load()
+    return [g for g in load() if include_hidden or not g.get('hidden')]
 
 
 def find_collection(collection_id):
-    for group in groups():
+    for group in groups(include_hidden=True):
         for folder in group['folders']:
             if folder['id'] == collection_id:
                 return folder

@@ -46,25 +46,22 @@ def normalize(data):
                 'backdrop':f.get('backdrop') or f.get('heroBackdropUrl') or '',
                 'animation':f.get('animation') or f.get('focusGifUrl') or '',
                 'hideTitle':bool(f.get('hideTitle')), 'hidden':bool(f.get('hidden'))})
-        if folders:groups.append({'id':gid,'title':name,'folders':folders})
+        if folders:groups.append({'id':gid,'title':name,'folders':folders,'hidden':bool(g.get('hidden'))})
     return groups
 
 def save(data, validation=None):
+    """Save the Home layout. Nothing is network-checked or blocked here (6.0.15):
+    an unavailable catalog just stays empty on Home. ``validation`` - a report
+    from Settings > Collections > Recheck - is stored for reference only."""
     groups = normalize(data)
     if not groups:
         raise ValueError('This export has no supported movie or series collections.')
-    from . import collection_validation as validation_api
-    # All writers, including sync and native settings, obey the same gate.
-    if validation is not None and not validation_api.accepts(groups, validation):
-        raise ValueError('Configuration changed. Validate the collections again before saving.')
-    proof = validation if validation is not None else validation_api.validate(groups)
-    if not proof.get('ok'):
-        raise ValueError(validation_api.message(proof))
     path = profile_file()
     path.parent.mkdir(parents=True, exist_ok=True)
     from .nuviohub.safe_io import write_json
     write_json(str(path), groups)
-    write_json(str(path.with_suffix('.verified.json')), proof)
+    if isinstance(validation, dict):
+        write_json(str(path.with_suffix('.verified.json')), validation)
     _LOADED.clear()  # Coarse file timestamps must not hide a same-size rewrite.
     return sum(len(g['folders']) for g in groups)
 

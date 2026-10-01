@@ -93,7 +93,13 @@ def initial_shelves(bucket=''):
             all_groups[MAX_ROWS-1]['title']='More collections'
         return [tiles(g) for g in all_groups[:MAX_ROWS]]
     if not bucket:
-        shelves.append(continue_shelf())
+        try:
+            from .settings_cache import cached_addon
+            show_continue = cached_addon().getSetting('nuvio_home_continue') != 'false'
+        except Exception:
+            show_continue = True
+        if show_continue:
+            shelves.append(continue_shelf())
         from .collections_home import home_rows
         try:shelves.extend(home_rows())
         except Exception:

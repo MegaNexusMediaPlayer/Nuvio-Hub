@@ -2,8 +2,8 @@
 
 This is a four-component Kodi build: `plugin.video.nuviohub` (backend/service),
 `script.nuvio` (Python/XML frontend), `skin.nuvio` (Kodi shell), and
-`screensaver.nuvio` (screensaver entrypoint). The local 6.0.13 candidate is the
-baseline for this 6.0.14 candidate. Do not publish, push, or change live user
+`screensaver.nuvio` (screensaver entrypoint). The local 6.0.14 candidate is the
+baseline for this 6.0.15 candidate. Do not publish, push, or change live user
 profiles as a side effect of reviewing code.
 
 ## Required repository skills
@@ -15,7 +15,7 @@ claims that a runtime plugin or global agent skill has been installed.
 
 ## Before modifying code
 
-Read the relevant call sites, tests, and `docs/RELEASE-6.0.14.md` (and 6.0.13 back to 6.0.10). Identify which
+Read the relevant call sites, tests, and `docs/RELEASE-6.0.15.md` (and 6.0.14 back to 6.0.10). Identify which
 Kodi process/interpreter owns the work. Keep existing public add-on IDs,
 profile paths, encrypted credentials and migration aliases. Never mass-rename
 legacy state keys or remove upstream license notices. Never replace an
@@ -29,9 +29,9 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
 
 ## Invariants
 
-* Accounts are optional; Home requires enabled metadata and stream providers
-  plus a verified, nonempty collection configuration. Internal presets are
-  explicit candidates only. Match exact manifest/catalog/type identities and
+* Accounts are optional and nothing blocks entry into Nuvio (6.0.15): with no
+  configuration Cinemeta supplies metadata and default collections; collection
+  checks are reports only. The numb3rs presets are an explicit choice. Match exact manifest/catalog/type identities and
   filters; never silently reinterpret a catalog as belonging to another addon.
 * OFF providers stay OFF. Respect per-resource `types` and `idPrefixes`,
   configuration/profile cache boundaries and a bounded request budget.
@@ -63,10 +63,10 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
 ## Required checks (Python 3.9+ review environment)
 
 ```sh
-python review/check_614.py
-python review/check_608_rebrand_kodi22.py 6.0.14
-python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.14.zip
-python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.14.zip
+python review/check_615.py
+python review/check_608_rebrand_kodi22.py 6.0.15
+python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.15.zip
+python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.15.zip
 ```
 
 The first command runs the maintained unit suite, parses XML/JSON, and checks

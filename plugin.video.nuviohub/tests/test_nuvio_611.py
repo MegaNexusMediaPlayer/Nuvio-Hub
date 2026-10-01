@@ -798,14 +798,6 @@ class SetupGateDiagnosis(unittest.TestCase):
         from nuvio_ui import setup_gate
         self.gate = setup_gate
 
-    def test_reasons_name_what_blocks_home(self):
-        with mock.patch.object(self.gate.metadata_providers, 'candidates', return_value=[{'id': 'a'}]), \
-                mock.patch.object(self.gate.metadata_providers, 'enabled', return_value=[]), \
-                mock.patch.object(self.gate.stream_providers, 'candidates', return_value=[]), \
-                mock.patch.object(self.gate.collection_profile, 'load', return_value=[]):
-            self.assertEqual(self.gate.missing(), ['all metadata add-ons are OFF', 'no stream add-on installed',
-                                                   'no collections imported'])
-
     def test_one_tap_switches_every_addon_on(self):
         module = mock.Mock()
         module.candidates.return_value = [{'id': 'a', 'name': 'A'}, {'id': 'b'}]

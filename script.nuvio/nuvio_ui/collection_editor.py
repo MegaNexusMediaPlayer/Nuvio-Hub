@@ -223,37 +223,87 @@ def create_collection():
     return commit_collections(groups)
 
 
+def default_collections():
+    """Cinemeta (no setup, the default) or the numb3rs set (needs AIOMetadata)."""
+    from . import settings
+    from resources.lib import default_setup
+    from resources.lib.nuviohub import store
+    from .playback import job
+    dialog = xbmcgui.Dialog()
+    pick = dialog.select('Default collections', [
+        'Cinemeta · works without any setup (default)',
+        'numb3rs collections · needs AIOMetadata from numb3rs.stream'])
+    if pick < 0:
+        return False
+    if pick == 0:
+        try:job(default_setup.install_cinemeta, label='Setting up Cinemeta')
+        except Exception:dialog.ok('Cinemeta','Cinemeta could not be reached now. The collections are saved and load when it answers.')
+        return settings.commit_collections(default_setup.cinemeta_collections())
+    saved = settings.commit_collections(collection_profile.defaults())
+    ready = default_setup.numb3rs_ready(store.list_providers())
+    dialog.textviewer('numb3rs collections' + (' · AIOMetadata found' if ready else ' · setup needed'),
+                      ('AIOMetadata is installed. If a collection stays empty, check its catalogs at '
+                       + default_setup.NUMB3RS_URL + '.\n\n' if ready else '') + default_setup.NUMB3RS_HELP)
+    return saved
+
+
+def home_rows():
+    """Show or hide whole Home rows: Continue Watching and each collection group."""
+    from . import settings_page as page
+    from . import settings
+    def rows():
+        groups = collection_profile.load()
+        return ([page.item('Continue Watching', enabled=settings.ADDON.getSetting('nuvio_home_continue') != 'false')] +
+                [page.item(g['title'], '%d collections' % len(g['folders']) if not g.get('hidden') else '', enabled=not g.get('hidden'))
+                 for g in groups] + [page.item('Back')])
+    def choose(pick):
+        groups = collection_profile.load()
+        if pick == 0:
+            settings.ADDON.setSetting('nuvio_home_continue', 'true' if settings.ADDON.getSetting('nuvio_home_continue') == 'false' else 'false')
+            return None
+        if pick > len(groups):
+            return page.DONE
+        group = groups[pick - 1]
+        group['hidden'] = not group.get('hidden')
+        collection_profile.save(groups)
+        return None
+    return page.show('Home rows · show or hide', rows, choose)
+
+
 def run():
     from . import settings
     dialog = xbmcgui.Dialog()
     previous = 0
     while True:
-        choice = dialog.select('Collections · verified metadata required', [
-            'Metadata add-ons', 'Edit each collection card',
+        choice = dialog.select('Collections', [
+            'Default collections · Cinemeta or numb3rs', 'Home rows · show or hide',
+            'Edit each collection card', 'Metadata add-ons',
             'Import collections from Nuvio account', 'Import collections JSON (no account needed)',
-            'Check and use internal presets', 'Recheck current collections',
-            'Create a collection from installed catalogs', 'Back'], preselect=previous)
-        if choice < 0 or choice == 7:
+            'Create a collection from installed catalogs', 'Check collection catalogs (report only)',
+            'Back'], preselect=previous)
+        if choice < 0 or choice == 8:
             return
         previous = choice
         try:
             if choice == 0:
-                settings.metadata_addons()
+                default_collections()
             elif choice == 1:
-                edit_items()
+                home_rows()
             elif choice == 2:
-                settings.import_nuvio_collections()
+                edit_items()
             elif choice == 3:
-                import_json()
+                settings.metadata_addons()
             elif choice == 4:
-                settings.commit_collections(collection_profile.defaults())
+                settings.import_nuvio_collections()
             elif choice == 5:
+                import_json()
+            elif choice == 6:
+                create_collection()
+            elif choice == 7:
                 groups = collection_profile.load()
                 if groups:
                     settings.commit_collections(groups, force=True)
                 else:
                     dialog.ok('Collection checks', 'Import or create collections first.')
-            elif choice == 6:
-                create_collection()
         except (ValueError, OSError):
             dialog.ok('Collections', 'The change was not saved. Check the selected catalogs, filters and file format.')

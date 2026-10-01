@@ -214,31 +214,27 @@ def _switch_on_collection_addons(groups, dialog):
 
 
 def commit_collections(data, force=False):
-    """Network validation is cancellable; only the UI commits after success.
+    """Save the Home layout at once - no network check, nothing blocks (6.0.15).
 
-    Individual catalogs that cannot be used are reported and skipped; the
-    collections are saved as long as at least one catalog works.
+    ``force`` additionally runs the catalog check and shows its report; an
+    unavailable catalog is only reported, never a reason to refuse the layout.
     """
-    from resources.lib import collection_validation
-    from .playback import job
     dialog = xbmcgui.Dialog()
     groups = collection_profile.normalize(data)
     _switch_on_collection_addons(groups, dialog)
-    proof = None if force else collection_validation.stored_proof(groups)
-    if proof is None:
+    count = collection_profile.save(groups)
+    if force:
+        from resources.lib import collection_validation
+        from .playback import job
         import threading
         cancel = threading.Event()
-        proof = job(lambda: collection_validation.validate(groups, stopped=cancel.is_set), label='Checking collection catalogs and metadata', cancel=cancel)
-    if proof is None:
-        return False
-    if not proof.get('ok') or not collection_validation.accepts(groups, proof):
-        dialog.ok('Collection check failed', collection_validation.message(proof))
-        return False
-    count = collection_profile.save(groups, validation=proof)
-    if proof.get('skipped') or proof.get('warnings'):
-        dialog.ok('Collections saved', collection_validation.message(proof))
+        proof = job(lambda: collection_validation.validate(groups, stopped=cancel.is_set),
+                    label='Checking collection catalogs', cancel=cancel)
+        if proof is not None:
+            collection_profile.save(groups, validation=proof)
+            dialog.ok('Collection check', collection_validation.message(proof))
     else:
-        dialog.notification('Collections', '%d collections saved · %d catalogs ready' % (count, proof.get('catalogs', 0)))
+        dialog.notification('Collections', '%d collections saved' % count)
     return True
 
 

@@ -1,4 +1,4 @@
-# Install and configure Nuvio Hub 6.0.14 candidate
+# Install and configure Nuvio Hub 6.0.15 candidate
 
 This is a supplied local test bundle, not an automatically published release.
 The supported code/API target is Kodi 21 and Kodi 22; actual rendering, native
@@ -7,40 +7,36 @@ playback and live synchronization still need device acceptance.
 ## Safe upgrade
 
 Back up your Kodi profile first. Stop playback and close the Nuvio frontend.
-Install `Nuvio-Hub-Complete-6.0.14.zip` via Add-ons → Install from zip file. Open
+Install `Nuvio-Hub-Complete-6.0.15.zip` via Add-ons → Install from zip file. Open
 backend **Nuvio Hub** once to update the interface, skin and screensaver, then
-restart Kodi. All four Nuvio components must report 6.0.14. Keep userdata; do
+restart Kodi. All four Nuvio components must report 6.0.15. Keep userdata; do
 not uninstall or delete credentials/settings to update. The source archive is
 for development and is not installable through Kodi's ZIP installer.
 
-## Accounts are optional; validated provider setup is required
+## Accounts are optional; nothing has to be set up first
 
-In Nuvio Settings → Add-ons, add your own configured manifest URLs and enable
-metadata providers under **Metadata add-ons**, then stream providers under
-**Stream add-ons**. Multiple metadata providers can be ON independently. A
-provider marked OFF must never be used as a silent metadata fallback.
+Nuvio opens straight away. When nothing is configured (no Nuvio import, no
+metadata add-on, no collections), Cinemeta — Stremio's public metadata add-on —
+is added automatically and supplies metadata plus default Home collections
+(Popular, Top Rated, New this year and genres).
 
-Next open Collections. Choose one of: import from a connected Nuvio account;
-import a collections JSON export without any account; or create a collection
-from installed catalogs. Provide required catalog filter values. Home requires
-nonempty validated collections and enabled metadata and stream providers.
-An old saved collection set is revalidated without resetting its layout.
+Settings > Collections:
 
-Internal presets are available only as an explicit validation candidate. They
-are not automatically installed, and a provider name/domain alone is not a
-match: manifest addon ID, catalog ID, type, filters and actual sample metadata
-must agree. Each source validates up to two returned IDs; this is an import
-sanity check, not exhaustive proof for every item. Empty/unreachable catalogs
-cannot be verified during initial setup. A failed or canceled import does not
-replace the previous collection file.
+* **Default collections** — Cinemeta (default, no setup) or the numb3rs
+  collections. The numb3rs set needs AIOMetadata configured at
+  https://numb3rs.stream; its manifest URL is added under Settings > Add-ons and
+  switched ON under Metadata add-ons. Nuvio shows these steps when you pick it.
+* **Home rows · show or hide** — switch each collection group and Continue
+  Watching on or off.
+* **Edit each collection card** — name, pictures, Show on Home, and each linked
+  catalog with its own On/Off switch. Changes save at once.
+* Import from a Nuvio account or a JSON export, or create collections from
+  installed catalogs. **Check collection catalogs** gives a report only; an
+  unavailable catalog simply stays empty on Home.
 
-To use the built-in collection presets, configure AIOMetadata with
-https://numb3rs.stream (the preset catalogs match that setup), or set up your
-collections in Nuvio web and import them from your Nuvio account.
-
-A metadata toggle or configuration change invalidates the validation proof.
-Revalidate or update affected collections before returning to Home. A source
-providing catalogs only may use a separately enabled compatible metadata addon.
+In Settings > Add-ons, add your own configured manifest URLs and switch metadata
+and stream add-ons on or off. A metadata add-on that is OFF is never used as a
+silent fallback.
 
 ## Continue Watching
 

@@ -123,11 +123,14 @@ class Collections(ProviderFixture):
         self.assertEqual(profiles.save(self.groups,validation=proof),1)
         self.assertEqual(profiles.load(),self.groups)
         self.assertIsNotNone(validation.stored_proof(profiles.load()))
-    def test_bad_identity_does_not_overwrite_existing_collections(self):
-        profiles.save(self.groups);before=self.path.read_bytes()
+    def test_unknown_catalog_is_saved_and_only_reported(self):
+        # 6.0.15: collections never block; a missing catalog stays empty on Home.
+        profiles.save(self.groups)
         changed=copy.deepcopy(self.groups);changed[0]['folders'][0]['sources'][0]['addonId']='unrelated'
-        with self.assertRaises(ValueError):profiles.save(changed)
-        self.assertEqual(self.path.read_bytes(),before)
+        self.assertEqual(profiles.save(changed),1)
+        self.assertEqual(profiles.load()[0]['folders'][0]['sources'][0]['addonId'],'unrelated')
+        report=validation.validate(changed)
+        self.assertFalse(report['ok']);self.assertTrue(report['skipped'])
     def test_wrong_metadata_sample_fails(self):
         with mock.patch.object(client,'fetch_meta',return_value={'meta':{'id':'tt999'}}):
             self.assertFalse(validation.validate(self.groups)['ok'])
@@ -158,12 +161,12 @@ class Collections(ProviderFixture):
         self.assertEqual(collections.matching_catalog(ref,self.sources)[0]['id'],'p')
         ref['providerId']='second';self.assertEqual(collections.matching_catalog(ref,self.sources)[0]['id'],'second')
         ref['providerId']='unknown-remote-id';self.assertEqual(collections.matching_catalog(ref,self.sources)[0]['id'],'p')
-    def test_cancelled_validation_keeps_previous_file(self):
-        profiles.save(self.groups);before=self.path.read_bytes()
+    def test_cancelled_check_is_only_a_report(self):
+        # 6.0.15: the check is a report stored next to the layout, never a gate.
         proof=validation.validate(self.groups,stopped=lambda:True)
         self.assertFalse(proof['ok'])
-        with self.assertRaises(ValueError):profiles.save(self.groups,validation=proof)
-        self.assertEqual(self.path.read_bytes(),before)
+        self.assertEqual(profiles.save(self.groups,validation=proof),1)
+        self.assertEqual(profiles.load(),self.groups)
     def test_settings_change_invalidates_proof(self):
         proof=validation.validate(self.groups);providers.set_enabled('p',False)
         self.assertFalse(validation.accepts(self.groups,proof))
