@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#040F22">
+<title>MegaNexus setup</title>
+<style>
+:root{--bg:#040F22;--panel:#08204A;--panel2:#0B2A5C;--line:#163A72;--text:#F4F7FC;--muted:#99C9FF;
+  --dim:#7E93B8;--accent:#1E7BF0;--accent2:#4FB3FF;--ok:#3DDC97;--err:#FF7A7A}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:radial-gradient(120% 80% at 50% 0%,#0f3170 0%,var(--bg) 60%) fixed;color:var(--text);
+  font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans",sans-serif}
+header{position:sticky;top:0;z-index:5;background:rgba(4,15,34,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;gap:12px;padding:12px 16px}
+.top img{height:46px}
+.top span{color:var(--muted);font-size:14px;margin-left:auto}
+nav{display:flex;gap:6px;padding:0 12px 10px;overflow-x:auto}
+nav button{flex:1;white-space:nowrap;background:transparent;color:var(--muted);border:1px solid var(--line);
+  border-radius:999px;padding:9px 14px;font-size:14px}
+nav button.on{background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;border-color:transparent}
+main{padding:16px 16px 120px;max-width:720px;margin:0 auto}
+section{display:none}section.on{display:block}
+h2{font-size:18px;margin:22px 0 10px}h2:first-child{margin-top:4px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0}
+.row{display:flex;align-items:center;gap:10px;min-height:44px}
+.row .grow{flex:1;min-width:0}
+.name{font-weight:600;overflow-wrap:anywhere}.sub{color:var(--dim);font-size:13px;overflow-wrap:anywhere}
+input[type=text],input[type=email],input[type=password],input[type=url],select{width:100%;padding:12px;border-radius:12px;
+  border:1px solid var(--line);background:#06183A;color:var(--text);font-size:16px}
+label.f{display:block;color:var(--muted);font-size:13px;margin:12px 0 6px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:0;border-radius:12px;padding:12px 16px;
+  font-size:15px;font-weight:600;color:#fff;background:linear-gradient(135deg,var(--accent2),var(--accent));cursor:pointer}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.btn.small{padding:8px 12px;font-size:13px}.btn.wide{width:100%;margin-top:14px}
+.btn:disabled{opacity:.5}
+.icon{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:#06183A;color:var(--muted);font-size:18px}
+.switch{position:relative;width:50px;height:30px;flex:none}
+.switch input{opacity:0;width:0;height:0}
+.switch i{position:absolute;inset:0;border-radius:999px;background:#1B2C4D;transition:.2s}
+.switch i:after{content:"";position:absolute;width:24px;height:24px;left:3px;top:3px;border-radius:50%;background:#C9D6EA;transition:.2s}
+.switch input:checked+i{background:var(--accent)}.switch input:checked+i:after{transform:translateX(20px);background:#fff}
+details{margin-top:8px}summary{color:var(--muted);font-size:14px;cursor:pointer;padding:6px 0}
+.folder{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+.seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.seg button{flex:1;padding:11px;background:transparent;border:0;color:var(--muted);font-size:14px}
+.seg button.on{background:var(--accent);color:#fff}
+.note{color:var(--dim);font-size:13px;margin:6px 0}
+.msg{margin:10px 0;font-size:14px}.msg.ok{color:var(--ok)}.msg.err{color:var(--err)}
+footer{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:rgba(4,15,34,.95);border-top:1px solid var(--line)}
+footer .btn{width:100%;max-width:720px;display:flex;margin:0 auto;font-size:17px;padding:15px}
+#done{display:none;text-align:center;padding:60px 24px}
+#done h1{font-size:24px}#done p{color:var(--muted)}
+.empty{color:var(--dim);font-size:14px;padding:6px 0}
+</style></head>
+<body>
+<header>
+  <div class="top"><img src="/logo.png" alt="MegaNexus"><span>Setup</span></div>
+  <nav id="tabs">
+    <button data-tab="account" class="on">Account</button>
+    <button data-tab="addons">Add-ons</button>
+    <button data-tab="collections">Collections</button>
+    <button data-tab="display">Display</button>
+  </nav>
+</header>
+<main id="app">
+  <div class="msg" id="msg"></div>
+  <section id="account" class="on"></section>
+  <section id="addons"></section>
+  <section id="collections"></section>
+  <section id="display"></section>
+</main>
+<div id="done"><h1>Saved ✓</h1><p>MegaNexus is starting on your TV.<br>You can close this page.</p>
+  <p class="note">To change something later, open HUB Settings → Set up on phone and scan the new code.</p></div>
+<footer id="bar"><button class="btn" id="save">Save &amp; start MegaNexus</button></footer>
+<script>
+"use strict";
+const KEY = new URLSearchParams(location.search).get('k') || '';
+let S = null;   // state from the TV; edited locally until Save
+
+function el(tag, attrs, ...kids){
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})){
+    if (k === 'class') n.className = v;
+    else if (k === 'text') n.textContent = v;
+    else if (k.startsWith('on')) n.addEventListener(k.slice(2), v);
+    else if (v === true) n.setAttribute(k, '');
+    else if (v !== false && v != null) n.setAttribute(k, v);
+  }
+  for (const kid of kids.flat()) if (kid != null) n.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+  return n;
+}
+function say(text, ok){
+  const m = document.getElementById('msg');
+  m.textContent = text || ''; m.className = 'msg ' + (text ? (ok ? 'ok' : 'err') : '');
+  if (text) window.scrollTo({top: 0, behavior: 'smooth'});
+}
+async function api(path, body){
+  const opts = {headers: {'X-Setup-Key': KEY}};
+  if (body !== undefined){ opts.method = 'POST'; opts.headers['Content-Type'] = 'application/json'; opts.body = JSON.stringify(body); }
+  let r;
+  try { r = await fetch(path, opts); }
+  catch (e) { throw new Error('The TV cannot be reached. Keep the phone on the same Wi-Fi and the QR screen open.'); }
+  const d = await r.json().catch(() => ({ok: false, error: 'Unexpected answer from the TV.'}));
+  if (!d.ok) throw new Error(d.error || 'Failed.');
+  return d;
+}
+async function busy(button, fn){
+  const label = button.textContent; button.disabled = true; button.textContent = 'Please wait…';
+  try { await fn(); } catch (e) { say(e.message); } finally { button.disabled = false; button.textContent = label; }
+}
+function toggle(checked, onchange){
+  const input = el('input', {type: 'checkbox'}); input.checked = !!checked;
+  input.addEventListener('change', () => onchange(input.checked));
+  return el('label', {class: 'switch'}, input, el('i'));
+}
+async function reload(){ S = await api('/api/state'); render(); }
+
+/* ---------- Account ---------- */
+function renderAccount(){
+  const box = document.getElementById('account'); box.replaceChildren();
+  const n = S.nuvio;
+  box.append(el('h2', {text: 'Nuvio account'}));
+  if (!n.linked){
+    const email = el('input', {type: 'email', autocomplete: 'username', inputmode: 'email'});
+    const pass = el('input', {type: 'password', autocomplete: 'current-password'});
+    const go = el('button', {class: 'btn wide', text: 'Sign in'});
+    go.addEventListener('click', () => busy(go, async () => {
+      const d = await api('/api/nuvio/login', {email: email.value, password: pass.value});
+      pass.value = '';
+      say('Signed in to Nuvio.', true);
+      await reload();
+      if ((d.profiles || []).length > 1) document.getElementById('profiles')?.scrollIntoView();
+    }));
+    box.append(el('div', {class: 'card'},
+      el('p', {class: 'note', text: 'Optional. Your email and password go straight to your TV over your home network.'}),
+      el('label', {class: 'f', text: 'Email'}), email, el('label', {class: 'f', text: 'Password'}), pass, go));
+  } else {
+    const card = el('div', {class: 'card'},
+      el('div', {class: 'row'}, el('div', {class: 'grow'}, el('div', {class: 'name', text: n.email || 'Connected'}),
+        el('div', {class: 'sub', text: n.profile ? 'Profile: ' + n.profile : 'Choose a profile below'}))));
+    const profiles = el('div', {id: 'profiles'});
+    const load = el('button', {class: 'btn ghost small', text: 'Choose profile'});
+    load.addEventListener('click', () => busy(load, async () => {
+      const d = await api('/api/nuvio/profiles', {});
+      profiles.replaceChildren(...(d.profiles || []).map(p => {
+        const b = el('button', {class: 'btn ghost small', text: p.name, style: 'margin:6px 6px 0 0'});
+        b.addEventListener('click', () => busy(b, async () => {
+          await api('/api/nuvio/profile', {index: p.index}); say('Profile selected.', true); await reload(); }));
+        return b;
+      }));
+    }));
+    const withCollections = el('input', {type: 'checkbox'}); withCollections.checked = true;
+    const imp = el('button', {class: 'btn wide', text: 'Import my add-ons from Nuvio'});
+    imp.addEventListener('click', () => busy(imp, async () => {
+      const d = await api('/api/nuvio/import', {collections: withCollections.checked});
+      say(d.providers + ' add-ons imported' + (d.collections ? ', ' + d.collections + ' collections' : '') +
+          (d.errors && d.errors.length ? ' · ' + d.errors.join(' · ') : '') + '.', !(d.errors && d.errors.length));
+      await reload();
+    }));
+    const out = el('button', {class: 'btn ghost wide', text: 'Sign out'});
+    out.addEventListener('click', () => { if (confirm('Sign out of Nuvio on this TV?'))
+      busy(out, async () => { await api('/api/nuvio/logout', {}); say('Signed out.', true); await reload(); }); });
+    card.append(load, profiles,
+      el('div', {class: 'row', style: 'margin-top:10px'}, el('div', {class: 'grow sub', text: 'Also import the collection layout'}),
+        el('label', {class: 'switch'}, withCollections, el('i'))), imp, out);
+    box.append(card);
+  }
+}
+
+/* ---------- Add-ons ---------- */
+function providerList(title, rows, note){
+  const card = el('div', {class: 'card'});
+  if (!rows.length) card.append(el('div', {class: 'empty', text: 'None installed yet.'}));
+  for (const row of rows)
+    card.append(el('div', {class: 'row'}, el('div', {class: 'grow'}, el('div', {class: 'name', text: row.name}),
+      row.builtin ? el('div', {class: 'sub', text: 'Built-in · no setup'}) : null),
+      toggle(row.enabled, on => { row.enabled = on; })));
+  return [el('h2', {text: title}), el('p', {class: 'note', text: note}), card];
+}
+function renderAddons(){
+  const box = document.getElementById('addons'); box.replaceChildren();
+  const url = el('input', {type: 'url', placeholder: 'https://…/manifest.json', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false'});
+  const add = el('button', {class: 'btn wide', text: 'Add add-on'});
+  add.addEventListener('click', () => busy(add, async () => {
+    const d = await api('/api/addons/add', {url: url.value}); url.value = '';
+    say('Added: ' + (d.added || []).join(', '), true); await reload(); }));
+  box.append(el('h2', {text: 'Add an add-on'}), el('div', {class: 'card'},
+    el('p', {class: 'note', text: 'Paste your configured manifest link (copy it from the add-on’s configure page).'}), url, add));
+  box.append(...providerList('Metadata add-ons', S.metadata, 'Supply titles, posters, details and catalogs.'));
+  box.append(...providerList('Stream add-ons', S.streams, 'Every add-on that is ON is asked for sources, so “Loading video” waits for all of them. Keep only the ones you use ON.'));
+  const installed = el('div', {class: 'card'});
+  if (!S.providers.length) installed.append(el('div', {class: 'empty', text: 'None installed yet.'}));
+  for (const p of S.providers){
+    const del = el('button', {class: 'btn ghost small', text: 'Remove'});
+    del.addEventListener('click', () => { if (confirm('Remove “' + p.name + '” from this TV?'))
+      busy(del, async () => { await api('/api/addons/remove', {id: p.id}); say('Removed.', true); await reload(); }); });
+    installed.append(el('div', {class: 'row'}, el('div', {class: 'grow name', text: p.name}), del));
+  }
+  box.append(el('h2', {text: 'Installed add-ons'}), installed);
+}
+
+/* ---------- Collections ---------- */
+function move(list, i, d){ const j = i + d; if (j < 0 || j >= list.length) return; [list[i], list[j]] = [list[j], list[i]]; renderCollections(); }
+function renderCollections(){
+  const box = document.getElementById('collections'); box.replaceChildren();
+  box.append(el('h2', {text: 'Home rows'}),
+    el('p', {class: 'note', text: 'Order, show or hide rows and cards, rename cards and choose which catalogs fill each card.'}));
+  if (!S.groups.length){ box.append(el('div', {class: 'card'}, el('div', {class: 'empty',
+    text: 'No collections yet. Import them from Nuvio under Account, or use HUB Settings → Collections on the TV.'}))); return; }
+  S.groups.forEach((g, gi) => {
+    const card = el('div', {class: 'card'});
+    const up = el('button', {class: 'icon', text: '↑', 'aria-label': 'Move up', onclick: () => move(S.groups, gi, -1)});
+    const down = el('button', {class: 'icon', text: '↓', 'aria-label': 'Move down', onclick: () => move(S.groups, gi, 1)});
+    card.append(el('div', {class: 'row'}, el('div', {class: 'grow'}, el('div', {class: 'name', text: g.title}),
+      el('div', {class: 'sub', text: g.folders.length + (g.folders.length === 1 ? ' card' : ' cards')})), up, down, toggle(!g.hidden, on => { g.hidden = !on; })));
+    const more = el('details', {}, el('summary', {text: 'Cards in this row'}));
+    g.folders.forEach((f, fi) => {
+      const title = el('input', {type: 'text', value: f.title, maxlength: '80'});
+      title.addEventListener('input', () => { f.title = title.value; });
+      const sources = el('details', {}, el('summary', {text: 'Catalogs (' + f.sources.filter(s => s.enabled).length + ' of ' + f.sources.length + ' ON)'}),
+        ...f.sources.map(s => el('div', {class: 'row'}, el('div', {class: 'grow sub', text: s.label}), toggle(s.enabled, on => { s.enabled = on; }))));
+      more.append(el('div', {class: 'folder'},
+        el('div', {class: 'row'}, el('div', {class: 'grow'}, title),
+          el('button', {class: 'icon', text: '←', 'aria-label': 'Move left', onclick: () => move(g.folders, fi, -1)}),
+          el('button', {class: 'icon', text: '→', 'aria-label': 'Move right', onclick: () => move(g.folders, fi, 1)})),
+        el('div', {class: 'row'}, el('div', {class: 'grow sub', text: 'Show on Home'}), toggle(!f.hidden, on => { f.hidden = !on; })),
+        el('div', {class: 'row'}, el('div', {class: 'grow sub', text: 'Title on the card'}), toggle(!f.hideTitle, on => { f.hideTitle = !on; })),
+        sources));
+    });
+    card.append(more); box.append(card);
+  });
+}
+
+/* ---------- Display ---------- */
+function segment(options, value, onpick){
+  const seg = el('div', {class: 'seg'});
+  for (const [v, label] of options){
+    const b = el('button', {class: v === value ? 'on' : '', text: label});
+    b.addEventListener('click', () => { onpick(v); seg.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); });
+    seg.append(b);
+  }
+  return seg;
+}
+function renderDisplay(){
+  const box = document.getElementById('display'); box.replaceChildren();
+  const d = S.display;
+  const saver = [['image', 'MegaNexus image'], ['animated', 'MegaNexus animated']];
+  if (d.screensaver === 'custom') saver.push(['custom', 'Keep my own']);
+  box.append(el('h2', {text: 'Display'}), el('div', {class: 'card'},
+    el('label', {class: 'f', text: 'Movie and series cards'}),
+    segment([['poster', 'Portrait posters'], ['landscape', 'Landscape']], d.card_shape, v => { d.card_shape = v; }),
+    el('div', {class: 'row', style: 'margin-top:10px'}, el('div', {class: 'grow', text: 'Ratings under the title'}), toggle(d.show_ratings, on => { d.show_ratings = on; })),
+    el('div', {class: 'row'}, el('div', {class: 'grow', text: 'Automatic trailers'}), toggle(d.auto_trailers, on => { d.auto_trailers = on; })),
+    el('div', {class: 'row'}, el('div', {class: 'grow', text: 'Continue Watching row'}), toggle(d.continue_row, on => { d.continue_row = on; })),
+    el('label', {class: 'f', text: 'Screensaver'}),
+    segment(saver, d.screensaver, v => { d.screensaver = v; })));
+}
+
+function render(){ renderAccount(); renderAddons(); renderCollections(); renderDisplay(); }
+
+function showTab(tab){
+  if (!document.getElementById(tab)) tab = 'account';
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
+  document.querySelectorAll('main section').forEach(s => s.classList.toggle('on', s.id === tab));
+}
+document.getElementById('tabs').addEventListener('click', e => {
+  const tab = e.target.dataset && e.target.dataset.tab; if (!tab) return;
+  showTab(tab); history.replaceState(null, '', '#' + tab); say('');
+});
+showTab(location.hash.slice(1));
+const saveButton = document.getElementById('save');
+saveButton.addEventListener('click', () => busy(saveButton, async () => {
+  const display = Object.assign({}, S.display);
+  if (display.screensaver === 'custom') delete display.screensaver;
+  await api('/api/save', {
+    metadata: S.metadata.map(p => ({id: p.id, enabled: p.enabled})),
+    streams: S.streams.map(p => ({id: p.id, enabled: p.enabled})),
+    groups: S.groups.map(g => ({id: g.id, hidden: g.hidden, folders: g.folders.map(f => ({
+      id: f.id, title: f.title, hidden: f.hidden, hideTitle: f.hideTitle, sources: f.sources.map(s => s.enabled)}))})),
+    display});
+  document.querySelector('header').style.display = 'none';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('bar').style.display = 'none';
+  document.getElementById('done').style.display = 'block';
+}));
+reload().catch(e => say(e.message));
+</script>
+</body></html>

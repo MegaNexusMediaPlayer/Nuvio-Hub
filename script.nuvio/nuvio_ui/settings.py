@@ -162,15 +162,16 @@ def sign_in_nuvio():
 
 def accounts():
     from resources.lib.nuviohub import nuvio_stremio_sync as sync
-    def rows():return [page.item('Sign in',nuvio_status()),page.item('Sync add-ons and progress','Keep Home layout'),page.item('Sign out'),page.item('Choose Nuvio profile',sync.Nuvio.token().get('profile_name') or ''),page.item('Continue Watching sync', (ADDON.getSetting('nuvio_progress_interval') or '60')+' seconds'),page.item('Back')]
+    def rows():return [page.item('Sign in',nuvio_status()),page.item('Sign in with phone · QR code'),page.item('Sync add-ons and progress','Keep Home layout'),page.item('Sign out'),page.item('Choose Nuvio profile',sync.Nuvio.token().get('profile_name') or ''),page.item('Continue Watching sync', (ADDON.getSetting('nuvio_progress_interval') or '60')+' seconds'),page.item('Back')]
     def choose(pick):
         if pick==0:
             if sign_in_nuvio():sync_nuvio()
-        elif pick==1:sync_nuvio()
-        elif pick==2:sync.Nuvio.clear();ADDON.setSetting('nuvio_sync_enabled','false')
-        elif pick==3:choose_nuvio_profile()
-        elif pick==4:progress_settings()
-        elif pick==5:return page.DONE
+        elif pick==1:phone_setup()
+        elif pick==2:sync_nuvio()
+        elif pick==3:sync.Nuvio.clear();ADDON.setSetting('nuvio_sync_enabled','false')
+        elif pick==4:choose_nuvio_profile()
+        elif pick==5:progress_settings()
+        elif pick==6:return page.DONE
     return page.show('Nuvio account',rows,choose)
 
 def progress_settings():
@@ -492,11 +493,16 @@ def maintenance():
     return page.show('Maintenance',rows,choose)
 
 
+def phone_setup():
+    from .phone_setup import run as phone
+    phone()
+
+
 def run(back_command=''):
     def iptv_settings():
         from .iptv import configure
         configure()
-    actions=[('Accounts & tracking',tracking_accounts),('Add-ons',addons),('Collections',collections),
+    actions=[('Set up on phone · QR code',phone_setup),('Accounts & tracking',tracking_accounts),('Add-ons',addons),('Collections',collections),
         ('IPTV',iptv_settings),('Playback',playback),('Subtitles',subtitle_settings),('Trailers',trailers),
         ('Home & appearance',appearance),('Performance & image cache',performance),('Maintenance & updates',maintenance),
         ('Support MegaNexus · Ko-fi',support)]

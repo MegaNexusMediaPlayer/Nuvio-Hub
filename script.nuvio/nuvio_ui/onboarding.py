@@ -72,7 +72,16 @@ def run(force=False):
     # Offer once, including when Back/Cancel dismisses the very first step.
     # Completion is separate: every optional step remains available manually.
     _offered()
-    dialog=xbmcgui.Dialog();steps=_steps()
+    dialog=xbmcgui.Dialog()
+    if not force:
+        # 6.0.22: the phone is the easy way; the remote steps stay available.
+        way=dialog.select('Welcome to MegaNexus',['Set up on your phone · QR code','Set up with the remote','Skip · open MegaNexus'])
+        if way<0 or way==2:return
+        if way==0:
+            from .phone_setup import run as phone
+            if phone():_finish()
+            return
+    steps=_steps()
     try:index=0 if force else min(len(steps)-1,max(0,int(ADDON.getSetting('nuvio_setup_v110_step') or 0)))
     except ValueError:index=0
     while index<len(steps):
@@ -80,7 +89,7 @@ def run(force=False):
         labels=[name for name,_ in actions]+['Next','Skip this step','Finish optional steps and check collection setup']
         if index:labels.append('Previous step')
         status=(' - '+settings.nuvio_status()) if index<2 else ''
-        pick=dialog.select('Welcome to Nuvio - %d/%d: %s%s'%(index+1,len(steps),title,status),labels)
+        pick=dialog.select('Welcome to MegaNexus - %d/%d: %s%s'%(index+1,len(steps),title,status),labels)
         if pick<0:return  # Open Nuvio goes to Home; setup stays available in Settings.
         if pick<len(actions):
             try:

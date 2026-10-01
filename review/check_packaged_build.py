@@ -91,7 +91,10 @@ modules=('resources.lib.plugin','resources.lib.backend_api','resources.lib.backe
          'resources.lib.saver_state','nuvio_ui.session','nuvio_ui.saver',
          'resources.lib.resource_support','resources.lib.metadata_providers','resources.lib.collection_validation',
          'resources.lib.browse_cache','resources.lib.display_text','resources.lib.progress_model',
-         'resources.lib.nuvio_progress','resources.lib.progress_sync','nuvio_ui.person','nuvio_ui.setup_gate','nuvio_ui.startup')
+         'resources.lib.nuvio_progress','resources.lib.progress_sync','nuvio_ui.person','nuvio_ui.setup_gate','nuvio_ui.startup',
+         'resources.lib.phone_setup','resources.lib.qr_pair','nuvio_ui.phone_setup')
+import resources.lib.phone_setup as _phone
+assert Path(_phone.PAGE).is_file() and Path(_phone.PAGE).is_relative_to(OUT),_phone.PAGE
 for name in modules:
     mod=importlib.import_module(name)
     assert Path(mod.__file__).is_relative_to(OUT),mod.__file__

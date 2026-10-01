@@ -41,6 +41,15 @@ def launch():
             if command:execute_command(command)
             from nuvio_ui.home_window import open_home
             if not xbmc.getCondVisibility('Window.IsVisible(yesnodialog)'):open_home()
+        elif mode == 'phone':
+            # HUB / backend entry: after Save on the phone MegaNexus starts.
+            from nuvio_ui.phone_setup import run as phone
+            if phone():
+                from nuvio_ui.onboarding import _finish
+                _finish()
+                from nuvio_ui.home_window import open_home
+                open_home()
+            else:xbmc.executebuiltin('ActivateWindow(Home)')
         elif mode == 'skinsettings':
             from nuvio_ui.settings import appearance
             command=appearance()
