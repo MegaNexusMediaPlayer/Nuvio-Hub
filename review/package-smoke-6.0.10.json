@@ -1,0 +1,12 @@
+{
+  "extracted_to": "/tmp/nuvio-package-smoke-9lwc5fbp",
+  "imported_packaged_modules": 50,
+  "validated_xml_asset_refs": 1456,
+  "unified_version": "6.0.10",
+  "components": [
+    "script.nuvio",
+    "skin.nuvio",
+    "screensaver.nuvio"
+  ],
+  "result": "PASS"
+}

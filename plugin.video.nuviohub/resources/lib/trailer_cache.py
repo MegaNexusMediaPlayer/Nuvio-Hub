@@ -10,7 +10,7 @@ import threading
 import time
 from urllib.parse import parse_qs, urlsplit
 from urllib.request import Request, urlopen
-from .dexhub.common import profile_path
+from .nuviohub.common import profile_path
 from .trailer_support import trailer_url
 
 _LOCK = threading.Lock()

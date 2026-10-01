@@ -105,7 +105,7 @@ class TestBadgeToggleResolution(unittest.TestCase):
     def setUp(self):
         import xbmcgui
         self.win = xbmcgui.Window(10000)
-        self.win.clearProperty('dexhub.badges.enabled')
+        self.win.clearProperty('nuviohub.badges.enabled')
         live._SETTINGS_FILE_MEMO.update({'sig': None, 'values': {}})
 
     tearDown = setUp
@@ -127,9 +127,9 @@ class TestBadgeToggleResolution(unittest.TestCase):
         self.assertTrue(sb._elite_badges_enabled())
 
     def test_published_value_is_honoured_both_ways(self):
-        self.win.setProperty('dexhub.badges.enabled', 'false')
+        self.win.setProperty('nuviohub.badges.enabled', 'false')
         self.assertFalse(sb._elite_badges_enabled())
-        self.win.setProperty('dexhub.badges.enabled', 'true')
+        self.win.setProperty('nuviohub.badges.enabled', 'true')
         self.assertTrue(sb._elite_badges_enabled())
 
     def test_badges_render_end_to_end_with_defaults(self):

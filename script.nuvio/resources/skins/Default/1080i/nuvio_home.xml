@@ -72,6 +72,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7000).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -137,6 +138,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7023).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -202,6 +204,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7022).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -267,6 +270,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7021).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -332,6 +336,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7020).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -397,6 +402,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7019).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -462,6 +468,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7018).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -527,6 +534,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7017).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -592,6 +600,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7016).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -657,6 +666,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7015).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -722,6 +732,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7014).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -787,6 +798,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7013).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -852,6 +864,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7012).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -917,6 +930,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7011).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -982,6 +996,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7010).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -1047,6 +1062,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7009).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -1112,6 +1128,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7008).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -1177,6 +1194,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7001).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -1242,6 +1260,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7002).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -1307,6 +1326,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7003).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -1372,6 +1392,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7004).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -1437,6 +1458,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7005).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -1502,6 +1524,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7006).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -1567,6 +1590,7 @@
         <font>font13</font>
         <textcolor>FFBCC3D1</textcolor>
         <label>$INFO[Container(7007).ListItem.Property(plot)]</label>
+        <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
       </control>
       <control type="label">
         <left>73</left>
@@ -1608,7 +1632,7 @@
       <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
       <texturenofocus border="22" colordiffuse="20232935">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
       <label>Home</label>
-      <onleft>107</onleft>
+      <onleft>108</onleft>
       <onright>105</onright>
       <ondown>7000</ondown>
       <onup>101</onup>
@@ -1644,11 +1668,29 @@
       <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
       <texturenofocus border="22" colordiffuse="20232935">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
       <label>Settings</label>
-      <onright>101</onright>
+      <onright>108</onright>
       <ondown>7000</ondown>
       <onup>107</onup>
       <onleft>105</onleft>
-      </control>
+    </control>
+    <control type="button" id="108">
+      <left>950</left>
+      <top>32</top>
+      <width>140</width>
+      <height>56</height>
+      <font>font13</font>
+      <align>center</align>
+      <aligny>center</aligny>
+      <textcolor>FFCCD1DC</textcolor>
+      <focusedcolor>FF090B11</focusedcolor>
+      <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturenofocus border="22" colordiffuse="20232935">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <label>HUB</label>
+      <onright>101</onright>
+      <ondown>7000</ondown>
+      <onup>108</onup>
+      <onleft>107</onleft>
+    </control>
     <control type="label">
       <left>1750</left>
       <top>39</top>
@@ -1658,7 +1700,7 @@
       <textcolor>FFA6AEBD</textcolor>
       <label>$INFO[System.Time(hh:mm)]</label>
       <align>right</align>
-      <visible>!Skin.HasSetting(nuvio.hideweather)</visible>
+      <visible>[!Skin.HasSetting(nuvio.hideweather)] + !Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
     </control>
     <control type="grouplist" id="6000">
       <left>56</left>
@@ -9784,6 +9826,7 @@
         <width>48</width>
         <height>48</height>
         <texture>special://home/addons/skin.nuvio/media/nuvio/weather/$INFO[Weather.FanartCode].png</texture>
+        <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
       </control>
       <control type="label">
         <left>1660</left>
@@ -9793,6 +9836,7 @@
         <font>font12</font>
         <textcolor>FFC2ADFF</textcolor>
         <label>$INFO[Weather.Temperature]</label>
+        <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
       </control>
     </control>
     <control type="textbox" id="109">
@@ -9805,5 +9849,5 @@
       <label>$INFO[Window.Property(nuvio.home.error)]</label>
       <visible>!String.IsEmpty(Window.Property(nuvio.home.error))</visible>
     </control>
-    </controls>
+  </controls>
 </window>

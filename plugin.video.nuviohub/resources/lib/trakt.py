@@ -10,14 +10,14 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
-from .dexhub.common import profile_path
+from .nuviohub.common import profile_path
 from . import playback_store
 from . import tmdbhelper as _tmdbhelper_art
 from .art import posters_prefer_local
 from . import tmdb_direct as _tmdb_direct_art
 from .i18n import tr
 
-# --- dexhub-401-patch ---
+# --- nuviohub-401-patch ---
 try:
     from .settings_cache import cached_addon as _dh_cached_addon
 except Exception:
@@ -84,14 +84,14 @@ def sync_enabled():
 
 def _read_json(path, default):
     # v3.9.17: delegated to safe_io for crash-safe read with .bak recovery.
-    from .dexhub.safe_io import read_json as _safe_read_json
+    from .nuviohub.safe_io import read_json as _safe_read_json
     return _safe_read_json(path, default)
 
 
 def _write_json(path, value):
     # v3.9.17: delegated to safe_io for atomic write + .bak snapshot —
     # avoids losing your Trakt tokens to a half-written file on power loss.
-    from .dexhub.safe_io import write_json as _safe_write_json
+    from .nuviohub.safe_io import write_json as _safe_write_json
     _safe_write_json(path, value)
 
 
@@ -175,32 +175,32 @@ def _refresh_token_if_needed(force=False):
 def _ensure_auth():
     ensure_enabled()
     if not credentials_configured():
-        raise RuntimeError('بيانات Trakt غير مدمجة في هذه النسخة')
+        raise RuntimeError('Trakt credentials are not bundled in this build')
     data = _refresh_token_if_needed(force=False)
     if not data.get('access_token'):
-        raise RuntimeError('Trakt غير مربوط بعد')
+        raise RuntimeError('Trakt is not linked yet')
     return data
 
 
 def _build_pin_message(verify_url, user_code, remaining=None):
     """Single-string message compatible with Kodi 20+ (Nexus/Omega) dialogs."""
     lines = [
-        '[B]١) افتح الرابط:[/B]',
+        '[B]1) Open this link:[/B]',
         '[COLOR orange]%s[/COLOR]' % verify_url,
         '',
-        '[B]٢) أدخل الرمز:[/B]',
+        '[B]2) Enter this code:[/B]',
         '[COLOR yellow][B]   %s   [/B][/COLOR]' % user_code,
     ]
     if remaining is not None:
         lines.append('')
-        lines.append(tr('المتبقي: %ss') % int(remaining))
+        lines.append(tr('Remaining: %ss') % int(remaining))
     return '\n'.join(lines)
 
 
 def device_auth():
     ensure_enabled()
     if not credentials_configured():
-        raise RuntimeError('بيانات Trakt غير مدمجة في هذه النسخة')
+        raise RuntimeError('Trakt credentials are not bundled in this build')
 
     # Step 1: request a device code.
     try:
@@ -210,9 +210,9 @@ def device_auth():
             body = exc.read().decode('utf-8', 'ignore')
         except Exception:
             body = ''
-        raise RuntimeError(tr('فشل طلب رمز Trakt (%s): %s') % (exc.code, body[:200]))
+        raise RuntimeError(tr('Trakt device-code request failed (%s): %s') % (exc.code, body[:200]))
     except Exception as exc:
-        raise RuntimeError(tr('فشل الاتصال بـ Trakt: %s') % exc)
+        raise RuntimeError(tr('Trakt connection failed: %s') % exc)
 
     user_code = (code.get('user_code') or '').strip()
     device_code = (code.get('device_code') or '').strip()
@@ -221,13 +221,13 @@ def device_auth():
     expires_in = max(60, int(code.get('expires_in') or 600))
 
     if not user_code or not device_code:
-        raise RuntimeError('لم يرجع Trakt رمز ربط صالح')
+        raise RuntimeError('Trakt did not return a valid device code')
 
     # Step 2: show the PIN to the user.
     # Kodi 20+ Dialog API: ok(heading, message) — old multi-line signature was removed.
     shown_ok = False
     try:
-        xbmcgui.Dialog().ok(tr('Nuvio Hub • ربط Trakt'), tr(_build_pin_message(verify, user_code)))
+        xbmcgui.Dialog().ok(tr('Nuvio Hub • Trakt link'), tr(_build_pin_message(verify, user_code)))
         shown_ok = True
     except Exception as exc:
         xbmc.log('[NuvioHub] Dialog.ok fallback: %s' % exc, xbmc.LOGWARNING)
@@ -238,7 +238,7 @@ def device_auth():
     # Step 3: polling dialog.
     dlg = xbmcgui.DialogProgress()
     # Kodi 20+ DialogProgress: create(heading, message).
-    dlg.create(tr('Nuvio Hub • ربط Trakt'), tr(_build_pin_message(verify, user_code, remaining=expires_in)))
+    dlg.create(tr('Nuvio Hub • Trakt link'), tr(_build_pin_message(verify, user_code, remaining=expires_in)))
 
     start = time.time()
     try:
@@ -257,7 +257,7 @@ def device_auth():
                     token['created_at'] = int(time.time())
                     save_token(token)
                     dlg.close()
-                    xbmcgui.Dialog().notification('Nuvio Hub', tr('تم ربط Trakt بنجاح'), xbmcgui.NOTIFICATION_INFO, 3000)
+                    xbmcgui.Dialog().notification('Nuvio Hub', tr('Trakt linked successfully'), xbmcgui.NOTIFICATION_INFO, 3000)
                     return True
             except urllib.error.HTTPError as exc:
                 try:
@@ -270,19 +270,19 @@ def device_auth():
                     interval = max(interval, 5) * 2
                 elif exc.code == 404:
                     dlg.close()
-                    raise RuntimeError('رمز ربط Trakt غير صالح، أعد المحاولة')
+                    raise RuntimeError('Invalid Trakt link code, please try again')
                 elif exc.code == 409:
                     dlg.close()
-                    raise RuntimeError('تم استخدام رمز Trakt هذا بالفعل، ابدأ ربطًا جديدًا')
+                    raise RuntimeError('This Trakt code was already used. Start a new link flow')
                 elif exc.code == 410:
                     dlg.close()
-                    raise RuntimeError('انتهت مهلة رمز Trakt، أعد المحاولة')
+                    raise RuntimeError('The Trakt code expired. Please try again')
                 elif exc.code == 418:
                     dlg.close()
-                    raise RuntimeError('تم رفض ربط Trakt من صفحة التفعيل')
+                    raise RuntimeError('The Trakt link was denied on the activation page')
                 else:
                     dlg.close()
-                    raise RuntimeError(tr('فشل ربط Trakt: %s %s') % (exc.code, body[:200]))
+                    raise RuntimeError(tr('Trakt link failed: %s %s') % (exc.code, body[:200]))
             except Exception as exc:
                 # Transient network hiccup — log and keep polling rather than die.
                 xbmc.log('[NuvioHub] trakt poll transient error: %s' % exc, xbmc.LOGWARNING)
@@ -308,7 +308,7 @@ def logout():
         except Exception:
             pass
     clear_token()
-    xbmcgui.Dialog().notification('Nuvio Hub', tr('تم تسجيل الخروج من Trakt'), xbmcgui.NOTIFICATION_INFO, 2500)
+    xbmcgui.Dialog().notification('Nuvio Hub', tr('Signed out from Trakt'), xbmcgui.NOTIFICATION_INFO, 2500)
 
 
 def _ids_payload(ctx):
@@ -503,7 +503,7 @@ def invalidate_cache(prefix=''):
 
 def import_progress(limit=100):
     if not (enabled() and sync_enabled()):
-        raise RuntimeError('فعّل مزامنة Trakt من الإعدادات')
+        raise RuntimeError('Enable Trakt sync from settings')
     _ensure_auth()
     pending = []
     for path, media_type in (('/sync/playback/movies?extended=full', 'movie'), ('/sync/playback/episodes?extended=full', 'series')):

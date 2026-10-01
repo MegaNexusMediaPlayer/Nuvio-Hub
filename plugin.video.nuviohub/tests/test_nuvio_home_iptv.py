@@ -24,12 +24,14 @@ class HomeBack(unittest.TestCase):
         self.assertIn('RunScript(script.nuvio)',actions)
         self.assertIn('RunScript(script.nuvio,iptv)',actions)
 
-    def test_back_on_top_navigation_exits_even_inside_collection(self):
+    def test_back_on_top_navigation_returns_home_without_exiting_to_hub(self):
         for cid in (101,105,107):
             win=home.HomeWindow();win._touch=mock.Mock();win._finish=mock.Mock();win._paint=mock.Mock()
             win.getFocusId=lambda:cid;win._bucket='collection:x'
-            win.onAction(SimpleNamespace(getId=lambda:92))
-            win._finish.assert_called_once();win._paint.assert_not_called()
+            with mock.patch.object(home.home_data,'initial_shelves',return_value=['home']):
+                win.onAction(SimpleNamespace(getId=lambda:92))
+            win._finish.assert_not_called();win._paint.assert_called_once_with(['home'])
+            self.assertEqual(win._bucket,'')
 
     def test_back_inside_collection_returns_to_home_rows(self):
         win=home.HomeWindow();win._touch=mock.Mock();win._finish=mock.Mock();win._paint=mock.Mock()
@@ -89,19 +91,24 @@ class IPTVBrowser(unittest.TestCase):
         with mock.patch.object(tv,'rpc',return_value={'broadcasts':rows}):result=tv.broadcasts(5)
         self.assertEqual(result,list(reversed(rows)))
 
-    def test_first_click_plays_second_click_goes_fullscreen(self):
+    def test_first_click_previews_second_click_uses_retained_fullscreen_child(self):
         row={'channelid':55,'uniqueid':999,'clientid':2,'label':'One'};win=self.window([row]);win.controls[500].getSelectedPosition.return_value=0
-        with mock.patch.object(tv,'rpc') as rpc,mock.patch.object(tv,'current_id',return_value=55),mock.patch.object(tv.ADDON,'setSetting'):
-            win.onClick(500);win.drain_events();win.drain_events();self.assertFalse(win.fullscreen)
-            win.onClick(500);win.drain_events();win.drain_events();self.assertTrue(win.fullscreen);self.assertTrue(win.closed)
-        rpc.assert_called_once_with('Player.Open',{'item':{'channelid':55}})
+        win.child=mock.Mock()
+        with mock.patch.object(tv,'open_preview') as preview,mock.patch.object(tv,'current_id',return_value=55),mock.patch.object(tv.ADDON,'setSetting'):
+            win.onClick(500);win.drain_events()
+            preview.assert_called_once_with(55);win.child.assert_not_called()
+            win.onClick(500);win.drain_events()
+            win.child.assert_called_once_with(win._fullscreen)
+            self.assertFalse(win.closed)
+        win.close.assert_not_called()
 
-    def test_back_or_stop_closes_iptv(self):
+    def test_back_or_stop_returns_to_guide_without_closing_iptv(self):
         for action in (92,13):
             win=self.window()
             with mock.patch.object(tv.xbmc,'getCondVisibility',return_value=True),mock.patch.object(tv.xbmc,'Player') as player:
                 win.onAction(SimpleNamespace(getId=lambda:action))
-            self.assertTrue(win.closed);player.return_value.stop.assert_called_once()
+            self.assertFalse(win.closed);player.return_value.stop.assert_called_once()
+            win.close.assert_not_called();win.setFocusId.assert_called_once_with(500)
 
     def test_layout_has_categories_channels_then_video_and_guide_below(self):
         root=ET.parse(ROOT/'script.nuvio/resources/skins/Default/1080i/nuvio_iptv.xml').getroot()
@@ -145,7 +152,7 @@ class PersistentSettings(unittest.TestCase):
         def show(title,rows,choose):
             self.assertTrue(rows()[4]['enabled']);choose(4);self.assertFalse(rows()[4]['enabled'])
             self.assertTrue(rows()[9]['enabled']);choose(9);self.assertFalse(rows()[9]['enabled'])
-        with mock.patch.object(settings.page,'show',side_effect=show),mock.patch.object(editor.collection_profile,'save') as save:
+        with mock.patch.object(settings.page,'show',side_effect=show),mock.patch.object(settings,'commit_collections',return_value=True) as save:
             editor.edit_card([group],group,folder)
         self.assertEqual(save.call_count,2)
 

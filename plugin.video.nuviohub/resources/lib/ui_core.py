@@ -18,7 +18,7 @@ import xbmcvfs
 
 from .i18n import tr
 
-# --- dexhub-401-patch ---
+# --- nuviohub-401-patch ---
 try:
     from .settings_cache import cached_addon as _dh_cached_addon
 except Exception:
@@ -222,8 +222,8 @@ def _get_tmdbh_seed_ids(canonical_id=None):
     """Return seed IDs only when the stash's canonical_id matches (or no canonical filter given)."""
     try:
         win = xbmcgui.Window(WINDOW_ID)
-        raw = win.getProperty('dexhub.tmdbh_seed_ids') or ''
-        scoped_for = win.getProperty('dexhub.tmdbh_seed_for') or ''
+        raw = win.getProperty('nuviohub.tmdbh_seed_ids') or ''
+        scoped_for = win.getProperty('nuviohub.tmdbh_seed_for') or ''
         if not raw:
             return {}
         # If caller specified a canonical_id and the stash was set for a different one, don't leak.

@@ -38,8 +38,8 @@ def configure_metadata(addon, providers):
 
 
 def add_manifest(dialog):
-    from .dexhub.client import validate_manifest
-    from .dexhub import store
+    from .nuviohub.client import validate_manifest
+    from .nuviohub import store
     value = dialog.input('Paste your configured provider manifest URL').strip()
     if not value:
         return False

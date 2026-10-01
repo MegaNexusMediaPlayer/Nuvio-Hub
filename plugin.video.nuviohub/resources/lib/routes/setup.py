@@ -3,11 +3,11 @@
 
 def choose_setup_path(dialog, tr=lambda x: x):
     labels = [
-        tr('Nuvio — ربط متابعة المشاهدة'),
-        tr('Stremio — استيراد الإضافات + متابعة المشاهدة'),
-        tr('إعداد يدوي — Stremio / Plex / Emby بنفسي'),
+        tr('Nuvio — link Continue Watching'),
+        tr('Stremio — import addons + Continue Watching'),
+        tr('Manual setup — Stremio / Plex / Emby myself'),
     ]
-    idx = dialog.select(tr('Quick Start • اختر طريقة الإعداد'), labels)
+    idx = dialog.select(tr('Quick Start • choose a setup method'), labels)
     if idx < 0:
         return None
     return ('nuvio', 'stremio', 'manual')[idx]

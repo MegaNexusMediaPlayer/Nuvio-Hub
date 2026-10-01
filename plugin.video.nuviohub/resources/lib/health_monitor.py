@@ -11,10 +11,10 @@ Status states:
     red    → no response or HTTP error in last cycle
 
 Properties published:
-    dexhub.health.<name>.status   → green | amber | red
-    dexhub.health.<name>.latency  → '%d' ms (last successful)
-    dexhub.health.<name>.checked  → unix timestamp of last check
-    dexhub.health.<name>.url      → host of the endpoint (for tooltip)
+    nuviohub.health.<name>.status   → green | amber | red
+    nuviohub.health.<name>.latency  → '%d' ms (last successful)
+    nuviohub.health.<name>.checked  → unix timestamp of last check
+    nuviohub.health.<name>.url      → host of the endpoint (for tooltip)
 
 The service.py loop calls run_check_cycle() once per CHECK_INTERVAL.
 """
@@ -62,17 +62,17 @@ def _publish(name, status, latency_ms, url):
     try:
         win = xbmcgui.Window(_W)
         slug = ''.join(c for c in name.lower() if c.isalnum())[:30] or 'unknown'
-        win.setProperty('dexhub.health.%s.status' % slug, status)
-        win.setProperty('dexhub.health.%s.latency' % slug, '%d' % int(latency_ms or 0))
-        win.setProperty('dexhub.health.%s.checked' % slug, '%d' % int(time.time()))
+        win.setProperty('nuviohub.health.%s.status' % slug, status)
+        win.setProperty('nuviohub.health.%s.latency' % slug, '%d' % int(latency_ms or 0))
+        win.setProperty('nuviohub.health.%s.checked' % slug, '%d' % int(time.time()))
         if url:
             try:
                 from urllib.parse import urlparse
                 host = urlparse(url).hostname or url
-                win.setProperty('dexhub.health.%s.url' % slug, host)
+                win.setProperty('nuviohub.health.%s.url' % slug, host)
             except Exception:
                 pass
-        win.setProperty('dexhub.health.%s.name' % slug, name)
+        win.setProperty('nuviohub.health.%s.name' % slug, name)
     except Exception as exc:
         log.warn('HEALTH', 'publish %s failed: %s', name, exc)
 
@@ -82,7 +82,7 @@ def _collect_endpoints():
     base URLs. Returns [(name, ping_url), ...]."""
     endpoints = []
     try:
-        from .dexhub import store
+        from .nuviohub import store
         providers = store.list_providers() or []
     except Exception:
         return endpoints
@@ -143,9 +143,9 @@ def quick_status():
         for name, _url in endpoints:
             slug = ''.join(c for c in name.lower() if c.isalnum())[:30] or 'unknown'
             out[name] = {
-                'status':  win.getProperty('dexhub.health.%s.status' % slug) or 'unknown',
-                'latency': int(win.getProperty('dexhub.health.%s.latency' % slug) or 0),
-                'checked': int(win.getProperty('dexhub.health.%s.checked' % slug) or 0),
+                'status':  win.getProperty('nuviohub.health.%s.status' % slug) or 'unknown',
+                'latency': int(win.getProperty('nuviohub.health.%s.latency' % slug) or 0),
+                'checked': int(win.getProperty('nuviohub.health.%s.checked' % slug) or 0),
             }
     except Exception:
         pass

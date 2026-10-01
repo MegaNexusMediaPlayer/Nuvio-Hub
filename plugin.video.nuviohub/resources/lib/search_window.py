@@ -55,7 +55,7 @@ class SearchResultsWindow(xbmcgui.WindowXMLDialog):
         self._last_busy_touch = now
         try:
             xbmcgui.Window(10000).setProperty(
-                'dexhub.interactive_busy', '%.3f' % time.time())
+                'nuviohub.interactive_busy', '%.3f' % time.time())
         except Exception:
             pass
 
@@ -65,14 +65,14 @@ class SearchResultsWindow(xbmcgui.WindowXMLDialog):
             skin_theme.publish_theme(window=self)
         except Exception:
             pass
-        self.setProperty('dexhub.search.query', self._query)
-        self.setProperty('dexhub.search.title', tr('البحث'))
-        self.setProperty('dexhub.search.all_label', tr('الكل'))
-        self.setProperty('dexhub.search.movies_label', tr('الأفلام'))
-        self.setProperty('dexhub.search.series_label', tr('المسلسلات'))
-        self.setProperty('dexhub.search.anime_label', tr('الأنمي'))
-        self.setProperty('dexhub.search.search_label', tr('بحث جديد'))
-        self.setProperty('dexhub.search.result_label', tr('نتيجة'))
+        self.setProperty('nuviohub.search.query', self._query)
+        self.setProperty('nuviohub.search.title', tr('Search'))
+        self.setProperty('nuviohub.search.all_label', tr('All'))
+        self.setProperty('nuviohub.search.movies_label', tr('Movies'))
+        self.setProperty('nuviohub.search.series_label', tr('Series'))
+        self.setProperty('nuviohub.search.anime_label', tr('Anime'))
+        self.setProperty('nuviohub.search.search_label', tr('New search'))
+        self.setProperty('nuviohub.search.result_label', tr('result'))
         self._apply_filter('all')
         try:
             self.setFocusId(LIST_RESULTS)
@@ -96,8 +96,8 @@ class SearchResultsWindow(xbmcgui.WindowXMLDialog):
         if not self._visible_rows and self._active_filter != 'all':
             self._active_filter = 'all'
             self._visible_rows = list(self._all_rows)
-        self.setProperty('dexhub.search.active_filter', self._active_filter)
-        self.setProperty('dexhub.search.count', str(len(self._visible_rows)))
+        self.setProperty('nuviohub.search.active_filter', self._active_filter)
+        self.setProperty('nuviohub.search.count', str(len(self._visible_rows)))
         try:
             control = self.getControl(LIST_RESULTS)
             control.reset()
@@ -122,7 +122,7 @@ class SearchResultsWindow(xbmcgui.WindowXMLDialog):
                 li.setProperty(key, _clean(row.get(key)))
             li.setProperty('genre', _joined(row.get('genre')))
             li.setProperty(
-                'kind', tr('فيلم') if media_type == 'movie' else tr('مسلسل'))
+                'kind', tr('Movie') if media_type == 'movie' else tr('Series'))
             items.append(li)
         if control is not None:
             try:

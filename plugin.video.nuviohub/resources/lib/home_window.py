@@ -140,7 +140,7 @@ class HomeWindow(xbmcgui.WindowXMLDialog):
         now = time.monotonic()
         if now - self._last_touch > 2:
             self._last_touch = now
-            xbmcgui.Window(10000).setProperty('dexhub.interactive_busy', str(time.time()))
+            xbmcgui.Window(10000).setProperty('nuviohub.interactive_busy', str(time.time()))
 
     def onFocus(self, control_id):
         self._touch()

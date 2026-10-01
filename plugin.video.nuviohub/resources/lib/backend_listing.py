@@ -4,7 +4,7 @@ from . import backend_api
 
 def render(params):
     from . import plugin as p
-    from .dexhub.client import fetch_catalog
+    from .nuviohub.client import fetch_catalog
     source=backend_api.provider('metadata')
     if not source:
         p.add_item('Connect AIOMetadata in Nuvio Settings',p.build_url(action='first_run_wizard'),is_folder=False)

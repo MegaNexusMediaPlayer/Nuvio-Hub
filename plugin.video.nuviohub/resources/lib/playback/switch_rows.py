@@ -31,6 +31,6 @@ def rows_with_current_first(rows, current_key):
         if str((row or {}).get('k') or '') != key:
             continue
         tagged = dict(row)
-        tagged['l'] = _TAG % (tr('يشتغل الآن'), row.get('l') or '?')
+        tagged['l'] = _TAG % (tr('Now playing'), row.get('l') or '?')
         return [tagged] + out[:i] + out[i + 1:], True
     return out, False

@@ -24,7 +24,7 @@ ROOT = kodi_stub.ADDON_ROOT
 td = kodi_stub.import_lib_module('tmdb_direct')
 
 PLUGIN = io.open(os.path.join(ROOT, 'resources', 'lib', 'plugin.py'), encoding='utf-8').read()
-SYNC = io.open(os.path.join(ROOT, 'resources', 'lib', 'dexhub', 'nuvio_stremio_sync.py'), encoding='utf-8').read()
+SYNC = io.open(os.path.join(ROOT, 'resources', 'lib', 'nuviohub', 'nuvio_stremio_sync.py'), encoding='utf-8').read()
 QR = io.open(os.path.join(ROOT, 'resources', 'lib', 'qr_pair.py'), encoding='utf-8').read()
 ACCOUNTS = io.open(os.path.join(ROOT, 'resources', 'lib', 'routes', 'accounts.py'), encoding='utf-8').read()
 
@@ -41,7 +41,7 @@ class TestSyncActuallyEnabled(unittest.TestCase):
         """v4.8.4: behavioural. This is the bug that made every sync a
         no-op — a QR-paired account was linked but its toggle was never
         written, and enabled_targets() therefore returned nothing."""
-        sync = kodi_stub.import_lib_module('dexhub.nuvio_stremio_sync')
+        sync = kodi_stub.import_lib_module('nuviohub.nuvio_stremio_sync')
         store = {}
         written = []
 

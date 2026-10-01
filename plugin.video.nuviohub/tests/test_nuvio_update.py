@@ -64,7 +64,7 @@ class UpdateTests(unittest.TestCase):
         self.assertEqual(out['target']['video_id'],'provider-episode');self.assertEqual(out['title'],'Show')
 
     def test_cloud_progress_without_display_fields_keeps_saved_title_and_poster(self):
-        db=importlib.import_module(cw.__package__+'.dexhub.playback_store')
+        db=importlib.import_module(cw.__package__+'.nuviohub.playback_store')
         with tempfile.TemporaryDirectory() as tmp,mock.patch.object(db,'DB_PATH',str(Path(tmp)/'progress.db')),mock.patch.object(db,'_DB_READY',False):
             row={'media_type':'movie','canonical_id':'tt1','video_id':'tt1','title':'Real title','poster':'cover','background':'backdrop','position':100,'duration':1000,'percent':10,'ext_updated_at':100}
             db.upsert_entries([row],mark_dirty=False)
@@ -74,7 +74,7 @@ class UpdateTests(unittest.TestCase):
             self.assertEqual(saved['position'],400);self.assertEqual(saved['updated_at'],200)
 
     def test_metadata_repair_is_persisted_without_changing_resume_or_timestamp(self):
-        db=importlib.import_module(cw.__package__+'.dexhub.playback_store')
+        db=importlib.import_module(cw.__package__+'.nuviohub.playback_store')
         with tempfile.TemporaryDirectory() as tmp,mock.patch.object(db,'DB_PATH',str(Path(tmp)/'progress.db')),mock.patch.object(db,'_DB_READY',False):
             db.upsert_entries([{'media_type':'tv','canonical_id':'tt1','video_id':'tt1:1:2','position':321,'duration':1000,'percent':32,'ext_updated_at':123}],mark_dirty=False)
             row={'title':'Unknown','progress_key':['tv','tt1','tt1:1:2'],'target':{'canonical_id':'tt1','media_type':'tv','video_id':'tt1:1:2'}}
@@ -122,7 +122,7 @@ class UpdateTests(unittest.TestCase):
         self.assertEqual(choose.call_args.args[1]['video_id'],'tt1:2:3')
 
     def test_catalog_page_uses_raw_offset_and_retains_genre(self):
-        client=kodi_stub.import_lib_module('dexhub.client')
+        client=kodi_stub.import_lib_module('nuviohub.client')
         h=kodi_stub.import_lib_module('home_data')
         jobs=[{'provider':{'id':'p'},'catalog':{'id':'list','type':'movie','extra':[{'name':'skip'}]},'extra':{'genre':'Drama'},'offset':7,'done':False}]
         with mock.patch.object(client,'fetch_catalog',return_value={'metas':[{'id':'tt1'},{}]}) as fetch,mock.patch.object(h,'media_card',side_effect=lambda m,*a:m):rows,state=pages.fetch_page(jobs)

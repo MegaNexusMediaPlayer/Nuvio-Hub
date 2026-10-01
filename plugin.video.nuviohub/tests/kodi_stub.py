@@ -43,6 +43,7 @@ def install():
     xbmc.sleep = lambda *_a, **_k: None
     xbmc.executebuiltin = lambda *_a, **_k: None
     xbmc.getInfoLabel = lambda *_a, **_k: ''
+    xbmc.getSkinDir = lambda: 'skin.nuvio'
     xbmc.getCondVisibility = lambda *_a, **_k: False
     xbmc.Monitor = type('Monitor', (), {'abortRequested': lambda self: False,
                                         'waitForAbort': lambda self, *_a: True})
@@ -78,6 +79,7 @@ def install():
         'create': lambda self, *a: None, 'update': lambda self, *a: None,
         'close': lambda self: None, 'iscanceled': lambda self: True})
     xbmcgui.WindowXMLDialog = type('WindowXMLDialog', (), {})
+    xbmcgui.WindowXML = type('WindowXML', (), {})
     # v4.6.7: plex_qr.QRLinkWindow imports need the plain borderless dialog
     # and its bare controls.
     xbmcgui.WindowDialog = type('WindowDialog', (), {
@@ -113,7 +115,7 @@ def install():
 
 def import_lib_module(name):
     """Import resources/lib/<name>.py as part of a package so its relative
-    imports (`from . import x`, `from .dexhub...`) resolve like inside Kodi."""
+    imports (`from . import x`, `from .nuviohub...`) resolve like inside Kodi."""
     install()
     import importlib
     pkg_name = 'dexlib'

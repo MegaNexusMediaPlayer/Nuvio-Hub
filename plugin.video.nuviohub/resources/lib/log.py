@@ -144,7 +144,7 @@ class _Log:
 
         Usage:
             try:
-                window.setProperty('dexhub.results.poster', url)
+                window.setProperty('nuviohub.results.poster', url)
             except Exception as exc:
                 log.silent('RESULTS_WIN', exc, 'setProperty poster')
 

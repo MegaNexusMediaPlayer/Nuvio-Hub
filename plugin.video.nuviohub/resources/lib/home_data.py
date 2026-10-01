@@ -17,9 +17,13 @@ def placeholder(title, plot, path='', folder=True):
 
 
 def media_card(meta, provider=None, media_type='movie', next_episode=False):
+    if (meta or {}).get('type',media_type) in ('person','people','actor'):
+        from .search_catalogs import person_card
+        return person_card(meta,provider)
     p = _api()
     meta = dict(meta or {})
-    title = str(meta.get('name') or meta.get('title') or 'Untitled').strip()
+    from .display_text import clean
+    title = clean(meta.get('name') or meta.get('title') or 'Untitled').strip()
     mid = str(meta.get('id') or meta.get('canonical_id') or '')
     media_type = meta.get('type') or meta.get('media_type') or media_type
     poster = meta.get('poster') or ''
@@ -115,6 +119,9 @@ def initial_shelves(bucket=''):
 def load_catalog(shelf, stopped=None):
     if stopped and stopped():return []
     p = _api()
+    if shelf.get('people_job'):
+        from .search_catalogs import search_people
+        return search_people(shelf['people_job']) or [placeholder('No actors found','Try another name.')]
     if shelf.get('collection_job'):
         results = []
         for provider, catalog, extra in shelf['collection_job']:
@@ -137,10 +144,9 @@ def load_catalog(shelf, stopped=None):
         return rows
     provider, catalog = shelf['job']
     mt = catalog.get('type') or 'movie'
-    # The HTTP client supplies persistent cache; hard request timeout bounds each shelf.
-    from .dexhub.client import get_json, build_resource_url, catalog_ttl
-    url = build_resource_url(provider, 'catalog', mt, catalog.get('id'), extra=shelf.get('extra') or {})
-    data = get_json(url, ttl_seconds=catalog_ttl(), timeout_override=4, retry=False, rate_wait=0.25)
+    from . import browse_cache
+    data = browse_cache.catalog(provider, catalog, shelf.get('extra') or {},
+                                timeout=8 if shelf.get('extra', {}).get('search') else 4)
     metas = [m for m in (data or {}).get('metas', []) if isinstance(m, dict) and m.get('id')][:PAGE_SIZE]
     # AIOMetadata owns these catalogs and their metadata. No second enrichment layer.
     rows = [media_card(p._normalize_meta_art_urls(provider, m), provider, mt) for m in metas]
@@ -151,22 +157,34 @@ def load_catalog(shelf, stopped=None):
 
 
 def search_shelves(query):
-    from .backend_api import catalog_entries
-    shelves=[]
-    p=_api()
-    for provider,catalog,kind in catalog_entries():
-        if not any((e.get('name') if isinstance(e,dict) else e)=='search' for e in catalog.get('extra') or []):continue
-        path=p.build_url(action='catalog_all',provider_id=provider['id'],media_type=catalog['type'],catalog_id=catalog['id'])
-        shelves.append({'title':catalog.get('name') or ('Movies' if catalog['type']=='movie' else 'Series'),
-                        'job':(provider,catalog),'extra':{'search':query},'no_more':True,'path':path,
-                        'rows':[placeholder('Searching','Searching AIOMetadata...')]})
-        if len(shelves)>=MAX_ROWS:break
-    return shelves or [{'title':'Search','rows':[placeholder('Connect AIOMetadata','Your metadata provider must expose a searchable catalog.',p.build_url(action='first_run_wizard'),False)]}]
+    from . import backend_api, search_catalogs, tmdb_direct
+    from .metadata_providers import enabled
+    shelves=[];p=_api()
+    query=str(query or '').strip()
+    if not query:return []
+    for source in enabled():
+        for catalog in search_catalogs.entries(source):
+            path=p.build_url(action='catalog_all',provider_id=source['id'],media_type=catalog['type'],
+                             catalog_id=catalog['id'],search=query)
+            shelves.append({'title':search_catalogs.title(catalog)+' · '+(source.get('name') or source['id']),
+                            'job':(source,catalog), 'extra':{'search':query},'no_more':False,'path':path,
+                            'rows':[placeholder('Searching','Searching your metadata add-ons…')]})
+    if tmdb_direct._api_key():
+        shelves.insert(0,{'title':'Actors & crew','people_job':query,'rows':[placeholder('Searching actors','Loading people…')]})
+    # No metadata catalog type filter: include movies, series, anime and the
+    # other searchable types the provider advertises. Never invent endpoint IDs.
+    if len(shelves)>MAX_ROWS:
+        overflow=shelves[MAX_ROWS-1:]
+        shelves=shelves[:MAX_ROWS-1]+[{'title':'More search categories','rows':[
+            placeholder(s['title'],'Search this metadata catalog for '+query,s.get('path','')) for s in overflow]}]
+    return shelves or [{'title':'Search movies, series, actors & more','rows':[
+        placeholder('Configure metadata search','Enable title and People Search catalogs in your metadata add-on, then refresh its manifest.',p.build_url(action='setup_center'),False)]}]
 
 
 def continue_shelf():
     from . import simkl_watched, watch_nextup, continue_local
-    from dexhub import playback_store
+    from .progress_model import timestamp
+    from nuviohub import playback_store
     p=_api(); rows=[]; watched=simkl_watched.snapshot()
     local=continue_local.recent()
     # Local user actions win over account imports. Completed local titles also
@@ -175,14 +193,11 @@ def continue_shelf():
     for r in local:
         key=continue_local.identity(r)
         remote=merged.get(key)
-        if not remote or float(r.get('updated_at') or 0)>=float(remote[0].get('updated_at') or 0):
+        if not remote or timestamp(r.get('updated_at'))>=timestamp(remote[0].get('updated_at')):
             merged[key]=(r,True)
-    # Imported timestamps can describe a sync/import rather than a local watch.
-    # Keep the local journal first, newest watch first; remote-only titles follow.
-    local_order={continue_local.identity(r):float(r.get('updated_at') or 0) for r in local}
+    from .progress_model import timestamp
     def display_order(value):
-        raw=value[0];key=continue_local.identity(raw)
-        return key in local_order,local_order.get(key,float(raw.get('updated_at') or 0))
+        return timestamp(value[0].get('updated_at'))
     for raw,is_local in sorted(merged.values(),key=display_order,reverse=True):
         if raw.get('event_type')=='watched' or float(raw.get('percent') or 0)>=95:continue
         mt='movie' if raw.get('media_type')=='movie' else 'series'

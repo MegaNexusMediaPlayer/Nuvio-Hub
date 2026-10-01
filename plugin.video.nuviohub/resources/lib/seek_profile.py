@@ -1,7 +1,7 @@
 """Upgrade migration: restore Kodi controls changed by Nuvio 6.0.1–6.0.3."""
 import json
 import xbmc
-from .dexhub.common import profile_path
+from .nuviohub.common import profile_path
 
 VALUES = {'videoplayer.seeksteps': [-10,-5,-3,-1,1,3,5,10], 'videoplayer.seekdelay': 250}
 

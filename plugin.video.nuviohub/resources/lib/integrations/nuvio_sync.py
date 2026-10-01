@@ -10,8 +10,8 @@ import os
 import time
 from urllib.parse import urlparse
 
-from ..dexhub.common import profile_path
-from ..dexhub.safe_io import write_json
+from ..nuviohub.common import profile_path
+from ..nuviohub.safe_io import write_json
 from .. import store
 from .. import collection_sets
 from ..client import validate_manifest
@@ -152,7 +152,7 @@ def export_bundle():
                 'folders': folders,
             })
     return {
-        'format': 'dexhub.nuvio.sync',
+        'format': 'nuviohub.nuvio.sync',
         'version': 1,
         'exportedAt': int(time.time()),
         'addons': addon_rows,
@@ -167,7 +167,7 @@ def import_payload(raw, source_label='Nuvio Sync', manifest_resolver=None):
         raw = raw.decode('utf-8', 'replace')
     data = json.loads(raw) if isinstance(raw, str) else raw
     if not isinstance(data, (dict, list)):
-        raise ValueError('ملف المزامنة غير صالح')
+        raise ValueError('Invalid sync file')
 
     provider_count = 0
     for manifest_url in _manifest_urls_from_any(data):

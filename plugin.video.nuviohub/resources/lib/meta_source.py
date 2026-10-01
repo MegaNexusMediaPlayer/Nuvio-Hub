@@ -31,11 +31,11 @@ import json
 import xbmc
 import xbmcaddon
 
-from .dexhub import store as _store
-from .dexhub.client import fetch_meta
+from .nuviohub import store as _store
+from .nuviohub.client import fetch_meta
 from .art import extract_ids
 
-# --- dexhub-401-patch ---
+# --- nuviohub-401-patch ---
 try:
     from .settings_cache import cached_addon as _dh_cached_addon
 except Exception:
@@ -92,7 +92,7 @@ def _default_source_id_from_setting():
     low = raw.lower()
     if 'tmdb helper' in low or 'tmdb_helper' in low or low == '1':
         return 'tmdb_helper'
-    if 'native' in low or 'الأصلي' in low or 'اصلي' in low or low == '2':
+    if 'native' in low or "\u0627\u0644\u0623\u0635\u0644\u064a" in low or "\u0627\u0635\u0644\u064a" in low or low == '2':
         return 'native'
     return 'auto'
 
@@ -141,7 +141,7 @@ def set_meta_source_for(provider_id, source_id):
     # 6h+) before the change took visible effect — what users perceived as
     # "the meta source picker doesn't work".
     try:
-        from .dexhub.client import purge_meta_cache as _purge
+        from .nuviohub.client import purge_meta_cache as _purge
         _purge()
     except Exception:
         pass
@@ -150,7 +150,7 @@ def set_meta_source_for(provider_id, source_id):
 def clear_meta_map():
     _save_map({})
     try:
-        from .dexhub.client import purge_meta_cache as _purge
+        from .nuviohub.client import purge_meta_cache as _purge
         _purge()
     except Exception:
         pass
@@ -192,7 +192,7 @@ def art_configuration_mode():
         raw = (ADDON.getSetting('art_configuration_mode') or 'Unified').strip().lower()
     except Exception:
         raw = 'unified'
-    return 'custom' if raw in ('custom', 'تخصيص') else 'unified'
+    return 'custom' if raw in ('custom', "\u062a\u062e\u0635\u064a\u0635") else 'unified'
 
 
 
@@ -250,7 +250,7 @@ def set_global_art_priority(art_type, provider_ids):
         mapping.pop(art_type, None)
     _save_global_art_map(mapping)
     try:
-        from .dexhub.client import purge_meta_cache as _purge
+        from .nuviohub.client import purge_meta_cache as _purge
         _purge()
     except Exception:
         pass
@@ -258,7 +258,7 @@ def set_global_art_priority(art_type, provider_ids):
 def clear_global_art():
     _save_global_art_map({})
     try:
-        from .dexhub.client import purge_meta_cache as _purge
+        from .nuviohub.client import purge_meta_cache as _purge
         _purge()
     except Exception:
         pass
@@ -338,7 +338,7 @@ def set_bucket_art_priority(bucket, art_type, provider_ids):
     _save_bucket_art_map(mapping)
     # Purge meta cache so the next render uses the new priority.
     try:
-        from .dexhub.client import purge_meta_cache as _purge
+        from .nuviohub.client import purge_meta_cache as _purge
         _purge()
     except Exception:
         pass
@@ -353,7 +353,7 @@ def clear_bucket_art_for(bucket):
         mapping.pop(str(bucket), None)
         _save_bucket_art_map(mapping)
         try:
-            from .dexhub.client import purge_meta_cache as _purge
+            from .nuviohub.client import purge_meta_cache as _purge
             _purge()
         except Exception:
             pass
@@ -427,9 +427,9 @@ def provider_is_stream_only(provider):
 def list_available_meta_sources():
     """Return the list of choosable meta sources for the picker."""
     sources = [
-        {'id': 'auto', 'name': 'تلقائي (ذكي)', 'kind': 'special'},
-        {'id': 'native', 'name': 'ميتاداتا الإضافة نفسها', 'kind': 'special'},
-        {'id': 'tmdb_helper', 'name': 'TMDb Helper (بدون API)', 'kind': 'builtin'},
+        {'id': 'auto', 'name': 'Automatic (smart)', 'kind': 'special'},
+        {'id': 'native', 'name': "The addon's own metadata", 'kind': 'special'},
+        {'id': 'tmdb_helper', 'name': 'TMDb Helper (no API needed)', 'kind': 'builtin'},
     ]
     seen = set()
     for row in _store.list_providers() or []:
@@ -621,13 +621,13 @@ def _mark_source(meta, source_id='', provider_id='', strict_art=False, virtual_k
     """
     out = dict(meta or {})
     if source_id:
-        out['_dexhub_meta_source_id'] = str(source_id or '')
+        out['_nuviohub_meta_source_id'] = str(source_id or '')
     if provider_id:
-        out['_dexhub_meta_provider_id'] = str(provider_id or '')
+        out['_nuviohub_meta_provider_id'] = str(provider_id or '')
     if virtual_key:
-        out['_dexhub_meta_virtual_key'] = str(virtual_key or '')
+        out['_nuviohub_meta_virtual_key'] = str(virtual_key or '')
     if strict_art:
-        out['_dexhub_art_strict'] = '1'
+        out['_nuviohub_art_strict'] = '1'
     return out
 
 
@@ -703,13 +703,7 @@ def override_virtual_meta(target_key, media_type, meta):
 
 
 def override_meta(provider, media_type, meta):
-    """Apply per-provider metadata override.
-
-    'native' is treated as a STRICT no-op — the provider's own meta is
-    returned untouched, even if it looks sparse. This is what 'احترام
-    اختيار المستخدم' means for users that explicitly prefer Plexio/DexBridge
-    meta because their setup already has rich local artwork.
-    """
+    "Apply per-provider metadata override.\n\n    'native' is treated as a STRICT no-op — the provider's own meta is\n    returned untouched, even if it looks sparse. This is what '\u0627\u062d\u062a\u0631\u0627\u0645\n    \u0627\u062e\u062a\u064a\u0627\u0631 \u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645' means for users that explicitly prefer Plexio/DexBridge\n    meta because their setup already has rich local artwork.\n    "
     if not provider:
         return meta
     source_id = get_meta_source_for(provider.get('id'))
@@ -769,7 +763,7 @@ def override_metas_batch(provider, media_type, metas):
     if source_id == 'auto' and not provider_is_stream_only(provider):
         return metas
 
-    from .dexhub.client import run_parallel
+    from .nuviohub.client import run_parallel
 
     # When the user picks an EXPLICIT source (tmdb_helper or a specific
     # Stremio meta addon), every item must go through override_meta —

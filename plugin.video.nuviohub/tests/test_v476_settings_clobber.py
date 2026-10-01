@@ -96,7 +96,7 @@ class TestMigrationCannotClobber(unittest.TestCase):
     def test_revision_read_from_a_fresh_instance(self):
         body = CTX.split('def apply_clean_defaults_once():', 1)[1].split('\ndef ', 1)[0]
         self.assertIn("_fresh = xbmcaddon.Addon('plugin.video.nuviohub')", body)
-        self.assertIn("_fresh.getSetting('dexhub_defaults_rev')", body)
+        self.assertIn("_fresh.getSetting('nuviohub_defaults_rev')", body)
 
     def test_never_writes_while_the_settings_dialog_is_open(self):
         body = CTX.split('def apply_clean_defaults_once():', 1)[1].split('\ndef ', 1)[0]

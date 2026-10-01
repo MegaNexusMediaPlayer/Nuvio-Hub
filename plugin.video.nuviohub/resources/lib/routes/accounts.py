@@ -16,12 +16,12 @@ def qr_login(service):
 def login(service, addon, tr):
     if service != 'nuvio':return False
     import xbmcgui
-    from resources.lib.dexhub import nuvio_stremio_sync as sync
+    from resources.lib.nuviohub import nuvio_stremio_sync as sync
     dlg = xbmcgui.Dialog()
     email = (addon.getSetting('%s_email' % service) or '').strip()
     password = addon.getSetting('%s_password' % service) or ''
     if not email or not password:
-        dlg.ok('Nuvio Hub', tr('اكتب البريد وكلمة المرور في الإعدادات أولاً.'))
+        dlg.ok('Nuvio Hub', tr('Enter the email and password in Settings first.'))
         return False
     try:
         if service == 'nuvio':
@@ -38,29 +38,29 @@ def login(service, addon, tr):
             addon.setSetting('%s_sync_enabled' % service, 'true')
         except Exception:
             pass
-        dlg.notification('Nuvio Hub', tr('تم تسجيل الدخول ✓'), xbmcgui.NOTIFICATION_INFO, 4000)
+        dlg.notification('Nuvio Hub', tr('Logged in ✓'), xbmcgui.NOTIFICATION_INFO, 4000)
         return True
     except Exception as exc:
-        dlg.ok('Nuvio Hub', tr('فشل تسجيل الدخول:') + '\n' + str(exc))
+        dlg.ok('Nuvio Hub', tr('Login failed:') + '\n' + str(exc))
         return False
 
 
 def logout(service, tr):
     import xbmcgui
-    from resources.lib.dexhub import nuvio_stremio_sync as sync
+    from resources.lib.nuviohub import nuvio_stremio_sync as sync
     if service == 'nuvio':
         sync.Nuvio.clear()
     else:
         sync.Stremio.clear()
-    xbmcgui.Dialog().notification('Nuvio Hub', tr('تم تسجيل الخروج'), xbmcgui.NOTIFICATION_INFO, 3000)
+    xbmcgui.Dialog().notification('Nuvio Hub', tr('Logged out'), xbmcgui.NOTIFICATION_INFO, 3000)
     return True
 
 
 def direction(addon):
     raw = addon.getSetting('cloud_sync_direction') or 'Two-way'
-    if raw in ('Upload only', 'رفع فقط'):
+    if raw in ('Upload only', "\u0631\u0641\u0639 \u0641\u0642\u0637"):
         return 'push'
-    if raw in ('Download only', 'سحب فقط'):
+    if raw in ('Download only', "\u0633\u062d\u0628 \u0641\u0642\u0637"):
         return 'pull'
     return 'both'
 
@@ -76,19 +76,19 @@ def sync_options(addon, tr, setting):
         continuous = (setting('cloud_sync_continuous', 'true') or 'true'
                       ).strip().lower() in ('true', '1', 'yes', 'on')
         if interval <= 0:
-            mode = tr('موقوفة')
+            mode = tr('Off')
         elif continuous:
-            mode = tr('مستمرة (فورية)')
+            mode = tr('Continuous (instant)')
         else:
-            mode = tr('ذكية وخفيفة')
+            mode = tr('Smart and lightweight')
         rows = [
-            '%s:  [B]%s[/B]' % (tr('وضع المزامنة'), mode),
+            '%s:  [B]%s[/B]' % (tr('Sync mode'), mode),
             '%s:  [B]%s[/B]' % (
-                tr('فترة السحب'),
-                (tr('%d دقيقة') % interval) if interval > 0 else tr('موقوفة')),
-            tr('مزامنة الآن'),
+                tr('Pull interval'),
+                (tr('%d min') % interval) if interval > 0 else tr('Off')),
+            tr('Sync now'),
         ]
-        choice = xbmcgui.Dialog().select(tr('إعدادات المزامنة'), rows)
+        choice = xbmcgui.Dialog().select(tr('Sync settings'), rows)
         if choice < 0:
             return
         if choice == 0:
@@ -97,8 +97,8 @@ def sync_options(addon, tr, setting):
             # could never be turned on from the one screen built to
             # control it — and the service loop ignored it anyway.
             pick = xbmcgui.Dialog().select(
-                tr('وضع المزامنة'),
-                [tr('مستمرة (فورية)'), tr('ذكية وخفيفة'), tr('موقوفة')])
+                tr('Sync mode'),
+                [tr('Continuous (instant)'), tr('Smart and lightweight'), tr('Off')])
             if pick < 0:
                 continue
             if pick == 2:
@@ -111,7 +111,7 @@ def sync_options(addon, tr, setting):
         elif choice == 1:
             options = [5, 15, 30, 60, 120, 240]
             pick = xbmcgui.Dialog().select(
-                tr('فترة السحب'), [tr('%d دقيقة') % n for n in options])
+                tr('Pull interval'), [tr('%d min') % n for n in options])
             if pick < 0:
                 continue
             addon.setSetting('cloud_sync_interval_min', str(options[pick]))
@@ -126,24 +126,24 @@ def sync_options(addon, tr, setting):
 
 def sync_now(addon, tr, only=None):
     import xbmcgui
-    from resources.lib.dexhub import nuvio_stremio_sync as sync
+    from resources.lib.nuviohub import nuvio_stremio_sync as sync
     dlg = xbmcgui.Dialog()
     targets = sync.enabled_targets()
     if only:
         targets = [t for t in targets if t == only]
         if not targets:
-            dlg.ok('Nuvio Hub', tr('لا يوجد حساب مفعّل لهذه الخدمة.'))
+            dlg.ok('Nuvio Hub', tr('No linked account for this service.'))
             return False
     if not targets:
-        dlg.ok('Nuvio Hub', tr('فعّل حساب Nuvio أو Stremio وسجّل الدخول أولاً.'))
+        dlg.ok('Nuvio Hub', tr('Enable a Nuvio or Stremio account and log in first.'))
         return False
     pd = xbmcgui.DialogProgressBG()
-    pd.create('Nuvio Hub', tr('مزامنة الحسابات…'))
+    pd.create('Nuvio Hub', tr('Syncing accounts…'))
     try:
-        pd.update(15, tr('تحضير المزامنة…'))
+        pd.update(15, tr('Preparing sync…'))
         # v4.0.0: direction and sections resolve per service from settings.
         result = sync.run_sync(targets=targets, force_full=False)
-        pd.update(95, tr('حفظ النتائج…'))
+        pd.update(95, tr('Saving results…'))
     finally:
         pd.close()
     if not result or not result.get('ok'):
@@ -152,14 +152,14 @@ def sync_now(addon, tr, only=None):
             for name, section in (row.get('sections') or {}).items():
                 if not section.get('ok'):
                     errors.append('%s/%s: %s' % (row.get('service'), name, section.get('error', '')))
-        dlg.ok('Nuvio Hub', tr('فشلت المزامنة:') + '\n' + ('\n'.join(errors) or str((result or {}).get('error', ''))))
+        dlg.ok('Nuvio Hub', tr('Sync failed:') + '\n' + ('\n'.join(errors) or str((result or {}).get('error', ''))))
         return False
     ok_services = [r['service'] for r in result.get('report', []) if r.get('ok')]
     wb = result.get('writeback', {})
-    msg = tr('تمت المزامنة')
+    msg = tr('Sync complete')
     if ok_services:
         msg += ' • ' + ', '.join(ok_services)
-    msg += ' • ' + tr('+%d إضافة، %d متابعة') % (
+    msg += ' • ' + tr('+%d addons, %d progress items') % (
         wb.get('providers', 0), wb.get('progress', 0))
     dlg.notification('Nuvio Hub', msg, xbmcgui.NOTIFICATION_INFO, 6000)
     errors = []

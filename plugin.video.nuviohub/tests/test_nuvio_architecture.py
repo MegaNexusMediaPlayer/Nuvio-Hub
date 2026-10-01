@@ -15,7 +15,7 @@ import kodi_stub
 ROOT=Path(kodi_stub.ADDON_ROOT)
 sys.path.insert(0,str(ROOT.parent/'script.nuvio'))
 api=kodi_stub.import_lib_module('backend_api')
-client=kodi_stub.import_lib_module('dexhub.client')
+client=kodi_stub.import_lib_module('nuviohub.client')
 installer=kodi_stub.import_lib_module('bundle_installer')
 bridge=kodi_stub.import_lib_module('frontend_bridge')
 plugin=kodi_stub.import_lib_module('plugin')
@@ -31,22 +31,25 @@ class DirectAIOTests(unittest.TestCase):
               {'name':'4K second','url':'https://example.test/2','behaviorHints':{'notWebReady':False}},
               {'name':'720p duplicate','url':'https://example.test/1'}]
         original=json.dumps(rows)
-        with mock.patch.object(api,'provider',return_value=source),mock.patch.object(client,'get_json',return_value={'streams':rows}) as get:
+        switches=importlib.import_module('resources.lib.stream_providers')
+        with mock.patch.object(switches,'enabled',return_value=[source]),mock.patch.object(client,'get_json',return_value={'streams':rows}) as get:
             found,result=api.streams('movie','tt123')
-        self.assertIs(result,rows)
-        self.assertEqual(json.dumps(result),original)
-        self.assertEqual(found,source)
+        self.assertEqual(json.dumps(rows),original)  # raw provider data is unmodified
+        self.assertEqual([{k:v for k,v in row.items() if k!='_nuvio_source'} for row in result],rows)
+        self.assertTrue(all(row['_nuvio_source']['id']=='aio' for row in result))
+        self.assertEqual(found,dict(source,_nuvio_errors=[]))
         self.assertEqual(get.call_args.kwargs['ttl_seconds'],0)
         self.assertEqual(get.call_args.kwargs['retry'],False)
 
-    def test_no_other_provider_is_used_when_aiostreams_is_missing(self):
-        with mock.patch.object(api,'provider',return_value=None),mock.patch.object(client,'get_json') as get:
-            with self.assertRaisesRegex(ValueError,'Connect AIOStreams'):api.streams('movie','tt123')
+    def test_no_provider_is_used_when_all_stream_addons_are_disabled(self):
+        switches=importlib.import_module('resources.lib.stream_providers')
+        with mock.patch.object(switches,'enabled',return_value=[]),mock.patch.object(client,'get_json') as get:
+            with self.assertRaisesRegex(ValueError,'Enable a compatible stream add-on'):api.streams('movie','tt123')
         get.assert_not_called()
 
-    def test_metadata_keeps_the_requested_playback_identity(self):
-        with mock.patch.object(api,'provider',return_value={'id':'meta'}),mock.patch.object(client,'fetch_meta',return_value={'meta':{'id':'other','name':'Title'}}):
-            self.assertEqual(api.metadata('movie','tt123')['id'],'tt123')
+    def test_metadata_rejects_an_unrelated_title_instead_of_relabelling_it(self):
+        with mock.patch('resources.lib.metadata_providers.enabled',return_value=[{'id':'meta'}]),mock.patch.object(client,'fetch_meta',return_value={'meta':{'id':'other','name':'Title'}}):
+            with self.assertRaisesRegex(ValueError,'matching details'):api.metadata('movie','tt123')
 
     def test_legacy_routes_only_bridge_to_the_new_interface(self):
         with mock.patch.object(bridge,'legacy_streams') as call:

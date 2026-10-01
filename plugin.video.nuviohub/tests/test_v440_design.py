@@ -15,7 +15,7 @@ PLUGIN = io.open(os.path.join(ROOT, 'resources', 'lib', 'plugin.py'), encoding='
 SB = io.open(os.path.join(ROOT, 'resources', 'lib', 'source_browser.py'), encoding='utf-8').read()
 SKIN = io.open(os.path.join(ROOT, 'resources', 'skins', 'Default', '1080i', 'sources_results.xml'), encoding='utf-8').read()
 SETTINGS = io.open(os.path.join(ROOT, 'resources', 'settings.xml'), encoding='utf-8').read()
-HOME_XML = os.path.join(ROOT, 'resources', 'skins', 'Default', '1080i', 'dexhub_home.xml')
+HOME_XML = os.path.join(ROOT, 'resources', 'skins', 'Default', '1080i', 'nuviohub_home.xml')
 
 
 class TestThemePresets(unittest.TestCase):
@@ -43,8 +43,8 @@ class TestClassicOnlyLook(unittest.TestCase):
     """v4.5.1: the 4.3.2 classic composition is the one and only sources look."""
 
     def test_look_machinery_fully_removed(self):
-        self.assertNotIn('dexhub.look', SKIN)
-        self.assertNotIn('dexhub.look', SB)
+        self.assertNotIn('nuviohub.look', SKIN)
+        self.assertNotIn('nuviohub.look', SB)
         self.assertNotIn('sources_look', SETTINGS)
 
     def test_single_heavy_dim_and_unconditional_poster(self):
@@ -73,11 +73,11 @@ class TestClassicOnlyLook(unittest.TestCase):
 
 class TestSearchSummary(unittest.TestCase):
     def test_browser_builds_summary_from_row_list(self):
-        self.assertIn("dexhub.search.summary", SB)
-        self.assertIn("provider_name", SB.split('dexhub.search.summary')[0][-1200:])
+        self.assertIn("nuviohub.search.summary", SB)
+        self.assertIn("provider_name", SB.split('nuviohub.search.summary')[0][-1200:])
 
     def test_skin_renders_summary_strip(self):
-        self.assertIn('Window.Property(dexhub.search.summary)', SKIN)
+        self.assertIn('Window.Property(nuviohub.search.summary)', SKIN)
 
 
 class TestXmlHome(unittest.TestCase):

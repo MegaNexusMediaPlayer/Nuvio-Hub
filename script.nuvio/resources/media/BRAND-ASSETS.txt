@@ -1,4 +1,4 @@
-Brand marks bundled in Dex Hub 4.2.2
+Brand marks bundled in Nuvio Hub 4.2.2
 ====================================
 
 The Plex, Emby, Jellyfin, TMDb, Trakt, MDBList, Simkl, Stremio and Kodi

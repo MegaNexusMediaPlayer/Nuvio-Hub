@@ -1,0 +1,9 @@
+{
+  "result": "PASS",
+  "version": "6.0.10",
+  "checks_passed": 24,
+  "python_files_compiled": 268,
+  "xml_files_parsed": 146,
+  "json_files_parsed": 6,
+  "errors": []
+}

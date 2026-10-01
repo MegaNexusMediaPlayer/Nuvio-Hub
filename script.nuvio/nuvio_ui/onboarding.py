@@ -1,7 +1,7 @@
-"""Optional first-run setup. Dismissal never blocks Home or resets configuration."""
+"""Account and extras are optional; Home separately requires validated catalog setup."""
 import xbmcgui
 from resources.lib import backend_api, settings_cache
-from resources.lib.dexhub import nuvio_stremio_sync as sync
+from resources.lib.nuviohub import nuvio_stremio_sync as sync
 from . import settings
 
 ADDON=settings.ADDON
@@ -14,10 +14,10 @@ def _steps():
                            ('Choose saved account profile',settings.choose_nuvio_profile)]),
         ('Add-ons (Home layout is kept)', [('Import my Nuvio add-ons and progress',settings.sync_nuvio),
                                    ('Add a configured provider manifest',lambda:settings.add_manifest(xbmcgui.Dialog())),
-                                   ('Optional: import Nuvio collection layout',settings.import_nuvio_collections),
+                                   ('Import and validate Nuvio collections',settings.import_nuvio_collections),
                                    ('Collections / skin configuration',settings.collections)]),
-        ('Metadata and streams', [('Choose metadata for ALL collections',lambda:settings.select_provider('metadata')),
-                                 ('Choose stream provider',lambda:settings.select_provider('streams'))]),
+        ('Metadata and streams', [('Enable metadata add-ons',lambda:settings.select_provider('metadata')),
+                                 ('Enable stream add-ons',lambda:settings.select_provider('streams'))]),
         ('Playback preferences', [('Autoplay, intro / credits and trailer settings',settings.playback)]),
         ('Simkl watch tracking', [('Connect Simkl with a PIN',simkl_account.link),
                                  ('Tracking and import preferences',simkl_account.run)]),
@@ -77,7 +77,7 @@ def run(force=False):
     except ValueError:index=0
     while index<len(steps):
         title,actions=steps[index]
-        labels=[name for name,_ in actions]+['Next','Skip this step','Skip setup and open Home']
+        labels=[name for name,_ in actions]+['Next','Skip this step','Finish optional steps and check collection setup']
         if index:labels.append('Previous step')
         status=(' - '+settings.nuvio_status()) if index<2 else ''
         pick=dialog.select('Welcome to Nuvio - %d/%d: %s%s'%(index+1,len(steps),title,status),labels)

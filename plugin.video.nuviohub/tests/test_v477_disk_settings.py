@@ -48,7 +48,7 @@ class _Profile(object):
         self.content = content
 
     def __enter__(self):
-        self.dir = tempfile.mkdtemp(prefix='dexhub_prof_')
+        self.dir = tempfile.mkdtemp(prefix='nuviohub_prof_')
         with io.open(os.path.join(self.dir, 'settings.xml'), 'w', encoding='utf-8') as fh:
             fh.write(self.content)
         self._orig = live.ADDON.getAddonInfo
@@ -66,8 +66,8 @@ class _Profile(object):
 
 class TestDiskTruthRead(unittest.TestCase):
     def setUp(self):
-        xbmcgui.Window(10000).clearProperty('dexhub.badges.url')
-        xbmcgui.Window(10000).clearProperty('dexhub.badges.enabled')
+        xbmcgui.Window(10000).clearProperty('nuviohub.badges.url')
+        xbmcgui.Window(10000).clearProperty('nuviohub.badges.enabled')
 
     tearDown = setUp
 
@@ -76,7 +76,7 @@ class TestDiskTruthRead(unittest.TestCase):
             self.assertEqual(sb._elite_badge_setting_url(), 'https://disk/gold.json')
 
     def test_file_beats_a_stale_published_property(self):
-        xbmcgui.Window(10000).setProperty('dexhub.badges.url', 'https://STALE/old.json')
+        xbmcgui.Window(10000).setProperty('nuviohub.badges.url', 'https://STALE/old.json')
         with _Profile(KODI19_FILE):
             self.assertEqual(sb._elite_badge_setting_url(), 'https://disk/gold.json')
 
@@ -99,7 +99,7 @@ class TestDiskTruthRead(unittest.TestCase):
 
     def test_missing_file_falls_back_not_raises(self):
         orig = live.ADDON.getAddonInfo
-        live.ADDON.getAddonInfo = lambda key: ('/nonexistent-dexhub-profile'
+        live.ADDON.getAddonInfo = lambda key: ('/nonexistent-nuviohub-profile'
                                                if key == 'profile' else orig(key))
         live._SETTINGS_FILE_MEMO.update({'sig': None, 'values': {}})
         try:

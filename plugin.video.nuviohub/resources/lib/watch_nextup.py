@@ -4,7 +4,7 @@ import json
 import os
 import threading
 import time
-from .dexhub.common import profile_path
+from .nuviohub.common import profile_path
 from . import playback_store,simkl_watched
 
 _LOCK=threading.RLock()
@@ -30,7 +30,7 @@ def remember(meta,provider_id=''):
         data=_read();data[str(meta['id'])]={'provider':provider_id,'saved':time.time(),'meta':meta}
         data=dict(sorted(data.items(),key=lambda pair:pair[1].get('saved',0),reverse=True)[:100])
         path=_path();os.makedirs(os.path.dirname(path),exist_ok=True)
-        from .dexhub.safe_io import write_json
+        from .nuviohub.safe_io import write_json
         write_json(path,data)
 
 def release_day(episode):

@@ -22,7 +22,7 @@ import time
 
 import xbmc
 
-from .dexhub import index as index_mod
+from .nuviohub import index as index_mod
 
 
 # Module-level singleton — opened lazily on first call.
@@ -38,7 +38,7 @@ def _get_db():
             _DB_LOCK = threading.Lock()
         with _DB_LOCK:
             if _DB is None:
-                from .dexhub.common import profile_path
+                from .nuviohub.common import profile_path
                 import os
                 db_path = os.path.join(profile_path(), 'library.sqlite3')
                 _DB = index_mod.IndexDB(db_path)
@@ -101,9 +101,9 @@ def query_bucket_metas(bucket, sort='release_date', media_type=None,
         # did before. Falls back gracefully to empty strings when the
         # query couldn't determine attribution (very rare; happens only
         # if item_sources rows were orphaned).
-        meta['_dexhub_indexed'] = True
-        meta['_dexhub_provider_id'] = row.get('best_provider_id') or ''
-        meta['_dexhub_catalog_id']  = row.get('best_catalog_id')  or ''
+        meta['_nuviohub_indexed'] = True
+        meta['_nuviohub_provider_id'] = row.get('best_provider_id') or ''
+        meta['_nuviohub_catalog_id']  = row.get('best_catalog_id')  or ''
         metas.append(meta)
     return metas
 
@@ -131,7 +131,7 @@ def search_metas(query, media_type=None, limit=80):
         meta.setdefault('name', row['title'])
         if row.get('poster') and not meta.get('poster'):
             meta['poster'] = row['poster']
-        meta['_dexhub_indexed'] = True
+        meta['_nuviohub_indexed'] = True
         metas.append(meta)
     return metas
 

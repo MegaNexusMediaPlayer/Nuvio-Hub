@@ -27,7 +27,7 @@ import xbmcvfs
 from ..i18n import tr
 from .. import plex_client
 
-# --- dexhub-401-patch ---
+# --- nuviohub-401-patch ---
 try:
     # This module lives one package below resources.lib.  The old relative
     # import used ``.settings_cache`` (playback.settings_cache), which does not
@@ -78,10 +78,10 @@ def _regional_flag_to_code(match):
 
 
 
-_SUBS_TMP_DIRNAME = 'dexhub_subs'
+_SUBS_TMP_DIRNAME = 'nuviohub_subs'
 
 _FILENAME_LANG_HINTS = [
-    ('arabic',     'ar'), ('عربي',     'ar'), ('عربية',    'ar'), ('ara',  'ar'), ('.ar.', 'ar'), ('-ar-', 'ar'), ('_ar_', 'ar'),
+    ('arabic',     'ar'), ('Arabic',     'ar'), ('Arabic',    'ar'), ('ara',  'ar'), ('.ar.', 'ar'), ('-ar-', 'ar'), ('_ar_', 'ar'),
     ('english',    'en'), ('eng',      'en'), ('.en.', 'en'), ('-en-', 'en'), ('_en_', 'en'),
     ('french',     'fr'), ('français', 'fr'), ('francais', 'fr'), ('fre',  'fr'), ('fra',  'fr'), ('.fr.', 'fr'),
     ('spanish',    'es'), ('español',  'es'), ('espanol',  'es'), ('spa',  'es'), ('.es.', 'es'),
@@ -112,9 +112,9 @@ def _subtitle_pick_mode_setting():
         raw = str(ADDON.getSetting('subtitle_search_mode') or '').strip().lower()
     except Exception:
         raw = ''
-    if 'تشغيل مع ترجمة' in raw or 'تشغيل مع الترجمات' in raw or 'with subtitle' in raw or 'with subtitles' in raw or 'play_with_subtitles' in raw:
+    if 'Play with subtitles' in raw or "\u062a\u0634\u063a\u064a\u0644 \u0645\u0639 \u0627\u0644\u062a\u0631\u062c\u0645\u0627\u062a" in raw or 'with subtitle' in raw or 'with subtitles' in raw or 'play_with_subtitles' in raw:
         return 'play_with_subtitles'
-    if 'مع التشغيل' in raw or 'auto' in raw or 'playback' in raw:
+    if 'During playback' in raw or 'auto' in raw or 'playback' in raw:
         return 'play_with_subtitles'
     # No more runtime prompt. Any legacy/empty/"ask" value falls back to
     # normal playback and is controlled from settings only.
@@ -127,9 +127,9 @@ def _subtitle_search_on_demand_only():
 
 def _preferred_subtitle_lang_keys():
     try:
-        raw = str(ADDON.getSetting('preferred_subtitle_langs') or 'ar,en').strip()
+        raw = str(ADDON.getSetting('preferred_subtitle_langs') or 'en').strip()
     except Exception:
-        raw = 'ar,en'
+        raw = 'en'
     out = []
     for part in raw.split(','):
         key = _normalize_lang(part)
@@ -141,7 +141,7 @@ def _preferred_subtitle_lang_keys():
 def _force_preferred_subtitle_on_player(player, show=False, attempts=4, delay_ms=400):
     """v3.9.105: after Kodi has loaded subtitle streams, scan them and force
     setSubtitleStream() to the FIRST one matching the user's preferred language
-    list (default: ar,en). Kodi otherwise tends to auto-select the last loaded
+    list (default: en). Kodi otherwise tends to auto-select the last loaded
     subtitle regardless of language — so a Chinese or Spanish sub ends up being
     the default even when an Arabic one is present in the list.
 
@@ -271,7 +271,7 @@ def _normalize_lang(value):
         pass
     raw = raw_text.lower().replace('_', '-').replace(' ', '-')
     aliases = {
-        'ara': 'ar', 'arabic': 'ar', 'العربية': 'ar', 'عربي': 'ar', 'عربية': 'ar',
+        'ara': 'ar', 'arabic': 'ar', 'Arabic': 'ar', 'Arabic': 'ar', 'Arabic': 'ar',
         'eng': 'en', 'english': 'en',
         'spa': 'es', 'spanish': 'es',
         'fre': 'fr', 'fra': 'fr', 'french': 'fr',
@@ -800,7 +800,7 @@ def _publish_subtitle_addon_row():
         if not kodi_subtitle_addons():
             return
         xbmcgui.Window(WINDOW_ID).setProperty(
-            'dexhub.subtitles.addon_search',
+            'nuviohub.subtitles.addon_search',
             build_url(action='subtitle_addons'))
     except Exception:
         pass
@@ -841,7 +841,7 @@ def subtitle_addon_search():
     """
     try:
         if not xbmc.Player().isPlaying():
-            notify(tr('شغّل شيئاً أولاً'))
+            notify(tr('Play something first'))
             return
     except Exception:
         pass
@@ -849,13 +849,13 @@ def subtitle_addon_search():
     xbmc.log('[NuvioHub] subtitle addons available: %s'
              % (', '.join(a['id'] for a in addons) or 'none'), xbmc.LOGINFO)
     if not addons:
-        notify(tr('لا توجد إضافات ترجمة مثبّتة'))
+        notify(tr('No subtitle addons installed'))
         return
     xbmc.executebuiltin('ActivateWindow(SubtitleSearch)')
 
 
 def _subtitle_picker_title(ctx):
-    title = ctx.get('show_title') or ctx.get('title') or tr('الترجمات')
+    title = ctx.get('show_title') or ctx.get('title') or tr('Subtitles')
     season = ctx.get('season')
     episode = ctx.get('episode')
     if season not in (None, '') and episode not in (None, ''):
@@ -869,20 +869,20 @@ def _subtitle_picker_title(ctx):
 def _subtitle_pick_for_stream_key(stream_key, current=None):
     ctx = cache_store.get('stream', stream_key) or {}
     if not ctx:
-        error(tr('انتهت بيانات المصدر. أعد فتحه.'))
+        error(tr('The add-on data expired. Open it again.'))
         return None
     rows = _collect_playback_subtitles(ctx, manual=True)
-    labels = ['بدون ترجمة']
+    labels = ['No subtitles']
     for row in rows:
         labels.append(_subtitle_title(row))
     if len(labels) == 1:
-        notify(tr('لا توجد ترجمات متاحة لهذا المصدر'))
+        notify(tr('No subtitles available for this add-on'))
         return None
-    idx = xbmcgui.Dialog().select(tr('الترجمات — %s') % _subtitle_picker_title(ctx), [tr(x) for x in labels])
+    idx = xbmcgui.Dialog().select(tr('Subtitles — %s') % _subtitle_picker_title(ctx), [tr(x) for x in labels])
     if idx < 0:
         return None
     if idx == 0:
-        return {'__clear__': True, '_label': 'بدون ترجمة'}
+        return {'__clear__': True, '_label': 'No subtitles'}
     chosen = dict(rows[idx - 1])
     chosen['_label'] = labels[idx]
     return chosen
@@ -904,13 +904,13 @@ def _publish_subtitle_bridge_properties(ctx, is_ep):
     # so it always has the content IDs even before VideoPlayer is ready.
     try:
         _sub_home = xbmcgui.Window(10000)
-        _sub_home.setProperty('dexhub.sub.imdb_id',  ctx.get('imdb_id') or '')
-        _sub_home.setProperty('dexhub.sub.tmdb_id',  ctx.get('tmdb_id') or '')
-        _sub_home.setProperty('dexhub.sub.tvdb_id',  ctx.get('tvdb_id') or '')
-        _sub_home.setProperty('dexhub.sub.season',   str(int(ctx.get('season') or 0)) if is_ep else '')
-        _sub_home.setProperty('dexhub.sub.episode',  str(int(ctx.get('episode') or 0)) if is_ep else '')
-        _sub_home.setProperty('dexhub.sub.title',    ctx.get('title') or '')
-        _sub_home.setProperty('dexhub.sub.mediatype','episode' if is_ep else 'movie')
+        _sub_home.setProperty('nuviohub.sub.imdb_id',  ctx.get('imdb_id') or '')
+        _sub_home.setProperty('nuviohub.sub.tmdb_id',  ctx.get('tmdb_id') or '')
+        _sub_home.setProperty('nuviohub.sub.tvdb_id',  ctx.get('tvdb_id') or '')
+        _sub_home.setProperty('nuviohub.sub.season',   str(int(ctx.get('season') or 0)) if is_ep else '')
+        _sub_home.setProperty('nuviohub.sub.episode',  str(int(ctx.get('episode') or 0)) if is_ep else '')
+        _sub_home.setProperty('nuviohub.sub.title',    ctx.get('title') or '')
+        _sub_home.setProperty('nuviohub.sub.mediatype','episode' if is_ep else 'movie')
     except Exception:
         pass
 
@@ -1125,7 +1125,7 @@ def _prepare_subtitle_files(subtitles, stream_key, prefer_local_copy=False,
                 # site as part of the per-playback context. We don't have it
                 # directly here, so peek at the most recently-set transient
                 # property (set by the source picker before play).
-                work_title = (xbmcgui.Window(WINDOW_ID).getProperty('dexhub.source.title') or '').strip()
+                work_title = (xbmcgui.Window(WINDOW_ID).getProperty('nuviohub.source.title') or '').strip()
             except Exception:
                 work_title = ''
             safe_work_title = _safe_subtitle_filename_part(work_title, 60) if work_title else ''

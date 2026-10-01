@@ -32,7 +32,7 @@ import xbmcaddon
 import xbmcgui
 
 from . import plex_state
-# --- dexhub-403-patch ---
+# --- nuviohub-403-patch ---
 try:
     from .i18n import tr as tr
 except Exception:
@@ -226,7 +226,7 @@ def _request(url, method='GET', token='', data=None, headers=None, timeout=None)
         # Kodi still failed before library discovery.  Unwrap the exception
         # chain and retry ONLY certificate-validation failures.
         if not _is_certificate_error(exc):
-            raise PlexError(tr('تعذر الاتصال بخادم Plex (%s)') % exc)
+            raise PlexError(tr('Could not reach the Plex server (%s)') % exc)
         # v3.9.210 — THE reason Plex returned nothing while Emby worked.
         #
         # Plex serves its LAN address over HTTPS on a *.plex.direct hostname
@@ -249,7 +249,7 @@ def _request(url, method='GET', token='', data=None, headers=None, timeout=None)
             with urlopen(req, timeout=(timeout or _timeout()), context=ctx) as response:
                 return response.read()
         except Exception as retry_exc:
-            raise PlexError(tr('تعذر الاتصال بخادم Plex (%s)') % retry_exc)
+            raise PlexError(tr('Could not reach the Plex server (%s)') % retry_exc)
 
 
 def _is_certificate_error(exc):
@@ -277,7 +277,7 @@ def _xml(data):
     try:
         return ET.fromstring(data or b'')
     except Exception as exc:
-        raise PlexError(tr('استجابة Plex غير صالحة (%s)') % exc)
+        raise PlexError(tr('Invalid Plex response (%s)') % exc)
 
 
 def _json(data):
@@ -285,7 +285,7 @@ def _json(data):
         value = json.loads((data or b'').decode('utf-8', 'ignore'))
         return value if isinstance(value, dict) else {}
     except Exception as exc:
-        raise PlexError(tr('استجابة Plex غير صالحة (%s)') % exc)
+        raise PlexError(tr('Invalid Plex response (%s)') % exc)
 
 
 def _node_value(node, name, default=''):
@@ -295,7 +295,7 @@ def _node_value(node, name, default=''):
 
 
 def _auth_prop(name):
-    return 'dexhub.plex.auth' if name.endswith('auth_json') else ''
+    return 'nuviohub.plex.auth' if name.endswith('auth_json') else ''
 
 
 def _parse_json_setting(name, default):
@@ -360,7 +360,7 @@ def sign_out():
     _setting('plex_auth_json', '')
     _remove_persistent('plex_auth_json')
     try:
-        xbmcgui.Window(WINDOW_ID).clearProperty('dexhub.plex.auth')
+        xbmcgui.Window(WINDOW_ID).clearProperty('nuviohub.plex.auth')
     except Exception:
         pass
     _setting('plex_servers_cache_json', '')
@@ -404,7 +404,7 @@ def request_pin(strong=False):
     code = (root.findtext('code') or '').strip()
     pin_id = (root.findtext('id') or '').strip()
     if not (code and pin_id):
-        raise PlexError('لم يرسل Plex رمز الربط')
+        raise PlexError('Plex did not send a link code')
     return {'id': pin_id, 'code': code.upper(), 'flavor': 'legacy', 'strong': False,
             'link_url': 'https://plex.tv/link/?' + urlencode({'pin': code.upper()})}
 
@@ -673,7 +673,7 @@ def _verified_uri(server, force=False):
         if hit and now < hit[1]:
             return hit[0]
         try:
-            raw = xbmcgui.Window(10000).getProperty('dexhub.plex.uri.%s' % sid) or ''
+            raw = xbmcgui.Window(10000).getProperty('nuviohub.plex.uri.%s' % sid) or ''
             if raw:
                 uri, exp = raw.rsplit('|', 1)
                 if now < float(exp):
@@ -711,7 +711,7 @@ def _verified_uri(server, force=False):
     if sid:
         _VERIFIED_URI_MEM[sid] = (best, expires)
         try:
-            xbmcgui.Window(10000).setProperty('dexhub.plex.uri.%s' % sid,
+            xbmcgui.Window(10000).setProperty('nuviohub.plex.uri.%s' % sid,
                                               '%s|%s' % (best, expires))
         except Exception:
             pass
@@ -762,7 +762,7 @@ def _server_xml(server, path, params=None):
             return _xml(_request(url, timeout=browse_timeout)), fallback_base
         except PlexError as exc:
             last_error = exc
-    raise last_error or PlexError('لا يوجد اتصال صالح بخادم Plex')
+    raise last_error or PlexError('No valid connection to the Plex server')
 
 
 def _guid_ids(node):
@@ -1072,7 +1072,7 @@ def libraries(server, force=False):
         # v3.9.171: sections shared across warm interpreters (one fetch per
         # TTL for the whole device instead of per interpreter).
         try:
-            raw = xbmcgui.Window(10000).getProperty('dexhub.plex.libs.%s' % cache_key) or ''
+            raw = xbmcgui.Window(10000).getProperty('nuviohub.plex.libs.%s' % cache_key) or ''
             if raw:
                 data = json.loads(raw)
                 if data.get('at', 0) + LIBRARY_CACHE_SECONDS > time.time():
@@ -1113,7 +1113,7 @@ def libraries(server, force=False):
                  'will retry on the next call' % (server.get('name') or '?'),
                  xbmc.LOGWARNING)
         try:
-            xbmcgui.Window(WINDOW_ID).clearProperty('dexhub.plex.libs.%s' % cache_key)
+            xbmcgui.Window(WINDOW_ID).clearProperty('nuviohub.plex.libs.%s' % cache_key)
         except Exception:
             pass
         _LIBRARIES_MEM.pop(cache_key, None)
@@ -1125,7 +1125,7 @@ def libraries(server, force=False):
     _LIBRARIES_MEM[cache_key] = payload
     if cache_key:
         try:
-            xbmcgui.Window(10000).setProperty('dexhub.plex.libs.%s' % cache_key,
+            xbmcgui.Window(10000).setProperty('nuviohub.plex.libs.%s' % cache_key,
                                               json.dumps(payload))
         except Exception:
             pass
@@ -1205,7 +1205,7 @@ def metadata(server, rating_key):
     for node in list(root):
         if node.tag.rsplit('}', 1)[-1] in ('Video', 'Directory'):
             return item_from_node(node, server, base)
-    raise PlexError('لم يتم العثور على عنصر Plex')
+    raise PlexError('Plex item not found')
 
 
 def search_server(server, query, media_type='', limit=40):
@@ -1381,7 +1381,7 @@ def search_all(query, media_type='', limit_per_server=40):
 
 _TITLE_NOISE_RE = re.compile(r'[\[\](){}:.,!?\'"`~*_/\\|+-]+')
 _TITLE_YEAR_RE = re.compile(r'\b(19|20)\d{2}\b')
-_AR_DIACRITICS_RE = re.compile('[\u064b-\u0652\u0640]')
+_AR_DIACRITICS_RE = re.compile("[\u064b-\u0652\u0640]")
 
 
 def _norm_title(value):
@@ -1398,9 +1398,9 @@ def _norm_title(value):
     if not text:
         return ''
     text = _AR_DIACRITICS_RE.sub('', text)
-    text = (text.replace('\u0623', '\u0627').replace('\u0625', '\u0627')
-                .replace('\u0622', '\u0627').replace('\u0649', '\u064a')
-                .replace('\u0629', '\u0647'))
+    text = (text.replace("\u0623", "\u0627").replace("\u0625", "\u0627")
+                .replace("\u0622", "\u0627").replace("\u0649", "\u064a")
+                .replace("\u0629", "\u0647"))
     text = _TITLE_YEAR_RE.sub(' ', text)
     text = _TITLE_NOISE_RE.sub(' ', text)
     return ' '.join(text.split())
@@ -1958,5 +1958,5 @@ def playback_url(item, part_key=''):
     """Direct Play URL (token included) for a chosen part, default first."""
     part = str(part_key or item.get('part_key') or '').strip()
     if not part:
-        raise PlexError('لا توجد نسخة تشغيل مباشرة لهذا العنصر في Plex')
+        raise PlexError('No directly playable version of this item in Plex')
     return artwork_url(item, part)

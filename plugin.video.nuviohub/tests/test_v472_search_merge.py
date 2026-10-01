@@ -90,7 +90,7 @@ class TestEliteJsonHardening(unittest.TestCase):
         self.assertNotIn('timeout=3.0', body)
 
     def test_last_good_disk_copy_roundtrip(self):
-        tmp = tempfile.mkdtemp(prefix='dexhub_elite_')
+        tmp = tempfile.mkdtemp(prefix='nuviohub_elite_')
         orig = sb_mod._elite_rules_disk_path
         try:
             sb_mod._elite_rules_disk_path = lambda url: os.path.join(tmp, 'rules.json')

@@ -36,7 +36,7 @@ I18N = io.open(os.path.join(ROOT, 'resources', 'lib', 'i18n.py'), encoding='utf-
 
 class _Profile(object):
     def __enter__(self):
-        self.dir = tempfile.mkdtemp(prefix='dexhub_ov_')
+        self.dir = tempfile.mkdtemp(prefix='nuviohub_ov_')
         self._orig = sb.ADDON.getAddonInfo
         sb.ADDON.getAddonInfo = lambda key: (self.dir if key == 'profile'
                                              else self._orig(key))
@@ -85,7 +85,7 @@ class TestAddonOwnedUrl(unittest.TestCase):
         with _Profile():
             self.assertEqual(sb._elite_url_provenance(), 'getSetting')
             sb._elite_url_override_write(self.URL)
-            self.assertEqual(sb._elite_url_provenance(), 'dexhub-file')
+            self.assertEqual(sb._elite_url_provenance(), 'nuviohub-file')
         self.assertIn('via=%s', SB)
 
     def test_override_is_checked_before_every_other_layer(self):

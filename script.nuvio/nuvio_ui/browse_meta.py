@@ -5,7 +5,7 @@ from copy import deepcopy
 import json
 import threading
 import time
-from resources.lib import backend_api, settings_cache
+from resources.lib import backend_api, settings_cache, browse_cache, metadata_providers
 
 _CACHE=OrderedDict()
 _PENDING={}
@@ -17,7 +17,7 @@ _GENERATION=0
 def identity(context):
     mt=context.get('media_type') or context.get('type') or 'movie'
     if mt in ('tv','show','tvshow','episode','anime'):mt='series'
-    return (settings_cache.cached_addon().getSetting('nuvio_metadata_provider'),mt,
+    return (browse_cache.key(metadata_providers.signature(), context.get('source_provider_id') or ''),mt,
             context.get('canonical_id') or context.get('id') or '')
 
 
@@ -34,7 +34,8 @@ def cached(context):
     key=identity(context)
     with _LOCK:
         entry=_CACHE.get(key)
-        if not entry or entry[0]<time.monotonic():return None
+        if not entry or entry[0]<time.monotonic():
+            return browse_cache.instance().get(browse_cache.key('metadata', *key), memory_only=True)
         _CACHE.move_to_end(key)
         return deepcopy(entry[1])
 
@@ -50,17 +51,15 @@ def request(context):
         generation=_GENERATION
         def load():
             global _BYTES
-            meta=backend_api.metadata(key[1],key[2])
+            disk_key=browse_cache.key('metadata', *key)
+            hit=browse_cache.instance().get(disk_key)
+            if hit is not None:return hit
+            options={'preferred':context['source_provider_id']} if context.get('source_provider_id') else {}
+            meta=backend_api.metadata(key[1],key[2],**options)
             if not meta:return None
-            size=len(json.dumps(meta,ensure_ascii=False,default=str).encode('utf-8'))
-            if size<=8*1024*1024:
-                with _LOCK:
-                    if generation==_GENERATION:
-                        old=_CACHE.pop(key,None)
-                        if old:_BYTES-=old[2]
-                        _CACHE[key]=(time.monotonic()+300,deepcopy(meta),size);_BYTES+=size
-                        while len(_CACHE)>32 or _BYTES>8*1024*1024:
-                            _,entry=_CACHE.popitem(last=False);_BYTES-=entry[2]
+            with _LOCK:
+                if generation == _GENERATION:
+                    browse_cache.instance().put(browse_cache.key('metadata', *key), meta, ttl=1800)
             return meta
         from .playback import _JOBS
         future=_JOBS.submit(load);_PENDING[key]=future
@@ -71,9 +70,10 @@ def request(context):
         return future
 
 
-def clear():
+def clear(persistent=False):
     global _BYTES,_GENERATION
     with _LOCK:
         _GENERATION+=1;_CACHE.clear();_BYTES=0
+        if persistent:browse_cache.instance().clear()
         for future in list(_PENDING.values()):future.cancel()
         _PENDING.clear()

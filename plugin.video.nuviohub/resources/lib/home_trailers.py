@@ -37,8 +37,8 @@ def trailer_url(meta):
 def selected_trailer(row):
     url = row.get('trailer') or ''
     if not url and row.get('target'):
-        from .dexhub import store
-        from .dexhub.client import fetch_meta
+        from .nuviohub import store
+        from .nuviohub.client import fetch_meta
         target = row['target']
         provider = next((p for p in store.list_providers() if p.get('id') == target.get('source_provider_id')), None)
         if provider:

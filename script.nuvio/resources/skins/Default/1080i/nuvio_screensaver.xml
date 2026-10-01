@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
 <window>
   <defaultcontrol always="true">100</defaultcontrol>
   <controls>
@@ -17,6 +18,13 @@
       <aspectratio>scale</aspectratio>
       <texture>$INFO[Window.Property(nuvio.background)]</texture>
     </control>
+    <control type="videowindow">
+      <left>0</left>
+      <top>0</top>
+      <width>1920</width>
+      <height>1080</height>
+      <visible>String.IsEqual(Window.Property(nuvio.saver.video),1)</visible>
+    </control>
     <control type="group">
       <visible>!String.IsEmpty(Weather.Temperature)</visible>
       <control type="image">
@@ -26,6 +34,7 @@
         <height>48</height>
         <aspectratio>scale</aspectratio>
         <texture>special://home/addons/skin.nuvio/media/nuvio/weather/$INFO[Weather.FanartCode].png</texture>
+        <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
       </control>
       <control type="label">
         <left>1645</left>
@@ -35,6 +44,7 @@
         <font>font12</font>
         <textcolor>FFC2ADFF</textcolor>
         <label>$INFO[Weather.Temperature]</label>
+        <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
       </control>
     </control>
     <control type="label">
@@ -45,6 +55,7 @@
       <font>font12</font>
       <textcolor>FFCAD0DB</textcolor>
       <label>$INFO[System.Time(hh:mm)]</label>
+      <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
     </control>
   </controls>
 </window>

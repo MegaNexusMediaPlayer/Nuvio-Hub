@@ -85,11 +85,11 @@ def entry_matches_last_source(entry, pref):
 
 def _min_quality_required_rank(raw):
     mapping = {
-        'بدون فلترة': 0, 'no filter': 0,
-        '480p فأعلى': 1, '480p+': 1,
-        '720p فأعلى': 2, '720p+': 2,
-        '1080p فأعلى': 3, '1080p+': 3,
-        '4k فقط': 4, '4k only': 4,
+        'No filter': 0, 'no filter': 0,
+        '480p+': 1, '480p+': 1,
+        '720p+': 2, '720p+': 2,
+        '1080p+': 3, '1080p+': 3,
+        '4K only': 4, '4k only': 4,
     }
     return mapping.get(str(raw or 'No filter').strip().lower(), 0)
 
@@ -134,20 +134,20 @@ _QUALITY_PROFILES = {
 # and English variants here.
 _PROFILE_ALIASES = {
     'best': 'best',
-    'أعلى جودة': 'best',
-    'أعلى جوده': 'best',
+    "\u0623\u0639\u0644\u0649 \u062c\u0648\u062f\u0629": 'best',
+    "\u0623\u0639\u0644\u0649 \u062c\u0648\u062f\u0647": 'best',
     'balanced': 'balanced',
     'balanced (recommended)': 'balanced',
-    'متوازن': 'balanced',
-    'متوازن (مستحسن)': 'balanced',
+    "\u0645\u062a\u0648\u0627\u0632\u0646": 'balanced',
+    "\u0645\u062a\u0648\u0627\u0632\u0646 (\u0645\u0633\u062a\u062d\u0633\u0646)": 'balanced',
     'data saver': 'data_saver',
     'data_saver': 'data_saver',
-    'موفر بيانات': 'data_saver',
-    'موفّر بيانات': 'data_saver',
-    'موفّر للبيانات': 'data_saver',
+    "\u0645\u0648\u0641\u0631 \u0628\u064a\u0627\u0646\u0627\u062a": 'data_saver',
+    "\u0645\u0648\u0641\u0651\u0631 \u0628\u064a\u0627\u0646\u0627\u062a": 'data_saver',
+    "\u0645\u0648\u0641\u0651\u0631 \u0644\u0644\u0628\u064a\u0627\u0646\u0627\u062a": 'data_saver',
     'custom': 'custom',
-    'مخصص': 'custom',
-    'مخصّص': 'custom',
+    'Custom': 'custom',
+    "\u0645\u062e\u0635\u0651\u0635": 'custom',
 }
 
 
@@ -179,7 +179,7 @@ def source_settings(addon):
             priority_order = []
         if not priority_order:
             try:
-                from .dexhub import store as _store
+                from .nuviohub import store as _store
                 for prov in (_store.list_providers() or []):
                     name = (prov.get('name') or prov.get('id') or '').strip().lower()
                     if name:
@@ -245,7 +245,7 @@ def source_settings(addon):
         # Fall back to the order of providers as listed in the Sources
         # page. This is what the user sees and reorders directly.
         try:
-            from .dexhub import store as _store
+            from .nuviohub import store as _store
             for prov in (_store.list_providers() or []):
                 name = (prov.get('name') or prov.get('id') or '').strip().lower()
                 if name:

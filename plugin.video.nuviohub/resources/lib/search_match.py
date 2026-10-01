@@ -1,22 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Search relevance matching — pure, dependency-free, unit-testable.
-
-v4.8.4: lifted out of plugin.py (25.8k lines) unchanged. Two reasons this
-module exists rather than another block in there:
-
-  * these are the functions that decide whether a search result is shown
-    at all, and they were only ever covered by tests that grep the source
-    for a string. Here they can be called directly;
-  * the relevance FILTER used to be inline in two different render
-    functions, so a fix had to be applied twice — one of the ways a patch
-    silently missed a site earlier in this cycle.
-
-Ported from the DexWorld Pro server's arabicNorm/titleMatchScore
-(server.js), which is tuned against this catalogue. Two of its rules are
-load-bearing: a digit in the query must appear verbatim ("الموسم 5" must
-never match "الموسم 50"), and a single-word query must hit a WHOLE word
-rather than a fragment.
-"""
+"Search relevance matching — pure, dependency-free, unit-testable.\n\nv4.8.4: lifted out of plugin.py (25.8k lines) unchanged. Two reasons this\nmodule exists rather than another block in there:\n\n  * these are the functions that decide whether a search result is shown\n    at all, and they were only ever covered by tests that grep the source\n    for a string. Here they can be called directly;\n  * the relevance FILTER used to be inline in two different render\n    functions, so a fix had to be applied twice — one of the ways a patch\n    silently missed a site earlier in this cycle.\n\nPorted from the DexWorld Pro server's arabicNorm/titleMatchScore\n(server.js), which is tuned against this catalogue. Two of its rules are\nload-bearing: a digit in the query must appear verbatim (\"\u0627\u0644\u0645\u0648\u0633\u0645 5\" must\nnever match \"\u0627\u0644\u0645\u0648\u0633\u0645 50\"), and a single-word query must hit a WHOLE word\nrather than a fragment.\n"
 
 # ── v4.8.2: Arabic-first search matching ─────────────────────────────────
 # Ported from the DexWorld Pro server's own titleMatchScore/arabicNorm
@@ -31,22 +14,22 @@ from functools import lru_cache
 
 
 AR_FOLD = {
-    '\u0623': '\u0627', '\u0625': '\u0627', '\u0622': '\u0627',   # أ إ آ  → ا
-    '\u0649': '\u064a',                                         # ى      → ي
-    '\u0629': '\u0647',                                         # ة      → ه
-    '\u0624': '\u0648', '\u0626': '\u064a',                     # ؤ ئ    → و ي
-    '\u0640': '',                                                # tatweel
+    "\u0623": "\u0627", "\u0625": "\u0627", "\u0622": "\u0627",   # أ إ آ  → ا
+    "\u0649": "\u064a",                                         # ى      → ي
+    "\u0629": "\u0647",                                         # ة      → ه
+    "\u0624": "\u0648", "\u0626": "\u064a",                     # ؤ ئ    → و ي
+    "\u0640": '',                                                # tatweel
 }
-AR_DIGITS = {'\u0660': '0', '\u0661': '1', '\u0662': '2', '\u0663': '3',
-              '\u0664': '4', '\u0665': '5', '\u0666': '6', '\u0667': '7',
-              '\u0668': '8', '\u0669': '9'}
+AR_DIGITS = {"\u0660": '0', "\u0661": '1', "\u0662": '2', "\u0663": '3',
+              "\u0664": '4', "\u0665": '5', "\u0666": '6', "\u0667": '7',
+              "\u0668": '8', "\u0669": '9'}
 
 
 @lru_cache(maxsize=16384)
 def _norm_text(text):
     out = []
     for ch in text.casefold():
-        if '\u064b' <= ch <= '\u065f' or ch == '\u0670':      # tashkeel
+        if "\u064b" <= ch <= "\u065f" or ch == "\u0670":      # tashkeel
             continue
         ch = AR_DIGITS.get(ch, AR_FOLD.get(ch, ch))
         if not ch:
@@ -55,7 +38,7 @@ def _norm_text(text):
     tokens = []
     for tok in ''.join(out).split():
         # the definite article is noise: "الطيار" must reach "طيار"
-        if tok.startswith('\u0627\u0644') and len(tok) > 4:
+        if tok.startswith("\u0627\u0644") and len(tok) > 4:
             tok = tok[2:]
         tokens.append(tok)
     return ' '.join(tokens)
@@ -108,11 +91,11 @@ def fuzzy_token_eq(qt, it, min_len=4):
 
 
 _ARABIC_REPLACEMENTS = {
-    'ا': 'a', 'ب': 'b', 'ت': 't', 'ث': 't', 'ج': 'g', 'ح': 'h',
-    'خ': 'k', 'د': 'd', 'ذ': 'z', 'ر': 'r', 'ز': 'z', 'س': 's',
-    'ش': 's', 'ص': 's', 'ض': 'd', 'ط': 't', 'ظ': 'z', 'ع': '',
-    'غ': 'g', 'ف': 'f', 'ق': 'k', 'ك': 'k', 'ل': 'l', 'م': 'm',
-    'ن': 'n', 'ه': 'h', 'و': 'w', 'ي': 'y', 'ء': '',
+    "\u0627": 'a', "\u0628": 'b', "\u062a": 't', 's': 't', "\u062c": 'g', "\u062d": 'h',
+    "\u062e": 'k', "\u062f": 'd', "\u0630": 'z', "\u0631": 'r', "\u0632": 'z', "\u0633": 's',
+    "\u0634": 's', "\u0635": 's', "\u0636": 'd', "\u0637": 't', "\u0638": 'z', "\u0639": '',
+    "\u063a": 'g', "\u0641": 'f', "\u0642": 'k', "\u0643": 'k', "\u0644": 'l', "\u0645": 'm',
+    "\u0646": 'n', "\u0647": 'h', "\u0648": 'w', "\u064a": 'y', "\u0621": '',
 }
 _TITLE_KEYS = (
     'name', 'title', 'original_title', 'original_name', 'originalTitle',
@@ -123,7 +106,7 @@ _TITLE_KEYS = (
 
 @lru_cache(maxsize=8192)
 def _has_arabic(text):
-    return any('\u0600' <= ch <= '\u06ff' for ch in str(text or ''))
+    return any("\u0600" <= ch <= "\u06ff" for ch in str(text or ''))
 
 
 @lru_cache(maxsize=8192)

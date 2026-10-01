@@ -28,8 +28,8 @@ handful of libraries, and it keeps the choice readable/removable by hand.
 import os
 import threading
 
-from .dexhub.common import profile_path
-from .dexhub.safe_io import read_json, write_json
+from .nuviohub.common import profile_path
+from .nuviohub.safe_io import read_json, write_json
 
 _LOCK = threading.RLock()
 _MEM = None

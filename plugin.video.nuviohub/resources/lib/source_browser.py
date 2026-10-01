@@ -33,7 +33,7 @@ def _provider_color_index(name):
     except Exception:  # pragma: no cover
         return 1
 
-# --- dexhub-401-patch ---
+# --- nuviohub-401-patch ---
 try:
     from .settings_cache import cached_addon as _dh_cached_addon
 except Exception:
@@ -139,7 +139,7 @@ _PLOT_RELEASE_RE = re.compile(
     r'\b(?:2160p|1440p|1080p|720p|480p|WEB-?DL|WEB-?RIP|BLU-?RAY|BDRIP|HDTV|'
     r'REMUX|HEVC|AVC|X26[45]|H\.?26[45]|AAC|EAC-?3|DDP?[57]|ATMOS|TRUEHD|'
     r'\bMKV\b|\bMP4\b|\bSCOPE\b|HDR10?\+?|\bDV\b|FRAMESTOR|\d+(?:\.\d+)?\s*[GM]B)\b', re.I)
-_PLOT_SENTENCE_RE = re.compile(r'[.!؟?…،]\s')
+_PLOT_SENTENCE_RE = re.compile("[.!\u061f?…\u060c]\\s")
 
 
 def _clean_header_plot(text):
@@ -354,11 +354,11 @@ def elite_preset_preview(url, fallback=''):
 def _elite_url_provenance():
     """Which layer answered — ends the guessing in the next log."""
     if _elite_url_override_read() is not None:
-        return 'dexhub-file'
+        return 'nuviohub-file'
     if _settings_file_value('elite_badges_json_url') is not None:
         return 'settings.xml'
     try:
-        if (xbmcgui.Window(10000).getProperty('dexhub.badges.url') or '').strip():
+        if (xbmcgui.Window(10000).getProperty('nuviohub.badges.url') or '').strip():
             return 'window-prop'
     except Exception:
         pass
@@ -451,7 +451,7 @@ def _elite_badge_setting_url():
         return disk.strip()
     # 2) the value the service published on the last settings change
     try:
-        live = (xbmcgui.Window(10000).getProperty('dexhub.badges.url') or '').strip()
+        live = (xbmcgui.Window(10000).getProperty('nuviohub.badges.url') or '').strip()
     except Exception:
         live = ''
     if live:
@@ -479,7 +479,7 @@ def _elite_badges_enabled():
     """
     # v4.7.5: same staleness applies to the toggle — prefer the live value.
     return _live.live_bool('elite_badges_enabled',
-                           'dexhub.badges.enabled', default=True)
+                           'nuviohub.badges.enabled', default=True)
 
 
 def _elite_rule_entry(item, inherited_group=''):
@@ -790,7 +790,7 @@ def _elite_notify_custom_applied_once(url, count):
     _ELITE_BADGE_RULE_CACHE['applied_url'] = url
     try:
         xbmcgui.Dialog().notification(
-            'Nuvio Hub', tr('تم تطبيق %d قاعدة شارات من الرابط المخصص') % count,
+            'Nuvio Hub', tr('%d badge rules applied from the custom URL') % count,
             xbmcgui.NOTIFICATION_INFO, 3000, sound=False)
     except Exception:
         pass
@@ -833,7 +833,7 @@ def _elite_warn_custom_failed_once(url):
     _ELITE_BADGE_RULE_CACHE['warned_url'] = url
     try:
         xbmcgui.Dialog().notification(
-            'Nuvio Hub', tr('تعذر تحميل badges.json المخصص — سيتم استخدام الافتراضي'),
+            'Nuvio Hub', tr('Custom badges.json could not be loaded — using the built-in set'),
             xbmcgui.NOTIFICATION_WARNING, 4000, sound=False)
     except Exception:
         pass
@@ -973,7 +973,7 @@ def _elite_badge_images(row, tags=None, max_items=10):
     return out
 
 
-# --- dexhub-407-patch ---
+# --- nuviohub-407-patch ---
 # Sort modes for the results drawer. Kept separate from QUALITY_FILTERS so a
 # filter and a sort can be active at the same time.
 SORT_MODES = [
@@ -1054,7 +1054,7 @@ def _filter_label(value):
     if value.startswith('P:'):
         return tr('PROVIDER • %s') % value[2:]
     if value.startswith('V:'):
-        return tr('إضافة • %s') % value[2:]
+        return tr('Addon • %s') % value[2:]
     if value.startswith('T:'):
         return tr('TYPE • %s') % value[2:]
     return tr(value)
@@ -1284,7 +1284,7 @@ def _source_meta_backfill(meta):
 
 def _normalize_mode(value):
     raw = str(value or '').strip().lower()
-    if raw in (MODE_PLAY_SUBS, 'play_with_subtitles', 'with_subtitles', 'with-subs', 'تشغيل مع ترجمة', 'play with subtitles'):
+    if raw in (MODE_PLAY_SUBS, 'play_with_subtitles', 'with_subtitles', 'with-subs', 'Play with subtitles', 'play with subtitles'):
         return MODE_PLAY_SUBS
     # Legacy/empty/ask values all become normal playback. Playback mode is now
     # controlled from settings only; no per-click prompt.
@@ -1298,7 +1298,7 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
         self.meta = kwargs.get('meta') or {}
         self.selected = None
         self.active_filter = 'ALL'
-        # --- dexhub-407-patch ---
+        # --- nuviohub-407-patch ---
         try:
             self.active_sort = str(ADDON.getSetting('source_sort_mode') or 'S:DEFAULT') or 'S:DEFAULT'
         except Exception:
@@ -1355,7 +1355,7 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
         self._last_busy_touch = now
         try:
             xbmcgui.Window(10000).setProperty(
-                'dexhub.interactive_busy', '%.3f' % time.time())
+                'nuviohub.interactive_busy', '%.3f' % time.time())
         except Exception:
             pass
 
@@ -1388,14 +1388,14 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
             pass
         # XML chrome is translated through runtime properties because Kodi's
         # custom WindowXML files do not pass arbitrary labels through i18n.py.
-        self.setProperty('results_label', tr('نتائج البحث'))
-        self.setProperty('play_mode_prefix', tr('وضع التشغيل'))
-        self.setProperty('filters_label', tr('الفلاتر'))
-        self.setProperty('nav_hint_title', tr('اختصارات الريموت'))
-        self.setProperty('nav_hint_updown', tr('أعلى / أسفل: اختيار النسخة'))
-        self.setProperty('nav_hint_left', tr('يسار: الفلاتر والترتيب'))
-        self.setProperty('nav_hint_right', tr('يمين: فلاتر المصادر'))
-        self.setProperty('nav_hint_info', tr('معلومات: تفاصيل المصدر'))
+        self.setProperty('results_label', tr('Search results'))
+        self.setProperty('play_mode_prefix', tr('Playback mode'))
+        self.setProperty('filters_label', tr('Filters'))
+        self.setProperty('nav_hint_title', tr('Remote shortcuts'))
+        self.setProperty('nav_hint_updown', tr('Up / Down: choose version'))
+        self.setProperty('nav_hint_left', tr('Left: filters and sorting'))
+        self.setProperty('nav_hint_right', tr('Right: add-on filters'))
+        self.setProperty('nav_hint_info', tr('Info: add-on details'))
         try:
             self.meta = _source_meta_backfill(self.meta)
         except Exception:
@@ -1447,12 +1447,12 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
         # to empty, so we explicitly clear any leftover from a previous
         # session of the results window — this is the fix for the
         # "previous item's poster appears briefly" issue.
-        self.setProperty('dexhub.results.fanart', _fanart or '')
-        self.setProperty('dexhub.results.clearlogo', _clearlogo or '')
+        self.setProperty('nuviohub.results.fanart', _fanart or '')
+        self.setProperty('nuviohub.results.clearlogo', _clearlogo or '')
         # v3.9.89: _poster is always either a TMDb URL, a vetted addon
         # URL, or the local portrait placeholder — never empty, never
         # landscape — so no extra fallback is needed here.
-        self.setProperty('dexhub.results.poster', _poster or '')
+        self.setProperty('nuviohub.results.poster', _poster or '')
         self.setProperty('title', _title)
         self.setProperty('plot', _clean_header_plot(_plot))
         self.setProperty('year', _year)
@@ -1461,17 +1461,17 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
         self.setProperty('studio', _studio)
         try:
             home = xbmcgui.Window(10000)
-            home.setProperty('dexhub.source.fanart', _fanart)
-            home.setProperty('dexhub.source.clearlogo', _clearlogo)
-            home.setProperty('dexhub.source.poster', _poster or _fanart or '')
-            home.setProperty('dexhub.source.thumb', _poster or _fanart or '')
-            home.setProperty('dexhub.source.title', _title)
-            home.setProperty('dexhub.source.plot', _plot)
-            home.setProperty('dexhub.source.year', _year)
-            home.setProperty('dexhub.source.rating', _rating)
-            home.setProperty('dexhub.source.genre', _genre)
-            home.setProperty('dexhub.source.studio', _studio)
-            home.setProperty('dexhub.source.key', _source_art_identity_key(self.meta))
+            home.setProperty('nuviohub.source.fanart', _fanart)
+            home.setProperty('nuviohub.source.clearlogo', _clearlogo)
+            home.setProperty('nuviohub.source.poster', _poster or _fanart or '')
+            home.setProperty('nuviohub.source.thumb', _poster or _fanart or '')
+            home.setProperty('nuviohub.source.title', _title)
+            home.setProperty('nuviohub.source.plot', _plot)
+            home.setProperty('nuviohub.source.year', _year)
+            home.setProperty('nuviohub.source.rating', _rating)
+            home.setProperty('nuviohub.source.genre', _genre)
+            home.setProperty('nuviohub.source.studio', _studio)
+            home.setProperty('nuviohub.source.key', _source_art_identity_key(self.meta))
         except Exception as _silent_exc:
             log.silent('RESULTS_WIN', _silent_exc)
         self.setProperty('filters_visible', 'false')
@@ -1495,7 +1495,7 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
         except Exception as _silent_exc:
             log.silent('RESULTS_WIN', _silent_exc)
     def _update_loading_state(self):
-        label = tr('جار جلب نتائج إضافية...') if self.getProperty('loading_more') == 'true' else ''
+        label = tr('Fetching more results...') if self.getProperty('loading_more') == 'true' else ''
         self.setProperty('loading_label', label)
         # v4.4.0: live search summary for the header strip.
         try:
@@ -1506,17 +1506,17 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
             done = not str(label or '').strip()
             parts = []
             if providers:
-                parts.append('%d %s' % (providers, tr('مصادر')))
+                parts.append('%d %s' % (providers, tr('Add-ons')))
             total = len(rows)
             if total:
-                parts.append('%d %s' % (total, tr('نتيجة')))
-            parts.append('%.1f%s' % (elapsed, tr('ث')))
+                parts.append('%d %s' % (total, tr('result')))
+            parts.append('%.1f%s' % (elapsed, tr('s')))
             summary = '  •  '.join(parts)
             # v4.6.1: no check-mark glyph (U+2713) prefix here — it renders
             # as a tofu box in the active skin font on CoreELEC.
 
-            self.setProperty('dexhub.search.summary', summary)
-            self.setProperty('dexhub.search.done', '1' if done else '')
+            self.setProperty('nuviohub.search.summary', summary)
+            self.setProperty('nuviohub.search.done', '1' if done else '')
         except Exception:
             pass
 
@@ -1543,24 +1543,24 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
         if status.get('running'):
             remaining = max(0, int(__import__('math').ceil(
                 float(status.get('remaining') or 0.0))))
-            label = tr('الترجمة: جار البحث — متبقٍ %s ث من %s') % (
+            label = tr('Subtitles: searching — %s of %s seconds remaining') % (
                 remaining, budget)
             ready = ''
         elif status.get('ready') and int(status.get('count') or 0) > 0:
-            label = tr('الترجمة: %s جاهزة') % int(status.get('count') or 0)
+            label = tr('Subtitles: %s ready') % int(status.get('count') or 0)
             ready = '1'
         elif status.get('ready'):
-            label = tr('الترجمة: اكتمل البحث دون نتيجة خلال %s ث') % budget
+            label = tr('Subtitles: search finished with no result in %s seconds') % budget
             ready = ''
         else:
-            label = tr('الترجمة: عند الطلب')
+            label = tr('Subtitles: on demand')
             ready = ''
         signature = (label, ready)
         if signature == self._subtitle_status_signature:
             return
         self._subtitle_status_signature = signature
-        self.setProperty('dexhub.subtitle.status', label)
-        self.setProperty('dexhub.subtitle.ready', ready)
+        self.setProperty('nuviohub.subtitle.status', label)
+        self.setProperty('nuviohub.subtitle.ready', ready)
 
     def _apply_session_payload(self, payload):
         if not isinstance(payload, dict):
@@ -1576,7 +1576,7 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
         try:
             from resources.lib.plugin import _provider_stats_line
             stats = _provider_stats_line(self.results)
-            self.setProperty('dexhub.results.provider_stats', stats)
+            self.setProperty('nuviohub.results.provider_stats', stats)
             self.setProperty('provider_stats', stats)
         except Exception:
             pass
@@ -1619,11 +1619,11 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
                 # Only overwrite when the async fetch actually produced art —
                 # never clobber the carried-over backdrop/logo with empty.
                 if art.get('poster'):
-                    self.setProperty('dexhub.results.poster', art.get('poster'))
+                    self.setProperty('nuviohub.results.poster', art.get('poster'))
                 if art.get('fanart'):
-                    self.setProperty('dexhub.results.fanart', art.get('fanart'))
+                    self.setProperty('nuviohub.results.fanart', art.get('fanart'))
                 if art.get('clearlogo'):
-                    self.setProperty('dexhub.results.clearlogo', art.get('clearlogo'))
+                    self.setProperty('nuviohub.results.clearlogo', art.get('clearlogo'))
                 # v3.9.144: hero TEXT filled from the same TMDb meta_for call.
                 if art.get('plot'):
                     _cleaned_plot = _clean_header_plot(art.get('plot'))
@@ -1752,7 +1752,7 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
                 pass
         items = []
         item_specs = []
-        # --- dexhub-407-patch --- sort entries head the drawer
+        # --- nuviohub-407-patch --- sort entries head the drawer
         for sort_key, _sort_label in SORT_MODES:
             marker = '> ' if sort_key == self.active_sort else '   '
             label = '%s%s' % (marker, _sort_mode_label(sort_key))
@@ -1784,7 +1784,7 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
         except Exception as _silent_exc:
             log.silent('RESULTS_WIN', _silent_exc)
     def _results_for_filter(self, filter_value):
-        # --- dexhub-407-patch --- filter first, then apply the active sort
+        # --- nuviohub-407-patch --- filter first, then apply the active sort
         return _sorted_rows(self._filtered_rows(filter_value), getattr(self, 'active_sort', 'S:DEFAULT'))
 
     def _filtered_rows(self, filter_value):
@@ -1831,7 +1831,7 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
                 counts[name] += 1
             ranked = sorted(order, key=lambda n: (-counts[n], order.index(n)))
             active = str(self.active_filter or 'ALL')
-            entries = [(tr('الكل'), len(rows), '', 0,
+            entries = [(tr('All'), len(rows), '', 0,
                         not active.startswith('V:'))]
             for name in ranked:
                 entries.append((name, counts[name], name,
@@ -1979,7 +1979,7 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
         return li
 
     def _apply_filter(self, filter_value):
-        # --- dexhub-407-patch --- a sort pick changes the order, never the filter
+        # --- nuviohub-407-patch --- a sort pick changes the order, never the filter
         requested_filter = str(filter_value or 'ALL')
         filter_changed = (not requested_filter.startswith('S:') and
                           requested_filter != str(self.active_filter or 'ALL'))
@@ -2004,7 +2004,7 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
         if loading:
             total_label = '%s +' % total_label
         self.setProperty('total_results', total_label)
-        # --- dexhub-407-patch --- show filter and sort side by side
+        # --- nuviohub-407-patch --- show filter and sort side by side
         _info_bits = []
         if self.active_filter != 'ALL':
             _info_bits.append(_filter_label(self.active_filter))
@@ -2120,8 +2120,8 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
 
     def _play_mode_label(self):
         if self.play_mode == MODE_PLAY_SUBS:
-            return tr('تشغيل مع ترجمة')
-        return tr('تشغيل')
+            return tr('Play with subtitles')
+        return tr('Play')
 
     def _update_play_mode_label(self):
         self.setProperty('play_mode_label', self._play_mode_label())
@@ -2132,10 +2132,10 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
         self._mode_dialog_open = True
         try:
             options = [
-                (tr('تشغيل فقط'), MODE_PLAY),
-                (tr('تشغيل مع ترجمة'), MODE_PLAY_SUBS),
+                (tr('Play only'), MODE_PLAY),
+                (tr('Play with subtitles'), MODE_PLAY_SUBS),
             ]
-            idx = xbmcgui.Dialog().select(tr('وضع التشغيل'), [label for label, _ in options])
+            idx = xbmcgui.Dialog().select(tr('Playback mode'), [label for label, _ in options])
             if idx >= 0:
                 self.play_mode = options[idx][1]
                 self._update_play_mode_label()
@@ -2364,7 +2364,7 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
         # next SourcesWindow opening for a DIFFERENT item doesn't briefly
         # show the previous item's poster/clearlogo/fanart before the
         # new onInit() can populate them. The bug: home window keeps
-        # `dexhub.source.poster` etc set between window opens, and the
+        # `nuviohub.source.poster` etc set between window opens, and the
         # skin reads them as $INFO bindings; if the user picked item A,
         # closed the picker, then opened item B, the half-second between
         # the new picker's open and its onInit setting fresh values
@@ -2372,11 +2372,11 @@ class SourcesWindow(xbmcgui.WindowXMLDialog):
         try:
             home = xbmcgui.Window(10000)
             for key in (
-                'dexhub.source.fanart', 'dexhub.source.clearlogo',
-                'dexhub.source.poster', 'dexhub.source.thumb',
-                'dexhub.source.title',  'dexhub.source.plot',
-                'dexhub.source.year',   'dexhub.source.rating',
-                'dexhub.source.genre',  'dexhub.source.studio',
+                'nuviohub.source.fanart', 'nuviohub.source.clearlogo',
+                'nuviohub.source.poster', 'nuviohub.source.thumb',
+                'nuviohub.source.title',  'nuviohub.source.plot',
+                'nuviohub.source.year',   'nuviohub.source.rating',
+                'nuviohub.source.genre',  'nuviohub.source.studio',
             ):
                 try:
                     home.clearProperty(key)

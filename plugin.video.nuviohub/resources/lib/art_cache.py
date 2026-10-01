@@ -14,7 +14,7 @@ import os
 import threading
 import time
 
-LIMITS = {'ram150':150*1024*1024, 'disk246':246*1024*1024, 'disk512':512*1024*1024}
+LIMITS = {'ram200':160*1024*1024, 'ram150':150*1024*1024, 'disk246':246*1024*1024, 'disk512':512*1024*1024}
 MAX_IMAGE = 8*1024*1024
 _BASE = ('',0)
 _SERVICE = None
@@ -183,6 +183,15 @@ class Handler(BaseHTTPRequestHandler):
             except Exception:pass
 
 
+def selected_mode(addon):
+    """Upgrade the previous RAM preset, without changing disk/off preferences."""
+    mode = addon.getSetting('nuvio_art_cache') or 'ram200'
+    if mode == 'ram150':
+        mode = 'ram200'
+        addon.setSetting('nuvio_art_cache', mode)
+    return mode
+
+
 class Service:
     def __init__(self):
         self.events=threading.Event();self.stopped=threading.Event();self.clear_requested=False
@@ -193,10 +202,10 @@ class Service:
         self.events.set()
     def run(self):
         import xbmc,xbmcaddon,xbmcgui
-        from .dexhub.common import profile_path
+        from .nuviohub.common import profile_path
         home=xbmcgui.Window(10000);root=Path(profile_path())/'art-cache'
         try:
-            cache=Cache(root,xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_art_cache') or 'disk246')
+            cache=Cache(root,selected_mode(xbmcaddon.Addon('plugin.video.nuviohub')))
             portfile=root/'port'
             try:port=int(portfile.read_text())
             except (ValueError,OSError):port=0
@@ -206,7 +215,7 @@ class Service:
             thread=threading.Thread(target=self.server.serve_forever,name='NuvioArtHTTP',daemon=True);thread.start()
             monitor=xbmc.Monitor()
             while not self.stopped.is_set() and not monitor.abortRequested():
-                mode=xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_art_cache') or 'disk246'
+                mode=selected_mode(xbmcaddon.Addon('plugin.video.nuviohub'))
                 cache.configure(mode)
                 if self.clear_requested:self.clear_requested=False;cache.clear()
                 home.setProperty('nuvio.art_cache.base',('http://127.0.0.1:%d'%self.server.server_port) if mode in LIMITS else '')

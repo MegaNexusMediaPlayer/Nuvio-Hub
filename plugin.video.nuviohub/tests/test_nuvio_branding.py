@@ -40,7 +40,7 @@ class BrandingTests(unittest.TestCase):
             version=dependency.get('version');dependency.set('version','5.4.12.10');tree.write(path)
             with self.assertRaisesRegex(ValueError,'dependency version mismatch'):
                 builder.release_version(root)
-            dependency.set('version',version);tree.getroot().set('name','Dex Hub');tree.write(path)
+            dependency.set('version',version);tree.getroot().set('name','Nuvio Hub');tree.write(path)
             with self.assertRaisesRegex(ValueError,'component identity'):
                 builder.release_version(root)
 

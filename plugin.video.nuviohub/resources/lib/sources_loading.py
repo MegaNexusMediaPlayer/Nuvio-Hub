@@ -32,7 +32,7 @@ import xbmcaddon
 
 from .i18n import tr
 
-# --- dexhub-401-patch ---
+# --- nuviohub-401-patch ---
 try:
     from .settings_cache import cached_addon as _dh_cached_addon
 except Exception:
@@ -140,23 +140,23 @@ class _LoadingWindow(xbmcgui.WindowXMLDialog):
         # 'fanart', and 'clearlogo' properties — set by many code paths
         # throughout plugin.py — and Kodi's $INFO[Window.Property(key)]
         # resolver was reading from there for our dialog, not from the
-        # dialog's own properties. By switching to dexhub.loading.*
+        # dialog's own properties. By switching to nuviohub.loading.*
         # names we guarantee no conflict with any other code, and the
         # dialog only sees what THIS specific call set.
-        for prop in ('dexhub.loading.poster',
-                     'dexhub.loading.fanart',
-                     'dexhub.loading.clearlogo'):
+        for prop in ('nuviohub.loading.poster',
+                     'nuviohub.loading.fanart',
+                     'nuviohub.loading.clearlogo'):
             try:
                 self.setProperty(prop, '')
             except Exception as _silent_exc:
                 log.silent('LOADING_DLG', _silent_exc)
         try:
             if self._init_poster:
-                self.setProperty('dexhub.loading.poster', self._init_poster)
+                self.setProperty('nuviohub.loading.poster', self._init_poster)
             if self._init_fanart:
-                self.setProperty('dexhub.loading.fanart', self._init_fanart)
+                self.setProperty('nuviohub.loading.fanart', self._init_fanart)
             if self._init_clearlogo:
-                self.setProperty('dexhub.loading.clearlogo', self._init_clearlogo)
+                self.setProperty('nuviohub.loading.clearlogo', self._init_clearlogo)
         except Exception as _silent_exc:
             log.silent('LOADING_DLG', _silent_exc)
         self._push_art_controls(self._init_poster, self._init_fanart, self._init_clearlogo)
@@ -207,7 +207,7 @@ class _LoadingWindow(xbmcgui.WindowXMLDialog):
             self._continue_search = True
             try:
                 self.setProperty('enough_state', '')
-                self.setProperty('hint_line', tr('سيستمر البحث حتى اكتمال المصادر أو انتهاء المهلة'))
+                self.setProperty('hint_line', tr('Search will continue until add-ons finish or the time limit is reached'))
             except Exception as _silent_exc:
                 log.silent('LOADING_DLG', _silent_exc)
         elif control_id == 9000:
@@ -339,27 +339,27 @@ class SourcesLoadingDialog(object):
         # v3.9.55: namespaced art property names to prevent collision
         # with the global Window(10000) properties set elsewhere in
         # plugin.py. The XML reads from these unique names.
-        self._set('dexhub.loading.fanart', self._fanart)
-        self._set('dexhub.loading.poster', self._poster)
-        self._set('dexhub.loading.clearlogo', self._clearlogo)
+        self._set('nuviohub.loading.fanart', self._fanart)
+        self._set('nuviohub.loading.poster', self._poster)
+        self._set('nuviohub.loading.clearlogo', self._clearlogo)
         # v3.9.52: editorial properties.
-        self._set('eyebrow', tr('بحث المصادر — Nuvio Hub'))
+        self._set('eyebrow', tr('Add-on search — Nuvio Hub'))
         self._set('caption_line', tr('A NUVIO HUB SOURCE SEARCH'))
         self._set('counter_number', '0')
-        self._set('counter_label', tr('نتيجة'))
-        self._set('providers_short_label', tr('مصادر'))
-        self._set('results_line', tr('نتيجة صالحة بعد حذف المكرر'))
-        self._set('status', tr('جار البحث عن المصادر...'))
+        self._set('counter_label', tr('result'))
+        self._set('providers_short_label', tr('Add-ons'))
+        self._set('results_line', tr('valid result after deduplication'))
+        self._set('status', tr('Searching for add-ons...'))
         self._set('sub_status', '')
         self._set('progress_pct', '0')
         self._set('current_provider', '')
-        self._set('hint_line', tr('اضغط رجوع لإلغاء البحث'))
-        self._set('cancel_label', tr('إلغاء البحث') or 'Cancel search')
-        self._set('sufficient_label', tr('عرض النتائج الآن') or 'Show results now')
-        self._set('continue_label', tr('متابعة البحث') or 'Keep searching')
+        self._set('hint_line', tr('Press Back to cancel the search'))
+        self._set('cancel_label', tr('Cancel search') or 'Cancel search')
+        self._set('sufficient_label', tr('Show results now') or 'Show results now')
+        self._set('continue_label', tr('Keep searching') or 'Keep searching')
         self._set('enough_state', '')
         self._set('enough_label', '')
-        self._set('elapsed_label', '0.0 %s' % tr('ث'))
+        self._set('elapsed_label', '0.0 %s' % tr('s'))
         self._set('provider_count', str(self._provider_count))
         self._set('completed_count', '0')
         self._set('progress_label', '0%')
@@ -371,13 +371,13 @@ class SourcesLoadingDialog(object):
             self._set('provider_%d_label' % idx, '')
             self._set('provider_%d_color' % idx, 'FF38BDF8')
         # v4.6.0: state labels the XML card chips bind to (translated once).
-        self._set('pv_state_wait_label', tr('بالانتظار'))
-        self._set('pv_state_done_label', tr('اكتمل'))
-        self._set('pv_state_zero_label', tr('بدون نتائج'))
+        self._set('pv_state_wait_label', tr('Waiting'))
+        self._set('pv_state_done_label', tr('Done'))
+        self._set('pv_state_zero_label', tr('No results'))
         self._refresh_provider_cards()
         if self._provider_count:
             self._set('providers_line',
-                      '%s 0 / %d' % (tr('المصادر'), self._provider_count))
+                      '%s 0 / %d' % (tr('Add-ons'), self._provider_count))
         else:
             self._set('providers_line', '')
 
@@ -391,9 +391,9 @@ class SourcesLoadingDialog(object):
         self._clearlogo = clearlogo or self._clearlogo
         if self._win is None:
             return
-        self._set('dexhub.loading.poster', self._poster)
-        self._set('dexhub.loading.fanart', self._fanart)
-        self._set('dexhub.loading.clearlogo', self._clearlogo)
+        self._set('nuviohub.loading.poster', self._poster)
+        self._set('nuviohub.loading.fanart', self._fanart)
+        self._set('nuviohub.loading.clearlogo', self._clearlogo)
         try:
             self._win._push_art_controls(self._poster, self._fanart, self._clearlogo)
         except Exception as _silent_exc:
@@ -487,7 +487,7 @@ class SourcesLoadingDialog(object):
         # matches the magazine subhead pattern.
         if provider_name:
             self._set('current_provider',
-                      '%s  %s' % (tr('يفحص الآن:'), provider_name))
+                      '%s  %s' % (tr('Now checking:'), provider_name))
             # v4.6.0: iter_parallel yields a provider when it has finished
             # answering, so an update() naming a provider means that provider
             # is DONE — flip its dashboard card (count may still arrive via
@@ -502,7 +502,7 @@ class SourcesLoadingDialog(object):
             self._set_progress_width(pct)
             self._set('progress_label', '%d%%' % pct)
             self._set('completed_count', str(index))
-            line = '%s %d / %d' % (tr('المصادر'), index, self._provider_count)
+            line = '%s %d / %d' % (tr('Add-ons'), index, self._provider_count)
             self._set('providers_line', line)
             for step in range(1, min(self._provider_count, 12) + 1):
                 if step < index:
@@ -515,9 +515,9 @@ class SourcesLoadingDialog(object):
             # sub_status in editorial layout shows "X of Y providers checked"
             if sub_status is None:
                 self._set('sub_status',
-                          tr('%d من %d مزوّد تم فحصها') % (index, self._provider_count))
+                          tr('%d of %d providers checked') % (index, self._provider_count))
 
-        self._set('elapsed_label', '%.1f %s' % (max(0.0, time.monotonic() - self._started_at), tr('ث')))
+        self._set('elapsed_label', '%.1f %s' % (max(0.0, time.monotonic() - self._started_at), tr('s')))
 
     # v4.6.0 ------------------------------------------------------------- #
     #  Provider dashboard cards (up to 8 visible slots).                    #
@@ -615,18 +615,18 @@ class SourcesLoadingDialog(object):
                     self._win.setFocusId(9001)
                 except Exception:
                     pass
-        self._set('elapsed_label', '%.1f %s' % (max(0.0, time.monotonic() - self._started_at), tr('ث')))
+        self._set('elapsed_label', '%.1f %s' % (max(0.0, time.monotonic() - self._started_at), tr('s')))
 
     def mark_sufficient(self, auto_seconds=2):
         self._set('enough_state', '1')
-        self._set('enough_label', tr('تم الوصول إلى نتائج كافية'))
-        self._set('status', tr('تم الوصول إلى نتائج كافية'))
-        self._set('hint_line', tr('عرض النتائج تلقائياً خلال %d ثانية') % int(auto_seconds or 0))
+        self._set('enough_label', tr('Enough results found'))
+        self._set('status', tr('Enough results found'))
+        self._set('hint_line', tr('Showing results automatically in %d seconds') % int(auto_seconds or 0))
 
     def clear_sufficient(self):
         self._set('enough_state', '')
         self._set('enough_label', '')
-        self._set('status', tr('جار البحث عن المصادر...'))
+        self._set('status', tr('Searching for add-ons...'))
 
     def consume_continue_search(self):
         if self._win is None:
@@ -638,7 +638,7 @@ class SourcesLoadingDialog(object):
 
     def set_finalizing(self, msg=None):
         """Switch to a final "organizing results..." state."""
-        self._set('status', msg or (tr('جار جلب نتائج إضافية...')))
+        self._set('status', msg or (tr('Fetching more results...')))
         self._set('progress_pct', '100')
         self._set_progress_width(100)
         self._set('progress_label', '100%')

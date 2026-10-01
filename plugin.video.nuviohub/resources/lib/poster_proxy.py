@@ -23,7 +23,7 @@ sees one URL, which always returns a valid image.
 Lifecycle:
   - Started by service.py via `start()` at addon startup.
   - Binds to 127.0.0.1 on a random free port (no external exposure).
-  - Port published via Window property `dexhub.poster_proxy.port`.
+  - Port published via Window property `nuviohub.poster_proxy.port`.
   - plugin.py reads that property and constructs proxy URLs in
     `_apply_poster_reliability` when the auto mode is active.
   - `stop()` called from service.py when Kodi shuts the addon down.
@@ -46,7 +46,7 @@ import xbmcgui
 # ── constants ─────────────────────────────────────────────────────────
 PROXY_HOST = '127.0.0.1'
 WINDOW_ID  = 10000
-PROP_PORT  = 'dexhub.poster_proxy.port'
+PROP_PORT  = 'nuviohub.poster_proxy.port'
 
 _CHUNK              = 64 * 1024     # streaming chunk size
 _DECORATED_TIMEOUT  = 3.0           # decoration services are slow; allow more

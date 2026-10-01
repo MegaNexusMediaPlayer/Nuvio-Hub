@@ -263,7 +263,7 @@ def _save_source_pref_map(data):
     try:
         # v3.9.17: atomic write so crash mid-save doesn't lose the user's
         # "remember last source" preferences for every movie/episode.
-        from .dexhub.safe_io import write_json as _safe_write_json
+        from .nuviohub.safe_io import write_json as _safe_write_json
         _safe_write_json(path, data or {})
     except Exception:
         pass
@@ -369,12 +369,12 @@ def _build_source_picker_menu(media_type='movie', canonical_id='', title='', sea
     if not url:
         return []
     is_series_root = _is_series_media(media_type) and season in (None, '', 0, '0') and episode in (None, '', 0, '0')
-    label = tr('فتح المواسم') if is_series_root else tr('اختيار المصدر')
+    label = tr('Open seasons') if is_series_root else tr('Choose add-on')
     menu = [(label, 'Container.Update(%s)' % url)]
     if source_provider_id and not is_series_root:
         same_url = _source_picker_url(media_type=media_type, canonical_id=canonical_id, title=title, season=season, episode=episode, video_id=video_id, resume_seconds=resume_seconds, preferred_provider_name=preferred_provider_name, source_provider_id=source_provider_id, source_mode='only')
         if same_url:
-            menu.append(('اختيار مصدر من نفس السورس فقط', 'Container.Update(%s)' % same_url))
+            menu.append(('Pick another stream from the same source only', 'Container.Update(%s)' % same_url))
         play_args = {
             'action': 'play_item',
             'media_type': 'series' if _is_series_media(media_type) else (media_type or 'movie'),
@@ -391,7 +391,7 @@ def _build_source_picker_menu(media_type='movie', canonical_id='', title='', sea
             play_args['episode'] = str(episode)
         if resume_seconds not in (None, '', 0, '0'):
             play_args['resume_seconds'] = str(resume_seconds)
-        menu.append(('تشغيل مباشر من نفس السورس', 'RunPlugin(%s)' % build_url(**play_args)))
+        menu.append(('Direct play from the same add-on', 'RunPlugin(%s)' % build_url(**play_args)))
     return menu
 
 
@@ -402,7 +402,7 @@ def _build_source_picker_menu(media_type='movie', canonical_id='', title='', sea
 # TMDb Helper opens twice in a row. SourcesWindow has its own action guard
 # for clicks within the same process; this is the cross-process backstop.
 # Stored on Window(WINDOW_ID) as 'key|timestamp'.
-_DISPATCH_PROP = 'dexhub.dispatch.in_flight'
+_DISPATCH_PROP = 'nuviohub.dispatch.in_flight'
 
 
 def _dispatch_in_flight(key, window_seconds=2.5):
@@ -442,16 +442,16 @@ def _dispatch_clear():
     except Exception:
         pass
 
-_TMDBH_HANDOFF_UNTIL_PROP = 'dexhub.tmdbh_handoff_until'
-_TMDBH_TRANSIENT_PROPS = ('dexhub.invoked_by_tmdbh', 'dexhub.tmdbh_seed_ids', 'dexhub.tmdbh_seed_for', _TMDBH_HANDOFF_UNTIL_PROP)
+_TMDBH_HANDOFF_UNTIL_PROP = 'nuviohub.tmdbh_handoff_until'
+_TMDBH_TRANSIENT_PROPS = ('nuviohub.invoked_by_tmdbh', 'nuviohub.tmdbh_seed_ids', 'nuviohub.tmdbh_seed_for', _TMDBH_HANDOFF_UNTIL_PROP)
 _SOURCE_TRANSIENT_PROPS = (
-    'dexhub.source.clearlogo', 'dexhub.source.logo', 'dexhub.source.poster', 'dexhub.source.thumb',
-    'dexhub.source.fanart', 'dexhub.source.title', 'dexhub.source.plot', 'dexhub.source.year',
-    'dexhub.source.rating', 'dexhub.source.genre', 'dexhub.source.studio', 'dexhub.source.key'
+    'nuviohub.source.clearlogo', 'nuviohub.source.logo', 'nuviohub.source.poster', 'nuviohub.source.thumb',
+    'nuviohub.source.fanart', 'nuviohub.source.title', 'nuviohub.source.plot', 'nuviohub.source.year',
+    'nuviohub.source.rating', 'nuviohub.source.genre', 'nuviohub.source.studio', 'nuviohub.source.key'
 )
 _GLOBAL_ART_TRANSIENT_PROPS = (
     'clearlogo', 'logo', 'tvshow.clearlogo', 'poster', 'thumb', 'fanart', 'fanart_image',
-    'dexhub.clearlogo', 'dexhub.poster', 'dexhub.fanart',
+    'nuviohub.clearlogo', 'nuviohub.poster', 'nuviohub.fanart',
     'ArcticFuse.NowPlaying.Logo', 'ArcticFuse.NowPlaying.Thumb', 'ArcticFuse.NowPlaying.Fanart',
     'ArcticFuse.NowPlaying.Title', 'ArcticFuse.NowPlaying.Plot', 'ArcticFuse.NowPlaying.Year',
     'ArcticFuse.NowPlaying.Studio', 'ArcticFuse.NowPlaying.Genre', 'ArcticFuse.NowPlaying.Rating',
@@ -487,7 +487,7 @@ def _tmdbh_handoff_active():
         for win_id in (WINDOW_ID, 10000, 12005):
             try:
                 win = xbmcgui.Window(win_id)
-                if (win.getProperty('dexhub.invoked_by_tmdbh') or '').strip() == '1':
+                if (win.getProperty('nuviohub.invoked_by_tmdbh') or '').strip() == '1':
                     return True
                 raw_until = win.getProperty(_TMDBH_HANDOFF_UNTIL_PROP) or ''
                 if raw_until:
@@ -546,7 +546,7 @@ def _clear_source_transient_props(clear_global=False):
 def _mark_interactive_busy():
     """Give source/search/playback work priority over account maintenance."""
     try:
-        xbmcgui.Window(10000).setProperty('dexhub.interactive_busy', '%.3f' % time.time())
+        xbmcgui.Window(10000).setProperty('nuviohub.interactive_busy', '%.3f' % time.time())
     except Exception:
         pass
 
@@ -580,7 +580,7 @@ def _source_art_identity_key(payload=None):
 def _home_source_props_match(meta, home=None):
     try:
         home = home or xbmcgui.Window(10000)
-        current = home.getProperty('dexhub.source.key') or ''
+        current = home.getProperty('nuviohub.source.key') or ''
     except Exception:
         return False
     wanted = _source_art_identity_key(meta)
@@ -602,7 +602,7 @@ def play_item(media_type='', canonical_id='', title='', video_id='', season='', 
             xbmc.log('[NuvioHub] play_item: duplicate dispatch suppressed (%s)' % _dispatch_key, xbmc.LOGINFO)
             xbmcgui.Dialog().notification(
                 'Nuvio Hub',
-                tr('جاري التحميل…'),
+                tr('Loading…'),
                 xbmcgui.NOTIFICATION_INFO, 1500, sound=False
             )
         except Exception:
@@ -610,7 +610,7 @@ def play_item(media_type='', canonical_id='', title='', video_id='', season='', 
         return
     if _maybe_redirect_default_player(media_type=media_type, canonical_id=canonical_id, title=title or canonical_id, season=season, episode=episode, tmdb_id=tmdb_id, imdb_id=imdb_id, tvdb_id=tvdb_id):
         return
-    return _dispatch_dexhub_play(
+    return _dispatch_nuviohub_play(
         media_type=media_type,
         canonical_id=canonical_id,
         title=title or canonical_id,
@@ -1125,7 +1125,7 @@ def _is_proxy_healthy(url):
     # reuselanguageinvoker interpreter shares ONE probe per TTL instead of
     # each paying the 1.5s HEAD on its first catalog — badges show with the
     # results instead of after them.
-    _prop_key = 'dexhub.proxyhealth.%s' % domain
+    _prop_key = 'nuviohub.proxyhealth.%s' % domain
     try:
         _raw = xbmcgui.Window(WINDOW_ID).getProperty(_prop_key) or ''
         if _raw:
@@ -1205,9 +1205,9 @@ def _poster_reliability_mode():
     # Done with substring matches so future label rewording (e.g. minor
     # translation tweaks) doesn't break the routing.
     low = raw.lower()
-    if ('clean' in low and 'no badges' in low) or 'نظيف' in low:
+    if ('clean' in low and 'no badges' in low) or "\u0646\u0638\u064a\u0641" in low:
         return 'clean'
-    if ('decorated' in low and 'keep' in low) or 'مزي' in low or 'مزخرف' in low:
+    if ('decorated' in low and 'keep' in low) or "\u0645\u0632\u064a" in low or "\u0645\u0632\u062e\u0631\u0641" in low:
         return 'decorated'
     return 'auto'
 
@@ -1344,16 +1344,16 @@ def _apply_poster_reliability(art, meta):
 #              live fallback even when index is empty, but that gives a
 #              worse first-run experience so we don't enable it yet).
 #
-# The actual data layer lives in resources/lib/dexhub/index.py and the
-# sync engine in dexhub/sync_engine.py. service.py runs the scheduler.
+# The actual data layer lives in resources/lib/nuviohub/index.py and the
+# sync engine in nuviohub/sync_engine.py. service.py runs the scheduler.
 # ─────────────────────────────────────────────────────────────────────
 
 def _index_mode():
     raw = (ADDON.getSetting('index_mode') or 'Live (current)').strip()
     low = raw.lower()
-    if 'fast' in low or 'سريع' in low:
+    if 'fast' in low or "\u0633\u0631\u064a\u0639" in low:
         return 'fast'
-    if 'hybrid' in low or 'هجين' in low:
+    if 'hybrid' in low or "\u0647\u062c\u064a\u0646" in low:
         return 'hybrid'
     return 'live'
 
@@ -1449,8 +1449,8 @@ def _try_index_render(bucket, page_num, page_size, fetch_limit, entries):
         # Use the real attribution from the index query if available,
         # falling back to the first installed entry when the index
         # couldn't determine it (a degenerate case).
-        real_provider_id = meta.get('_dexhub_provider_id') or ''
-        real_catalog_id = meta.get('_dexhub_catalog_id') or ''
+        real_provider_id = meta.get('_nuviohub_provider_id') or ''
+        real_catalog_id = meta.get('_nuviohub_catalog_id') or ''
         provider = provider_by_id.get(real_provider_id, fallback_provider)
         catalog  = catalog_by_id.get(real_catalog_id,  fallback_catalog)
         rows.append((provider, catalog, media_type, meta_id, meta))
@@ -1482,7 +1482,7 @@ def _index_engine():
     so a fresh schema (after schema_migrate) is picked up without
     restarting Kodi."""
     from . import index_render
-    from .dexhub import sync_engine
+    from .nuviohub import sync_engine
     db = index_render.get_db()
 
     def _pinned():
@@ -1495,19 +1495,19 @@ def index_refresh_all():
     """User-triggered: re-sync every pinned catalog into the index."""
     try:
         xbmcgui.Dialog().notification('Nuvio Hub',
-            tr('بدء مزامنة المكتبة...'),
+            tr('Starting library sync...'),
             xbmcgui.NOTIFICATION_INFO, 2000, sound=False)
         eng = _index_engine()
         def _run():
             try:
                 result = eng.sync_all()
                 xbmcgui.Dialog().notification('Nuvio Hub',
-                    tr('انتهت المزامنة: %d كتالوج') % (result.get('ok') or 0),
+                    tr('Sync finished: %d catalogs') % (result.get('ok') or 0),
                     xbmcgui.NOTIFICATION_INFO, 3500, sound=False)
             except Exception as exc:
                 xbmc.log('[NuvioHub] refresh_all failed: %s' % exc, xbmc.LOGWARNING)
         if not _submit_optional(_run, key='manual-index-sync'):
-            notify(tr('المزامنة تعمل بالفعل أو الجهاز مشغول'))
+            notify(tr('A sync is already running, or the device is busy'))
     except Exception as exc:
         xbmc.log('[NuvioHub] index_refresh_all error: %s' % exc, xbmc.LOGWARNING)
 
@@ -1519,20 +1519,20 @@ def index_refresh_bucket(bucket=''):
         return
     try:
         xbmcgui.Dialog().notification('Nuvio Hub',
-            tr('مزامنة %s...') % _hub_bucket_title(bucket),
+            tr('Syncing %s...') % _hub_bucket_title(bucket),
             xbmcgui.NOTIFICATION_INFO, 2000, sound=False)
         eng = _index_engine()
         def _run():
             try:
                 result = eng.sync_bucket(bucket)
                 xbmcgui.Dialog().notification('Nuvio Hub',
-                    tr('انتهى: %d / %d كتالوج') % (
+                    tr('Done: %d / %d catalogs') % (
                         result.get('ok') or 0, result.get('total') or 0),
                     xbmcgui.NOTIFICATION_INFO, 3500, sound=False)
             except Exception as exc:
                 xbmc.log('[NuvioHub] refresh_bucket failed: %s' % exc, xbmc.LOGWARNING)
         if not _submit_optional(_run, key='bucket-index-sync:%s' % bucket):
-            notify(tr('مزامنة هذا القسم تعمل بالفعل'))
+            notify(tr('This section is already syncing'))
     except Exception as exc:
         xbmc.log('[NuvioHub] index_refresh_bucket error: %s' % exc, xbmc.LOGWARNING)
 
@@ -1541,13 +1541,13 @@ def index_clear():
     """User-triggered: wipe the library index. Prompts for confirmation."""
     if not xbmcgui.Dialog().yesno(
         'Nuvio Hub',
-        tr('سيتم حذف المكتبة المحلية بالكامل. هل أنت متأكد؟')):
+        tr('The entire local library will be deleted. Are you sure?')):
         return
     try:
         from . import index_render
         index_render.get_db().clear_all()
         xbmcgui.Dialog().notification('Nuvio Hub',
-            tr('تم مسح المكتبة'),
+            tr('Library cleared'),
             xbmcgui.NOTIFICATION_INFO, 2000, sound=False)
     except Exception as exc:
         xbmc.log('[NuvioHub] index_clear failed: %s' % exc, xbmc.LOGWARNING)
@@ -1570,25 +1570,25 @@ def index_status():
         age_text = 'never'
 
     add_item('[B]%s[/B]: %d  •  [B]%s[/B]: %d catalogs  •  [B]%s[/B]: %.1f MB  •  [B]%s[/B]: %s' % (
-        tr('عناصر'), s.get('items') or 0,
-        tr('مزامنات'), len(sync_rows),
-        tr('الحجم'), size_mb,
-        tr('آخر مزامنة'), age_text),
+        tr('items'), s.get('items') or 0,
+        tr('syncs'), len(sync_rows),
+        tr('Size'), size_mb,
+        tr('Last sync'), age_text),
         build_url(action='index_status'), is_folder=False,
         art=root_art('catalogs'),
-        info={'title': tr('حالة المكتبة'),
-              'plot': tr('إحصائيات الفهرس المحلي.')})
+        info={'title': tr('Library status'),
+              'plot': tr('Local index statistics.')})
 
     # Manual refresh actions
-    add_item('[COLOR cyan]↻ %s[/COLOR]' % tr('مزامنة الكل الآن'),
+    add_item('[COLOR cyan]↻ %s[/COLOR]' % tr('Sync all now'),
         build_url(action='index_refresh_all'),
         is_folder=False, art=root_art('add'),
-        info={'title': tr('مزامنة الكل')})
+        info={'title': tr('Sync all')})
 
-    add_item('[COLOR red]✖ %s[/COLOR]' % tr('مسح المكتبة'),
+    add_item('[COLOR red]✖ %s[/COLOR]' % tr('Clear library'),
         build_url(action='index_clear'),
         is_folder=False, art=root_art('remove'),
-        info={'title': tr('مسح المكتبة')})
+        info={'title': tr('Clear library')})
 
     # Per-catalog status rows
     for row in sync_rows[:50]:
@@ -1610,7 +1610,7 @@ def index_status():
         add_item(label, build_url(action='index_refresh_bucket',
                                   bucket=row.get('bucket') or ''),
                  is_folder=False,
-                 info={'title': label, 'plot': info_plot or tr('اضغط للمزامنة')})
+                 info={'title': label, 'plot': info_plot or tr('Press to sync')})
 
     return end_dir(content='files', cache=False)
 
@@ -2220,8 +2220,8 @@ def _normalize_meta_art_urls(provider, meta):
     # the provider's host. Otherwise we'd wrap a TMDb/Cinemeta poster inside
     # /photo/:/transcode?url=... which Plex/Plexio cannot resolve, producing
     # broken posters every time the user changes the metadata source.
-    sid = str(meta.get('_dexhub_meta_source_id') or '').strip().lower()
-    strict = str(meta.get('_dexhub_art_strict') or '').strip().lower() in ('1', 'true', 'yes', 'on')
+    sid = str(meta.get('_nuviohub_meta_source_id') or '').strip().lower()
+    strict = str(meta.get('_nuviohub_art_strict') or '').strip().lower() in ('1', 'true', 'yes', 'on')
     if strict or (sid and sid not in ('auto', 'native')):
         return meta
     out = dict(meta)
@@ -2330,11 +2330,11 @@ def _provider_uses_explicit_meta_art(provider):
 
 
 def _meta_art_is_strict(meta):
-    return str((meta or {}).get('_dexhub_art_strict') or '').strip().lower() in ('1', 'true', 'yes', 'on')
+    return str((meta or {}).get('_nuviohub_art_strict') or '').strip().lower() in ('1', 'true', 'yes', 'on')
 
 
 def _meta_source_id_from_meta(meta):
-    return str((meta or {}).get('_dexhub_meta_source_id') or '').strip()
+    return str((meta or {}).get('_nuviohub_meta_source_id') or '').strip()
 
 
 def _target_meta_source_id(target_key):
@@ -2532,10 +2532,10 @@ def _apply_bucket_art_priority(art, media_type, meta, current_provider):
     priority provider has the art available.
 
     Reads the active bucket from the Window property
-    ``dexhub.render_bucket`` set by _hub_render_media_rows().
+    ``nuviohub.render_bucket`` set by _hub_render_media_rows().
     """
     try:
-        bucket = xbmcgui.Window(WINDOW_ID).getProperty('dexhub.render_bucket') or ''
+        bucket = xbmcgui.Window(WINDOW_ID).getProperty('nuviohub.render_bucket') or ''
     except Exception:
         bucket = ''
     if not bucket:
@@ -2788,7 +2788,7 @@ def _provider_summary(provider):
 
 
 def _group_title(media_type):
-    return 'أفلام' if media_type == 'movie' else 'مسلسلات' if media_type == 'series' else media_type
+    return 'Movies' if media_type == 'movie' else 'TV Shows' if media_type == 'series' else media_type
 
 
 def _item_fallback_art(provider=None, media_type='movie', catalog=None, name=''):
@@ -2856,24 +2856,24 @@ def _hub_catalog_bucket(provider, catalog):
     blob = _hub_catalog_blob(provider, catalog)
     live_words = (
         'live', 'iptv', 'channel', 'channels', 'tv channel', 'television',
-        'قنوات', 'قناة', 'بث مباشر', 'مباشر', 'تلفزيون', 'رياضة مباشرة'
+        'Channels', "\u0642\u0646\u0627\u0629", 'Live TV', 'Live', "\u062a\u0644\u0641\u0632\u064a\u0648\u0646", "\u0631\u064a\u0627\u0636\u0629 \u0645\u0628\u0627\u0634\u0631\u0629"
     )
     anime_words = (
         'anime', 'animu', 'anilist', 'kitsu', 'crunchyroll', 'myanimelist',
-        'مانجا', 'انمي', 'أنمي', 'انيمي', 'أنيمي', 'كرتون ياباني'
+        "\u0645\u0627\u0646\u062c\u0627", "\u0627\u0646\u0645\u064a", 'Anime', "\u0627\u0646\u064a\u0645\u064a", "\u0623\u0646\u064a\u0645\u064a", "\u0643\u0631\u062a\u0648\u0646 \u064a\u0627\u0628\u0627\u0646\u064a"
     )
     turkish_words = (
         'turkish', 'turkey', 'turk', 'turkiye', 'türkiye', 'dizi', 'diziler',
-        'turkish series', 'turkish drama', 'مسلسلات تركية', 'تركي', 'تركية', 'تركيا'
+        'turkish series', 'turkish drama', "\u0645\u0633\u0644\u0633\u0644\u0627\u062a \u062a\u0631\u0643\u064a\u0629", 'Turkish', "\u062a\u0631\u0643\u064a\u0629", "\u062a\u0631\u0643\u064a\u0627"
     )
     korean_words = (
         'korean', 'korea', 'k-drama', 'kdrama', 'k drama', 'korean drama',
-        'drakor', 'korean series', 'مسلسلات كورية', 'كوري', 'كورية', 'كوريا'
+        'drakor', 'korean series', "\u0645\u0633\u0644\u0633\u0644\u0627\u062a \u0643\u0648\u0631\u064a\u0629", 'Korean', "\u0643\u0648\u0631\u064a\u0629", "\u0643\u0648\u0631\u064a\u0627"
     )
     arabic_words = (
         'arabic', 'arab', 'middle east', 'mena', 'egyptian', 'saudi', 'levant', 'gulf',
-        'عربي', 'عربية', 'عرب', 'مصري', 'مصرية', 'خليجي', 'خليجية', 'سعودي', 'سعودية',
-        'شامي', 'لبناني', 'سوري', 'افلام عربية', 'أفلام عربية', 'مسلسلات عربية'
+        'Arabic', 'Arabic', "\u0639\u0631\u0628", "\u0645\u0635\u0631\u064a", "\u0645\u0635\u0631\u064a\u0629", "\u062e\u0644\u064a\u062c\u064a", "\u062e\u0644\u064a\u062c\u064a\u0629", "\u0633\u0639\u0648\u062f\u064a", "\u0633\u0639\u0648\u062f\u064a\u0629",
+        "\u0634\u0627\u0645\u064a", "\u0644\u0628\u0646\u0627\u0646\u064a", "\u0633\u0648\u0631\u064a", "\u0627\u0641\u0644\u0627\u0645 \u0639\u0631\u0628\u064a\u0629", "\u0623\u0641\u0644\u0627\u0645 \u0639\u0631\u0628\u064a\u0629", "\u0645\u0633\u0644\u0633\u0644\u0627\u062a \u0639\u0631\u0628\u064a\u0629"
     )
     if media_type in ('tv', 'channel', 'channels', 'live', 'iptv') or any(w in blob for w in live_words):
         return 'live'
@@ -2898,15 +2898,15 @@ def _hub_bucket_title(bucket):
     # Arabic-canonical labels — i18n.tr() translates to English when ui_language=English.
     # Turkish/Korean previously returned English in both modes, breaking single-language UX.
     return {
-        'movies': 'أفلام',
-        'series': 'مسلسلات',
-        'anime': 'أنمي',
-        'arabic': 'عربي',
-        'turkish': 'تركي',
-        'korean': 'كوري',
-        'live': 'بث مباشر',
-        'other': 'كتالوجات أخرى',
-    }.get(str(bucket or ''), _subfolder_title(bucket) or _custom_home_bucket_title(bucket) or str(bucket or 'كتالوجات'))
+        'movies': 'Movies',
+        'series': 'TV Shows',
+        'anime': 'Anime',
+        'arabic': 'Arabic',
+        'turkish': 'Turkish',
+        'korean': 'Korean',
+        'live': 'Live TV',
+        'other': 'Other catalogs',
+    }.get(str(bucket or ''), _subfolder_title(bucket) or _custom_home_bucket_title(bucket) or str(bucket or 'Catalogs'))
 
 
 def _hub_bucket_media_type(bucket):
@@ -2941,7 +2941,7 @@ def _hub_icon_for_bucket(bucket):
     if bucket == 'anime':
         return catalog_art('anime', 'series')
     if bucket == 'arabic':
-        return catalog_art('arabic movies series عربي', 'movie')
+        return catalog_art("arabic movies series \u0639\u0631\u0628\u064a", 'movie')
     if bucket == 'turkish':
         return catalog_art('turkish series drama', 'series')
     if bucket == 'korean':
@@ -3079,13 +3079,13 @@ def _catalog_source_bucket_for(bucket):
 
 def _default_home_bucket_defs():
     return [
-        {'bucket': 'movies', 'title': 'أفلام'},
-        {'bucket': 'series', 'title': 'مسلسلات'},
-        {'bucket': 'anime', 'title': 'أنمي'},
-        {'bucket': 'arabic', 'title': 'عربي'},
+        {'bucket': 'movies', 'title': 'Movies'},
+        {'bucket': 'series', 'title': 'TV Shows'},
+        {'bucket': 'anime', 'title': 'Anime'},
+        {'bucket': 'arabic', 'title': 'Arabic'},
         {'bucket': 'turkish', 'title': 'Turkish'},
         {'bucket': 'korean', 'title': 'Korean'},
-        {'bucket': 'live', 'title': 'بث مباشر'},
+        {'bucket': 'live', 'title': 'Live TV'},
     ]
 
 
@@ -3122,16 +3122,16 @@ def _home_bucket_context(bucket):
         # a meta source (TMDb, Cinemeta, or any installed provider)
         # specifically for this bucket, overriding the global default
         # set under "مصادر الميتاداتا".
-        (tr('🖼️ تعديل مصدر الميتاداتا لهذا المجلد'),
+        (tr('🖼️ Change metadata add-on for this folder'),
          'RunPlugin(%s)' % build_url(action='bucket_meta_pick', bucket=bucket)),
-        ('إضافة Sub folder داخل هذا المجلد', 'RunPlugin(%s)' % build_url(action='home_subfolder_add', parent=bucket)),
-        ('إدارة Sub folders لهذا المجلد', 'Container.Update(%s)' % build_url(action='home_subfolder_manage', parent=bucket)),
-        ('إضافة مجلد جديد في الهوم', 'RunPlugin(%s)' % build_url(action='home_folder_add')),
-        ('إدارة مجلدات الهوم', 'Container.Update(%s)' % build_url(action='home_folder_manage')),
-        ('عرض مصادر هذا المجلد', 'Container.Update(%s)' % build_url(action='hub_section', bucket=bucket, raw='1')),
+        ('Add a sub folder inside this folder', 'RunPlugin(%s)' % build_url(action='home_subfolder_add', parent=bucket)),
+        ('Manage sub folders for this folder', 'Container.Update(%s)' % build_url(action='home_subfolder_manage', parent=bucket)),
+        ('Add a new home folder', 'RunPlugin(%s)' % build_url(action='home_folder_add')),
+        ('Manage home folders', 'Container.Update(%s)' % build_url(action='home_folder_manage')),
+        ('Show add-ons for this folder', 'Container.Update(%s)' % build_url(action='hub_section', bucket=bucket, raw='1')),
     ]
     if str(bucket or '').startswith('custom:'):
-        items.insert(1, ('حذف هذا المجلد من الهوم', 'RunPlugin(%s)' % build_url(action='home_folder_remove', bucket=bucket)))
+        items.insert(1, ('Remove this folder from home', 'RunPlugin(%s)' % build_url(action='home_folder_remove', bucket=bucket)))
     return items
 
 
@@ -3189,16 +3189,16 @@ def bucket_meta_pick(bucket=''):
     """Open a select dialog to assign a meta source to a bucket."""
     bucket = (bucket or '').strip()
     if not bucket:
-        notify(tr('لم يتم تحديد المجلد'))
+        notify(tr('No folder selected'))
         return
     # Build the list of source options: auto (use global), TMDb Helper,
     # Cinemeta, and any installed Stremio provider that declares the
     # meta resource. All labels go through tr() so English users see
     # English text.
     options = [
-        ('auto', tr('استخدام الإعداد العام (افتراضي)')),
-        ('tmdb_helper', tr('TMDb Helper (يتطلب تثبيت الإضافة)')),
-        ('cinemeta', tr('Cinemeta (Stremio الرسمي)')),
+        ('auto', tr('Use the global default')),
+        ('tmdb_helper', tr('TMDb Helper (addon required)')),
+        ('cinemeta', tr('Cinemeta (official Stremio)')),
     ]
     try:
         for p in store.list_providers() or []:
@@ -3211,7 +3211,7 @@ def bucket_meta_pick(bucket=''):
                 if isinstance(r, dict) and r.get('name') == 'meta':
                     supports_meta = True; break
             if supports_meta and p.get('id'):
-                options.append((p.get('id'), tr('مصدر: %s') % (p.get('name') or p.get('id'))))
+                options.append((p.get('id'), tr('Provider: %s') % (p.get('name') or p.get('id'))))
     except Exception:
         pass
     current = get_bucket_meta_source(bucket)
@@ -3220,7 +3220,7 @@ def bucket_meta_pick(bucket=''):
         marker = '  ✓' if sid == current or (not current and sid == 'auto') else ''
         labels.append(name + marker)
     bucket_title = _hub_bucket_title(bucket) or bucket
-    idx = xbmcgui.Dialog().select(tr('مصدر الميتاداتا لمجلد: %s') % bucket_title, labels)
+    idx = xbmcgui.Dialog().select(tr('Metadata add-on for folder: %s') % bucket_title, labels)
     if idx < 0:
         return
     chosen_id, chosen_name = options[idx]
@@ -3231,11 +3231,11 @@ def bucket_meta_pick(bucket=''):
         mapping[bucket] = chosen_id
     _save_bucket_meta_map(mapping)
     try:
-        from .dexhub.client import purge_meta_cache as _purge
+        from .nuviohub.client import purge_meta_cache as _purge
         _purge()
     except Exception:
         pass
-    notify(tr('تم: %s ← %s') % (bucket_title, chosen_name))
+    notify(tr('Done: %s ← %s') % (bucket_title, chosen_name))
     try:
         xbmc.executebuiltin('Container.Refresh')
     except Exception:
@@ -3243,7 +3243,7 @@ def bucket_meta_pick(bucket=''):
 
 
 def home_folder_add():
-    keyboard = xbmc.Keyboard('', tr('اسم مجلد الهوم الجديد'))
+    keyboard = xbmc.Keyboard('', tr('New home folder name'))
     keyboard.doModal()
     if not keyboard.isConfirmed():
         return end_dir(content='files', cache=False)
@@ -3260,7 +3260,7 @@ def home_folder_add():
         i += 1
     rows.append({'bucket': bucket, 'title': title, 'created': int(time.time())})
     _save_custom_home_folders(rows)
-    notify(tr('تمت إضافة مجلد الهوم'))
+    notify(tr('Home folder added'))
     try:
         xbmc.executebuiltin('Container.Refresh')
     except Exception:
@@ -3271,7 +3271,7 @@ def home_folder_add():
 def home_folder_remove(bucket=''):
     bucket = str(bucket or '').strip()
     if not bucket.startswith('custom:'):
-        notify(tr('لا يمكن حذف المجلدات الأساسية'))
+        notify(tr('Built-in folders cannot be removed'))
         return end_dir(content='files', cache=False)
     rows = [r for r in _load_custom_home_folders() if r.get('bucket') != bucket]
     _save_custom_home_folders(rows)
@@ -3279,7 +3279,7 @@ def home_folder_remove(bucket=''):
     _save_home_subfolders([r for r in _load_home_subfolders() if (r.get('parent') or '') != bucket])
     pins = [p for p in _load_catalog_pins() if (p.get('bucket') or '') != bucket and (p.get('bucket') or '') not in sub_buckets]
     _save_catalog_pins(pins)
-    notify(tr('تم حذف مجلد الهوم'))
+    notify(tr('Home folder removed'))
     try:
         xbmc.executebuiltin('Container.Refresh')
     except Exception:
@@ -3291,7 +3291,7 @@ def home_subfolder_add(parent=''):
     parent = str(parent or '').strip()
     if not parent:
         return end_dir(content='files', cache=False)
-    keyboard = xbmc.Keyboard('', tr('اسم Sub folder'))
+    keyboard = xbmc.Keyboard('', tr('Sub folder name'))
     keyboard.doModal()
     if not keyboard.isConfirmed():
         return end_dir(content='files', cache=False)
@@ -3308,7 +3308,7 @@ def home_subfolder_add(parent=''):
         i += 1
     rows.append({'parent': parent, 'bucket': bucket, 'title': title, 'created': int(time.time())})
     _save_home_subfolders(rows)
-    notify(tr('تمت إضافة Sub folder'))
+    notify(tr('Sub folder added'))
     try:
         xbmc.executebuiltin('Container.Refresh')
     except Exception:
@@ -3323,7 +3323,7 @@ def home_subfolder_remove(bucket=''):
     _save_home_subfolders([r for r in _load_home_subfolders() if (r.get('bucket') or '') != bucket])
     pins = [p for p in _load_catalog_pins() if (p.get('bucket') or '') != bucket]
     _save_catalog_pins(pins)
-    notify(tr('تم حذف Sub folder'))
+    notify(tr('Sub folder removed'))
     try:
         xbmc.executebuiltin('Container.Refresh')
     except Exception:
@@ -3334,32 +3334,32 @@ def home_subfolder_remove(bucket=''):
 def home_subfolder_manage(parent=''):
     parent = str(parent or '').strip()
     title = _hub_bucket_title(parent)
-    add_item(tr('+ إضافة Sub folder'), build_url(action='home_subfolder_add', parent=parent), art=root_art('add'), info={'title': tr('إضافة Sub folder'), 'plot': tr('أضف مجلدًا فرعيًا داخل %s ثم ثبّت فيه كتالوجات من Sources') % title})
+    add_item(tr('+ Add sub folder'), build_url(action='home_subfolder_add', parent=parent), art=root_art('add'), info={'title': tr('Add sub folder'), 'plot': tr('Add a sub folder inside %s, then pin catalogs into it from Add-ons') % title})
     pins = _load_catalog_pins()
     subs = _home_subfolders(parent)
     if not subs:
-        add_item(tr('[COLOR yellow]لا توجد Sub folders بعد[/COLOR]'), build_url(action='home_subfolder_add', parent=parent), art=root_art('add'), info={'title': tr('لا توجد Sub folders'), 'plot': tr('اضغط لإضافة مجلد فرعي داخل %s') % title})
+        add_item(tr('[COLOR yellow]No sub folders yet[/COLOR]'), build_url(action='home_subfolder_add', parent=parent), art=root_art('add'), info={'title': tr('No sub folders yet'), 'plot': tr('Tap to add a sub folder inside %s') % title})
     for row in subs:
         bucket = row.get('bucket') or ''
         stitle = row.get('title') or _hub_bucket_title(bucket)
         pins_count = len([p for p in pins if (p.get('bucket') or '') == bucket])
         ctx = [
-            ('حذف Sub folder', 'RunPlugin(%s)' % build_url(action='home_subfolder_remove', bucket=bucket)),
-            ('عرض مصادر هذا Sub folder', 'Container.Update(%s)' % build_url(action='hub_section', bucket=bucket, raw='1')),
+            ('Delete sub folder', 'RunPlugin(%s)' % build_url(action='home_subfolder_remove', bucket=bucket)),
+            ('Show the add-ons in this sub folder', 'Container.Update(%s)' % build_url(action='hub_section', bucket=bucket, raw='1')),
         ]
-        add_item('%s (%d)' % (stitle, pins_count), build_url(action='hub_section', bucket=bucket), art=_hub_icon_for_bucket(bucket), info={'title': stitle, 'plot': tr('Sub folder داخل %s') % title}, context_menu=ctx)
+        add_item('%s (%d)' % (stitle, pins_count), build_url(action='hub_section', bucket=bucket), art=_hub_icon_for_bucket(bucket), info={'title': stitle, 'plot': tr('Sub folder inside %s') % title}, context_menu=ctx)
     return end_dir(content='files', cache=False)
 
 
 def home_folder_manage():
-    add_item(tr('+ إضافة مجلد جديد'), build_url(action='home_folder_add'), art=root_art('add'), info={'title': tr('إضافة مجلد جديد'), 'plot': tr('أضف مجلدًا جديدًا في الصفحة الرئيسية ثم ثبّت داخله كتالوجات من Sources')})
+    add_item(tr('+ Add new folder'), build_url(action='home_folder_add'), art=root_art('add'), info={'title': tr('Add new folder'), 'plot': tr('Add a new home folder, then pin catalogs into it from Add-ons')})
     pins = _load_catalog_pins()
     for row in _home_bucket_defs(include_collection=False):
         bucket = row.get('bucket') or ''
         title = row.get('title') or _hub_bucket_title(bucket)
         pins_count = _bucket_pin_count(bucket)
         ctx = _home_bucket_context(bucket)
-        add_item('%s (%d)' % (title, pins_count), build_url(action='hub_section', bucket=bucket), art=_hub_icon_for_bucket(bucket), info={'title': title, 'plot': tr('مجلد هوم مخصص — ثبّت داخله كتالوجات من Sources')}, context_menu=ctx)
+        add_item('%s (%d)' % (title, pins_count), build_url(action='hub_section', bucket=bucket), art=_hub_icon_for_bucket(bucket), info={'title': title, 'plot': tr('Custom home folder — pin catalogs into it from Add-ons')}, context_menu=ctx)
     return end_dir(content='files', cache=False)
 
 
@@ -3434,7 +3434,7 @@ def _hub_provider_rank(provider):
         rank = min(rank, 5)
     if 'cinemeta' in blob:
         rank = min(rank, 10)
-    if 'dexworld' in blob or 'dex hub' in blob or 'dexhub' in blob:
+    if 'dexworld' in blob or 'dex hub' in blob or 'nuviohub' in blob:
         rank = min(rank, 15)
     if 'plexio' in blob or 'plex' in blob or 'streambridge' in blob or 'emby' in blob:
         rank = min(rank, 20)
@@ -3452,72 +3452,72 @@ def _hub_category_defs(bucket):
     bucket = str(bucket or '').lower()
     if bucket == 'movies':
         return [
-            {'key': 'latest', 'label': 'Last Release', 'plot': 'أحدث إصدارات الأفلام من أفضل كتالوج متوفر', 'kw': ['last release', 'latest', 'new release', 'new movies', 'recent', 'released', 'premiere', 'now playing', 'جديد', 'حديث', 'احدث', 'أحدث']},
-            {'key': 'trending', 'label': 'Trending', 'plot': 'الأفلام الرائجة الآن', 'kw': ['trending', 'trend', 'popular this week', 'رائج', 'ترند']},
-            {'key': 'popular', 'label': 'Popular', 'plot': 'الأفلام الأكثر شعبية', 'kw': ['popular', 'most watched', 'most popular', 'مشهور', 'شائع', 'الاكثر مشاهدة', 'الأكثر مشاهدة']},
-            {'key': 'top', 'label': 'Top Rated', 'plot': 'الأفلام الأعلى تقييمًا', 'kw': ['top rated', 'top', 'best', 'imdb top', 'rating', 'rated', 'اعلى تقييم', 'أعلى تقييم', 'الافضل', 'الأفضل']},
-            {'key': 'az', 'label': 'A to Z', 'plot': 'ترتيب الأفلام أبجديًا من A إلى Z', 'sort': 'az'},
-            {'key': 'za', 'label': 'Z to A', 'plot': 'ترتيب الأفلام أبجديًا من Z إلى A', 'sort': 'za'},
-            {'key': 'arabic', 'label': 'Arabic Movies', 'plot': 'أفلام عربية من مصادر تدعم العربية', 'kw': ['arabic', 'arab', 'عربي', 'عربية', 'افلام عربية', 'أفلام عربية']},
-            {'key': 'fourk', 'label': '4K Movies', 'plot': 'أفلام 4K عند توفر كتالوج مخصص', 'kw': ['4k', 'uhd', '2160p', 'dolby vision', 'hdr']},
-            {'key': 'kids', 'label': 'Kids / Family', 'plot': 'أفلام عائلية وأطفال', 'kw': ['kids', 'family', 'children', 'animation', 'اطفال', 'أطفال', 'عائلي']},
+            {'key': 'latest', 'label': 'Last Release', 'plot': 'The newest movie releases from the best available catalog', 'kw': ['last release', 'latest', 'new release', 'new movies', 'recent', 'released', 'premiere', 'now playing', "\u062c\u062f\u064a\u062f", "\u062d\u062f\u064a\u062b", "\u0627\u062d\u062f\u062b", "\u0623\u062d\u062f\u062b"]},
+            {'key': 'trending', 'label': 'Trending', 'plot': 'Movies trending now', 'kw': ['trending', 'trend', 'popular this week', "\u0631\u0627\u0626\u062c", "\u062a\u0631\u0646\u062f"]},
+            {'key': 'popular', 'label': 'Popular', 'plot': 'Most popular movies', 'kw': ['popular', 'most watched', 'most popular', "\u0645\u0634\u0647\u0648\u0631", "\u0634\u0627\u0626\u0639", "\u0627\u0644\u0627\u0643\u062b\u0631 \u0645\u0634\u0627\u0647\u062f\u0629", "\u0627\u0644\u0623\u0643\u062b\u0631 \u0645\u0634\u0627\u0647\u062f\u0629"]},
+            {'key': 'top', 'label': 'Top Rated', 'plot': 'Top rated movies', 'kw': ['top rated', 'top', 'best', 'imdb top', 'rating', 'rated', "\u0627\u0639\u0644\u0649 \u062a\u0642\u064a\u064a\u0645", "\u0623\u0639\u0644\u0649 \u062a\u0642\u064a\u064a\u0645", "\u0627\u0644\u0627\u0641\u0636\u0644", "\u0627\u0644\u0623\u0641\u0636\u0644"]},
+            {'key': 'az', 'label': 'A to Z', 'plot': 'Movies sorted A to Z', 'sort': 'az'},
+            {'key': 'za', 'label': 'Z to A', 'plot': 'Movies sorted Z to A', 'sort': 'za'},
+            {'key': 'arabic', 'label': 'Arabic Movies', 'plot': 'Arabic movies from add-ons that support Arabic', 'kw': ['arabic', 'arab', 'Arabic', 'Arabic', "\u0627\u0641\u0644\u0627\u0645 \u0639\u0631\u0628\u064a\u0629", "\u0623\u0641\u0644\u0627\u0645 \u0639\u0631\u0628\u064a\u0629"]},
+            {'key': 'fourk', 'label': '4K Movies', 'plot': '4K movies when a dedicated catalog is available', 'kw': ['4k', 'uhd', '2160p', 'dolby vision', 'hdr']},
+            {'key': 'kids', 'label': 'Kids / Family', 'plot': 'Family and kids movies', 'kw': ['kids', 'family', 'children', 'animation', "\u0627\u0637\u0641\u0627\u0644", 'Kids', "\u0639\u0627\u0626\u0644\u064a"]},
         ]
     if bucket == 'series':
         return [
-            {'key': 'continue', 'label': 'Continue Watching', 'plot': 'استمرار مشاهدة المسلسلات والحلقات', 'special': 'continue'},
-            {'key': 'nextup', 'label': 'Next Up', 'plot': 'الحلقة التالية من Trakt / التقدم المحلي', 'special': 'nextup'},
-            {'key': 'latest', 'label': 'Last Release', 'plot': 'أحدث المسلسلات والإصدارات', 'kw': ['last release', 'latest', 'new series', 'new shows', 'recent', 'released', 'جديد', 'حديث', 'احدث', 'أحدث']},
-            {'key': 'added', 'label': 'Last Added', 'plot': 'آخر ما أضيف من مصادر السيرفر أو Stremio', 'kw': ['last added', 'recently added', 'newly added', 'added', 'library', 'اضيف', 'أضيف', 'آخر إضافة']},
-            {'key': 'newepisodes', 'label': 'New Episodes', 'plot': 'الحلقات الجديدة', 'kw': ['new episodes', 'latest episodes', 'recent episodes', 'airing', 'episode', 'حلقات جديدة', 'الحلقات الجديدة']},
-            {'key': 'trending', 'label': 'Trending', 'plot': 'المسلسلات الرائجة الآن', 'kw': ['trending', 'trend', 'رائج', 'ترند']},
-            {'key': 'popular', 'label': 'Popular', 'plot': 'المسلسلات الأكثر شعبية', 'kw': ['popular', 'most watched', 'مشهور', 'شائع', 'الاكثر مشاهدة', 'الأكثر مشاهدة']},
-            {'key': 'top', 'label': 'Top Rated', 'plot': 'المسلسلات الأعلى تقييمًا', 'kw': ['top rated', 'top', 'best', 'imdb top', 'rating', 'rated', 'اعلى تقييم', 'أعلى تقييم', 'الافضل', 'الأفضل']},
-            {'key': 'az', 'label': 'A to Z', 'plot': 'ترتيب المسلسلات أبجديًا من A إلى Z', 'sort': 'az'},
-            {'key': 'za', 'label': 'Z to A', 'plot': 'ترتيب المسلسلات أبجديًا من Z إلى A', 'sort': 'za'},
+            {'key': 'continue', 'label': 'Continue Watching', 'plot': 'Continue watching series and episodes', 'special': 'continue'},
+            {'key': 'nextup', 'label': 'Next Up', 'plot': 'Next episode from Trakt / local progress', 'special': 'nextup'},
+            {'key': 'latest', 'label': 'Last Release', 'plot': 'The newest series and releases', 'kw': ['last release', 'latest', 'new series', 'new shows', 'recent', 'released', "\u062c\u062f\u064a\u062f", "\u062d\u062f\u064a\u062b", "\u0627\u062d\u062f\u062b", "\u0623\u062d\u062f\u062b"]},
+            {'key': 'added', 'label': 'Last Added', 'plot': 'Recently added from your servers or Stremio', 'kw': ['last added', 'recently added', 'newly added', 'added', 'library', "\u0627\u0636\u064a\u0641", "\u0623\u0636\u064a\u0641", "\u0622\u062e\u0631 \u0625\u0636\u0627\u0641\u0629"]},
+            {'key': 'newepisodes', 'label': 'New Episodes', 'plot': 'New episodes', 'kw': ['new episodes', 'latest episodes', 'recent episodes', 'airing', 'episode', "\u062d\u0644\u0642\u0627\u062a \u062c\u062f\u064a\u062f\u0629", 'New episodes']},
+            {'key': 'trending', 'label': 'Trending', 'plot': 'Series trending now', 'kw': ['trending', 'trend', "\u0631\u0627\u0626\u062c", "\u062a\u0631\u0646\u062f"]},
+            {'key': 'popular', 'label': 'Popular', 'plot': 'Most popular series', 'kw': ['popular', 'most watched', "\u0645\u0634\u0647\u0648\u0631", "\u0634\u0627\u0626\u0639", "\u0627\u0644\u0627\u0643\u062b\u0631 \u0645\u0634\u0627\u0647\u062f\u0629", "\u0627\u0644\u0623\u0643\u062b\u0631 \u0645\u0634\u0627\u0647\u062f\u0629"]},
+            {'key': 'top', 'label': 'Top Rated', 'plot': 'Top rated series', 'kw': ['top rated', 'top', 'best', 'imdb top', 'rating', 'rated', "\u0627\u0639\u0644\u0649 \u062a\u0642\u064a\u064a\u0645", "\u0623\u0639\u0644\u0649 \u062a\u0642\u064a\u064a\u0645", "\u0627\u0644\u0627\u0641\u0636\u0644", "\u0627\u0644\u0623\u0641\u0636\u0644"]},
+            {'key': 'az', 'label': 'A to Z', 'plot': 'Series sorted A to Z', 'sort': 'az'},
+            {'key': 'za', 'label': 'Z to A', 'plot': 'Series sorted Z to A', 'sort': 'za'},
         ]
     if bucket == 'anime':
         return [
-            {'key': 'continue', 'label': 'Continue Watching', 'plot': 'استمرار مشاهدة الأنمي', 'special': 'continue'},
-            {'key': 'latest', 'label': 'Latest Episodes', 'plot': 'أحدث حلقات الأنمي', 'kw': ['latest episodes', 'new episodes', 'recent episodes', 'airing', 'simulcast', 'جديد', 'حلقات جديدة']},
-            {'key': 'trending', 'label': 'Trending Anime', 'plot': 'الأنمي الرائج', 'kw': ['trending anime', 'trending', 'trend', 'رائج', 'ترند']},
-            {'key': 'popular', 'label': 'Popular Anime', 'plot': 'الأنمي الأكثر شعبية', 'kw': ['popular anime', 'popular', 'most watched', 'شائع', 'مشهور']},
-            {'key': 'top', 'label': 'Top Anime', 'plot': 'الأنمي الأعلى تقييمًا', 'kw': ['top anime', 'top rated', 'top', 'best', 'rating', 'اعلى تقييم', 'الأفضل']},
-            {'key': 'movies', 'label': 'Anime Movies', 'plot': 'أفلام الأنمي', 'kw': ['anime movies', 'movie anime', 'anime movie', 'افلام انمي', 'أفلام أنمي']},
-            {'key': 'series', 'label': 'Anime Series', 'plot': 'مسلسلات الأنمي', 'kw': ['anime series', 'anime shows', 'series anime', 'مسلسلات انمي', 'مسلسلات أنمي']},
-            {'key': 'az', 'label': 'A to Z', 'plot': 'ترتيب الأنمي أبجديًا من A إلى Z', 'sort': 'az'},
-            {'key': 'za', 'label': 'Z to A', 'plot': 'ترتيب الأنمي أبجديًا من Z إلى A', 'sort': 'za'},
+            {'key': 'continue', 'label': 'Continue Watching', 'plot': 'Continue watching anime', 'special': 'continue'},
+            {'key': 'latest', 'label': 'Latest Episodes', 'plot': 'Latest anime episodes', 'kw': ['latest episodes', 'new episodes', 'recent episodes', 'airing', 'simulcast', "\u062c\u062f\u064a\u062f", "\u062d\u0644\u0642\u0627\u062a \u062c\u062f\u064a\u062f\u0629"]},
+            {'key': 'trending', 'label': 'Trending Anime', 'plot': 'Trending anime', 'kw': ['trending anime', 'trending', 'trend', "\u0631\u0627\u0626\u062c", "\u062a\u0631\u0646\u062f"]},
+            {'key': 'popular', 'label': 'Popular Anime', 'plot': 'Most popular anime', 'kw': ['popular anime', 'popular', 'most watched', "\u0634\u0627\u0626\u0639", "\u0645\u0634\u0647\u0648\u0631"]},
+            {'key': 'top', 'label': 'Top Anime', 'plot': 'Top rated anime', 'kw': ['top anime', 'top rated', 'top', 'best', 'rating', "\u0627\u0639\u0644\u0649 \u062a\u0642\u064a\u064a\u0645", "\u0627\u0644\u0623\u0641\u0636\u0644"]},
+            {'key': 'movies', 'label': 'Anime Movies', 'plot': 'Anime movies', 'kw': ['anime movies', 'movie anime', 'anime movie', "\u0627\u0641\u0644\u0627\u0645 \u0627\u0646\u0645\u064a", "\u0623\u0641\u0644\u0627\u0645 \u0623\u0646\u0645\u064a"]},
+            {'key': 'series', 'label': 'Anime Series', 'plot': 'Anime series', 'kw': ['anime series', 'anime shows', 'series anime', "\u0645\u0633\u0644\u0633\u0644\u0627\u062a \u0627\u0646\u0645\u064a", "\u0645\u0633\u0644\u0633\u0644\u0627\u062a \u0623\u0646\u0645\u064a"]},
+            {'key': 'az', 'label': 'A to Z', 'plot': 'Anime sorted A to Z', 'sort': 'az'},
+            {'key': 'za', 'label': 'Z to A', 'plot': 'Anime sorted Z to A', 'sort': 'za'},
         ]
     if bucket == 'turkish':
         return [
-            {'key': 'continue', 'label': 'Continue Watching', 'plot': 'استمرار مشاهدة التركي', 'special': 'continue'},
-            {'key': 'latest', 'label': 'Last Release', 'plot': 'أحدث التركي', 'kw': ['turkish latest', 'latest turkish', 'new turkish', 'dizi latest', 'مسلسلات تركية جديدة', 'تركي جديد', 'تركية جديدة', 'احدث تركي', 'أحدث تركي']},
-            {'key': 'added', 'label': 'Last Added', 'plot': 'آخر ما أضيف من التركي', 'kw': ['last added turkish', 'recently added turkish', 'added turkish', 'dizi added', 'آخر إضافة تركي']},
-            {'key': 'trending', 'label': 'Trending', 'plot': 'التركي الرائج', 'kw': ['trending turkish', 'turkish trending', 'popular turkish this week', 'رائج تركي', 'ترند تركي']},
-            {'key': 'popular', 'label': 'Popular', 'plot': 'الأكثر شعبية من التركي', 'kw': ['popular turkish', 'turkish popular', 'most watched turkish', 'dizi popular', 'مشهور تركي', 'شائع تركي']},
-            {'key': 'top', 'label': 'Top Rated', 'plot': 'الأعلى تقييمًا من التركي', 'kw': ['top turkish', 'top rated turkish', 'best turkish', 'imdb turkish', 'افضل تركي', 'أفضل تركي']},
-            {'key': 'az', 'label': 'A to Z', 'plot': 'ترتيب التركي أبجديًا من A إلى Z', 'sort': 'az'},
-            {'key': 'za', 'label': 'Z to A', 'plot': 'ترتيب التركي أبجديًا من Z إلى A', 'sort': 'za'},
+            {'key': 'continue', 'label': 'Continue Watching', 'plot': 'Continue watching Turkish', 'special': 'continue'},
+            {'key': 'latest', 'label': 'Last Release', 'plot': 'Latest Turkish', 'kw': ['turkish latest', 'latest turkish', 'new turkish', 'dizi latest', "\u0645\u0633\u0644\u0633\u0644\u0627\u062a \u062a\u0631\u0643\u064a\u0629 \u062c\u062f\u064a\u062f\u0629", "\u062a\u0631\u0643\u064a \u062c\u062f\u064a\u062f", "\u062a\u0631\u0643\u064a\u0629 \u062c\u062f\u064a\u062f\u0629", "\u0627\u062d\u062f\u062b \u062a\u0631\u0643\u064a", "\u0623\u062d\u062f\u062b \u062a\u0631\u0643\u064a"]},
+            {'key': 'added', 'label': 'Last Added', 'plot': 'Recently added Turkish', 'kw': ['last added turkish', 'recently added turkish', 'added turkish', 'dizi added', "\u0622\u062e\u0631 \u0625\u0636\u0627\u0641\u0629 \u062a\u0631\u0643\u064a"]},
+            {'key': 'trending', 'label': 'Trending', 'plot': 'Trending Turkish', 'kw': ['trending turkish', 'turkish trending', 'popular turkish this week', "\u0631\u0627\u0626\u062c \u062a\u0631\u0643\u064a", "\u062a\u0631\u0646\u062f \u062a\u0631\u0643\u064a"]},
+            {'key': 'popular', 'label': 'Popular', 'plot': 'Most popular Turkish', 'kw': ['popular turkish', 'turkish popular', 'most watched turkish', 'dizi popular', "\u0645\u0634\u0647\u0648\u0631 \u062a\u0631\u0643\u064a", "\u0634\u0627\u0626\u0639 \u062a\u0631\u0643\u064a"]},
+            {'key': 'top', 'label': 'Top Rated', 'plot': 'Top rated Turkish', 'kw': ['top turkish', 'top rated turkish', 'best turkish', 'imdb turkish', "\u0627\u0641\u0636\u0644 \u062a\u0631\u0643\u064a", "\u0623\u0641\u0636\u0644 \u062a\u0631\u0643\u064a"]},
+            {'key': 'az', 'label': 'A to Z', 'plot': 'Turkish sorted A to Z', 'sort': 'az'},
+            {'key': 'za', 'label': 'Z to A', 'plot': 'Turkish sorted Z to A', 'sort': 'za'},
         ]
     if bucket == 'korean':
         return [
-            {'key': 'continue', 'label': 'Continue Watching', 'plot': 'استمرار مشاهدة الكوري', 'special': 'continue'},
-            {'key': 'latest', 'label': 'Last Release', 'plot': 'أحدث الكوري', 'kw': ['korean latest', 'latest korean', 'new korean', 'new kdrama', 'مسلسلات كورية جديدة', 'كوري جديد', 'كورية جديدة', 'احدث كوري', 'أحدث كوري']},
-            {'key': 'added', 'label': 'Last Added', 'plot': 'آخر ما أضيف من الكوري', 'kw': ['last added korean', 'recently added korean', 'added korean', 'drakor added', 'آخر إضافة كوري']},
-            {'key': 'trending', 'label': 'Trending', 'plot': 'الكوري الرائج', 'kw': ['trending korean', 'korean trending', 'trending kdrama', 'رائج كوري', 'ترند كوري']},
-            {'key': 'popular', 'label': 'Popular', 'plot': 'الأكثر شعبية من الكوري', 'kw': ['popular korean', 'korean popular', 'popular kdrama', 'most watched korean', 'مشهور كوري', 'شائع كوري']},
-            {'key': 'top', 'label': 'Top Rated', 'plot': 'الأعلى تقييمًا من الكوري', 'kw': ['top korean', 'top rated korean', 'best korean', 'best kdrama', 'افضل كوري', 'أفضل كوري']},
-            {'key': 'az', 'label': 'A to Z', 'plot': 'ترتيب الكوري أبجديًا من A إلى Z', 'sort': 'az'},
-            {'key': 'za', 'label': 'Z to A', 'plot': 'ترتيب الكوري أبجديًا من Z إلى A', 'sort': 'za'},
+            {'key': 'continue', 'label': 'Continue Watching', 'plot': 'Continue watching Korean', 'special': 'continue'},
+            {'key': 'latest', 'label': 'Last Release', 'plot': 'Latest Korean', 'kw': ['korean latest', 'latest korean', 'new korean', 'new kdrama', "\u0645\u0633\u0644\u0633\u0644\u0627\u062a \u0643\u0648\u0631\u064a\u0629 \u062c\u062f\u064a\u062f\u0629", "\u0643\u0648\u0631\u064a \u062c\u062f\u064a\u062f", "\u0643\u0648\u0631\u064a\u0629 \u062c\u062f\u064a\u062f\u0629", "\u0627\u062d\u062f\u062b \u0643\u0648\u0631\u064a", "\u0623\u062d\u062f\u062b \u0643\u0648\u0631\u064a"]},
+            {'key': 'added', 'label': 'Last Added', 'plot': 'Recently added Korean', 'kw': ['last added korean', 'recently added korean', 'added korean', 'drakor added', "\u0622\u062e\u0631 \u0625\u0636\u0627\u0641\u0629 \u0643\u0648\u0631\u064a"]},
+            {'key': 'trending', 'label': 'Trending', 'plot': 'Trending Korean', 'kw': ['trending korean', 'korean trending', 'trending kdrama', "\u0631\u0627\u0626\u062c \u0643\u0648\u0631\u064a", "\u062a\u0631\u0646\u062f \u0643\u0648\u0631\u064a"]},
+            {'key': 'popular', 'label': 'Popular', 'plot': 'Most popular Korean', 'kw': ['popular korean', 'korean popular', 'popular kdrama', 'most watched korean', "\u0645\u0634\u0647\u0648\u0631 \u0643\u0648\u0631\u064a", "\u0634\u0627\u0626\u0639 \u0643\u0648\u0631\u064a"]},
+            {'key': 'top', 'label': 'Top Rated', 'plot': 'Top rated Korean', 'kw': ['top korean', 'top rated korean', 'best korean', 'best kdrama', "\u0627\u0641\u0636\u0644 \u0643\u0648\u0631\u064a", "\u0623\u0641\u0636\u0644 \u0643\u0648\u0631\u064a"]},
+            {'key': 'az', 'label': 'A to Z', 'plot': 'Korean sorted A to Z', 'sort': 'az'},
+            {'key': 'za', 'label': 'Z to A', 'plot': 'Korean sorted Z to A', 'sort': 'za'},
         ]
     if bucket == 'live':
         return [
-            {'key': 'channels', 'label': 'TV Channels', 'plot': 'كل القنوات والبث المباشر', 'kw': ['channels', 'channel', 'live tv', 'iptv', 'tv', 'قنوات', 'قناة', 'بث مباشر']},
-            {'key': 'sports', 'label': 'Sports', 'plot': 'قنوات وفعاليات رياضية', 'kw': ['sports', 'sport', 'football', 'soccer', 'nba', 'رياضة', 'رياضي', 'كرة']},
-            {'key': 'movies', 'label': 'Movies Channels', 'plot': 'قنوات أفلام', 'kw': ['movie channels', 'movies channels', 'cinema', 'أفلام', 'افلام']},
-            {'key': 'series', 'label': 'Series Channels', 'plot': 'قنوات مسلسلات', 'kw': ['series channels', 'shows channels', 'مسلسلات']},
-            {'key': 'kids', 'label': 'Kids', 'plot': 'قنوات أطفال', 'kw': ['kids', 'children', 'cartoon', 'اطفال', 'أطفال', 'كرتون']},
-            {'key': 'news', 'label': 'News', 'plot': 'قنوات إخبارية', 'kw': ['news', 'breaking', 'اخبار', 'أخبار', 'اخبارية', 'إخبارية']},
-            {'key': 'arabic', 'label': 'Arabic Channels', 'plot': 'قنوات عربية', 'kw': ['arabic', 'arab', 'عربي', 'عربية']},
+            {'key': 'channels', 'label': 'TV Channels', 'plot': 'All channels and live TV', 'kw': ['channels', 'channel', 'live tv', 'iptv', 'tv', 'Channels', "\u0642\u0646\u0627\u0629", 'Live TV']},
+            {'key': 'sports', 'label': 'Sports', 'plot': 'Sports channels and events', 'kw': ['sports', 'sport', 'football', 'soccer', 'nba', "\u0631\u064a\u0627\u0636\u0629", "\u0631\u064a\u0627\u0636\u064a", "\u0643\u0631\u0629"]},
+            {'key': 'movies', 'label': 'Movies Channels', 'plot': 'Movie channels', 'kw': ['movie channels', 'movies channels', 'cinema', 'Movies', "\u0627\u0641\u0644\u0627\u0645"]},
+            {'key': 'series', 'label': 'Series Channels', 'plot': 'Series channels', 'kw': ['series channels', 'shows channels', 'TV Shows']},
+            {'key': 'kids', 'label': 'Kids', 'plot': 'Kids channels', 'kw': ['kids', 'children', 'cartoon', "\u0627\u0637\u0641\u0627\u0644", 'Kids', "\u0643\u0631\u062a\u0648\u0646"]},
+            {'key': 'news', 'label': 'News', 'plot': 'News channels', 'kw': ['news', 'breaking', "\u0627\u062e\u0628\u0627\u0631", "\u0623\u062e\u0628\u0627\u0631", "\u0627\u062e\u0628\u0627\u0631\u064a\u0629", "\u0625\u062e\u0628\u0627\u0631\u064a\u0629"]},
+            {'key': 'arabic', 'label': 'Arabic Channels', 'plot': 'Arabic channels', 'kw': ['arabic', 'arab', 'Arabic', 'Arabic']},
         ]
     return []
 
@@ -3560,13 +3560,13 @@ def _hub_category_score(provider, catalog, bucket, key):
         score += 8
     if key == 'top' and any(x in blob for x in ('top', 'rated', 'imdb', 'best')):
         score += 8
-    if key == 'arabic' and any(x in blob for x in ('arabic', 'arab', 'عربي', 'عربية')):
+    if key == 'arabic' and any(x in blob for x in ('arabic', 'arab', 'Arabic', 'Arabic')):
         score += 8
     if key == 'fourk' and any(x in blob for x in ('4k', '2160', 'uhd', 'hdr')):
         score += 8
-    if bucket == 'turkish' and any(x in blob for x in ('turkish', 'turkey', 'turk', 'türkiye', 'turkiye', 'dizi', 'تركي', 'تركية')):
+    if bucket == 'turkish' and any(x in blob for x in ('turkish', 'turkey', 'turk', 'türkiye', 'turkiye', 'dizi', 'Turkish', "\u062a\u0631\u0643\u064a\u0629")):
         score += 12
-    if bucket == 'korean' and any(x in blob for x in ('korean', 'korea', 'k-drama', 'kdrama', 'k drama', 'drakor', 'كوري', 'كورية')):
+    if bucket == 'korean' and any(x in blob for x in ('korean', 'korea', 'k-drama', 'kdrama', 'k drama', 'drakor', 'Korean', "\u0643\u0648\u0631\u064a\u0629")):
         score += 12
     return score
 
@@ -3597,9 +3597,9 @@ def _hub_best_search_provider(media_type='', bucket=''):
 
 def _hub_pin_context(provider_id, catalog_id, media_type, bucket):
     return [
-        ('تحريك لأعلى', 'RunPlugin(%s)' % build_url(action='catalog_pin_move', provider_id=provider_id, media_type=media_type, catalog_id=catalog_id, bucket=bucket, direction='up')),
-        ('تحريك لأسفل', 'RunPlugin(%s)' % build_url(action='catalog_pin_move', provider_id=provider_id, media_type=media_type, catalog_id=catalog_id, bucket=bucket, direction='down')),
-        ('إزالة من هذا القسم', 'RunPlugin(%s)' % build_url(action='catalog_unpin', provider_id=provider_id, media_type=media_type, catalog_id=catalog_id, bucket=bucket)),
+        ('Move up', 'RunPlugin(%s)' % build_url(action='catalog_pin_move', provider_id=provider_id, media_type=media_type, catalog_id=catalog_id, bucket=bucket, direction='up')),
+        ('Move down', 'RunPlugin(%s)' % build_url(action='catalog_pin_move', provider_id=provider_id, media_type=media_type, catalog_id=catalog_id, bucket=bucket, direction='down')),
+        ('Remove from this section', 'RunPlugin(%s)' % build_url(action='catalog_unpin', provider_id=provider_id, media_type=media_type, catalog_id=catalog_id, bucket=bucket)),
     ]
 
 
@@ -3616,7 +3616,7 @@ def _hub_render_pinned(bucket):
         label = '📌 %s' % cname
         url = build_url(action='catalog_all', provider_id=provider.get('id'), media_type=media_type, catalog_id=pin.get('catalog_id'), label=cname)
         ctx = _append_folder_tools_context(_hub_pin_context(provider.get('id') or '', pin.get('catalog_id') or '', media_type, bucket) + _hub_catalog_context(provider, catalog_def or {'id': pin.get('catalog_id'), 'name': cname, 'type': media_type}, bucket), bucket)
-        add_item(label, url, info={'title': label, 'plot': tr('قسم مثبت من %s') % pname}, art=catalog_art(cname, media_type, provider.get('manifest') or {}, catalog_def), context_menu=ctx)
+        add_item(label, url, info={'title': label, 'plot': tr('Section pinned from %s') % pname}, art=catalog_art(cname, media_type, provider.get('manifest') or {}, catalog_def), context_menu=ctx)
     return len(pins)
 
 
@@ -3644,8 +3644,8 @@ def hub_category(bucket='movies', key='popular', page='0'):
         # sources still appear, then sort/dedupe locally.
         entries = _hub_catalog_entries(bucket=bucket)[:8]
     if not entries:
-        add_item(tr('[COLOR yellow]لا يوجد مصدر مناسب لهذا القسم[/COLOR]'), build_url(action='providers'), art=root_art('providers'), info={'title': 'Sources', 'plot': tr('أضف أو فعّل كتالوج يدعم هذا القسم')})
-        add_item(tr('عرض كل كتالوجات %s') % _hub_bucket_title(bucket), build_url(action='hub_section', bucket=bucket, raw='1'), art=_hub_icon_for_bucket(bucket))
+        add_item(tr('[COLOR yellow]No suitable add-on for this section[/COLOR]'), build_url(action='providers'), art=root_art('providers'), info={'title': 'Sources', 'plot': tr('Add or enable a catalog that supports this section')})
+        add_item(tr('Show all %s catalogs') % _hub_bucket_title(bucket), build_url(action='hub_section', bucket=bucket, raw='1'), art=_hub_icon_for_bucket(bucket))
         return end_dir(content='files', cache=False)
 
     try:
@@ -3681,7 +3681,7 @@ def hub_category(bucket='movies', key='popular', page='0'):
             break
 
     if not ordered_rows:
-        error(tr('تعذر تحميل هذا القسم من المصادر الحالية'))
+        error(tr('Could not load this section from the current add-ons'))
         return end_dir(content='files', cache=False)
 
     if sort_mode in ('az', 'za'):
@@ -3712,9 +3712,9 @@ def hub_category(bucket='movies', key='popular', page='0'):
         ctx_menu = _append_folder_tools_context(_hub_item_context(provider, media_type, meta_id, item_label), bucket)
         already_fav = (str(media_type or ''), str(meta_id or '')) in favorite_keys
         if already_fav:
-            ctx_menu.append(('إزالة من المفضلة', 'RunPlugin(%s)' % build_url(action='fav_remove', media_type=media_type, canonical_id=meta_id)))
+            ctx_menu.append(('Remove from favorites', 'RunPlugin(%s)' % build_url(action='fav_remove', media_type=media_type, canonical_id=meta_id)))
         else:
-            ctx_menu.append(('إضافة إلى المفضلة', 'RunPlugin(%s)' % build_url(action='fav_add', media_type=media_type, canonical_id=meta_id, title=item_label, poster=art.get('poster') or '', background=art.get('fanart') or '', clearlogo=art.get('clearlogo') or '', year=str((_meta_info(meta).get('year') or 0)))))
+            ctx_menu.append(('Add to favorites', 'RunPlugin(%s)' % build_url(action='fav_add', media_type=media_type, canonical_id=meta_id, title=item_label, poster=art.get('poster') or '', background=art.get('fanart') or '', clearlogo=art.get('clearlogo') or '', year=str((_meta_info(meta).get('year') or 0)))))
         add_item(item_label, path, is_folder=path_is_folder, info=_meta_info(meta), art=art, ids=ids, context_menu=ctx_menu, is_favorite=already_fav)
     if first_fanart:
         try:
@@ -3723,7 +3723,7 @@ def hub_category(bucket='movies', key='popular', page='0'):
             pass
     if len(ordered_rows) >= page_size:
         if not globals().get('_pagination_hidden', lambda: False)():
-            add_item(tr('المزيد'), build_url(action='hub_category', bucket=bucket, key=key, page=str(page_num + 1)), art=root_art('catalogs'), info={'title': tr('المزيد')})
+            add_item(tr('More'), build_url(action='hub_category', bucket=bucket, key=key, page=str(page_num + 1)), art=root_art('catalogs'), info={'title': tr('More')})
     return end_dir(content=_hub_directory_content(bucket), cache=True)
 
 
@@ -3778,15 +3778,15 @@ def _hub_catalog_context(provider, catalog, bucket=''):
     for row in _home_bucket_defs(include_collection=False):
         b = row.get('bucket') or ''
         title = row.get('title') or _hub_bucket_title(b)
-        items.append((tr('إضافة داخل %s') % title, 'RunPlugin(%s)' % build_url(action='catalog_pin', provider_id=provider_id, media_type=media_type, catalog_id=catalog_id, label=label, bucket=b)))
+        items.append((tr('Add inside %s') % title, 'RunPlugin(%s)' % build_url(action='catalog_pin', provider_id=provider_id, media_type=media_type, catalog_id=catalog_id, label=label, bucket=b)))
         for sub in _home_subfolders(b):
             sb = sub.get('bucket') or ''
             st = sub.get('title') or _hub_bucket_title(sb)
-            items.append((tr('إضافة داخل %s / %s') % (title, st), 'RunPlugin(%s)' % build_url(action='catalog_pin', provider_id=provider_id, media_type=media_type, catalog_id=catalog_id, label=label, bucket=sb)))
+            items.append((tr('Add inside %s / %s') % (title, st), 'RunPlugin(%s)' % build_url(action='catalog_pin', provider_id=provider_id, media_type=media_type, catalog_id=catalog_id, label=label, bucket=sb)))
     # Collection is kept for favourites/Trakt/manual sets only. Source catalogues
     # are pinned to Home folders/Sub folders so they do not clutter Collection.
-    items.append(('إضافة Sub folder جديد', 'RunPlugin(%s)' % build_url(action='home_subfolder_add', parent=bucket or 'movies')))
-    items.append(('إضافة مجلد هوم جديد', 'RunPlugin(%s)' % build_url(action='home_folder_add')))
+    items.append(('Add a new sub folder', 'RunPlugin(%s)' % build_url(action='home_subfolder_add', parent=bucket or 'movies')))
+    items.append(('Add new home folder', 'RunPlugin(%s)' % build_url(action='home_folder_add')))
     return items
 
 
@@ -3808,9 +3808,9 @@ def _catalog_pin_targets():
 def catalog_pin_target_menu(provider_id='', catalog_id='', media_type='', label=''):
     targets = _catalog_pin_targets()
     if not targets:
-        notify(tr('أضف مجلد هوم أو Sub folder أولًا'))
+        notify(tr('Add a home folder or sub folder first'))
         return end_dir()
-    idx = xbmcgui.Dialog().select(tr('إضافة الكتالوج داخل'), [tr(t[0]) for t in targets])
+    idx = xbmcgui.Dialog().select(tr('Add catalog inside'), [tr(t[0]) for t in targets])
     if idx < 0:
         return end_dir()
     title, bucket = targets[idx]
@@ -3849,7 +3849,7 @@ def _catalog_filter_context(provider_id='', media_type='', catalog_id='', catalo
             value = (state or {}).get(name)
             if value not in (None, ''):
                 active.append('%s: %s' % (_filter_label(name), value))
-        label = 'فلتر الكتالوج'
+        label = 'Catalog filter'
         if active:
             label += '  •  %s' % ' | '.join(active[:3])
         items.append((label, 'Container.Update(%s)' % build_url(
@@ -3887,10 +3887,10 @@ def _catalog_add_toolbar(provider, provider_id, media_type, catalog_id, catalog_
     cname = label or (catalog_def or {}).get('name') or catalog_id or 'Catalog'
     ctx = _hub_catalog_context(provider, catalog_def or {'id': catalog_id, 'name': cname, 'type': media_type}, _hub_catalog_bucket(provider, catalog_def or {}))
     add_item(
-        '[COLOR yellow]+ إضافة هذا الكتالوج إلى الهوم[/COLOR]',
+        '[COLOR yellow]+ Add this catalog to home[/COLOR]',
         build_url(action='catalog_pin_target_menu', provider_id=provider_id, media_type=media_type, catalog_id=catalog_id, label=cname),
         is_folder=False,
-        info={'title': 'إضافة إلى الهوم', 'plot': 'ثبّت هذا الكتالوج داخل أفلام/مسلسلات/أنمي/عربي أو أي Sub folder. لا يضاف إلى Collection.'},
+        info={'title': 'Add to home', 'plot': 'Pin this catalog inside Movies/Series/Anime/Arabic or any sub folder. It is not added to a collection.'},
         art=root_art('add'),
         context_menu=ctx,
         properties={'SpecialSort': 'top'},
@@ -3928,23 +3928,23 @@ def _folder_tools_context(bucket, entries=None):
                     continue
                 group = group_by_key.get(key) or {'label': _folder_filter_label(key)}
                 active.append('%s: %s' % (group.get('label') or _folder_filter_label(key), value))
-            label = 'فلتر المجلد'
+            label = 'Folder filter'
             if active:
                 label += '  •  %s' % ' | '.join(active)
             items.append((label, 'Container.Update(%s)' % build_url(action='folder_filters_menu', bucket=bucket)))
     except Exception:
         pass
     if _folder_has_search(entries):
-        items.append((tr('بحث داخل %s') % title, 'Container.Update(%s)' % build_url(action='hub_search_folder', bucket=bucket)))
-    view_label = 'عرض حسب المصدر' if _folder_view_mode(bucket) == 'merged' else 'دمج المحتوى'
+        items.append((tr('Search inside %s') % title, 'Container.Update(%s)' % build_url(action='hub_search_folder', bucket=bucket)))
+    view_label = 'Group by add-on' if _folder_view_mode(bucket) == 'merged' else 'Merge content'
     items.append((view_label, 'RunPlugin(%s)' % build_url(action='folder_toggle_view', bucket=bucket)))
-    dedupe_label = 'إظهار التكرار' if _folder_dedupe_enabled(bucket) else 'إخفاء التكرار'
+    dedupe_label = 'Show duplicates' if _folder_dedupe_enabled(bucket) else 'Hide duplicates'
     items.append((dedupe_label, 'RunPlugin(%s)' % build_url(action='folder_toggle_dedupe', bucket=bucket)))
-    play_label = 'تشغيل سريع من نفس السورس' if _folder_play_mode(bucket) == 'normal' else 'وضع التشغيل العادي'
+    play_label = 'Quick play from the same add-on' if _folder_play_mode(bucket) == 'normal' else 'Normal playback mode'
     items.append((play_label, 'RunPlugin(%s)' % build_url(action='folder_toggle_play_mode', bucket=bucket)))
-    items.append(('تحديث هذا المجلد', 'RunPlugin(%s)' % build_url(action='folder_refresh', bucket=bucket)))
+    items.append(('Refresh this folder', 'RunPlugin(%s)' % build_url(action='folder_refresh', bucket=bucket)))
     if entries:
-        items.append(('ترتيب مصادر هذا المجلد', 'Container.Update(%s)' % build_url(action='hub_section', bucket=bucket, raw='1')))
+        items.append(('Order the add-ons in this folder', 'Container.Update(%s)' % build_url(action='hub_section', bucket=bucket, raw='1')))
     return items
 
 
@@ -4047,28 +4047,28 @@ def folder_toggle_view(bucket='movies'):
     current = _folder_view_mode(bucket)
     new_value = 'sources' if current == 'merged' else 'merged'
     _set_folder_pref(bucket, 'view_mode', new_value)
-    label = 'عرض حسب المصدر' if new_value == 'sources' else 'دمج المحتوى'
-    return _notify_and_refresh(tr('تم تغيير عرض المجلد: %s') % label)
+    label = 'Group by add-on' if new_value == 'sources' else 'Merge content'
+    return _notify_and_refresh(tr('Folder view changed: %s') % label)
 
 
 def folder_toggle_dedupe(bucket='movies'):
     enabled = _folder_dedupe_enabled(bucket)
     _set_folder_pref(bucket, 'dedupe', '0' if enabled else '1')
-    return _notify_and_refresh(tr('إخفاء التكرار: %s') % (tr('متوقف') if enabled else tr('مفعل')))
+    return _notify_and_refresh(tr('Hide duplicates: %s') % (tr('Stopped') if enabled else tr('Enabled')))
 
 
 def folder_toggle_play_mode(bucket='movies'):
     current = _folder_play_mode(bucket)
     new_value = 'same_source_auto' if current == 'normal' else 'normal'
     _set_folder_pref(bucket, 'play_mode', new_value)
-    label = 'تشغيل سريع من نفس السورس' if new_value == 'same_source_auto' else 'الوضع العادي'
-    return _notify_and_refresh(tr('وضع التشغيل: %s') % label)
+    label = 'Quick play from the same add-on' if new_value == 'same_source_auto' else 'Normal mode'
+    return _notify_and_refresh(tr('Playback mode: %s') % label)
 
 
 def folder_refresh(bucket='movies'):
     removed = 0
     try:
-        from .dexhub import client as _client_mod
+        from .nuviohub import client as _client_mod
         removed += int(_client_mod.clear_http_cache() or 0)
     except Exception:
         pass
@@ -4081,7 +4081,7 @@ def folder_refresh(bucket='movies'):
         _clear_folder_filters(bucket)
     except Exception:
         pass
-    return _notify_and_refresh('تم تحديث المجلد ومسح كاش الكتالوجات')
+    return _notify_and_refresh('Folder refreshed and catalog cache cleared')
 
 
 def _clean_title_for_key(value):
@@ -4092,7 +4092,7 @@ def _clean_title_for_key(value):
         pass
     text = re.sub(r'\[[^\]]+\]|\([^\)]*\b(?:\d{4}|1080p|720p|4k|uhd|hdr|dubbed|subbed)\b[^\)]*\)', ' ', text, flags=re.I)
     text = re.sub(r'\b(?:the|a|an)\b', ' ', text, flags=re.I)
-    # --- dexhub-405-patch --- fold Arabic spelling variants before stripping
+    # --- nuviohub-405-patch --- fold Arabic spelling variants before stripping
     text = _ar_fold(text)
     text = re.sub(r'[^0-9a-z\u0600-\u06FF]+', ' ', text, flags=re.I)
     return re.sub(r'\s+', ' ', text).strip()
@@ -4110,8 +4110,8 @@ def _year_for_key(meta):
     return ''
 
 
-# --- dexhub-405-patch ---
-_AR_DIACRITICS = re.compile('[\u064B-\u065F\u0670\u0640]')
+# --- nuviohub-405-patch ---
+_AR_DIACRITICS = re.compile("[\u064b-\u065f\u0670\u0640]")
 _AR_DIGITS = {}
 for _i in range(10):
     _AR_DIGITS[chr(0x0660 + _i)] = str(_i)   # Arabic-Indic
@@ -4131,22 +4131,22 @@ def _ar_fold(text):
     for ch in text:
         if ch in _AR_DIGITS:
             out.append(_AR_DIGITS[ch])
-        elif ch in '\u0622\u0623\u0625\u0671':      # آ أ إ ٱ
-            out.append('\u0627')                      # ا
-        elif ch == '\u0649':                          # ى
-            out.append('\u064A')                      # ي
-        elif ch == '\u0629':                          # ة
-            out.append('\u0647')                      # ه
-        elif ch == '\u0624':                          # ؤ
-            out.append('\u0648')                      # و
-        elif ch == '\u0626':                          # ئ
-            out.append('\u064A')
+        elif ch in "\u0622\u0623\u0625\u0671":      # آ أ إ ٱ
+            out.append("\u0627")                      # ا
+        elif ch == "\u0649":                          # ى
+            out.append("\u064a")                      # ي
+        elif ch == "\u0629":                          # ة
+            out.append("\u0647")                      # ه
+        elif ch == "\u0624":                          # ؤ
+            out.append("\u0648")                      # و
+        elif ch == "\u0626":                          # ئ
+            out.append("\u064a")
         else:
             out.append(ch)
     text = ''.join(out)
     # a leading definite article is optional in most catalog titles
-    text = re.sub('^\u0627\u0644', '', text)
-    text = re.sub('\\s\u0627\u0644', ' ', text)
+    text = re.sub("^\u0627\u0644", '', text)
+    text = re.sub("\\s\u0627\u0644", ' ', text)
     return text
 
 
@@ -4609,14 +4609,14 @@ def _hub_folder_filter_toolbar(bucket, entries):
             continue
         group = group_by_key.get(key) or {'label': _folder_filter_label(key)}
         active.append('%s: %s' % (group.get('label') or _folder_filter_label(key), value))
-    title = '[COLOR orange]≡ فلتر المجلد[/COLOR]'
+    title = '[COLOR orange]≡ Folder filter[/COLOR]'
     if active:
         title += ' • [COLOR yellow]%s[/COLOR]' % ' | '.join(active)
     add_item(
         title,
         build_url(action='folder_filters_menu', bucket=bucket),
         is_folder=True,
-        info={'title': 'فلتر المجلد', 'plot': tr('فلتر واحد لكل الكتالوجات المثبتة داخل %s. إذا مصدر لا يدعم الفلتر المختار يتم تجاهله لهذا المصدر فقط.') % _hub_bucket_title(bucket)},
+        info={'title': 'Folder filter', 'plot': tr('One filter for every catalog pinned inside %s. If a add-on does not support the chosen filter, it is skipped for that add-on only.') % _hub_bucket_title(bucket)},
         art=root_art('catalogs'),
         properties={'SpecialSort': 'top'},
     )
@@ -4627,7 +4627,7 @@ def folder_filters_menu(bucket='movies'):
     entries = _hub_pinned_catalog_entries(bucket)
     groups = _folder_filter_groups(entries)
     if not groups:
-        notify(tr('لا توجد فلاتر مدعومة داخل هذا المجلد'))
+        notify(tr('No filters available in this folder'))
         return hub_section(bucket)
     state = _folder_filter_state(bucket)
     labels = []
@@ -4641,9 +4641,9 @@ def folder_filters_menu(bucket='movies'):
         labels.append('%s%s' % (group.get('label') or _folder_filter_label(key), suffix))
         actions.append(('set', key))
     if state:
-        labels.append('مسح كل فلاتر المجلد')
+        labels.append('Clear all folder filters')
         actions.append(('clear', ''))
-    idx = xbmcgui.Dialog().select(tr('فلتر المجلد: %s') % tr(_hub_bucket_title(bucket)), [tr(x) for x in labels])
+    idx = xbmcgui.Dialog().select(tr('Folder filter: %s') % tr(_hub_bucket_title(bucket)), [tr(x) for x in labels])
     if idx < 0:
         return hub_section(bucket)
     action, key = actions[idx]
@@ -4663,8 +4663,8 @@ def folder_select_filter(bucket='movies', filter_key=''):
     options = list(group.get('options') or [])
     title = group.get('label') or _folder_filter_label(filter_key)
     if options:
-        labels = ['إلغاء الفلتر'] + options
-        idx = xbmcgui.Dialog().select(tr('اختر %s') % tr(title), [tr(x) for x in labels])
+        labels = ['Clear filter'] + options
+        idx = xbmcgui.Dialog().select(tr('Choose %s') % tr(title), [tr(x) for x in labels])
         if idx < 0:
             return hub_section(bucket)
         if idx == 0:
@@ -4673,7 +4673,7 @@ def folder_select_filter(bucket='movies', filter_key=''):
             _set_folder_filter(bucket, filter_key, labels[idx])
     else:
         default = _folder_filter_state(bucket).get(filter_key, '')
-        kb = xbmc.Keyboard(default, tr('اكتب %s') % tr(title))
+        kb = xbmc.Keyboard(default, tr('Type %s') % tr(title))
         kb.doModal()
         if not kb.isConfirmed():
             return hub_section(bucket)
@@ -4685,13 +4685,13 @@ def catalog_pin(provider_id='', catalog_id='', media_type='', label='', bucket='
     if not provider_id or not catalog_id or not bucket:
         return end_dir()
     if str(bucket or '').strip().lower() == 'collection':
-        notify(tr('Collection للمفضلة والقوائم فقط. اختر مجلد هوم أو Sub folder.'))
+        notify(tr('Collection is for Favorites and lists only. Pick a home folder or sub folder.'))
         return end_dir()
     rows = _load_catalog_pins()
     key = _catalog_pin_key(provider_id, catalog_id, media_type)
     for row in rows:
         if _catalog_pin_key(row.get('provider_id'), row.get('catalog_id'), row.get('media_type')) == key and (row.get('bucket') or '') == bucket:
-            notify(tr('القسم موجود مسبقًا'))
+            notify(tr('Section already exists'))
             return end_dir()
     provider = store.get_provider(provider_id) or {}
     rows.append({
@@ -4704,7 +4704,7 @@ def catalog_pin(provider_id='', catalog_id='', media_type='', label='', bucket='
         'created': int(time.time()),
     })
     _save_catalog_pins(rows)
-    notify(tr('تمت إضافة القسم'))
+    notify(tr('Section added'))
     try:
         xbmc.executebuiltin('Container.Refresh')
     except Exception:
@@ -4766,7 +4766,7 @@ def _hub_render_media_rows(ordered_rows, bucket='', page_num=0, has_more=False):
     # meta_source.set_bucket_art_priority). Cleared at the end of this
     # function so other code paths aren't confused by stale context.
     try:
-        xbmcgui.Window(WINDOW_ID).setProperty('dexhub.render_bucket', str(bucket or ''))
+        xbmcgui.Window(WINDOW_ID).setProperty('nuviohub.render_bucket', str(bucket or ''))
     except Exception:
         pass
     try:
@@ -4795,13 +4795,13 @@ def _hub_render_media_rows(ordered_rows, bucket='', page_num=0, has_more=False):
             first_fanart = art.get('fanart')
         ids = extract_ids(meta)
         folder_source_mode = 'only' if (_folder_play_mode(bucket) == 'same_source_auto' and not _is_series_media(media_type)) else ''
-        path, path_is_folder = _content_click_path(media_type=media_type, canonical_id=meta_id, title=item_label, tmdb_id=ids.get('tmdb_id') or '', imdb_id=ids.get('imdb_id') or '', tvdb_id=ids.get('tvdb_id') or '', source_provider_id=(provider or {}).get('id') or '', source_mode=folder_source_mode, force_dexhub=bool(folder_source_mode), ui_seed=art)
+        path, path_is_folder = _content_click_path(media_type=media_type, canonical_id=meta_id, title=item_label, tmdb_id=ids.get('tmdb_id') or '', imdb_id=ids.get('imdb_id') or '', tvdb_id=ids.get('tvdb_id') or '', source_provider_id=(provider or {}).get('id') or '', source_mode=folder_source_mode, force_nuviohub=bool(folder_source_mode), ui_seed=art)
         ctx_menu = _append_folder_tools_context(_hub_item_context(provider, media_type, meta_id, item_label), bucket)
         already_fav = (str(media_type or ''), str(meta_id or '')) in favorite_keys
         if already_fav:
-            ctx_menu.append(('إزالة من المفضلة', 'RunPlugin(%s)' % build_url(action='fav_remove', media_type=media_type, canonical_id=meta_id)))
+            ctx_menu.append(('Remove from favorites', 'RunPlugin(%s)' % build_url(action='fav_remove', media_type=media_type, canonical_id=meta_id)))
         else:
-            ctx_menu.append(('إضافة إلى المفضلة', 'RunPlugin(%s)' % build_url(action='fav_add', media_type=media_type, canonical_id=meta_id, title=item_label, poster=art.get('poster') or '', background=art.get('fanart') or '', clearlogo=art.get('clearlogo') or '', year=str((_meta_info(meta).get('year') or 0)))))
+            ctx_menu.append(('Add to favorites', 'RunPlugin(%s)' % build_url(action='fav_add', media_type=media_type, canonical_id=meta_id, title=item_label, poster=art.get('poster') or '', background=art.get('fanart') or '', clearlogo=art.get('clearlogo') or '', year=str((_meta_info(meta).get('year') or 0)))))
         add_item(item_label, path, is_folder=path_is_folder, info=_meta_info(meta), art=art, ids=ids, context_menu=ctx_menu, is_favorite=already_fav)
     if first_fanart:
         try:
@@ -4810,7 +4810,7 @@ def _hub_render_media_rows(ordered_rows, bucket='', page_num=0, has_more=False):
             pass
     if has_more:
         if not globals().get('_pagination_hidden', lambda: False)():
-            add_item(tr('المزيد'), build_url(action='hub_section', bucket=bucket, page=str(page_num + 1)), art=root_art('catalogs'), info={'title': tr('المزيد')})
+            add_item(tr('More'), build_url(action='hub_section', bucket=bucket, page=str(page_num + 1)), art=root_art('catalogs'), info={'title': tr('More')})
     return True
 
 
@@ -4820,11 +4820,11 @@ def _hub_section_direct_content(bucket='movies', page='0'):
     entries = _hub_pinned_catalog_entries(bucket)
     subfolders = _home_subfolders(bucket)
     if not entries and not subfolders:
-        add_item(tr('[COLOR yellow]اختر محتوى هذا المجلد من Sources[/COLOR]'), build_url(action='providers'), art=root_art('providers'), info={'title': title, 'plot': tr('افتح Sources، اضغط مطولًا على أي كتالوج، ثم اختر إضافة داخل %s. بعدها يظهر المحتوى هنا مباشرة بدون مجلدات.') % title}, context_menu=_folder_tools_context(bucket, entries))
-        add_item(tr('كل كتالوجات المصادر المناسبة'), build_url(action='hub_section', bucket=bucket, raw='1'), art=root_art('catalogs'), info={'title': tr('كل كتالوجات المصادر'), 'plot': tr('من هنا اختر الكتالوجات التي تريد تثبيتها داخل هذا المجلد')})
+        add_item(tr("[COLOR yellow]Pick this folder's content from Sources[/COLOR]"), build_url(action='providers'), art=root_art('providers'), info={'title': title, 'plot': tr('Open Add-ons, long-press any catalog, then choose "Add into %s". Content will appear here directly without folders.') % title}, context_menu=_folder_tools_context(bucket, entries))
+        add_item(tr('All matching add-on catalogs'), build_url(action='hub_section', bucket=bucket, raw='1'), art=root_art('catalogs'), info={'title': tr('All add-on catalogs'), 'plot': tr('Pick the catalogs you want to pin inside this folder from here')})
         if not _is_subfolder_bucket(bucket):
-            add_item(tr('+ إضافة Sub folder'), build_url(action='home_subfolder_add', parent=bucket), art=root_art('add'), info={'title': tr('إضافة Sub folder')})
-        add_item(tr('+ إضافة مجلد هوم جديد'), build_url(action='home_folder_add'), art=root_art('add'), info={'title': tr('إضافة مجلد هوم جديد')})
+            add_item(tr('+ Add sub folder'), build_url(action='home_subfolder_add', parent=bucket), art=root_art('add'), info={'title': tr('Add sub folder')})
+        add_item(tr('+ Add new home folder'), build_url(action='home_folder_add'), art=root_art('add'), info={'title': tr('Add new home folder')})
         return end_dir(content='files', cache=False)
     _hub_filter_toolbar_for_pins(bucket, entries)
     if entries and _folder_view_mode(bucket) == 'sources':
@@ -4835,10 +4835,10 @@ def _hub_section_direct_content(bucket='movies', page='0'):
                 st = sub.get('title') or _hub_bucket_title(sb)
                 cnt = len([p for p in pins if (p.get('bucket') or '') == sb])
                 ctx = _append_folder_tools_context([
-                    ('حذف Sub folder', 'RunPlugin(%s)' % build_url(action='home_subfolder_remove', bucket=sb)),
-                    ('عرض مصادر هذا Sub folder', 'Container.Update(%s)' % build_url(action='hub_section', bucket=sb, raw='1')),
+                    ('Delete sub folder', 'RunPlugin(%s)' % build_url(action='home_subfolder_remove', bucket=sb)),
+                    ('Show the add-ons in this sub folder', 'Container.Update(%s)' % build_url(action='hub_section', bucket=sb, raw='1')),
                 ], sb)
-                add_item(st if not cnt else '%s (%d)' % (st, cnt), build_url(action='hub_section', bucket=sb), art=_hub_icon_for_bucket(sb), info={'title': st, 'plot': tr('Sub folder داخل %s') % title}, context_menu=ctx)
+                add_item(st if not cnt else '%s (%d)' % (st, cnt), build_url(action='hub_section', bucket=sb), art=_hub_icon_for_bucket(sb), info={'title': st, 'plot': tr('Sub folder inside %s') % title}, context_menu=ctx)
         _hub_render_pinned(bucket)
         return end_dir(content='files', cache=False)
     if subfolders:
@@ -4848,12 +4848,12 @@ def _hub_section_direct_content(bucket='movies', page='0'):
             st = sub.get('title') or _hub_bucket_title(sb)
             cnt = len([p for p in pins if (p.get('bucket') or '') == sb])
             ctx = _append_folder_tools_context([
-                ('حذف Sub folder', 'RunPlugin(%s)' % build_url(action='home_subfolder_remove', bucket=sb)),
-                ('عرض مصادر هذا Sub folder', 'Container.Update(%s)' % build_url(action='hub_section', bucket=sb, raw='1')),
+                ('Delete sub folder', 'RunPlugin(%s)' % build_url(action='home_subfolder_remove', bucket=sb)),
+                ('Show the add-ons in this sub folder', 'Container.Update(%s)' % build_url(action='hub_section', bucket=sb, raw='1')),
             ], sb)
-            add_item(st if not cnt else '%s (%d)' % (st, cnt), build_url(action='hub_section', bucket=sb), art=_hub_icon_for_bucket(sb), info={'title': st, 'plot': tr('Sub folder داخل %s') % title}, context_menu=ctx)
+            add_item(st if not cnt else '%s (%d)' % (st, cnt), build_url(action='hub_section', bucket=sb), art=_hub_icon_for_bucket(sb), info={'title': st, 'plot': tr('Sub folder inside %s') % title}, context_menu=ctx)
         if not entries:
-            add_item(tr('كل كتالوجات المصادر المناسبة'), build_url(action='hub_section', bucket=bucket, raw='1'), art=root_art('catalogs'), info={'title': tr('كل كتالوجات المصادر')})
+            add_item(tr('All matching add-on catalogs'), build_url(action='hub_section', bucket=bucket, raw='1'), art=root_art('catalogs'), info={'title': tr('All add-on catalogs')})
             return end_dir(content='files', cache=False)
     try:
         page_num = max(0, int(page or 0))
@@ -4952,13 +4952,13 @@ def _hub_section_direct_content(bucket='movies', page='0'):
             _win = xbmcgui.Window(WINDOW_ID)
             for provider, _catalog, exc_name in _failed_providers[:1]:  # max 1 toast per render
                 pname = (provider or {}).get('name') or 'source'
-                seen_key = 'dexhub.fail_warn.%s' % ((provider or {}).get('id') or pname)
+                seen_key = 'nuviohub.fail_warn.%s' % ((provider or {}).get('id') or pname)
                 try:
                     if _win.getProperty(seen_key) != '1':
                         _win.setProperty(seen_key, '1')
                         xbmcgui.Dialog().notification(
                             'Nuvio Hub',
-                            tr('تعذّر الاتصال بـ %s — تم تخطيه') % pname,
+                            tr('Could not reach %s — skipped') % pname,
                             xbmcgui.NOTIFICATION_WARNING, 2200, sound=False
                         )
                 except Exception:
@@ -4969,7 +4969,7 @@ def _hub_section_direct_content(bucket='movies', page='0'):
     # Dedupe after collecting all catalogues so source priority wins regardless
     # of which network request returned first. Then sort the full merged set.
     if _folder_dedupe_enabled(bucket):
-        # --- dexhub-405-patch --- alias-aware merge, see _dedupe_rows
+        # --- nuviohub-405-patch --- alias-aware merge, see _dedupe_rows
         candidates = _dedupe_rows(
             candidates,
             rank_of=lambda row: (row[5], row[6]),
@@ -4989,13 +4989,13 @@ def _hub_section_direct_content(bucket='movies', page='0'):
         # the user can act on it (slow source vs no content). Always offer a
         # quick retry and a path into source diagnostics.
         if _budget_exceeded or _incomplete or _failed_providers:
-            empty_label = tr('تأخّر %d من %d مصدر — اضغط لإعادة المحاولة') % (
+            empty_label = tr('%d of %d add-ons timed out — press to retry') % (
                 max(_incomplete, len(_failed_providers)), len(entries)
             )
-            empty_plot  = tr('بعض المصادر لم تستجب خلال %d ثوانٍ. جرّب إعادة المحاولة، أو افتح "تشخيص المصادر" لمعرفة المسبّب.') % int(_FOLDER_OPEN_BUDGET)
+            empty_plot  = tr('Some add-ons did not respond within %d seconds. Try again, or open "Add-on diagnostics" to see which one is slow.') % int(_FOLDER_OPEN_BUDGET)
         else:
-            empty_label = '[COLOR yellow]%s[/COLOR]' % tr('لا يوجد محتوى ظاهر من الأقسام المثبتة')
-            empty_plot  = tr('قد يكون المصدر فارغًا أو لا يدعم الصفحة الحالية. جرّب تثبيت كتالوج آخر من Sources.')
+            empty_label = '[COLOR yellow]%s[/COLOR]' % tr('No content available from the pinned add-ons')
+            empty_plot  = tr('The add-on may be empty or may not support this page. Try pinning another catalog from Add-ons.')
         # Retry/refresh row
         add_item('[COLOR cyan]↻ %s[/COLOR]' % empty_label,
                  build_url(action='hub_section', bucket=bucket, page=str(page_num)),
@@ -5004,18 +5004,18 @@ def _hub_section_direct_content(bucket='movies', page='0'):
                  context_menu=_folder_tools_context(bucket, entries))
         # Diagnostic shortcut — surfaced only when something actually failed.
         if _budget_exceeded or _failed_providers:
-            add_item('[COLOR cyan]🩺 %s[/COLOR]' % tr('تشخيص المصادر'),
+            add_item('[COLOR cyan]🩺 %s[/COLOR]' % tr('Add-on diagnostics'),
                      build_url(action='diagnose_sources'),
                      art=root_art('catalogs'),
-                     info={'title': tr('تشخيص المصادر'),
-                           'plot': tr('اختبر سرعة كل مصدر مثبّت لمعرفة المتسبّب في البطء')})
+                     info={'title': tr('Add-on diagnostics'),
+                           'plot': tr('Test the response time of every pinned add-on to find the slow one')})
         # Original "browse all catalogs" fallback
-        add_item(tr('كل كتالوجات المصادر المناسبة'),
+        add_item(tr('All matching add-on catalogs'),
                  build_url(action='hub_section', bucket=bucket, raw='1'),
                  art=root_art('catalogs'),
-                 info={'title': 'كل كتالوجات المصادر'})
+                 info={'title': 'All add-on catalogs'})
         if not _is_subfolder_bucket(bucket):
-            add_item(tr('+ إضافة Sub folder'), build_url(action='home_subfolder_add', parent=bucket), art=root_art('add'), info={'title': tr('إضافة Sub folder')})
+            add_item(tr('+ Add sub folder'), build_url(action='home_subfolder_add', parent=bucket), art=root_art('add'), info={'title': tr('Add sub folder')})
         return end_dir(content='files', cache=False)
 
     _hub_render_media_rows(ordered_rows[:page_size], bucket=bucket, page_num=page_num, has_more=more_possible)
@@ -5033,7 +5033,7 @@ def hub_section(bucket='movies', raw='', page='0'):
         if not rows and (str(bucket or '').startswith('custom:') or _is_subfolder_bucket(bucket)):
             rows = _hub_catalog_entries(bucket=None)
         if not rows:
-            add_item(tr('[COLOR yellow]لا توجد كتالوجات في هذا القسم[/COLOR]'), build_url(action='providers'), art=root_art('providers'), info={'title': 'Sources'})
+            add_item(tr('[COLOR yellow]No catalogs in this section[/COLOR]'), build_url(action='providers'), art=root_art('providers'), info={'title': 'Sources'})
             return end_dir(content='files', cache=False)
         for provider, catalog, _b in rows:
             media_type = catalog.get('type') or _hub_bucket_media_type(bucket) or ''
@@ -5084,17 +5084,17 @@ def hub_search_menu(query=''):
     _clear_source_transient_props(clear_global=True)
 
     win = xbmcgui.Window(WINDOW_ID)
-    last_query = win.getProperty('dexhub.last_search.unified') or ''
+    last_query = win.getProperty('nuviohub.last_search.unified') or ''
     query = str(query or '').strip()
     if not query:
-        keyboard = xbmc.Keyboard(last_query, tr('ابحث في TMDb'))
+        keyboard = xbmc.Keyboard(last_query, tr('Search TMDb'))
         keyboard.doModal()
         if not keyboard.isConfirmed():
             return end_dir(content='files', cache=False)
         query = keyboard.getText().strip()
     if not query:
         return end_dir(content='files', cache=False)
-    win.setProperty('dexhub.last_search.unified', query)
+    win.setProperty('nuviohub.last_search.unified', query)
     try:
         from . import search_history as _sh
         _sh.add(query, media_type='all')
@@ -5125,7 +5125,7 @@ def _plex_servers_budgeted(budget_seconds=6.0, down_memo_seconds=90.0):
     a late finisher cannot race the picker build. Success clears the memo.
     """
     try:
-        down_until = float(xbmcgui.Window(10000).getProperty('dexhub.plex.down_until') or 0.0)
+        down_until = float(xbmcgui.Window(10000).getProperty('nuviohub.plex.down_until') or 0.0)
     except Exception:
         down_until = 0.0
     now = time.time()
@@ -5154,7 +5154,7 @@ def _plex_servers_budgeted(budget_seconds=6.0, down_memo_seconds=90.0):
                  xbmc.LOGWARNING)
         try:
             xbmcgui.Window(10000).setProperty(
-                'dexhub.plex.down_until',
+                'nuviohub.plex.down_until',
                 str(time.time() + down_memo_seconds),
             )
         except Exception:
@@ -5167,12 +5167,12 @@ def _plex_servers_budgeted(budget_seconds=6.0, down_memo_seconds=90.0):
                  xbmc.LOGWARNING)
         try:
             xbmcgui.Window(10000).setProperty(
-                'dexhub.plex.down_until', str(time.time() + down_memo_seconds))
+                'nuviohub.plex.down_until', str(time.time() + down_memo_seconds))
         except Exception:
             pass
         return []
     try:
-        xbmcgui.Window(10000).setProperty('dexhub.plex.down_until', '')
+        xbmcgui.Window(10000).setProperty('nuviohub.plex.down_until', '')
     except Exception:
         pass
     return out.get('servers') or []
@@ -5216,9 +5216,9 @@ def _emit_server_search_rows(query, ui_rows=None):
     if not rows:
         return 0
 
-    add_item(tr('[B][COLOR gold]\u2b50 \u0645\u0646 \u0633\u064a\u0631\u0641\u0631\u0627\u062a\u0643[/COLOR][/B]   [COLOR lightgrey]%d[/COLOR]') % len(rows),
+    add_item(tr('[B][COLOR gold]⭐ From your servers[/COLOR][/B]   [COLOR lightgrey]%d[/COLOR]') % len(rows),
              build_url(action='hub_search_menu'), is_folder=False,
-             art=root_art('plex'), info={'title': 'من سيرفراتك'})
+             art=root_art('plex'), info={'title': 'From your servers'})
     for meta in rows:
         path, is_folder = _server_row_path(meta)
         art = native_meta_art(meta, media_type=(meta.get('type') or 'movie'),
@@ -5293,7 +5293,7 @@ def _server_provider(backend, server):
         'backend': backend,
         'server': server,
         'manifest': {
-            'id': 'dexhub.%s.%s' % (backend, server.get('id') or ''),
+            'id': 'nuviohub.%s.%s' % (backend, server.get('id') or ''),
             'name': name,
             'types': ['movie', 'series'],
             'catalogs': catalogs,
@@ -5577,17 +5577,17 @@ def _search_incomplete_footer(failed, silent, ceiling):
         return
     bits = []
     if silent:
-        bits.append(tr('%d لم ترد خلال %ds') % (len(silent), int(ceiling)))
+        bits.append(tr('%d did not respond within %ds') % (len(silent), int(ceiling)))
     if failed:
-        bits.append(tr('%d فشلت') % len(failed))
+        bits.append(tr('%d failed') % len(failed))
     names = ', '.join((silent + sorted(failed))[:6])
-    add_item(tr('[COLOR grey]⚠ نتائج ناقصة: %s[/COLOR]') % ' • '.join(bits),
+    add_item(tr('[COLOR grey]⚠ Incomplete results: %s[/COLOR]') % ' • '.join(bits),
              build_url(action='hub_search_menu'), is_folder=False,
              art=root_art('search'),
-             info={'title': 'نتائج ناقصة',
-                   'plot': tr('هذه المصادر لم تُضِف نتائج لهذا البحث:\n%s\n\n'
-                           'ارفع مهلة البحث من الإعدادات إن كانت بطيئة، أو '
-                           'تحقق من أنها تدعم البحث أصلاً.') % (names or '-')})
+             info={'title': 'Incomplete results',
+                   'plot': tr('These add-ons did not return results for this search:\n%s\n\n'
+                              'Increase the search timeout in settings if they are slow, '
+                              'or check that they support search.') % (names or '-')})
 
 
 def search_selftest(query=''):
@@ -5650,42 +5650,42 @@ def search_selftest(query=''):
                     row['ids'] = result.get('ids') or []
 
     healthy = sum(1 for r in per_provider.values() if r['count'] > 0)
-    add_item(tr('[B]فحص البحث: "%s"[/B]   [COLOR lightgrey]%d/%d مصدر أجاب بنتائج[/COLOR]')
+    add_item(tr('[B]Search diagnostics: "%s"[/B]   [COLOR lightgrey]%d/%d add-ons returned results[/COLOR]')
              % (query, healthy, len(per_provider) or 0),
              build_url(action='search_selftest'), is_folder=False,
              art=root_art('search'),
-             info={'title': 'فحص البحث',
-                   'plot': 'اضغط لإعادة الفحص. كل مصدر أدناه جُرِّب باستعلام حقيقي.'})
+             info={'title': 'Search diagnostics',
+                   'plot': 'Press to re-run the check. Every add-on below was tried with a real query.'})
 
     for name in sorted(per_provider, key=lambda k: (-per_provider[k]['count'], k)):
         row = per_provider[name]
         if row['count'] > 0:
             mark = '[COLOR lime]✔[/COLOR]'
-            detail = tr('%d نتيجة • %.1fs') % (row['count'], row['secs'])
+            detail = tr('%d results • %.1fs') % (row['count'], row['secs'])
         elif row['errors']:
             mark = '[COLOR red]✘[/COLOR]'
             detail = row['errors'][0]
         else:
             mark = '[COLOR yellow]○[/COLOR]'
-            detail = tr('أجاب بلا نتائج • %.1fs') % row['secs']
-        plot = [tr('المصدر: %s') % name, tr('كتالوجات البحث: %d') % row['cats'], detail]
+            detail = tr('Responded with no results • %.1fs') % row['secs']
+        plot = [tr('Add-on: %s') % name, tr('Search catalogs: %d') % row['cats'], detail]
         if row['sample']:
-            plot.append(tr('عيّنة: %s') % row['sample'])
+            plot.append(tr('Sample: %s') % row['sample'])
         if row['ids']:
-            plot.append(tr('المعرّفات: %s') % ', '.join(row['ids']))
+            plot.append(tr('IDs: %s') % ', '.join(row['ids']))
         add_item('%s  %s   [COLOR grey]%s[/COLOR]' % (mark, name, detail),
                  build_url(action='search_selftest'), is_folder=False,
                  art=root_art('search'),
                  info={'title': name, 'plot': '\n'.join(plot)})
 
     for name in sorted(skipped):
-        add_item(tr('[COLOR grey]— %s   (لا يدعم البحث)[/COLOR]') % name,
+        add_item(tr('[COLOR grey]— %s   (search not supported)[/COLOR]') % name,
                  build_url(action='search_selftest'), is_folder=False,
                  art=root_art('search'),
                  info={'title': name,
-                       'plot': 'لا يعلن هذا المصدر أي كتالوج قابل للبحث، أو أن '
-                               'كتالوجه يشترط خياراً إجبارياً آخر (نوعاً مثلاً) '
-                               'فلا يمكن البحث فيه باستعلام مجرد.'})
+                       'plot': ('This add-on does not expose a searchable catalog, or its catalog requires '
+                                'another mandatory option (for example a type), so it cannot be searched '
+                                'with a plain query.')})
 
     xbmc.log('[NuvioHub] search selftest "%s": %d/%d providers returned results; '
              'no searchable catalog: %s' % (query, healthy, len(per_provider),
@@ -5694,25 +5694,13 @@ def search_selftest(query=''):
 
 
 def _hub_search_unified_render(query, providers_list, include_tmdb=False):
-    """v3.9.46: run a parallel search across every media type each
-    provider supports, then render the results grouped by media type.
-
-    Two design decisions worth noting. First, the loading dialog reuses
-    the same SourcesLoadingDialog from the source picker so the user
-    sees the same cancel and satisfy buttons they already understand.
-    Pressing "اكتفي بالموجود" stops the search early and renders
-    whatever results have already arrived; pressing "إلغاء" aborts
-    cleanly. Second, the result rendering groups items by media type
-    with section headers so Movies, Series, Anime, and other types
-    appear as distinct labelled blocks in one continuous page rather
-    than forcing the user to navigate three separate sub-pages.
-    """
+    "v3.9.46: run a parallel search across every media type each\n    provider supports, then render the results grouped by media type.\n\n    Two design decisions worth noting. First, the loading dialog reuses\n    the same SourcesLoadingDialog from the source picker so the user\n    sees the same cancel and satisfy buttons they already understand.\n    Pressing \"\u0627\u0643\u062a\u0641\u064a \u0628\u0627\u0644\u0645\u0648\u062c\u0648\u062f\" stops the search early and renders\n    whatever results have already arrived; pressing \"\u0625\u0644\u063a\u0627\u0621\" aborts\n    cleanly. Second, the result rendering groups items by media type\n    with section headers so Movies, Series, Anime, and other types\n    appear as distinct labelled blocks in one continuous page rather\n    than forcing the user to navigate three separate sub-pages.\n    "
     # Build the search job list across every searchable catalog in
     # every media type each provider declares support for.
     # v3.9.225: providers blacklisted while the Plex step was starving the scan
     # were punished for someone else's slowness. Give them a clean slate.
     try:
-        from .dexhub.client import provider_health_pause
+        from .nuviohub.client import provider_health_pause
         provider_health_pause(0)
     except Exception:
         pass
@@ -5749,7 +5737,7 @@ def _hub_search_unified_render(query, providers_list, include_tmdb=False):
     # results interleaved into the type sections below.
 
     if not jobs:
-        notify(tr('لا توجد كتالوجات تدعم البحث في مصادرك'))
+        notify(tr('No catalogs in your add-ons support search'))
         return end_dir(content='files', cache=False)
 
     results_by_type = {}
@@ -5824,7 +5812,7 @@ def _hub_search_unified_render(query, providers_list, include_tmdb=False):
         if _nm and _nm not in _loader_names:
             _loader_names.append(_nm)
     with SourcesLoadingDialog(
-        title=tr('بحث: %s') % query,
+        title=tr('Search: %s') % query,
         fanart='',
         provider_count=len(jobs),
         provider_names=_loader_names,
@@ -5851,8 +5839,8 @@ def _hub_search_unified_render(query, providers_list, include_tmdb=False):
             loader.update(
                 provider_name=provider.get('name') or '',
                 index=idx,
-                status=tr('البحث في المصادر...'),
-                sub_status=('%d %s' % (kept_count[0], tr('نتيجة'))) if kept_count[0] else '',
+                status=tr('Searching add-ons...'),
+                sub_status=('%d %s' % (kept_count[0], tr('result'))) if kept_count[0] else '',
             )
             _pname = (provider.get('name') if isinstance(provider, dict) else str(provider)) or '?'
             if isinstance(result, Exception):
@@ -5930,26 +5918,26 @@ def _hub_search_unified_render(query, providers_list, include_tmdb=False):
     except Exception:
         pass
 
-    header_label = tr('[B][COLOR cyan]🔍 بحث: %s[/COLOR][/B]    [COLOR lightgrey]نتائج: %d[/COLOR]') % (query, total_count)
+    header_label = tr('[B][COLOR cyan]🔍 Search: %s[/COLOR][/B]    [COLOR lightgrey]results: %d[/COLOR]') % (query, total_count)
     add_item(header_label,
              build_url(action='hub_search_menu'),
              is_folder=False,
-             info={'title': 'نتائج البحث',
-                   'plot': 'ضغطة لإعادة البحث بكلمة أخرى. النتائج مُجمَّعة حسب نوع المحتوى أدناه.'})
+             info={'title': 'Search results',
+                   'plot': 'Press to search again with a different term. Results are grouped by content type below.'})
 
     if total_count == 0:
-        add_item(tr('[COLOR yellow]لم يتم العثور على نتائج لـ "%s"[/COLOR]') % query,
+        add_item(tr('[COLOR yellow]No results found for "%s"[/COLOR]') % query,
                  build_url(action='hub_search_menu'), is_folder=False,
-                 info={'title': 'لا نتائج', 'plot': 'جرّب صياغة مختلفة أو معرّفاً مثل tt1234567 أو tmdb:123'})
+                 info={'title': 'No results', 'plot': 'Try a different phrasing, or an id like tt1234567 or tmdb:123'})
         return end_dir(content='videos', cache=False)
 
     type_order = ['movie', 'series', 'anime', 'tv', 'channel']
     type_labels = {
-        'movie': 'أفلام',
-        'series': 'مسلسلات',
-        'anime': 'أنمي',
-        'tv': 'قنوات',
-        'channel': 'قنوات',
+        'movie': 'Movies',
+        'series': 'TV Shows',
+        'anime': 'Anime',
+        'tv': 'Channels',
+        'channel': 'Channels',
     }
     _all_types = set(results_by_type.keys())
     ordered_types = [t for t in type_order if t in _all_types] + \
@@ -5981,7 +5969,7 @@ def _hub_search_unified_render(query, providers_list, include_tmdb=False):
                  build_url(action='hub_search_menu'),
                  is_folder=False,
                  info={'title': type_labels.get(type_key, type_key),
-                       'plot': tr('%d نتيجة من نوع %s') % (type_count, type_labels.get(type_key, type_key))})
+                       'plot': tr('%d results of type %s') % (type_count, type_labels.get(type_key, type_key))})
         # v4.7.2: ONE merged, relevance-ranked stream per section — Stremio,
         # Plex and Emby results interleave by match score instead of by
         # which provider happened to answer first (stable on ties).
@@ -6082,9 +6070,9 @@ def _hub_search_unified_render(query, providers_list, include_tmdb=False):
 def hub_search_bucket(bucket='anime'):
     entries = [(p, c, b) for (p, c, b) in _hub_catalog_entries(bucket=bucket) if _catalog_supports_search(c)]
     if not entries:
-        error(tr('لا توجد كتالوجات تدعم البحث في هذا القسم'))
+        error(tr('No catalogs support search in this section'))
         return hub_section(bucket)
-    keyboard = xbmc.Keyboard('', tr('ابحث في %s') % _hub_bucket_title(bucket))
+    keyboard = xbmc.Keyboard('', tr('Search in %s') % _hub_bucket_title(bucket))
     keyboard.doModal()
     if not keyboard.isConfirmed():
         return end_dir(content='files', cache=False)
@@ -6157,7 +6145,7 @@ def hub_search_bucket(bucket='anime'):
     ordered_rows.sort(
         key=lambda row: -_search_match.best_match_score(query, row[3]))
     if not ordered_rows:
-        notify(tr('لا توجد نتائج مطابقة'))
+        notify(tr('No matching results'))
     for provider, media_type, meta_id, meta in ordered_rows:
         item_label = meta.get('name') or meta_id
         try:
@@ -6181,9 +6169,9 @@ def hub_search_folder(bucket='movies'):
     bucket = bucket or 'movies'
     entries = [row for row in _hub_pinned_catalog_entries(bucket) if any(isinstance(x, dict) and x.get('name') == 'search' for x in (((row[1] or {}).get('extra') or [])))]
     if not entries:
-        notify(tr('لا توجد كتالوجات مثبتة تدعم البحث داخل هذا المجلد'))
+        notify(tr('No pinned catalogs support search inside this folder'))
         return hub_section(bucket)
-    keyboard = xbmc.Keyboard('', tr('ابحث داخل %s') % tr(_hub_bucket_title(bucket)))
+    keyboard = xbmc.Keyboard('', tr('Search inside %s') % tr(_hub_bucket_title(bucket)))
     keyboard.doModal()
     if not keyboard.isConfirmed():
         return hub_section(bucket)
@@ -6229,7 +6217,7 @@ def hub_search_folder(bucket='movies'):
         if len(ordered_rows) >= page_size * 2:
             break
     if not ordered_rows:
-        notify(tr('لا توجد نتائج داخل هذا المجلد'))
+        notify(tr('No results inside this folder'))
         return hub_section(bucket)
     ordered_rows.sort(
         key=lambda row: -_search_match.best_match_score(query, row[4]))
@@ -6238,25 +6226,25 @@ def hub_search_folder(bucket='movies'):
 
 def hub_collection():
     _set_render_section('collection')
-    add_item(tr('المفضلة / Watchlist'), build_url(action='favorites'), art=root_art('favorites'),
-             info={'title': 'المفضلة / Watchlist', 'plot': 'قائمة Trakt Watchlist + مفضلة Nuvio Hub المحلية'})
+    add_item(tr('Favorites / Watchlist'), build_url(action='favorites'), art=root_art('favorites'),
+             info={'title': 'Favorites / Watchlist', 'plot': 'Trakt watchlist + local Nuvio Hub favourites'})
     # v4.7.9: ready-made sets first — nothing to configure, always current.
-    add_item(tr('مجموعات جاهزة'), build_url(action='ready_collections_menu'),
+    add_item(tr('Ready-made collections'), build_url(action='ready_collections_menu'),
              art=root_art('catalogs'),
-             info={'title': tr('مجموعات جاهزة'),
-                   'plot': tr('رائج الآن، الأكثر شعبية، الأعلى تقييماً، في السينما وقريباً — مباشرة من TMDb.')})
-    add_item(tr('مجموعات Collection'), build_url(action='collection_sets'), art=root_art('catalogs'),
-             info={'title': 'مجموعات Collection', 'plot': 'فتح مجموعات الكتالوجات والقوائم اليدوية أو المستوردة'})
+             info={'title': tr('Ready-made collections'),
+                   'plot': tr('Trending, Most popular, Top rated, Now playing and Coming soon - straight from TMDb.')})
+    add_item(tr('Collections'), build_url(action='collection_sets'), art=root_art('catalogs'),
+             info={'title': 'Collections', 'plot': 'Open catalog collections and manual or imported lists'})
     if mdblist.configured():
-        add_item('MDBList • %s' % tr('لستاتي'),
+        add_item('MDBList • %s' % tr('My lists'),
                  build_url(action='mdblist_my_lists'), art=root_art('mdblist'),
                  info={'title': 'MDBList',
-                       'plot': tr('فتح القوائم الخاصة والعامة المرتبطة بمفتاح حسابك.')})
-    add_item(tr('إدارة واستيراد Collection'), build_url(action='collection_tools_menu'), art=root_art('settings'),
-             info={'title': 'إدارة Collection',
-                   'plot': 'استيراد وتصدير وإنشاء Collection وضبط مطابقة الميتاداتا مع TMDb Helper.'})
-    add_item(tr('[COLOR grey]كتالوجات Sources لا تضاف هنا[/COLOR]'), build_url(action='providers'), art=root_art('providers'),
-             info={'title': 'Collection', 'plot': 'ثبّت كتالوجات Sources داخل مجلدات الهوم أو Sub folders. Collection مخصص للمفضلة والقوائم فقط.'})
+                       'plot': tr('Open private and public lists linked to your account key.')})
+    add_item(tr('Manage and import collections'), build_url(action='collection_tools_menu'), art=root_art('settings'),
+             info={'title': 'Manage collections',
+                   'plot': 'Import, export, and create collections, and set up metadata matching with TMDb Helper.'})
+    add_item(tr('[COLOR grey]Add-on catalogs are not added here[/COLOR]'), build_url(action='providers'), art=root_art('providers'),
+             info={'title': 'Collection', 'plot': 'Pin Add-ons catalogs inside home folders or sub folders. Collections are only for favourites and lists.'})
     return end_dir(content='files', cache=False)
 
 
@@ -6272,11 +6260,11 @@ def ready_collections_menu():
     """
     from . import tmdb_direct as _tmdb
     if not _tmdb._api_key():
-        add_item(tr('[COLOR yellow]أضف مفتاح TMDb من الإعدادات لتفعيل المجموعات[/COLOR]'),
+        add_item(tr('[COLOR yellow]Add a TMDb key in Settings to enable collections[/COLOR]'),
                  build_url(action='open_settings'), is_folder=False,
                  art=root_art('tmdb'),
-                 info={'title': tr('مجموعات جاهزة'),
-                       'plot': tr('المجموعات الجاهزة تُبنى من TMDb مباشرة وتحتاج مفتاح API.')})
+                 info={'title': tr('Ready-made collections'),
+                       'plot': tr('Ready-made collections are built straight from TMDb and need an API key.')})
         return end_dir(content='files', cache=False)
     for set_id, label, _path, media_type in _tmdb.READY_SETS:
         art = root_art('movies' if media_type == 'movie' else 'series')
@@ -6295,7 +6283,7 @@ def ready_collections_menu():
         add_item(tr(label), build_url(action='ready_collection', set_id=set_id),
                  art=art,
                  info={'title': tr(label),
-                       'plot': tr('مجموعة جاهزة تُحدَّث تلقائياً من TMDb.'),
+                       'plot': tr('A ready-made set kept current from TMDb.'),
                        'mediatype': 'movie' if media_type == 'movie' else 'tvshow'})
     return end_dir(content='files', cache=True)
 
@@ -6313,7 +6301,7 @@ def ready_collection(set_id='', page='1'):
         page_num = 1
     rows = _tmdb.ready_set_items(set_id, page=page_num, limit=_listing_page_size())
     if not rows:
-        add_item(tr('[COLOR yellow]لا توجد عناصر في هذه المجموعة الآن[/COLOR]'),
+        add_item(tr('[COLOR yellow]This collection has no items right now[/COLOR]'),
                  build_url(action='ready_collections_menu'), is_folder=False,
                  art=root_art('catalogs'), info={'title': tr(label)})
         return end_dir(content='files', cache=False)
@@ -6340,9 +6328,9 @@ def ready_collection(set_id='', page='1'):
                  context_menu=_build_source_picker_menu(
                      media_type=media_type, canonical_id='tmdb:%s' % tmdb_id, title=title))
     if len(rows) >= _listing_page_size() and not globals().get('_pagination_hidden', lambda: False)():
-        add_item(tr('المزيد'), build_url(action='ready_collection', set_id=set_id,
+        add_item(tr('More'), build_url(action='ready_collection', set_id=set_id,
                                           page=str(page_num + 1)),
-                 art=root_art('catalogs'), info={'title': tr('المزيد')})
+                 art=root_art('catalogs'), info={'title': tr('More')})
     return end_dir(content=_directory_content_for_type(media_type), cache=True)
 
 
@@ -6352,34 +6340,34 @@ def collection_tools_menu():
     Collection browsing stays clean and media-focused; backup/import/matching
     tools live here so they are never hidden in context menus only.
     """
-    add_item(tr('فتح مجموعات Collection'), build_url(action='collection_sets'),
+    add_item(tr('Open collections'), build_url(action='collection_sets'),
              art=root_art('catalogs'),
-             info={'title': 'مجموعات Collection',
-                   'plot': 'تصفح المجموعات الحالية وإدارة عناصر كل مجموعة.'})
-    add_item(tr('استيراد Collection من JSON'), build_url(action='collection_set_add'),
+             info={'title': 'Collections',
+                   'plot': 'Browse your collections and manage the items in each one.'})
+    add_item(tr('Import collection from JSON'), build_url(action='collection_set_add'),
              is_folder=False, art=root_art('add'),
-             info={'title': 'استيراد Collection من JSON',
-                   'plot': 'استيراد مجموعة واحدة من ملف أو رابط JSON متوافق.'})
-    add_item(tr('استيراد نسخة احتياطية للكوليكشن'), build_url(action='collection_set_import_backup'),
+             info={'title': 'Import collection from JSON',
+                   'plot': 'Import a single collection from a compatible JSON file or URL.'})
+    add_item(tr('Import a collection backup'), build_url(action='collection_set_import_backup'),
              is_folder=False, art=root_art('settings'),
-             info={'title': 'استيراد Backup',
-                   'plot': 'استعادة كل مجموعات Collection من نسخة احتياطية سابقة.'})
-    add_item(tr('تصدير كل مجموعات Collection'), build_url(action='collection_set_export'),
+             info={'title': 'Import backup',
+                   'plot': 'Restore all collections from an earlier backup.'})
+    add_item(tr('Export all collections'), build_url(action='collection_set_export'),
              is_folder=False, art=root_art('catalogs'),
-             info={'title': 'تصدير Collection',
-                   'plot': 'تصدير جميع المجموعات إلى ملف JSON واحد قابل للنقل.'})
-    add_item(tr('إنشاء مجموعة فارغة'), build_url(action='collection_set_create_empty'),
+             info={'title': 'Export collection',
+                   'plot': 'Export every collection to one portable JSON file.'})
+    add_item(tr('Create empty collection'), build_url(action='collection_set_create_empty'),
              is_folder=False, art=root_art('add'),
-             info={'title': 'إنشاء Collection',
-                   'plot': 'إنشاء مجموعة فارغة ثم إضافة Stremio أو Trakt أو MDBList أو TMDb Helper إليها.'})
-    add_item(tr('مطابقة الميتاداتا مع TMDb Helper'), build_url(action='meta_sources_dialog'),
+             info={'title': 'Create collection',
+                   'plot': 'Create an empty collection, then add Stremio, Trakt, MDBList, or TMDb Helper to it.'})
+    add_item(tr('Match metadata with TMDb Helper'), build_url(action='meta_sources_dialog'),
              is_folder=False, art=root_art('tmdb'),
-             info={'title': 'مطابقة TMDb Helper',
-                   'plot': 'اختيار مصدر الميتاداتا وتوحيد IMDb / TMDb / TVDb لكل مصدر وكوليكشن.'})
-    add_item(tr('إعداد تكامل TMDb Helper'), build_url(action='integrations_menu'),
+             info={'title': 'TMDb Helper matching',
+                   'plot': 'Choose the metadata add-on and unify IMDb / TMDb / TVDb across every add-on and collection.'})
+    add_item(tr('Set up TMDb Helper integration'), build_url(action='integrations_menu'),
              art=root_art('tmdb'),
              info={'title': 'TMDb Helper',
-                   'plot': 'تسجيل Nuvio Hub كمشغّل وضبط مصادر الميتاداتا والنسخ الاحتياطية.'})
+                   'plot': 'Register Nuvio Hub as a player and configure metadata add-ons and backups.'})
     return end_dir(content='files', cache=False)
 
 # ─────────────────────────────────────────────────────────────────────
@@ -6427,7 +6415,7 @@ def _home_prefetch_kick(pins):
     # Rate-limit per Kodi session.
     win = xbmcgui.Window(WINDOW_ID)
     try:
-        last_str = win.getProperty('dexhub.home_prefetch_ts') or '0'
+        last_str = win.getProperty('nuviohub.home_prefetch_ts') or '0'
         last = float(last_str) if last_str.replace('.', '', 1).isdigit() else 0.0
     except Exception:
         last = 0.0
@@ -6435,7 +6423,7 @@ def _home_prefetch_kick(pins):
     if (now - last) < _HOME_PREFETCH_COOLDOWN:
         return
     try:
-        win.setProperty('dexhub.home_prefetch_ts', str(now))
+        win.setProperty('nuviohub.home_prefetch_ts', str(now))
     except Exception:
         pass
 
@@ -6642,7 +6630,7 @@ def _home_impl():
     # Clear stale one-shot handoff/source properties. Keep OSD artwork while video is active.
     _clear_tmdbh_transient()
     _clear_source_transient_props(clear_global=True)
-    for key in ('dexhub.catalog_extra_name', 'dexhub.catalog_extra_value', 'dexhub.catalog_skip_gate'):
+    for key in ('nuviohub.catalog_extra_name', 'nuviohub.catalog_extra_value', 'nuviohub.catalog_skip_gate'):
         try:
             win.clearProperty(key)
         except Exception:
@@ -6650,10 +6638,10 @@ def _home_impl():
 
     cw_dirty = False
     try:
-        if win.getProperty('dexhub.cw_dirty') == '1':
+        if win.getProperty('nuviohub.cw_dirty') == '1':
             cw_dirty = True
-            win.clearProperty('dexhub.cw_dirty')
-            win.clearProperty('dexhub.cw_dirty_ts')
+            win.clearProperty('nuviohub.cw_dirty')
+            win.clearProperty('nuviohub.cw_dirty_ts')
     except Exception:
         pass
 
@@ -6704,10 +6692,10 @@ def _home_impl():
     if not rows:
         # Actionable reception card: it feels like a welcome screen without a
         # blocking splash dialog every time Kodi opens the addon.
-        add_item('[COLOR yellow]%s[/COLOR]' % tr('مرحباً بك في Nuvio Hub — ابدأ الإعداد'),
+        add_item('[COLOR yellow]%s[/COLOR]' % tr('Welcome to Nuvio Hub — start setup'),
                  build_url(action='first_run_wizard'), art=root_art('add'),
-                 info={'title': tr('مرحباً بك في Nuvio Hub — ابدأ الإعداد'),
-                       'plot': tr('اربط Stremio أو Nuvio، أو أضف مصادر وحساباتك يدويًا. لن نثبت أي خدمة دون اختيارك.')})
+                 info={'title': tr('Welcome to Nuvio Hub — start setup'),
+                       'plot': tr('Link Stremio or Nuvio, or add your add-ons and accounts manually. Nothing is installed without your choice.')})
 
     # v3.9.91: read home-visibility toggles ONCE per render. The
     # show_nextup_home and show_favorites_home settings have existed
@@ -6726,17 +6714,17 @@ def _home_impl():
     _show_favorites  = _home_visibility('show_favorites_home',  True)
     _show_collection = _home_visibility('show_collection_home', True)
 
-    cw_label = 'متابعة' if not cw_count else tr('متابعة (%d)') % cw_count
+    cw_label = 'Continue' if not cw_count else tr('Continue (%d)') % cw_count
     if _home_row_visible('continue'):
         add_item(cw_label, build_url(action='continue'),
                  art=_home_feature_art('continue', cw_items),
                  info={'title': cw_label, 'plot': 'Continue watching from your saved progress.'})
     if _show_nextup:
         if _home_row_visible('nextup'):
-            add_item(tr('الحلقة التالية'), build_url(action='nextup'),
+            add_item(tr('Next episode'), build_url(action='nextup'),
                      art=_home_feature_art('nextup', cw_items),
-                     info={'title': tr('الحلقة التالية'),
-                           'plot': tr('الحلقة التالية من المسلسلات التي تتابعها عبر Trakt وNuvio Hub.')})
+                     info={'title': tr('Next episode'),
+                           'plot': tr('The next episode from shows you follow through Trakt and Nuvio Hub.')})
 
     # v3.9.32: Favorites accessible directly from Home. Previously buried
     # under "Collection". The click path goes through _content_click_path
@@ -6748,13 +6736,13 @@ def _home_impl():
     except Exception:
         fav_items = []
     fav_count = len(fav_items)
-    fav_label = 'المفضلة' if not fav_count else tr('المفضلة (%d)') % fav_count
+    fav_label = 'Favorites' if not fav_count else tr('Favourites (%d)') % fav_count
     if _show_favorites:
         if _home_row_visible('favorites'):
             add_item(fav_label, build_url(action='favorites'),
                      art=_home_feature_art('favorites', fav_items),
                      info={'title': fav_label,
-                           'plot': 'المفضلة المحلية + Watchlist من Trakt. التشغيل يتبع إعداد طريقة الضغط (Nuvio Hub / TMDb Helper / السؤال).'})
+                           'plot': 'Local favourites + Trakt watchlist. Playback follows your click-behaviour setting (Nuvio Hub / TMDb Helper / Ask).'})
 
     # Home libraries stay visible as first-class entries. They are also
     # available under Sources for management, but direct Home entries avoid
@@ -6771,19 +6759,19 @@ def _home_impl():
     # depending on which providers/buckets were installed.
     if lightweight:
         # Core home: متابعة، المفضلة، المصادر، TMDb Helper، البحث، Collection.
-        providers_label = 'المصادر' if not rows else tr('المصادر (%d)') % len(rows)
+        providers_label = 'Add-ons' if not rows else tr('Add-ons (%d)') % len(rows)
         if _home_row_visible('providers'):
             add_item(providers_label, build_url(action='providers'), art=root_art('providers'),
                      info={'title': providers_label,
-                           'plot': 'إضافات Stremio ومزامنة حسابات Nuvio وStremio.'})
+                           'plot': 'Stremio addons and Nuvio/Stremio account sync.'})
         if _home_row_visible('plex'):
             add_item('Plex', build_url(action='plex_menu'), art=root_art('plex'),
                      info={'title': 'Plex',
-                           'plot': 'فتح وربط وإدارة سيرفرات ومكتبات Plex.'})
+                           'plot': 'Open, link, and manage Plex servers and libraries.'})
         if _home_row_visible('emby'):
             add_item('Emby / Jellyfin', build_url(action='emby_menu'), art=root_art('emby_jellyfin'),
                      info={'title': 'Emby / Jellyfin',
-                           'plot': 'فتح وربط وإدارة مكتبات Emby وJellyfin.'})
+                           'plot': 'Open, link, and manage Emby and Jellyfin libraries.'})
         try:
             tmdbh_available = tmdbh_player.has_tmdbhelper()
         except Exception:
@@ -6792,24 +6780,24 @@ def _home_impl():
             if _home_row_visible('tmdbh'):
                 add_item(tr('TMDb Helper'), build_url(action='tmdbh_open'), art=root_art('tmdb'),
                          info={'title': 'TMDb Helper',
-                               'plot': 'فتح TMDb Helper؛ عند التشغيل يستخدم Nuvio Hub كمشغّل مصادر.'})
+                               'plot': 'Open TMDb Helper; on playback it uses Nuvio Hub as the source player.'})
         else:
             if _home_row_visible('tmdbh'):
                 add_item(tr('TMDb Helper'), build_url(action='integrations_menu'), art=root_art('tmdb'),
-                         info={'title': 'TMDb Helper', 'plot': 'غير مثبت أو غير مسجّل؛ افتح صفحة التكاملات.'})
+                         info={'title': 'TMDb Helper', 'plot': 'Not installed or not registered; open the integrations page.'})
         if _home_row_visible('search'):
-            add_item(tr('البحث'), build_url(action='hub_search_menu'), art=root_art('search_movie'),
-                     info={'title': 'البحث', 'plot': 'بحث موحّد عبر المصادر والمكتبات.'})
+            add_item(tr('Search'), build_url(action='hub_search_menu'), art=root_art('search_movie'),
+                     info={'title': 'Search', 'plot': 'Unified search across add-ons and libraries.'})
         if _show_collection:
             collection_label = 'Collection' if not pins else 'Collection (%d)' % len(pins)
             if _home_row_visible('collection'):
                 add_item(collection_label, build_url(action='hub_collection'), art=root_art('catalogs'),
                          info={'title': collection_label,
-                               'plot': 'المفضلة والقوائم والمجموعات المستوردة.'})
+                               'plot': 'Favourites, lists, and imported collections.'})
         if _home_row_visible('setup'):
-            add_item(tr('الضبط'), build_url(action='setup_center'), art=root_art('settings'),
-                     info={'title': 'الضبط',
-                           'plot': 'إعداد سريع وواضح للتشغيل والمصادر والترجمة والجودة، مع الخيارات المتقدمة عند الحاجة.'})
+            add_item(tr('Settings'), build_url(action='setup_center'), art=root_art('settings'),
+                     info={'title': 'Settings',
+                           'plot': 'Set up playback, add-ons, subtitles and quality, with advanced options when needed.'})
         try:
             xbmc.log('[NuvioHub] home core rendered', xbmc.LOGINFO)
         except Exception:
@@ -6841,12 +6829,12 @@ def _home_impl():
                         bucket_row.get('title') or bucket)
         stats = []
         if catalog_count:
-            stats.append(tr('%d كتالوج') % catalog_count)
+            stats.append(tr('%d catalog(s)') % catalog_count)
         if pin_count:
-            stats.append(tr('%d مثبت') % pin_count)
+            stats.append(tr('%d pinned') % pin_count)
         if subfolder_count:
-            stats.append(tr('%d مجلد فرعي') % subfolder_count)
-        plot = tr('يفتح محتوى %s مباشرةً بأغنى عرض متاح في السكين.') % bucket_title
+            stats.append(tr('%d subfolder(s)') % subfolder_count)
+        plot = tr('Opens %s content directly using the richest view available in the skin.') % bucket_title
         if stats:
             plot = '%s\n\n%s' % (plot, ' • '.join(stats))
         add_item(bucket_title, build_url(action='hub_section', bucket=bucket),
@@ -6854,19 +6842,19 @@ def _home_impl():
                  info={'title': bucket_title, 'plot': plot},
                  context_menu=_home_bucket_context(bucket))
 
-    providers_label = 'المصادر' if not rows else tr('المصادر (%d)') % len(rows)
+    providers_label = 'Add-ons' if not rows else tr('Add-ons (%d)') % len(rows)
     if _home_row_visible('providers'):
         add_item(providers_label, build_url(action='providers'), art=root_art('providers'),
                  info={'title': providers_label,
-                       'plot': 'إضافات Stremio ومزامنة حسابات Nuvio وStremio.'})
+                       'plot': 'Stremio addons and Nuvio/Stremio account sync.'})
     if _home_row_visible('plex'):
         add_item('Plex', build_url(action='plex_menu'), art=root_art('plex'),
                  info={'title': 'Plex',
-                       'plot': 'فتح وربط وإدارة سيرفرات ومكتبات Plex.'})
+                       'plot': 'Open, link, and manage Plex servers and libraries.'})
     if _home_row_visible('emby'):
         add_item('Emby / Jellyfin', build_url(action='emby_menu'), art=root_art('emby_jellyfin'),
                  info={'title': 'Emby / Jellyfin',
-                       'plot': 'فتح وربط وإدارة مكتبات Emby وJellyfin.'})
+                       'plot': 'Open, link, and manage Emby and Jellyfin libraries.'})
     try:
         tmdbh_available = tmdbh_player.has_tmdbhelper()
     except Exception:
@@ -6876,20 +6864,20 @@ def _home_impl():
                  build_url(action='tmdbh_open' if tmdbh_available else 'integrations_menu'),
                  art=root_art('tmdb'),
                  info={'title': 'TMDb Helper',
-                       'plot': 'فتح TMDb Helper أو إعداد التكامل.'})
+                       'plot': 'Open TMDb Helper or set up the integration.'})
     if _home_row_visible('search'):
-        add_item(tr('البحث'), build_url(action='hub_search_menu'), art=root_art('search_movie'),
-                 info={'title': 'البحث', 'plot': 'بحث موحّد عبر المصادر والمكتبات.'})
+        add_item(tr('Search'), build_url(action='hub_search_menu'), art=root_art('search_movie'),
+                 info={'title': 'Search', 'plot': 'Unified search across add-ons and libraries.'})
     if _show_collection:
         collection_label = 'Collection' if not pins else 'Collection (%d)' % len(pins)
         if _home_row_visible('collection'):
             add_item(collection_label, build_url(action='hub_collection'), art=root_art('catalogs'),
                      info={'title': collection_label,
-                           'plot': 'المفضلة والقوائم والمجموعات المستوردة.'})
+                           'plot': 'Favourites, lists, and imported collections.'})
     if _home_row_visible('setup'):
-        add_item(tr('الضبط'), build_url(action='setup_center'), art=root_art('settings'),
-                 info={'title': 'الضبط',
-                       'plot': 'إعداد سريع وواضح للتشغيل والمصادر والترجمة والجودة، مع الخيارات المتقدمة عند الحاجة.'})
+        add_item(tr('Settings'), build_url(action='setup_center'), art=root_art('settings'),
+                 info={'title': 'Settings',
+                       'plot': 'Set up playback, add-ons, subtitles and quality, with advanced options when needed.'})
     end_dir(content='files', cache=not cw_dirty)
 
 
@@ -6911,10 +6899,10 @@ def dexworld_info():
         'StreamBridge / Emby: https://sb.dexworld.cc/\n'
         'IPTV: https://dexworld.cc/\n'
         'Subtitles: https://dexworld.cc/subtitles/stremio/configure\n\n'
-        'الميزات: كتالوجات، متابعة المشاهدة، Next Up، روابط تشغيل، IPTV، وترجمات خارجية لكودي وستريميو.\n\n'
-        'بعد إنشاء أي خدمة انسخ رابط manifest.json الخاص بك وأضفه من: إضافة رابط Manifest.'
+        'Features: catalogs, Continue Watching, Next Up, playback links, IPTV, and external subtitles for Kodi and Stremio.\n\n'
+        'After creating any service, copy your manifest.json URL and add it via: Add Manifest URL.'
     )
-    xbmcgui.Dialog().ok(tr('DexWorld — الخدمات'), msg)
+    xbmcgui.Dialog().ok(tr('DexWorld — Free trial & support'), msg)
     return home()
 
 
@@ -6924,7 +6912,7 @@ def dexworld_info():
 def _config_snapshot():
     """Build the full configuration snapshot for export."""
     snapshot = {
-        'dexhub_export_version': 1,
+        'nuviohub_export_version': 1,
         'created_unix': int(time.time()),
         'plugin_version': ADDON.getAddonInfo('version'),
         'providers': [],
@@ -6972,46 +6960,46 @@ def _config_snapshot():
 def config_export():
     """Write a complete configuration snapshot to a user-chosen file."""
     snapshot = _config_snapshot()
-    dest_dir = xbmcgui.Dialog().browse(0, tr('اختر مجلد الحفظ'), 'files', '', False, False, '')
+    dest_dir = xbmcgui.Dialog().browse(0, tr('Choose a save folder'), 'files', '', False, False, '')
     if not dest_dir:
         return
     timestamp = time.strftime('%Y%m%d-%H%M%S')
-    filename = 'dexhub-config-%s.json' % timestamp
+    filename = 'nuviohub-config-%s.json' % timestamp
     dest_path = os.path.join(dest_dir, filename)
     try:
         body = json.dumps(snapshot, ensure_ascii=False, indent=2)
         with xbmcvfs.File(dest_path, 'w') as fh:
             fh.write(body)
-        notify(tr('تم التصدير: %s') % filename)
+        notify(tr('Exported: %s') % filename)
     except Exception as exc:
-        error(tr('فشل التصدير: %s') % exc)
+        error(tr('Export failed: %s') % exc)
 
 
 def config_import():
     """Restore configuration from a user-chosen JSON file."""
-    src_path = xbmcgui.Dialog().browse(1, tr('اختر ملف JSON الذي صدّرته سابقاً'), 'files', '.json', False, False, '')
+    src_path = xbmcgui.Dialog().browse(1, tr('Choose a previously-exported JSON file'), 'files', '.json', False, False, '')
     if not src_path or not src_path.lower().endswith('.json'):
         return
     if not xbmcgui.Dialog().yesno(
         'Nuvio Hub',
-        tr('سيستبدل هذا الإجراء التكوين الحالي بمحتوى الملف. هل تريد المتابعة؟'),
+        tr('This will replace your current configuration with the file contents. Continue?'),
     ):
         return
     try:
         with xbmcvfs.File(src_path, 'r') as fh:
             text = fh.read()
         if not text:
-            error(tr('الملف فارغ'))
+            error(tr('The file is empty'))
             return
         snapshot = json.loads(text)
     except Exception as exc:
-        error(tr('فشل قراءة الملف: %s') % exc)
+        error(tr('Could not read file: %s') % exc)
         return
     if not isinstance(snapshot, dict):
-        error(tr('صيغة الملف غير صحيحة'))
+        error(tr('Invalid file format'))
         return
-    if int(snapshot.get('dexhub_export_version') or 0) < 1:
-        error(tr('إصدار الملف غير مدعوم'))
+    if int(snapshot.get('nuviohub_export_version') or snapshot.get('dexhub_export_version') or 0) < 1:
+        error(tr('Unsupported file version'))
         return
     # Restore providers — we keep the existing addition flow so all
     # manifest validation runs, but we cheat by writing the providers
@@ -7041,7 +7029,13 @@ def config_import():
         pass
     restored_settings = 0
     try:
+        _legacy_setting_ids = {
+            'dexhub_defaults_rev': 'nuviohub_defaults_rev',
+            'dexhub_v510_defaults_applied': 'nuviohub_v510_defaults_applied',
+            'dexhub_v520_defaults_applied': 'nuviohub_v520_defaults_applied',
+        }
         for sid, sval in (snapshot.get('settings') or {}).items():
+            sid = _legacy_setting_ids.get(sid, sid)
             # Skip the two settings whose state is captured by other
             # fields above to avoid double-write conflicts.
             if sid in ('bucket_art_map', 'catalog_pins_json'):
@@ -7055,7 +7049,7 @@ def config_import():
         pass
     xbmcgui.Dialog().ok(
         'Nuvio Hub',
-        tr('تم الاستيراد بنجاح:\n• المصادر: %d\n• الكتالوجات المُثبّتة: %d\n• الإعدادات: %d') %
+        tr('Imported successfully:\n• Providers: %d\n• Pinned catalogs: %d\n• Settings: %d') %
             (restored_providers, restored_pins, restored_settings))
     try:
         xbmc.executebuiltin('Container.Refresh')
@@ -7067,7 +7061,7 @@ def source_health():
     """Show diagnostic metrics for each installed source."""
     rows = store.list_providers() or []
     if not rows:
-        notify(tr('لا توجد مصادر مُثبّتة'))
+        notify(tr('No pinned add-ons'))
         return end_dir()
     # Read health snapshot from the existing blacklist / telemetry store
     # if present. The telemetry was recorded internally but never shown.
@@ -7076,12 +7070,12 @@ def source_health():
         health_data = getattr(_sb, 'health_snapshot', lambda: {})() or {}
     except Exception:
         health_data = {}
-    add_item(tr('[COLOR cyan]صحة المصادر — لقطة من آخر سبعة أيام[/COLOR]'),
+    add_item(tr('[COLOR cyan]Add-on health — last 7 days[/COLOR]'),
              build_url(action='source_health'),
              is_folder=False,
              art=root_art('providers'),
-             info={'title': 'صحة المصادر',
-                   'plot': 'كلما زاد معدّل النجاح وقلّ زمن الاستجابة، كان المصدر أكثر موثوقية. المصادر التي تظهر باللون الرمادي لم تُستخدم في الأسبوع الماضي.'})
+             info={'title': 'Add-on health',
+                   'plot': 'The higher the success rate and the lower the response time, the more reliable the add-on. Add-ons shown in grey have not been used in the past week.'})
     for prov in rows:
         prov_id = prov.get('id') or ''
         name = prov.get('name') or prov_id
@@ -7092,20 +7086,20 @@ def source_health():
         avg_ms = int(h.get('avg_ms') or 0)
         last_failure = h.get('last_failure') or ''
         if attempts == 0:
-            label = tr('[COLOR grey]%s — لم يُستخدم مؤخراً[/COLOR]') % name
-            plot = 'لم يُسجَّل أي طلب لهذا المصدر في آخر سبعة أيام. قد يكون مُعطَّلاً أو غير مُستخدَم في تشكيلتك الحالية.'
+            label = tr('[COLOR grey]%s — not used recently[/COLOR]') % name
+            plot = 'No request to this add-on was recorded in the past seven days. It may be disabled or unused in your current lineup.'
         else:
             rate = (successes * 100) // max(1, attempts)
             colour = 'lightgreen' if rate >= 80 else ('yellow' if rate >= 50 else 'red')
-            label = tr('[COLOR %s]%s — نجاح %d%% • %d بث • %d مللي ثانية[/COLOR]') % (colour, name, rate, streams_produced, avg_ms)
+            label = tr('[COLOR %s]%s — %d%% success • %d streams • %d ms[/COLOR]') % (colour, name, rate, streams_produced, avg_ms)
             plot_lines = [
-                tr('إجمالي المحاولات: %d') % attempts,
-                tr('الناجحة منها: %d') % successes,
-                tr('البثوث المُنتجة: %d') % streams_produced,
-                tr('متوسّط زمن الاستجابة: %d مللي ثانية') % avg_ms,
+                tr('Total attempts: %d') % attempts,
+                tr('Succeeded: %d') % successes,
+                tr('Streams produced: %d') % streams_produced,
+                tr('Average response time: %d ms') % avg_ms,
             ]
             if last_failure:
-                plot_lines.append(tr('آخر فشل: %s') % last_failure)
+                plot_lines.append(tr('Last failure: %s') % last_failure)
             plot = '\n'.join(plot_lines)
         add_item(label,
                  build_url(action='provider_menu', provider_id=prov_id),
@@ -7185,29 +7179,29 @@ def apply_performance_preset():
     # Compose the explainer dialog: show exactly what will change so
     # the user understands the trade-offs rather than blindly accepting.
     lines = [
-        tr('سيُطبَّق على هذه الإعدادات:'),
+        tr('Will be applied to these settings:'),
         '',
     ]
     label_map = {
-        'lightweight_mode':  tr('الوضع الخفيف (يلغي مجلدات التجميع ومزامنة الفهرس)'),
-        'catalog_cache_ttl': tr('ذاكرة الكتالوجات: 30 دقيقة (بدل 10)'),
-        'meta_cache_ttl':    tr('ذاكرة الميتاداتا: 4 ساعات (بدل 1)'),
+        'lightweight_mode':  tr('Lite mode (disables grouping folders and index sync)'),
+        'catalog_cache_ttl': tr('Catalog cache: 30 minutes (instead of 10)'),
+        'meta_cache_ttl':    tr('Metadata cache: 4 hours (instead of 1)'),
     }
     for key, cur, want, ok in state['items']:
         mark = '✓' if ok else '○'
         lines.append('[COLOR %s]%s[/COLOR] %s' % ('green' if ok else 'yellow', mark, label_map.get(key, key)))
     lines.extend([
         '',
-        tr('السكين سيصبح أخف وأسرع. القوائم تستخدم الذاكرة المخزّنة بدل الجلب الحيّ، والبوسترات تأتي من ذاكرة Kodi بعد أوّل تحميل. لن تفقد أي مصدر — يبقى كل شيء داخل صفحة Sources.'),
+        tr("The skin becomes lighter and faster. Lists use the cache instead of live fetches, and posters come from Kodi's cache after the first load. You lose no sources — everything stays on the Sources page."),
     ])
     if state['all_active']:
         # Already on — offer re-apply only.
         try:
             want = xbmcgui.Dialog().yesno(
-                tr('Nuvio Hub • تحسين الأداء'),
-                tr('كلّ تحسينات الخفّة مُفعَّلة بالفعل. هل تريد إعادة تطبيقها للتأكّد؟'),
-                yeslabel=tr('أعد التطبيق'),
-                nolabel=tr('إغلاق'),
+                tr('Nuvio Hub • performance tuning'),
+                tr('All lite-mode optimisations are already applied. Re-apply them anyway?'),
+                yeslabel=tr('Re-apply'),
+                nolabel=tr('Close'),
             )
         except Exception:
             want = False
@@ -7216,10 +7210,10 @@ def apply_performance_preset():
     else:
         try:
             want = xbmcgui.Dialog().yesno(
-                tr('Nuvio Hub • تحسين الأداء'),
+                tr('Nuvio Hub • performance tuning'),
                 '\n'.join(lines),
-                yeslabel=tr('فعّل الكلّ'),
-                nolabel=tr('إلغاء'),
+                yeslabel=tr('Enable all'),
+                nolabel=tr('Cancel'),
             )
         except Exception:
             want = False
@@ -7243,9 +7237,9 @@ def apply_performance_preset():
         pass
 
     if failed:
-        notify(tr('طُبِّق جزئياً (%d ناجح، %d فشل)') % (len(applied), len(failed)))
+        notify(tr('Partially applied (%d succeeded, %d failed)') % (len(applied), len(failed)))
     else:
-        notify(tr('تم تفعيل تحسين الأداء ✓'))
+        notify(tr('Performance tuning applied ✓'))
 
     # Some toggles (lightweight_mode in particular) only take effect on
     # the next home() render. Suggest a restart of the addon's home so
@@ -7282,13 +7276,13 @@ def apply_recommended_preset():
     without hunting for two separate settings."""
     state = _recommended_preset_state()
     label_map = {
-        'quality_profile':    tr('ملف الجودة: متوازن (مستحسن)'),
-        'lightweight_mode':   tr('الوضع الخفيف (يلغي مجلدات التجميع ومزامنة الفهرس)'),
-        'catalog_cache_ttl':  tr('ذاكرة الكتالوجات: 30 دقيقة'),
-        'meta_cache_ttl':     tr('ذاكرة الميتاداتا: 4 ساعات'),
-        'bypass_all_filters': tr('فلترة المصادر: مفعّلة (لا نتجاوز الفلاتر)'),
+        'quality_profile':    tr('Quality profile: Balanced (recommended)'),
+        'lightweight_mode':   tr('Lite mode (disables grouping folders and index sync)'),
+        'catalog_cache_ttl':  tr('Catalog cache: 30 minutes'),
+        'meta_cache_ttl':     tr('Metadata cache: 4 hours'),
+        'bypass_all_filters': tr('Add-on filtering: on (filters are never bypassed)'),
     }
-    lines = [tr('الإعداد الموصى به يضبط:'), '']
+    lines = [tr('The recommended setup will apply:'), '']
     for key, cur, want, ok in state['items']:
         mark = '✓' if ok else '○'
         lines.append('[COLOR %s]%s[/COLOR] %s'
@@ -7296,18 +7290,18 @@ def apply_recommended_preset():
                         label_map.get(key, key)))
     lines.extend([
         '',
-        tr('متوازن: تفضّل 1080p+ وتُخفي نسخ الكاميرا، مع الـ Debrid أولاً. '
-           'الوضع الخفيف يجعل القوائم تأتي من الذاكرة بدل الجلب المباشر. '
-           'لن تفقد أي مصدر — كلّها تبقى داخل صفحة Sources.'),
+        tr('Balanced: prefers 1080p+ and hides camera copies, with Debrid first. '
+           'Lite mode serves lists from cache instead of fetching them live. '
+           'You do not lose any add-ons — they all remain available on the Sources page.'),
     ])
 
     if state['all_active']:
         try:
             want_apply = xbmcgui.Dialog().yesno(
-                'Nuvio Hub • ' + tr('الإعداد الموصى به'),
-                tr('كل إعدادات "الموصى به" مفعّلة بالفعل. هل تريد إعادة التطبيق للتأكيد؟'),
-                yeslabel=tr('أعد التطبيق'),
-                nolabel=tr('إغلاق'),
+                'Nuvio Hub • ' + tr('Recommended setup'),
+                tr('All recommended settings are already applied. Re-apply them anyway?'),
+                yeslabel=tr('Re-apply'),
+                nolabel=tr('Close'),
             )
         except Exception:
             want_apply = False
@@ -7316,10 +7310,10 @@ def apply_recommended_preset():
     else:
         try:
             want_apply = xbmcgui.Dialog().yesno(
-                'Nuvio Hub • ' + tr('الإعداد الموصى به'),
+                'Nuvio Hub • ' + tr('Recommended setup'),
                 '\n'.join(lines),
-                yeslabel=tr('فعّل الكلّ'),
-                nolabel=tr('إلغاء'),
+                yeslabel=tr('Enable all'),
+                nolabel=tr('Cancel'),
             )
         except Exception:
             want_apply = False
@@ -7345,9 +7339,9 @@ def apply_recommended_preset():
         pass
 
     if failed:
-        notify(tr('طُبِّق جزئياً (%d ناجح، %d فشل)') % (len(applied), len(failed)))
+        notify(tr('Partially applied (%d succeeded, %d failed)') % (len(applied), len(failed)))
     else:
-        notify(tr('تم تفعيل الإعداد الموصى به ✓'))
+        notify(tr('Recommended setup applied ✓'))
 
     try:
         xbmc.executebuiltin('Container.Refresh')
@@ -7383,7 +7377,7 @@ def reset_first_run_wizard():
         xbmcgui.Window(10000).clearProperty('nuvio.wizard.offered')
     except Exception:
         pass
-    notify(tr('سيظهر الويزرد عند فتح Nuvio Hub التالي'))
+    notify(tr('The wizard will appear the next time you open Nuvio Hub'))
     return integrations_menu()
 
 
@@ -7473,15 +7467,15 @@ def dexworld_link():
         try:
             xbmcgui.Dialog().ok(
                 'Nuvio Hub • DexWorld',
-                tr('أدخل مفتاح DexWorld API أولاً من حقل\n"DexWorld API Key" في نفس الصفحة.'),
+                tr('Enter your DexWorld API key first in the\n"DexWorld API Key" field on this page.'),
             )
         except Exception:
-            notify(tr('أدخل مفتاح DexWorld API أولاً'))
+            notify(tr('Enter your DexWorld API key first'))
         return
 
     urls = _dexworld_build_urls()
     if not urls:
-        notify(tr('تعذّر بناء روابط DexWorld'))
+        notify(tr('Could not build DexWorld links'))
         return
 
     # Make linking idempotent — remove any old DexWorld providers first so a
@@ -7500,7 +7494,7 @@ def dexworld_link():
     failed = []
     for display_name, manifest_url in urls:
         try:
-            from .dexhub.api import add_provider_from_url
+            from .nuviohub.api import add_provider_from_url
             add_provider_from_url(manifest_url, name=display_name)
             installed_names.append(display_name)
         except Exception as exc:
@@ -7512,28 +7506,29 @@ def dexworld_link():
             failed.append((display_name, str(exc)))
 
     if installed_names and not failed:
-        notify(tr('تم ربط DexWorld ✓ (%d مصادر)') % len(installed_names))
+        notify(tr('DexWorld linked ✓ (%d add-ons)') % len(installed_names))
     elif installed_names and failed:
         try:
             xbmcgui.Dialog().ok(
                 'Nuvio Hub • DexWorld',
-                tr('ربط جزئي:\n✓ %s\n✗ %s\n\nتحقّق من المفتاح وعنوان السيرفر.')
+                tr('Partially linked:\n✓ %s\n✗ %s\n\nCheck the key and the server address.')
                   % (', '.join(installed_names),
                      ', '.join('%s (%s)' % (n, e[:60]) for n, e in failed)),
             )
         except Exception:
-            notify(tr('ربط جزئي'))
+            notify(tr('Partially linked'))
     else:
         try:
             err_msg = '\n'.join('• %s: %s' % (n, e[:80]) for n, e in failed)
             xbmcgui.Dialog().ok(
                 'Nuvio Hub • DexWorld',
-                tr('فشل الربط بالكامل:\n\n%s\n\nتأكّد من:\n'
-                   '1. صحّة مفتاح API\n2. صحّة عنوان السيرفر\n'
-                   '3. أن اشتراكك ساري') % err_msg,
+                tr('Linking failed completely:\n\n%s\n\nCheck:\n'
+                   '1. The API key is correct\n'
+                   '2. The server address is correct\n'
+                   '3. Your subscription is active') % err_msg,
             )
         except Exception:
-            notify(tr('فشل ربط DexWorld'))
+            notify(tr('DexWorld linking failed'))
 
     try:
         xbmc.executebuiltin('Container.Refresh')
@@ -7549,14 +7544,14 @@ def dexworld_unlink():
     render a directory listing."""
     installed = _dexworld_installed_providers()
     if not installed:
-        notify(tr('لا يوجد مصادر DexWorld مُسجّلة'))
+        notify(tr('No DexWorld add-ons registered'))
         return
     try:
         confirmed = xbmcgui.Dialog().yesno(
             'Nuvio Hub • DexWorld',
-            tr('إزالة %d مصدر من DexWorld؟ المفتاح يبقى محفوظاً.') % len(installed),
-            yeslabel=tr('احذف'),
-            nolabel=tr('إلغاء'),
+            tr('Remove %d DexWorld add-ons? Your key stays saved.') % len(installed),
+            yeslabel=tr('Delete'),
+            nolabel=tr('Cancel'),
         )
     except Exception:
         confirmed = True
@@ -7569,7 +7564,7 @@ def dexworld_unlink():
             removed += 1
         except Exception:
             pass
-    notify(tr('أُزيلت %d مصادر DexWorld') % removed)
+    notify(tr('Removed %d DexWorld add-ons') % removed)
     try:
         xbmc.executebuiltin('Container.Refresh')
     except Exception:
@@ -7583,13 +7578,13 @@ def _plex_error(exc):
         xbmc.log('[NuvioHub] Plex: %s' % exc, xbmc.LOGWARNING)
     except Exception:
         pass
-    error(str(exc) or 'تعذر الاتصال بـ Plex')
+    error(str(exc) or 'Could not connect to Plex')
 
 
 def _plex_server(server_id):
     server = plex_client.server_by_id(server_id)
     if not server:
-        raise plex_client.PlexError('لم يعد هذا السيرفر متاحاً. حدّث قائمة Plex ثم أعد المحاولة.')
+        raise plex_client.PlexError('This server is no longer available. Refresh the Plex list and try again.')
     return server
 
 
@@ -7814,7 +7809,7 @@ def _plex_render_one(item):
     return True
 
 
-def _plex_render_items(items, empty_label='لا توجد عناصر في Plex'):
+def _plex_render_items(items, empty_label='No items in Plex'):
     """Render Plex movies/shows/seasons/episodes in the current directory."""
     emitted = 0
     for item in items or []:
@@ -7880,7 +7875,7 @@ def plex_login():
     progress = None
     if window is None:
         progress = xbmcgui.DialogProgress()
-        progress.create('Plex', tr('افتح plex.tv/link من الهاتف أو المتصفح.\nرمز PIN: %s\nبانتظار تأكيد الربط…') % code)
+        progress.create('Plex', tr('Open plex.tv/link on your phone or browser.\nPIN: %s\nWaiting for confirmation…') % code)
 
     linked = None
     try:
@@ -7909,7 +7904,7 @@ def plex_login():
                 break
             if progress is not None:
                 progress.update(min(99, int((tick + 1) * 100 / 150)),
-                                tr('افتح plex.tv/link من الهاتف أو المتصفح.\nرمز PIN: %s\nبانتظار تأكيد الربط من Plex…') % code)
+                                tr('Open plex.tv/link on your phone or browser.\nPIN: %s\nWaiting for Plex to confirm the link…') % code)
             if monitor.waitForAbort(2):
                 return
     finally:
@@ -7922,7 +7917,7 @@ def plex_login():
             pass
 
     if not linked:
-        notify('انتهت مهلة الربط - حاول مرة أخرى')
+        notify('Linking timed out — try again')
         return
     # Authentication and resource discovery are deliberately separate.
     # The durable account is already saved at this point; a temporary failure
@@ -7936,20 +7931,20 @@ def plex_login():
                  xbmc.LOGWARNING)
     xbmc.log('[NuvioHub] Plex linked: user=%s servers=%d' % (linked.get('username') or '?', len(servers)), xbmc.LOGINFO)
     if servers:
-        notify(tr('تم ربط Plex • %d سيرفر') % len(servers))
+        notify(tr('Plex linked • %d servers') % len(servers))
     else:
-        notify('تم ربط Plex • سيتم تحديث السيرفرات تلقائيًا')
+        notify('Plex linked • servers will refresh automatically')
     xbmc.executebuiltin('Container.Refresh')
 
 
 def plex_logout():
     try:
-        confirmed = xbmcgui.Dialog().yesno('Plex', tr('هل تريد فصل حساب Plex من Nuvio Hub؟'))
+        confirmed = xbmcgui.Dialog().yesno('Plex', tr('Disconnect the Plex account from Nuvio Hub?'))
     except Exception:
         confirmed = True
     if confirmed:
         plex_client.sign_out()
-        notify('تم فصل Plex')
+        notify('Plex disconnected')
         try:
             xbmc.executebuiltin('Container.Refresh')
         except Exception:
@@ -7959,34 +7954,34 @@ def plex_logout():
 def plex_menu():
     _set_render_section('plex')
     if not plex_client.is_signed_in():
-        add_item('ربط Plex عبر PIN', build_url(action='plex_login'), is_folder=False,
+        add_item('Link Plex with a PIN', build_url(action='plex_login'), is_folder=False,
                  art=root_art('accounts'),
-                 info={'title': 'Plex', 'plot': 'اربط Plex عبر plex.tv/link بدون إدخال Token يدوي.'})
-        add_item('الحساب والإعدادات', build_url(action='integrations_menu'),
+                 info={'title': 'Plex', 'plot': 'Link Plex through plex.tv/link without entering a token by hand.'})
+        add_item('Account &amp; settings', build_url(action='integrations_menu'),
                  art=root_art('accounts'))
         return end_dir(cache=False)
     account = plex_client.account()
-    name = account.get('username') or 'متصل'
+    name = account.get('username') or 'Connected'
     add_item('Plex • %s' % name, build_url(action='plex_menu'),
              art=root_art('accounts'), is_folder=True,
-             info={'title': 'Plex', 'plot': 'كل مكتبات وسيرفرات Plex المرتبطة بهذا الحساب.'})
-    add_item('متابعة Plex', build_url(action='plex_continue'), art=root_art('continue'),
-             info={'title': 'متابعة Plex', 'plot': 'يجمع On Deck من جميع السيرفرات المتاحة.'})
-    add_item('كل سيرفرات Plex', build_url(action='plex_servers'), art=root_art('plex'),
-             info={'title': 'سيرفرات Plex', 'plot': 'كل السيرفرات الخاصة والمشتركة المرتبطة بالحساب.'})
-    add_item('بحث Plex', build_url(action='plex_search'), art=root_art('search_movie'),
-             info={'title': 'بحث Plex', 'plot': 'بحث في جميع مكتبات جميع السيرفرات، مثل Dplex.'})
-    add_item('تحديث السيرفرات', build_url(action='plex_refresh'), is_folder=False,
-             art=root_art('settings'), info={'title': 'تحديث Plex'})
-    add_item('فصل Plex', build_url(action='plex_logout'), is_folder=False,
-             art=root_art('accounts'), info={'title': 'فصل Plex'})
+             info={'title': 'Plex', 'plot': 'Every Plex library and server linked to this account.'})
+    add_item('Continue on Plex', build_url(action='plex_continue'), art=root_art('continue'),
+             info={'title': 'Continue on Plex', 'plot': 'Combines On Deck from every available server.'})
+    add_item('All Plex servers', build_url(action='plex_servers'), art=root_art('plex'),
+             info={'title': 'Plex servers', 'plot': 'Every private and shared server linked to the account.'})
+    add_item('Search Plex', build_url(action='plex_search'), art=root_art('search_movie'),
+             info={'title': 'Search Plex', 'plot': 'Search every library on every server, like Dplex.'})
+    add_item('Refresh servers', build_url(action='plex_refresh'), is_folder=False,
+             art=root_art('settings'), info={'title': 'Refresh Plex'})
+    add_item('Disconnect Plex', build_url(action='plex_logout'), is_folder=False,
+             art=root_art('accounts'), info={'title': 'Disconnect Plex'})
     end_dir(cache=False)
 
 
 def plex_refresh():
     try:
         count = len(plex_client.servers(force=True))
-        notify(tr('تم تحديث Plex • %d سيرفر') % count)
+        notify(tr('Plex refreshed • %d servers') % count)
     except Exception as exc:
         _plex_error(exc)
     try:
@@ -8003,16 +7998,16 @@ def plex_servers():
         return end_dir(cache=False)
     for server in rows:
         name = server.get('name') or 'Plex Server'
-        suffix = 'محلي' if server.get('owned') else 'مشترك'
+        suffix = 'Local' if server.get('owned') else 'Shared'
         add_item('%s  [COLOR grey](%s)[/COLOR]' % (name, suffix),
                  build_url(action='plex_server', server_id=server.get('id') or ''),
                  art=root_art('plex'),
                  info={'title': name,
                        'plot': '%s • %s' % (server.get('product') or 'Plex Media Server', suffix)})
     if not rows:
-        add_item('[COLOR yellow]لم يتم العثور على سيرفرات Plex[/COLOR]',
+        add_item('[COLOR yellow]No Plex servers found[/COLOR]',
                  build_url(action='plex_refresh'), is_folder=False, art=root_art('settings'),
-                 info={'title': 'Plex', 'plot': 'تحقق أن حسابك يملك أو يشارك سيرفراً ثم حدّث القائمة.'})
+                 info={'title': 'Plex', 'plot': 'Check that your account owns or shares a server, then refresh the list.'})
     end_dir(content='files', cache=False)
 
 
@@ -8024,9 +8019,9 @@ def plex_server(server_id):
         _plex_error(exc)
         return end_dir(cache=False)
     name = server.get('name') or 'Plex Server'
-    add_item(tr('متابعة • %s') % name,
+    add_item(tr('Continue • %s') % name,
              build_url(action='plex_continue', server_id=server_id), art=root_art('continue'),
-             info={'title': 'متابعة Plex', 'plot': tr('المحتوى التالي من %s') % name})
+             info={'title': 'Continue on Plex', 'plot': tr('Next content from %s') % name})
     for library in libraries:
         library_title = library.get('title') or 'Library'
         _lib_type = library.get('type') or ''
@@ -8036,37 +8031,37 @@ def plex_server(server_id):
             library_type=_lt, sort=_sort)
         # v3.9.172: the official Plex sorts on long-press, exactly like the
         # Plex app's own ordering options.
-        _sorts = [('آخر إضافة', 'addedAt:desc'),
-                  ('آخر إصدار', 'originallyAvailableAt:desc'),
-                  ('التقييم', 'rating:desc'),
-                  ('الاسم', 'titleSort'),
-                  ('السنة', 'year:desc')]
+        _sorts = [("\u0622\u062e\u0631 \u0625\u0636\u0627\u0641\u0629", 'addedAt:desc'),
+                  ('Last Release', 'originallyAvailableAt:desc'),
+                  ('Rating', 'rating:desc'),
+                  ("\u0627\u0644\u0627\u0633\u0645", 'titleSort'),
+                  ('Year', 'year:desc')]
         if _lib_type == 'show':
-            _sorts.insert(1, ('آخر حلقة نزلت', 'episode.addedAt:desc'))
+            _sorts.insert(1, ('Latest episode released', 'episode.addedAt:desc'))
         # v3.9.232: the sort used to live ONLY in the Container.Update URL, so
         # nothing was stored and the tile always reopened unsorted — the user
         # had to re-pick the order every time.  Picking now goes through
         # plex_sort(), which SAVES the choice; the tile opens with it.
         _saved = sort_prefs.get_sort('plex', server_id, _lib_key, '')
-        _ctx = [(tr('فرز: %s%s') % (('● ' if _key == _saved else ''), _label),
+        _ctx = [(tr('Sort: %s%s') % (('● ' if _key == _saved else ''), _label),
                  'RunPlugin(%s)' % build_url(
                      action='plex_sort', server_id=server_id, key=_lib_key,
                      title=library_title, library_type=_lib_type, sort=_key))
                 for _label, _key in _sorts]
-        _ctx.append(('فرز: الافتراضي', 'RunPlugin(%s)' % build_url(
+        _ctx.append(('Sort: default', 'RunPlugin(%s)' % build_url(
             action='plex_sort', server_id=server_id, key=_lib_key,
             title=library_title, library_type=_lib_type, sort='')))
         _saved_label = next((l for l, k in _sorts if k == _saved), '')
         _plot = '%s • %s' % (name, _lib_type or 'library')
         if _saved_label:
-            _plot = tr('%s • الفرز: %s') % (_plot, _saved_label)
+            _plot = tr('%s • sorted by: %s') % (_plot, _saved_label)
         add_item(library_title,
                  _lib_url(_saved),
                  art=root_art('plex'),
                  info={'title': library_title, 'plot': _plot},
                  context_menu=_ctx)
     if not libraries:
-        add_item('[COLOR grey]لا توجد مكتبات فيديو ظاهرة لهذا الحساب[/COLOR]',
+        add_item('[COLOR grey]No video libraries visible for this account[/COLOR]',
                  build_url(action='plex_servers'), art=root_art('plex'))
     end_dir(content='files', cache=False)
 
@@ -8085,7 +8080,7 @@ def plex_continue(server_id=''):
                     pass
     except Exception as exc:
         _plex_error(exc)
-    _plex_render_items(rows, 'لا توجد عناصر للمتابعة في Plex')
+    _plex_render_items(rows, 'Nothing to continue on Plex')
     end_dir(content='videos', cache=False)
 
 
@@ -8113,13 +8108,13 @@ def plex_library(server_id, key, title='', library_type='', start='0', sort=''):
         server = _plex_server(server_id)
         path = '/library/sections/%s/all' % key
         rows, total = plex_client.children(server, path, start=int(start or 0), sort=sort)
-        _plex_render_items(rows, 'لا توجد عناصر في هذه المكتبة')
+        _plex_render_items(rows, 'No items in this library')
         next_start = int(start or 0) + len(rows)
         if rows and total > next_start:
-            add_item('المزيد', build_url(action='plex_library', server_id=server_id,
+            add_item('More', build_url(action='plex_library', server_id=server_id,
                                           key=key, title=title, sort=sort,
                                           library_type=library_type, start=str(next_start)),
-                     art=root_art('plex'), info={'title': 'المزيد'})
+                     art=root_art('plex'), info={'title': 'More'})
     except Exception as exc:
         _plex_error(exc)
     content = 'tvshows' if library_type == 'show' else 'movies'
@@ -8130,12 +8125,12 @@ def plex_children(server_id, key, title='', start='0'):
     try:
         server = _plex_server(server_id)
         rows, total = plex_client.children(server, key, start=int(start or 0))
-        _plex_render_items(rows, 'لا توجد عناصر هنا')
+        _plex_render_items(rows, 'Nothing here')
         next_start = int(start or 0) + len(rows)
         if rows and total > next_start:
-            add_item('المزيد', build_url(action='plex_children', server_id=server_id,
+            add_item('More', build_url(action='plex_children', server_id=server_id,
                                           key=key, title=title, start=str(next_start)),
-                     art=root_art('plex'), info={'title': 'المزيد'})
+                     art=root_art('plex'), info={'title': 'More'})
     except Exception as exc:
         _plex_error(exc)
     end_dir(content='episodes', cache=False)
@@ -8145,7 +8140,7 @@ def plex_search(query='', media_type=''):
     if not plex_client.is_signed_in():
         return plex_menu()
     if not query:
-        keyboard = xbmc.Keyboard('', tr('ابحث في جميع سيرفرات Plex'))
+        keyboard = xbmc.Keyboard('', tr('Search all Plex servers'))
         keyboard.doModal()
         if not keyboard.isConfirmed():
             return end_dir(cache=False)
@@ -8157,10 +8152,10 @@ def plex_search(query='', media_type=''):
     except Exception as exc:
         _plex_error(exc)
         rows = []
-    add_item(tr('🔍 Plex: %s • %d نتيجة') % (query, len(rows)),
+    add_item(tr('🔍 Plex: %s • %d results') % (query, len(rows)),
              build_url(action='plex_search', query=query, media_type=media_type),
-             art=root_art('search_movie'), info={'title': 'بحث Plex', 'plot': query})
-    _plex_render_items(rows, 'لا توجد نتائج Plex لهذا البحث')
+             art=root_art('search_movie'), info={'title': 'Search Plex', 'plot': query})
+    _plex_render_items(rows, 'No Plex results for this search')
     end_dir(content=_directory_content_for_type(media_type or 'movie'), cache=False)
 
 
@@ -8188,10 +8183,10 @@ def plex_play(server_id, rating_key):
                 except Exception:
                     pass
                 rows.append(li)
-            choice = xbmcgui.Dialog().select(tr('اختر النسخة'), rows, useDetails=True)
+            choice = xbmcgui.Dialog().select(tr('Choose version'), rows, useDetails=True)
         except Exception:
             choice = xbmcgui.Dialog().select(
-                tr('اختر النسخة'), [v.get('version_label') or '?' for v in versions])
+                tr('Choose version'), [v.get('version_label') or '?' for v in versions])
         if choice < 0:
             return
         selected_version = versions[choice]
@@ -8249,7 +8244,7 @@ def _emby_error(exc):
 def _emby_server():
     servers = emby_client.servers()
     if not servers:
-        raise Exception('لم يتم ربط Emby بعد')
+        raise Exception('Emby is not linked yet')
     return servers[0]
 
 
@@ -8314,11 +8309,11 @@ def emby_continue():
                 pass
     except Exception as exc:
         _emby_error(exc)
-    _emby_render_items(rows, 'لا توجد عناصر للمتابعة في Emby')
+    _emby_render_items(rows, 'Nothing to continue on Emby')
     end_dir(content='videos', cache=False)
 
 
-def _emby_render_items(items, empty_label='لا توجد عناصر في Emby'):
+def _emby_render_items(items, empty_label='No items in Emby'):
     try:
         server = _emby_server()
     except Exception as exc:
@@ -8336,56 +8331,56 @@ def _emby_render_items(items, empty_label='لا توجد عناصر في Emby'):
 
 def emby_login():
     """Sign in with the Emby username/password (EmbyCon's AuthenticateByName)."""
-    url = xbmcgui.Dialog().input(tr('عنوان سيرفر Emby (مثال: http://192.168.1.10:8096)'))
+    url = xbmcgui.Dialog().input(tr('Emby server address (example: http://192.168.1.10:8096)'))
     if not url:
         return
-    user = xbmcgui.Dialog().input(tr('اسم المستخدم'))
+    user = xbmcgui.Dialog().input(tr('Username'))
     if not user:
         return
-    password = xbmcgui.Dialog().input(tr('كلمة المرور'), option=xbmcgui.ALPHANUM_HIDE_INPUT)
+    password = xbmcgui.Dialog().input(tr('Password'), option=xbmcgui.ALPHANUM_HIDE_INPUT)
     try:
         auth = emby_client.sign_in(url, user, password or '')
     except Exception as exc:
         return _emby_error(exc)
     xbmc.log('[NuvioHub] Emby linked: user=%s server=%s' % (auth.get('username'), auth.get('server_name')), xbmc.LOGINFO)
-    notify(tr('تم ربط Emby • %s') % (auth.get('server_name') or ''))
+    notify(tr('Emby linked • %s') % (auth.get('server_name') or ''))
     xbmc.executebuiltin('Container.Refresh')
 
 
 def emby_logout():
     emby_client.sign_out()
-    notify('تم فصل Emby')
+    notify('Emby disconnected')
     xbmc.executebuiltin('Container.Refresh')
 
 
 def emby_menu():
     _set_render_section('emby')
     if not emby_client.is_signed_in():
-        add_item('ربط Emby', build_url(action='emby_login'), is_folder=False,
-                 art=root_art('settings'), info={'title': 'ربط Emby'})
+        add_item('Link Emby', build_url(action='emby_login'), is_folder=False,
+                 art=root_art('settings'), info={'title': 'Link Emby'})
         return end_dir(content='files', cache=False)
     try:
         server = _emby_server()
         # v3.9.232: Emby had NO continue-watching row at all while Plex has had
         # one all along. Emby's /Users/{id}/Items/Resume is the exact equivalent
         # of Plex's On Deck.
-        add_item('متابعة المشاهدة • Emby',
+        add_item('Continue Watching • Emby',
                  build_url(action='emby_continue'), art=root_art('continue'),
-                 info={'title': 'متابعة المشاهدة',
-                       'plot': 'أكمل ما بدأته على Emby.'})
+                 info={'title': 'Continue Watching',
+                       'plot': 'Pick up where you left off on Emby.'})
         for library in emby_client.libraries(server):
             _lkey = library.get('key') or ''
             _ltitle = library.get('title') or 'Library'
             _ltype = library.get('type') or ''
-            _sorts = [('آخر إضافة', 'DateCreated:desc'),
-                      ('آخر إصدار', 'PremiereDate:desc'),
-                      ('التقييم', 'CommunityRating:desc'),
-                      ('الاسم', 'SortName'),
-                      ('السنة', 'ProductionYear:desc')]
+            _sorts = [("\u0622\u062e\u0631 \u0625\u0636\u0627\u0641\u0629", 'DateCreated:desc'),
+                      ('Last Release', 'PremiereDate:desc'),
+                      ('Rating', 'CommunityRating:desc'),
+                      ("\u0627\u0644\u0627\u0633\u0645", 'SortName'),
+                      ('Year', 'ProductionYear:desc')]
             # The sort is SAVED now (emby_sort persists it), so the tile itself
             # reopens in the chosen order instead of snapping back to SortName.
             _saved = sort_prefs.get_sort('emby', 'emby', _lkey, '')
-            _ctx = [(tr('فرز: %s%s') % (('● ' if _key == _saved else ''), _label),
+            _ctx = [(tr('Sort: %s%s') % (('● ' if _key == _saved else ''), _label),
                      'RunPlugin(%s)' % build_url(
                          action='emby_sort', key=_lkey, title=_ltitle,
                          library_type=_ltype, current=_saved))
@@ -8396,25 +8391,25 @@ def emby_menu():
                                library_type=_ltype, sort=_saved),
                      art=root_art('emby'), context_menu=_ctx,
                      info={'title': _ltitle,
-                           'plot': (tr('الفرز: %s') % _saved_label) if _saved_label else ''})
+                           'plot': (tr('Sorted by: %s') % _saved_label) if _saved_label else ''})
     except Exception as exc:
         _emby_error(exc)
-    add_item('[COLOR grey]فصل Emby[/COLOR]', build_url(action='emby_logout'),
+    add_item('[COLOR grey]Disconnect Emby[/COLOR]', build_url(action='emby_logout'),
              is_folder=False, art=root_art('settings'))
     end_dir(content='files', cache=False)
 
 
 _EMBY_SORTS = [
-    ('SortName', 'الاسم'),
-    ('DateCreated:desc', 'الأحدث إضافة'),
-    ('PremiereDate:desc', 'الأحدث إصدارًا'),
-    ('ProductionYear:desc', 'السنة'),
-    ('CommunityRating:desc', 'التقييم'),
+    ('SortName', "\u0627\u0644\u0627\u0633\u0645"),
+    ('DateCreated:desc', 'Newest added'),
+    ('PremiereDate:desc', 'Newest released'),
+    ('ProductionYear:desc', 'Year'),
+    ('CommunityRating:desc', 'Rating'),
 ]
 
 
 def _emby_sort_title(value):
-    return next((label for key, label in _EMBY_SORTS if key == (value or 'SortName')), 'الاسم')
+    return next((label for key, label in _EMBY_SORTS if key == (value or 'SortName')), "\u0627\u0644\u0627\u0633\u0645")
 
 
 def emby_sort(key, title='', library_type='', current=''):
@@ -8430,7 +8425,7 @@ def emby_sort(key, title='', library_type='', current=''):
     saved = sort_prefs.get_sort('emby', 'emby', key, '') or current or 'SortName'
     labels = [(('[COLOR limegreen]● %s[/COLOR]' % label) if _key == saved else label)
               for _key, label in _EMBY_SORTS]
-    choice = xbmcgui.Dialog().select(tr('فرز Emby'), labels)
+    choice = xbmcgui.Dialog().select(tr('Emby sort'), labels)
     if choice < 0:
         return
     chosen = _EMBY_SORTS[choice][0]
@@ -8460,10 +8455,10 @@ def emby_library(key, title='', library_type='', start='0', sort=''):
         _emby_render_items(rows)
         nxt = int(start or 0) + len(rows)
         if rows and total > nxt:
-            add_item('المزيد', build_url(action='emby_library', key=key, title=title,
+            add_item('More', build_url(action='emby_library', key=key, title=title,
                                           library_type=library_type, sort=sort,
                                           start=str(nxt)),
-                     art=root_art('emby'), info={'title': 'المزيد'})
+                     art=root_art('emby'), info={'title': 'More'})
     except Exception as exc:
         _emby_error(exc)
     end_dir(content='tvshows' if library_type == 'show' else 'movies', cache=False)
@@ -8476,9 +8471,9 @@ def emby_children(key, title='', start='0'):
         _emby_render_items(rows)
         nxt = int(start or 0) + len(rows)
         if rows and total > nxt:
-            add_item('المزيد', build_url(action='emby_children', key=key, title=title,
+            add_item('More', build_url(action='emby_children', key=key, title=title,
                                           start=str(nxt)),
-                     art=root_art('emby'), info={'title': 'المزيد'})
+                     art=root_art('emby'), info={'title': 'More'})
     except Exception as exc:
         _emby_error(exc)
     end_dir(content='episodes', cache=False)
@@ -8506,10 +8501,10 @@ def emby_play(item_id):
                 except Exception:
                     pass
                 rows.append(li)
-            choice = xbmcgui.Dialog().select(tr('اختر النسخة'), rows, useDetails=True)
+            choice = xbmcgui.Dialog().select(tr('Choose version'), rows, useDetails=True)
         except Exception:
             choice = xbmcgui.Dialog().select(
-                tr('اختر النسخة'), [v.get('version_label') or '?' for v in versions])
+                tr('Choose version'), [v.get('version_label') or '?' for v in versions])
         if choice < 0:
             return
         selected_version = versions[choice]
@@ -8565,42 +8560,42 @@ def emby_play(item_id):
 
 def sync_accounts_menu():
     """One front door for linked accounts and lightweight sync controls."""
-    from resources.lib.dexhub import nuvio_stremio_sync as sync
+    from resources.lib.nuviohub import nuvio_stremio_sync as sync
     n_linked = sync.Nuvio.is_linked()
     s_linked = sync.Stremio.is_linked()
-    add_item('Nuvio • %s' % (tr('متصل ✓') if n_linked else tr('غير متصل')),
+    add_item('Nuvio • %s' % (tr('Linked ✓') if n_linked else tr('Not connected')),
              build_url(action='nuvio_sync_menu'), art=media_path('sync_accounts.png'),
-             info={'title': 'Nuvio', 'plot': 'مزامنة الإضافات ومتابعة المشاهدة مع حساب Nuvio.'})
-    add_item('Stremio • %s' % (tr('متصل ✓') if s_linked else tr('غير متصل')),
+             info={'title': 'Nuvio', 'plot': 'Sync addons and watch progress with your Nuvio account.'})
+    add_item('Stremio • %s' % (tr('Linked ✓') if s_linked else tr('Not connected')),
              build_url(action='stremio_sync_menu'), art=root_art('stremio'),
-             info={'title': 'Stremio', 'plot': 'استيراد إضافات Stremio ومزامنة متابعة المشاهدة.'})
-    add_item('Trakt • %s' % (tr('متصل ✓') if trakt.authorized() else tr('غير متصل')),
+             info={'title': 'Stremio', 'plot': 'Import Stremio addons and sync watch progress.'})
+    add_item('Trakt • %s' % (tr('Linked ✓') if trakt.authorized() else tr('Not connected')),
              build_url(action='trakt_menu'), art=root_art('trakt'),
-             info={'title': 'Trakt', 'plot': tr('سجل المشاهدة والتقدم والقوائم.')})
-    add_item('Simkl • %s' % (tr('متصل ✓') if simkl.authorized() else tr('غير متصل')),
+             info={'title': 'Trakt', 'plot': tr('Watch history, progress, and lists.')})
+    add_item('Simkl • %s' % (tr('Linked ✓') if simkl.authorized() else tr('Not connected')),
              build_url(action='simkl_menu'), art=root_art('simkl'),
-             info={'title': 'Simkl', 'plot': tr('مزامنة سجل المشاهدة ولستات Simkl.')})
-    add_item('MDBList • %s' % (tr('متصل ✓') if mdblist.configured() else tr('غير متصل')),
+             info={'title': 'Simkl', 'plot': tr('Sync Simkl watch history and lists.')})
+    add_item('MDBList • %s' % (tr('Linked ✓') if mdblist.configured() else tr('Not connected')),
              build_url(action='mdblist_menu'), art=root_art('mdblist'),
-             info={'title': 'MDBList', 'plot': tr('Watchlist ولستات حسابك في MDBList.')})
+             info={'title': 'MDBList', 'plot': tr('Your MDBList watchlist and lists.')})
     add_item(tr('Plex / Emby / Jellyfin'), build_url(action='media_libraries_menu'),
              art=root_art('plex'),
-             info={'title': tr('مكتبات الوسائط'),
-                   'plot': tr('ربط وإدارة مكتبات Plex وEmby وJellyfin.')})
+             info={'title': tr('Media libraries'),
+                   'plot': tr('Link and manage Plex, Emby, and Jellyfin libraries.')})
     if n_linked or s_linked:
-        add_item('مزامنة الحسابات الآن', build_url(action='account_sync_now'), is_folder=False,
+        add_item('Sync accounts now', build_url(action='account_sync_now'), is_folder=False,
                  art=root_art('refresh'),
-                 info={'title': 'مزامنة الحسابات الآن',
-                       'plot': 'يسحب ويرفع حسب الاتجاه المحدد لكل خدمة.'})
-    add_item('استيراد كوليكشن من JSON', build_url(action='nuvio_sync_import'), is_folder=False,
+                 info={'title': 'Sync accounts now',
+                       'plot': "Pulls and pushes according to each service's configured direction."})
+    add_item('Import collection from JSON', build_url(action='nuvio_sync_import'), is_folder=False,
              art=root_art('add'),
-             info={'title': 'استيراد كوليكشن من JSON',
-                   'plot': 'أداة مستقلة للكوليكشن وليست مزامنة حساب.'})
-    add_item(tr('وضع المزامنة والتوقيت'), build_url(action='sync_options'),
+             info={'title': 'Import collection from JSON',
+                   'plot': 'Standalone collection tool — not account sync.'})
+    add_item(tr('Sync mode and timing'), build_url(action='sync_options'),
              is_folder=False, art=root_art('refresh'),
-             info={'title': tr('وضع المزامنة والتوقيت'),
-                   'plot': tr('مزامنة ذكية عند التغيير، وسحب دوري لا يعمل أثناء التصفح أو التشغيل.')})
-    add_item('إعدادات المزامنة', build_url(action='open_settings'), is_folder=False,
+             info={'title': tr('Sync mode and timing'),
+                   'plot': tr('Smart sync after changes, plus periodic pulls that pause during browsing and playback.')})
+    add_item('Sync settings', build_url(action='open_settings'), is_folder=False,
              art=root_art('settings'))
     return end_dir(content='files', cache=False)
 
@@ -8608,34 +8603,34 @@ def sync_accounts_menu():
 def media_libraries_menu():
     """Home-server accounts only: Plex and Emby/Jellyfin."""
     add_item('Plex', build_url(action='plex_menu'), art=root_art('plex'),
-             info={'title': 'Plex', 'plot': 'ربط حساب Plex وإدارة كل السيرفرات والمكتبات.'})
+             info={'title': 'Plex', 'plot': 'Link a Plex account and manage all servers and libraries.'})
     add_item('Emby / Jellyfin', build_url(action='emby_menu'), art=root_art('emby_jellyfin'),
-             info={'title': 'Emby / Jellyfin', 'plot': 'ربط السيرفر وإدارة المكتبات والمتابعة.'})
+             info={'title': 'Emby / Jellyfin', 'plot': 'Link the server and manage libraries and Continue Watching.'})
     return end_dir(content='files', cache=False)
 
 def nuvio_sync_menu():
     """Nuvio account only. Collections live in Collection tools."""
-    from resources.lib.dexhub import nuvio_stremio_sync as sync
+    from resources.lib.nuviohub import nuvio_stremio_sync as sync
     n_linked = sync.Nuvio.is_linked()
-    add_item('Nuvio • %s' % (tr('متصل ✓') if n_linked else tr('ربط الحساب')),
+    add_item('Nuvio • %s' % (tr('Linked ✓') if n_linked else tr('Link account')),
              build_url(action='nuvio_login' if not n_linked else 'account_sync_now',
                        **({} if not n_linked else {'service': 'nuvio'})),
              is_folder=False, art=media_path('sync_accounts.png'),
              info={'title': 'Nuvio',
-                   'plot': 'مزامنة الإضافات ومتابعة المشاهدة مع حساب Nuvio.'})
+                   'plot': 'Sync addons and watch progress with your Nuvio account.'})
     if not n_linked:
-        add_item('تسجيل الدخول عبر QR', build_url(action='nuvio_qr_login'), is_folder=False,
+        add_item('Log in via QR', build_url(action='nuvio_qr_login'), is_folder=False,
                  art=media_path('sync_accounts.png'))
     if n_linked:
-        add_item('مزامنة Nuvio الآن', build_url(action='account_sync_now', service='nuvio'),
+        add_item('Sync Nuvio now', build_url(action='account_sync_now', service='nuvio'),
                  is_folder=False, art=root_art('refresh'))
-        add_item('فصل Nuvio', build_url(action='nuvio_logout'), is_folder=False, art=root_art('settings'))
-    add_item('استيراد كوليكشن من JSON', build_url(action='nuvio_sync_import'), is_folder=False,
-             art=root_art('add'), info={'title': 'استيراد كوليكشن من JSON', 'plot': 'أداة مستقلة للكوليكشن وليست مزامنة حساب.'})
-    add_item(tr('وضع المزامنة والتوقيت'), build_url(action='sync_options'),
+        add_item('Unlink Nuvio', build_url(action='nuvio_logout'), is_folder=False, art=root_art('settings'))
+    add_item('Import collection from JSON', build_url(action='nuvio_sync_import'), is_folder=False,
+             art=root_art('add'), info={'title': 'Import collection from JSON', 'plot': 'Standalone collection tool — not account sync.'})
+    add_item(tr('Sync mode and timing'), build_url(action='sync_options'),
              is_folder=False, art=root_art('refresh'),
-             info={'title': tr('وضع المزامنة والتوقيت')})
-    add_item('إعدادات المزامنة', build_url(action='open_settings'), is_folder=False,
+             info={'title': tr('Sync mode and timing')})
+    add_item('Sync settings', build_url(action='open_settings'), is_folder=False,
              art=root_art('settings'))
     return end_dir(content='files', cache=False)
 
@@ -8643,43 +8638,43 @@ def nuvio_sync_menu():
 def stremio_repair_library():
     """v4.4.2: heal invalid datetime fields across the Stremio cloud library."""
     try:
-        from resources.lib.dexhub.nuvio_stremio_sync import Stremio
+        from resources.lib.nuviohub.nuvio_stremio_sync import Stremio
         scanned, repaired = Stremio.repair_library()
         if repaired:
-            notify(tr('تم فحص %s عنصر وإصلاح %s — أعد فتح Stremio الآن') % (scanned, repaired))
+            notify(tr('Scanned %s items, repaired %s — reopen Stremio now') % (scanned, repaired))
         else:
-            notify(tr('تم فحص %s عنصر — لا توجد تواريخ تالفة') % scanned)
+            notify(tr('Scanned %s items — no broken dates found') % scanned)
     except Exception as exc:
-        error(tr('فشل إصلاح مكتبة Stremio: %s') % exc)
+        error(tr('Stremio library repair failed: %s') % exc)
     return stremio_sync_menu()
 
 
 def stremio_sync_menu():
     """Stremio account only."""
-    from resources.lib.dexhub import nuvio_stremio_sync as sync
+    from resources.lib.nuviohub import nuvio_stremio_sync as sync
     s_linked = sync.Stremio.is_linked()
-    add_item('Stremio • %s' % (tr('متصل ✓') if s_linked else tr('ربط الحساب')),
+    add_item('Stremio • %s' % (tr('Linked ✓') if s_linked else tr('Link account')),
              build_url(action='stremio_login' if not s_linked else 'account_sync_now',
                        **({} if not s_linked else {'service': 'stremio'})),
              is_folder=False, art=media_path('sync_accounts.png'),
              info={'title': 'Stremio',
-                   'plot': 'يسحب الإضافات المثبتة ويزامن متابعة المشاهدة.'})
+                   'plot': 'Pulls installed addons and syncs watch progress.'})
     if not s_linked:
-        add_item('تسجيل الدخول عبر QR', build_url(action='stremio_qr_login'), is_folder=False,
+        add_item('Log in via QR', build_url(action='stremio_qr_login'), is_folder=False,
                  art=media_path('sync_accounts.png'))
     if s_linked:
-        add_item('مزامنة Stremio الآن', build_url(action='account_sync_now', service='stremio'),
+        add_item('Sync Stremio now', build_url(action='account_sync_now', service='stremio'),
                  is_folder=False, art=root_art('refresh'))
-        add_item('فصل Stremio', build_url(action='stremio_logout'), is_folder=False, art=root_art('settings'))
-    add_item(tr('وضع المزامنة والتوقيت'), build_url(action='sync_options'),
+        add_item('Unlink Stremio', build_url(action='stremio_logout'), is_folder=False, art=root_art('settings'))
+    add_item(tr('Sync mode and timing'), build_url(action='sync_options'),
              is_folder=False, art=root_art('refresh'),
-             info={'title': tr('وضع المزامنة والتوقيت')})
-    add_item('إعدادات المزامنة', build_url(action='open_settings'), is_folder=False,
+             info={'title': tr('Sync mode and timing')})
+    add_item('Sync settings', build_url(action='open_settings'), is_folder=False,
              art=root_art('settings'))
-    add_item(tr('إصلاح مكتبة Stremio (تواريخ تالفة)'), build_url(action='stremio_repair_library'),
+    add_item(tr('Repair Stremio library (broken dates)'), build_url(action='stremio_repair_library'),
              is_folder=False, art=root_art('stremio'),
-             info={'title': tr('إصلاح مكتبة Stremio (تواريخ تالفة)'),
-                   'plot': tr('يفحص كل عناصر مكتبتك السحابية ويصلّح الطوابع الزمنية غير الصالحة التي تمنع Stremio من تحميل المكتبة (خطأ LibraryItemsPulledFromAPI)')})
+             info={'title': tr('Repair Stremio library (broken dates)'),
+                   'plot': tr('Scans every cloud library item and fixes invalid timestamps that stop Stremio loading the library (the LibraryItemsPulledFromAPI error)')})
     return end_dir(content='files', cache=False)
 
 def _nuvio_import_text(raw, source_label='Nuvio Sync'):
@@ -8688,7 +8683,7 @@ def _nuvio_import_text(raw, source_label='Nuvio Sync'):
         source_label=source_label,
         manifest_resolver=_make_addon_manifest_resolver(''),
     )
-    notify(tr('تمت المزامنة • %d مصدر • %d مجموعة') % (
+    notify(tr('Synced • %d add-ons • %d collections') % (
         int(result.get('providers') or 0), int(result.get('collections') or 0)))
     try:
         xbmc.executebuiltin('Container.Refresh')
@@ -8699,11 +8694,11 @@ def _nuvio_import_text(raw, source_label='Nuvio Sync'):
 
 def nuvio_sync_set_url():
     current = _nuvio_sync_mod.state().get('sync_url') or ''
-    kb = xbmc.Keyboard(current, tr('رابط استيراد الكوليكشن JSON'))
+    kb = xbmc.Keyboard(current, tr('Collection import URL (JSON)'))
     kb.doModal()
     if kb.isConfirmed():
         _nuvio_sync_mod.set_sync_url(kb.getText().strip())
-        notify('تم حفظ رابط المزامنة')
+        notify('Sync link saved')
     return nuvio_sync_menu()
 
 
@@ -8713,15 +8708,15 @@ def nuvio_sync_now():
         return nuvio_sync_set_url()
     try:
         result = _nuvio_sync_mod.pull(url, manifest_resolver=_make_addon_manifest_resolver(url))
-        notify(tr('تم استيراد الملف • %d مصدر • %d مجموعة') % (
+        notify(tr('File imported • %d add-ons • %d collections') % (
             int(result.get('providers') or 0), int(result.get('collections') or 0)))
     except Exception as exc:
-        error(tr('فشلت مزامنة Nuvio: %s') % exc)
+        error(tr('Nuvio sync failed: %s') % exc)
     return nuvio_sync_menu()
 
 
 def nuvio_sync_import():
-    kb = xbmc.Keyboard('', tr('ألصق رابط الكوليكشن أو JSON كامل'))
+    kb = xbmc.Keyboard('', tr('Paste a collection link or the full JSON'))
     kb.doModal()
     if not kb.isConfirmed():
         return nuvio_sync_menu()
@@ -8736,13 +8731,13 @@ def nuvio_sync_import():
         else:
             _nuvio_import_text(raw, source_label='Nuvio Import')
     except Exception as exc:
-        error(tr('فشل الاستيراد: %s') % exc)
+        error(tr('Import failed: %s') % exc)
     return nuvio_sync_menu()
 
 
 def nuvio_sync_import_file():
     try:
-        path = xbmcgui.Dialog().browse(1, tr('اختر ملف الكوليكشن JSON'), 'files', '.json')
+        path = xbmcgui.Dialog().browse(1, tr('Choose the collection JSON file'), 'files', '.json')
     except Exception:
         path = ''
     if not path:
@@ -8753,13 +8748,13 @@ def nuvio_sync_import_file():
         fh.close()
         _nuvio_import_text(raw, source_label=os.path.splitext(os.path.basename(path))[0])
     except Exception as exc:
-        error(tr('فشل استيراد الملف: %s') % exc)
+        error(tr('File import failed: %s') % exc)
     return nuvio_sync_menu()
 
 
 def nuvio_sync_export():
     try:
-        folder = xbmcgui.Dialog().browse(0, tr('اختر مجلد حفظ ملف التصدير'), 'files')
+        folder = xbmcgui.Dialog().browse(0, tr('Choose where to save the export'), 'files')
     except Exception:
         folder = ''
     if not folder:
@@ -8771,10 +8766,10 @@ def nuvio_sync_export():
         fh = xbmcvfs.File(path, 'w')
         fh.write(json.dumps(payload, ensure_ascii=False, indent=2))
         fh.close()
-        notify('تم تصدير الإضافات والكوليكشن')
-        xbmcgui.Dialog().ok('Nuvio Hub', tr('تم الحفظ:\n%s\n\nيمكن استيراده على جهاز آخر من خيار استيراد الكوليكشن.') % path)
+        notify('Addons and collections exported')
+        xbmcgui.Dialog().ok('Nuvio Hub', tr('Saved:\n%s\n\nYou can import it on another device from the collection import option.') % path)
     except Exception as exc:
-        error(tr('فشل التصدير: %s') % exc)
+        error(tr('Export failed: %s') % exc)
     return nuvio_sync_menu()
 
 
@@ -8805,31 +8800,31 @@ def setup_diagnostics():
 
 def integrations_menu():
     """Second-level menu for Trakt + TMDb Helper + addon settings."""
-    add_item('الحسابات والمزامنة', build_url(action='sync_accounts_menu'),
+    add_item('Accounts & sync', build_url(action='sync_accounts_menu'),
              art=media_path('sync_accounts.png'),
-             info={'title': 'Nuvio + Stremio', 'plot': 'Nuvio للمتابعة، وStremio للإضافات والمتابعة.'})
-    add_item('المكتبات', build_url(action='media_libraries_menu'),
+             info={'title': 'Nuvio + Stremio', 'plot': 'Nuvio for Continue Watching, Stremio for addons and Continue Watching.'})
+    add_item('Libraries', build_url(action='media_libraries_menu'),
              art=media_path('media_libraries.png'),
-             info={'title': 'Plex + Emby / Jellyfin', 'plot': 'ربط وإدارة المكتبات المنزلية.'})
+             info={'title': 'Plex + Emby / Jellyfin', 'plot': 'Link and manage your home libraries.'})
     # v3.9.103: Recommended preset — top of the menu, above Performance.
     # One tap takes a brand-new install from "nothing tuned" to a sensible
     # default (balanced quality profile + lightweight mode + bigger caches).
     rec_state = _recommended_preset_state()
     if rec_state['all_active']:
-        add_item(tr('الإعداد الموصى به • مفعّل'),
+        add_item(tr('Recommended setup - applied'),
                  build_url(action='apply_recommended_preset'),
                  is_folder=False,
                  art=root_art('settings'),
-                 info={'title': tr('الإعداد الموصى به'),
-                       'plot': tr('ملف الجودة "متوازن (مستحسن)" + تحسين الأداء بالكامل + فلترة المصادر مفعّلة. اضغط لإعادة التطبيق إن غيّرت أي إعداد.')})
+                 info={'title': tr('Recommended setup'),
+                       'plot': tr('Quality profile "Balanced (recommended)" + full performance tuning + source filtering enabled. Press to re-apply if you changed any setting.')})
     else:
         missing = rec_state['missing_count']
-        add_item(tr('[COLOR yellow]الإعداد الموصى به • %d تعديلات متاحة[/COLOR]') % missing,
+        add_item(tr('[COLOR yellow]Recommended setup - %d changes available[/COLOR]') % missing,
                  build_url(action='apply_recommended_preset'),
                  is_folder=False,
                  art=root_art('settings'),
-                 info={'title': tr('الإعداد الموصى به'),
-                       'plot': tr('حزمة واحدة تجعل Nuvio Hub جاهزاً لأغلب المستخدمين: ملف جودة متوازن، الوضع الخفيف، ذاكرة موسّعة للقوائم والميتاداتا. لن تفقد أي مصدر — كلّها تبقى داخل صفحة Sources.')})
+                 info={'title': tr('Recommended setup'),
+                       'plot': tr('One bundle that makes Nuvio Hub ready for most users: a balanced quality profile, lite mode, and a larger cache for lists and metadata. You lose no sources — they all stay on the Sources page.')})
 
     # v3.9.64: Performance Boost — top of the menu so users on slow
     # devices (ARM 32-bit CoreELEC, older Fire TV, etc.) find it
@@ -8837,37 +8832,37 @@ def integrations_menu():
     # toggles are already on, so the user can tell at a glance.
     boost_state = _performance_boost_state()
     if boost_state['all_active']:
-        add_item(tr('تحسين الأداء • مفعّل'),
+        add_item(tr('Performance tuning - applied'),
                  build_url(action='apply_performance_preset'),
                  is_folder=False,
                  art=root_art('settings'),
-                 info={'title': 'تحسين الأداء',
-                       'plot': 'كلّ تحسينات الخفّة مفعّلة: الوضع الخفيف + ذاكرة الكتالوج العليا + ذاكرة الميتاداتا العليا + Nuvio Hub كمشغّل افتراضي في TMDb Helper. اضغط لإعادة التطبيق إن غيّرت أيّ إعداد.'})
+                 info={'title': 'Performance tuning',
+                       'plot': 'Every lite-mode optimisation is active: lite mode + maximum catalog cache + maximum metadata cache + Nuvio Hub as the default TMDb Helper player. Press to re-apply if you changed any setting.'})
     else:
         missing = boost_state['missing_count']
-        add_item(tr('[COLOR yellow]تحسين الأداء • %d تحسينات متاحة[/COLOR]') % missing,
+        add_item(tr('[COLOR yellow]Performance tuning - %d improvements available[/COLOR]') % missing,
                  build_url(action='apply_performance_preset'),
                  is_folder=False,
                  art=root_art('settings'),
-                 info={'title': 'تحسين الأداء',
-                       'plot': 'حزمة واحدة تُسرّع جلب البوسترات والقوائم على الأجهزة البطيئة: ذاكرة كتالوج وميتاداتا قصوى، الوضع الخفيف، Nuvio Hub كمشغّل افتراضي في TMDb Helper.'})
+                 info={'title': 'Performance tuning',
+                       'plot': 'One bundle that speeds up posters and lists on slower devices: maximum catalog and metadata cache, lite mode, and Nuvio Hub as the default TMDb Helper player.'})
 
     # Trakt block
     state = trakt.authorization_status()
-    status_word = {'connected': 'متصل', 'ready': 'جاهز للربط', 'needs_api': 'يحتاج API'}.get(state, state or '—')
+    status_word = {'connected': 'Connected', 'ready': 'Ready to link', 'needs_api': 'Needs API'}.get(state, state or '—')
     add_item('Trakt • %s' % status_word, build_url(action='trakt_menu'), art=root_art('trakt'),
-             info={'title': 'Trakt', 'plot': 'ربط/فصل، استيراد التقدم، سجل المشاهدة، قوائمك'})
+             info={'title': 'Trakt', 'plot': 'Link/unlink, import progress, watch history, your lists'})
 
     # Simkl block (v4.1.0)
     simkl_state = simkl.authorization_status()
-    simkl_word = {'connected': 'متصل', 'ready': 'جاهز للربط', 'needs_api': 'يحتاج Client ID'}.get(simkl_state, simkl_state or '—')
+    simkl_word = {'connected': 'Connected', 'ready': 'Ready to link', 'needs_api': 'Needs a Client ID'}.get(simkl_state, simkl_state or '—')
     add_item('Simkl • %s' % tr(simkl_word), build_url(action='simkl_menu'), art=root_art('simkl'),
-             info={'title': 'Simkl', 'plot': tr('ربط/فصل، مزامنة سجل المشاهدة، لستاتك (أشاهدها/خطة/مكتملة)')})
+             info={'title': 'Simkl', 'plot': tr('Link/unlink, watch-history sync, your lists (watching/plan/completed)')})
 
     # MDBList block (v4.1.0)
-    mdb_word = 'متصل' if mdblist.configured() else 'يحتاج API Key'
+    mdb_word = 'Connected' if mdblist.configured() else 'Needs an API Key'
     add_item('MDBList • %s' % tr(mdb_word), build_url(action='mdblist_menu'), art=root_art('mdblist'),
-             info={'title': 'MDBList', 'plot': tr('Watchlist ولستات حسابك في MDBList داخل Nuvio Hub')})
+             info={'title': 'MDBList', 'plot': tr('Your MDBList watchlist and lists inside Nuvio Hub')})
 
     # TMDb Helper block (only if installed).
     if tmdbh_player.has_tmdbhelper():
@@ -8876,42 +8871,42 @@ def integrations_menu():
             # player picker dialog at Play time as one of the options; we
             # do NOT force it as the default to keep TMDb Helper's own
             # search and discovery flows working as the user expects.
-            add_item(tr('TMDb Helper • مسجّل'),
+            add_item(tr('TMDb Helper - registered'),
                      build_url(action='tmdbh_install'), is_folder=False,
                      art=root_art('tmdb'),
-                     info={'title': 'TMDb Helper', 'plot': 'Nuvio Hub مسجّل كأحد المشغّلات في TMDb Helper. يظهر زرّه في قائمة المشغّلات عند الضغط Play على أيّ عنصر داخل ودجات TMDb Helper.'},
-                     context_menu=[('إلغاء تسجيل Nuvio Hub من TMDb Helper', 'RunPlugin(%s)' % build_url(action='tmdbh_uninstall'))])
+                     info={'title': 'TMDb Helper', 'plot': 'Nuvio Hub is registered as a player in TMDb Helper. Its button appears in the player list when you press Play on any item inside TMDb Helper widgets.'},
+                     context_menu=[('Unregister Nuvio Hub from TMDb Helper', 'RunPlugin(%s)' % build_url(action='tmdbh_uninstall'))])
         else:
-            add_item(tr('TMDb Helper • غير مسجّل'),
+            add_item(tr('TMDb Helper • Not registered'),
                      build_url(action='tmdbh_install'), is_folder=False,
                      art=root_art('tmdb'),
-                     info={'title': 'TMDb Helper', 'plot': 'اضغط لتسجيل Nuvio Hub كمشغّل'})
+                     info={'title': 'TMDb Helper', 'plot': 'Press to register Nuvio Hub as a player'})
     else:
-        add_item(tr('[COLOR grey]TMDb Helper غير مثبّت[/COLOR]'), build_url(action='integrations_menu'), is_folder=False,
+        add_item(tr('[COLOR grey]TMDb Helper is not installed[/COLOR]'), build_url(action='integrations_menu'), is_folder=False,
                  art=root_art('tmdb'))
 
     # Metadata sources sub-menu.
-    add_item(tr('مصادر الميتاداتا'),
+    add_item(tr('Metadata add-ons'),
              build_url(action='meta_sources_menu'),
              is_folder=True,
              art=root_art('catalogs'),
-             info={'title': 'مصادر الميتاداتا', 'plot': 'اختر مصدر البيانات لكل نوع (أفلام/مسلسلات/أنمي)'})
+             info={'title': 'Metadata add-ons', 'plot': 'Choose the metadata add-on for each type (Movies/TV/Anime)'})
 
     # v3.9.45: backup and restore for the full NuvioHub configuration.
     # Captures providers, pins, bucket layout, art priorities, source
     # order, and settings into a single JSON file. Restoring this on
     # a fresh install or new device returns the addon to the exact
     # state it had at export time.
-    add_item(tr('تصدير الإعدادات والمصادر'),
+    add_item(tr('Export settings and add-ons'),
              build_url(action='config_export'),
              is_folder=False,
              art=root_art('settings'),
-             info={'title': tr('تصدير الإعدادات والمصادر'), 'plot': 'احفظ كل تكوينك (المصادر، الكتالوجات المُثبّتة، ترتيب المصادر، الإعدادات) في ملف JSON واحد قابل للنقل إلى أي جهاز أو لاسترجاعه بعد إعادة تثبيت Kodi.'})
-    add_item(tr('استيراد الإعدادات والمصادر'),
+             info={'title': tr('Export settings and add-ons'), 'plot': 'Save your whole setup (add-ons, pinned catalogs, add-on order, settings) into one portable JSON file you can move to another device or restore after reinstalling Kodi.'})
+    add_item(tr('Import settings and add-ons'),
              build_url(action='config_import'),
              is_folder=False,
              art=root_art('settings'),
-             info={'title': tr('استيراد الإعدادات والمصادر'), 'plot': 'استعد كل تكوينك من ملف JSON تم تصديره سابقاً. يستبدل التكوين الحالي بالمحفوظ في الملف.'})
+             info={'title': tr('Import settings and add-ons'), 'plot': 'Restore your whole setup from a previously exported JSON file. This replaces the current setup with the one in the file.'})
 
     # v3.9.48: widget endpoints + source health remain accessible via
     # their dispatch URLs for power users, but their menu entries have
@@ -8924,16 +8919,16 @@ def integrations_menu():
     # Surfacing it now would set wrong expectations.
 
     # Addon settings shortcut.
-    add_item(tr('الإعدادات'), build_url(action='open_settings'), is_folder=False,
+    add_item(tr('Settings'), build_url(action='open_settings'), is_folder=False,
              art=root_art('settings'),
-             info={'title': 'الإعدادات', 'plot': 'فتح إعدادات Nuvio Hub'})
+             info={'title': 'Settings', 'plot': 'Open Nuvio Hub settings'})
     # v4.7.8: badges URL front door — the Kodi settings field proved
     # unreliable on some devices, this path writes an addon-owned file and
     # reports the result immediately.
-    add_item(tr('شارات الجودة'), build_url(action='badges_url'), is_folder=False,
+    add_item(tr('Quality badges'), build_url(action='badges_url'), is_folder=False,
              art=root_art('settings'),
-             info={'title': tr('شارات الجودة'),
-                   'plot': tr('تعيين رابط JSON للشارات أو العودة للمجموعة المدمجة')})
+             info={'title': tr('Quality badges'),
+                   'plot': tr('Set the badges JSON URL or go back to the built-in set')})
     end_dir()
 
 
@@ -8951,16 +8946,16 @@ def meta_sources_menu():
 
     providers = store.list_providers() or []
     if not providers:
-        add_item(tr('[COLOR grey]لا توجد مصادر — أضف رابط manifest أولًا[/COLOR]'),
+        add_item(tr('[COLOR grey]No add-ons — add a manifest URL first[/COLOR]'),
                  build_url(action='add_provider'),
                  is_folder=True, art=root_art('add'))
         end_dir()
         return
 
-    add_item(tr('[COLOR yellow]ℹ كل إضافة تختار لها مصدر ميتاداتا مستقل[/COLOR]'),
+    add_item(tr('[COLOR yellow]ℹ Each addon can use its own metadata add-on[/COLOR]'),
              build_url(action='meta_sources_menu'),
              is_folder=False, art=root_art('catalogs'),
-             info={'title': 'مصادر الميتاداتا', 'plot': 'تلقائي = ذكي (Plex/Emby يُستبدل، الباقي يبقى أصلي)'})
+             info={'title': 'Metadata add-ons', 'plot': 'Automatic = smart (Plex/Emby gets replaced, others stay native)'})
 
     for prov in providers:
         pid = prov.get('id') or ''
@@ -8976,9 +8971,9 @@ def meta_sources_menu():
                  build_url(action='meta_pick_for_provider', provider_id=pid),
                  is_folder=True,
                  art=provider_art(name, prov.get('manifest') or {}, base_url=prov.get('base_url') or ''),
-                 info={'title': name, 'plot': 'اضغط لتغيير مصدر الميتاداتا لهذه الإضافة'})
+                 info={'title': name, 'plot': 'Press to change the metadata add-on for this addon'})
 
-    add_item(tr('[COLOR grey]─ إعادة ضبط الكل إلى "تلقائي" ─[/COLOR]'),
+    add_item(tr('[COLOR grey]─ Reset all to "Automatic" ─[/COLOR]'),
              'RunPlugin(%s)' % build_url(action='meta_reset_all'),
              is_folder=False,
              art=root_art('providers'))
@@ -8991,9 +8986,9 @@ def meta_pick_for_provider(provider_id=''):
         return
     provider = store.get_provider(provider_id)
     if not provider:
-        error(tr('الإضافة غير موجودة'))
+        error(tr('Addon not found'))
         return
-    return _meta_pick_target(provider_id, tr('ميتاداتا %s') % (provider.get('name') or provider_id))
+    return _meta_pick_target(provider_id, tr('Metadata %s') % (provider.get('name') or provider_id))
 
 
 def meta_reset_all():
@@ -9001,25 +8996,25 @@ def meta_reset_all():
         from . import meta_source as _meta_source
         _meta_source.clear_meta_map()
         _meta_mem_clear()
-        notify(tr('تم إعادة الضبط'))
+        notify(tr('Reset completed'))
     except Exception as exc:
-        error(tr('فشل: %s') % exc)
+        error(tr('Failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
 def _virtual_meta_targets():
     return [
-        ('virtual.continue.movie', 'متابعة المشاهدة • أفلام'),
-        ('virtual.continue.series', 'متابعة المشاهدة • مسلسلات/أنمي'),
-        ('virtual.favorites.movie', 'المفضلة • أفلام'),
-        ('virtual.favorites.series', 'المفضلة • مسلسلات/أنمي'),
-        ('virtual.collection.trakt', 'الكوليكشن • عناصر Trakt'),
+        ('virtual.continue.movie', 'Continue Watching • Movies'),
+        ('virtual.continue.series', 'Continue Watching • Series/Anime'),
+        ('virtual.favorites.movie', 'Favorites • Movies'),
+        ('virtual.favorites.series', 'Favorites • Series/Anime'),
+        ('virtual.collection.trakt', 'Collection • Trakt items'),
         # v3.9.234: the media servers are meta targets too, so the SAME picker
         # governs them. Set one to "Addon metadata" (native) to keep that
         # server's own posters — the right choice for a library whose art
         # carries overlays/badges you do not want replaced by TMDb.
-        ('plex_server', 'Plex • بوسترات وبيانات المكتبة'),
-        ('emby_server', 'Emby • بوسترات وبيانات المكتبة'),
+        ('plex_server', 'Plex • posters and library metadata'),
+        ('emby_server', 'Emby • posters and library metadata'),
     ]
 
 
@@ -9045,7 +9040,7 @@ def _meta_pick_target(target_key='', title=''):
                    if s.get('id') in ('auto', 'tmdb_helper', 'native')]
         for s in sources:
             if s.get('id') == 'native':
-                s['name'] = tr('بوسترات %s نفسها (تُبقي الأوفرلايات)') % _server_name
+                s['name'] = tr('The %s posters themselves (overlays are kept)') % _server_name
     labels = [s.get('name') or s.get('id') or 'Source' for s in sources]
     current = _meta_source.get_meta_source_for(target_key)
     preselect = 0
@@ -9053,7 +9048,7 @@ def _meta_pick_target(target_key='', title=''):
         if src.get('id') == current:
             preselect = idx
             break
-    choice = xbmcgui.Dialog().select(tr(title or tr('اختر مصدر الميتاداتا')), [tr(x) for x in labels], preselect=preselect)
+    choice = xbmcgui.Dialog().select(tr(title or tr('Choose metadata add-on')), [tr(x) for x in labels], preselect=preselect)
     if choice < 0:
         return
     picked = sources[choice]
@@ -9079,10 +9074,10 @@ def meta_sources_dialog():
         error('meta_source missing: %s' % exc)
         return
     # v3.9.30: top-level picker — by provider (legacy) or by folder (new).
-    mode = xbmcgui.Dialog().select(tr('إدارة مصادر الميتاداتا'), [
-        tr('لكل الإضافة — تخصيص كامل للصور'),
-        tr('حسب الإضافة (مصدر الميتاداتا)'),
-        tr('حسب المجلد (استثناءات مخصصة)'),
+    mode = xbmcgui.Dialog().select(tr('Manage metadata add-ons'), [
+        tr('Whole addon — full artwork customisation'),
+        tr('By addon (metadata add-on)'),
+        tr('By folder (custom overrides)'),
     ])
     if mode < 0:
         return
@@ -9102,9 +9097,9 @@ def meta_sources_dialog():
         current = _meta_source.source_display_name(_meta_source.get_meta_source_for(key))
         rows.append((key, '%s → %s' % (label, current), label))
     if not rows:
-        error(tr('لا توجد مصادر بعد'))
+        error(tr('No add-ons yet'))
         return
-    choice = xbmcgui.Dialog().select(tr('إدارة مصادر الميتاداتا'), [tr(row[1]) for row in rows])
+    choice = xbmcgui.Dialog().select(tr('Manage metadata add-ons'), [tr(row[1]) for row in rows])
     if choice < 0:
         return
     target_key, _label, title = rows[choice]
@@ -9113,8 +9108,8 @@ def meta_sources_dialog():
 
 def _art_type_rows():
     return [
-        ('poster', tr('البوستر')),
-        ('background', tr('الخلفية Fanart')),
+        ('poster', tr('Poster')),
+        ('background', tr('Fanart background')),
         ('landscape', tr('Landscape')),
         ('banner', tr('Banner')),
         ('clearlogo', tr('ClearLogo')),
@@ -9133,12 +9128,12 @@ def global_art_sources_dialog():
             if len(current) > 3:
                 summary += ' +%d' % (len(current) - 3)
             labels.append('%s%s' % (label, ('  [%s]' % summary) if summary else ''))
-        labels.extend([tr('مسح كل تخصيص الصور'), tr('رجوع')])
-        idx = xbmcgui.Dialog().select(tr('تخصيص الصور لكل الإضافة'), labels)
+        labels.extend([tr('Clear all artwork customisation'), tr('Back')])
+        idx = xbmcgui.Dialog().select(tr('Customise artwork for the whole addon'), labels)
         if idx < 0 or idx == len(rows) + 1:
             return
         if idx == len(rows):
-            if xbmcgui.Dialog().yesno('Nuvio Hub', tr('سيتم مسح كل مصادر الصور المخصصة. هل تريد المتابعة؟')):
+            if xbmcgui.Dialog().yesno('Nuvio Hub', tr('All custom artwork add-ons will be cleared. Continue?')):
                 _ms.clear_global_art()
                 _meta_mem_clear()
                 xbmc.executebuiltin('Container.Refresh')
@@ -9148,7 +9143,7 @@ def global_art_sources_dialog():
 
 def _all_art_source_candidates():
     from . import meta_source as _ms
-    candidates = [('native', tr('الصورة الأصلية من المصدر')),
+    candidates = [('native', tr('Original image from the add-on')),
                   ('tmdb_helper', 'TMDb Helper')]
     seen = {'native', 'tmdb_helper'}
     for provider in store.list_providers() or []:
@@ -9176,7 +9171,7 @@ def _art_pick_priority_global(art_type):
     for pid, name in ordered:
         labels.append(('[%d]  ' % (current.index(pid) + 1) if pid in current_set else '     ') + name)
     selected = xbmcgui.Dialog().multiselect(
-        tr('اختر المصادر بالترتيب — الأولوية من الأعلى للأسفل'),
+        tr('Order the add-ons — priority runs top to bottom'),
         labels,
         preselect=[i for i, (pid, _n) in enumerate(ordered) if pid in current_set],
     )
@@ -9192,7 +9187,7 @@ def _art_pick_priority_global(art_type):
 
 def _set_render_section(section):
     try:
-        xbmcgui.Window(WINDOW_ID).setProperty('dexhub.render_bucket', str(section or ''))
+        xbmcgui.Window(WINDOW_ID).setProperty('nuviohub.render_bucket', str(section or ''))
     except Exception:
         pass
 
@@ -9200,18 +9195,18 @@ def _set_render_section(section):
 def section_art_sources_dialog():
     """Customize artwork for stable Nuvio Hub sections and user folders."""
     sections = [
-        ('continue', tr('متابعة المشاهدة')),
-        ('favorites', tr('المفضلة')),
-        ('search', tr('البحث')),
+        ('continue', tr('Continue Watching')),
+        ('favorites', tr('Favorites')),
+        ('search', tr('Search')),
         ('collection', 'Collection'),
         ('plex', 'Plex'),
         ('emby', 'Emby / Jellyfin'),
-        ('stremio', tr('مصادر Stremio')),
+        ('stremio', tr('Stremio add-ons')),
     ]
     dynamic = sorted(set((b or '') for (_p, _c, b) in (_hub_catalog_entries(bucket=None) or []) if b))
     known = set(k for k, _ in sections)
     sections.extend((b, _hub_bucket_title(b)) for b in dynamic if b not in known)
-    idx = xbmcgui.Dialog().select(tr('اختر القسم لتخصيص صوره'), [label for _key, label in sections])
+    idx = xbmcgui.Dialog().select(tr('Choose the section to customise its artwork'), [label for _key, label in sections])
     if idx < 0:
         return
     bucket, title = sections[idx]
@@ -9223,12 +9218,12 @@ def section_art_sources_dialog():
             cur = _ms.get_bucket_art_priority(bucket, kind)
             summary = ' → '.join(_ms.source_display_name(x) for x in cur[:2])
             labels.append(label + (('  [%s]' % summary) if summary else ''))
-        labels.extend([tr('مسح تخصيص هذا القسم'), tr('رجوع')])
-        pick = xbmcgui.Dialog().select('%s • %s' % (tr('تخصيص الصور'), title), labels)
+        labels.extend([tr('Clear customisation for this section'), tr('Back')])
+        pick = xbmcgui.Dialog().select('%s • %s' % (tr('Customise artwork'), title), labels)
         if pick < 0 or pick == len(rows) + 1:
             return
         if pick == len(rows):
-            if xbmcgui.Dialog().yesno('Nuvio Hub', tr('مسح كل تخصيص الصور لهذا القسم؟')):
+            if xbmcgui.Dialog().yesno('Nuvio Hub', tr('Clear all artwork customisation for this section?')):
                 _ms.clear_bucket_art_for(bucket)
                 _meta_mem_clear()
             continue
@@ -9251,11 +9246,11 @@ def _meta_sources_by_bucket_dialog():
         if b
     ))
     if not buckets:
-        error(tr('لا توجد مجلدات بعد'))
+        error(tr('No folders yet'))
         return
     titles = [(b, _hub_bucket_title(b)) for b in buckets]
     bidx = xbmcgui.Dialog().select(
-        tr('اختر المجلد'),
+        tr('Choose folder'),
         [t for (_b, t) in titles])
     if bidx < 0:
         return
@@ -9264,8 +9259,8 @@ def _meta_sources_by_bucket_dialog():
     while True:
         # Step 2 — art type
         art_types = _art_type_rows() + [
-            ('__reset', tr('🗑  مسح كل الأولويات لهذا المجلد')),
-            ('__back', tr('↩  رجوع')),
+            ('__reset', tr('🗑  Clear all priorities for this folder')),
+            ('__back', tr('↩  Back')),
         ]
         # Show current priority count next to each art type
         type_labels = []
@@ -9277,7 +9272,7 @@ def _meta_sources_by_bucket_dialog():
             badge = (' (%d)' % n) if n > 0 else ''
             type_labels.append(label + badge)
         tidx = xbmcgui.Dialog().select(
-            tr('%s — اختر نوع الـ Art') % _hub_bucket_title(bucket),
+            tr('%s — choose art type') % _hub_bucket_title(bucket),
             type_labels)
         if tidx < 0:
             return
@@ -9286,10 +9281,10 @@ def _meta_sources_by_bucket_dialog():
             return
         if kind == '__reset':
             if xbmcgui.Dialog().yesno('Nuvio Hub',
-                tr('سيتم مسح كل أولويات الـ Art لهذا المجلد. هل تريد المتابعة؟')):
+                tr('All art priorities for this folder will be cleared. Continue?')):
                 _ms.clear_bucket_art_for(bucket)
                 xbmcgui.Dialog().notification('Nuvio Hub',
-                    tr('تم المسح'), xbmcgui.NOTIFICATION_INFO, 2000, sound=False)
+                    tr('Cleared'), xbmcgui.NOTIFICATION_INFO, 2000, sound=False)
             continue
 
         # Step 3 — pick providers
@@ -9303,7 +9298,7 @@ def _bucket_art_pick_priority(bucket, art_type):
     # Collect candidate providers — pinned to this bucket OR globally meta-capable.
     pinned = [p for (p, _c, b) in (_hub_catalog_entries(bucket=bucket) or []) if p]
     seen_pids = {'native', 'tmdb_helper'}
-    candidates = [('native', tr('الصورة الأصلية من المصدر')),
+    candidates = [('native', tr('Original image from the add-on')),
                   ('tmdb_helper', 'TMDb Helper')]
     for p in pinned:
         pid = (p or {}).get('id') or ''
@@ -9317,7 +9312,7 @@ def _bucket_art_pick_priority(bucket, art_type):
             seen_pids.add(pid)
             candidates.append((pid, p.get('name') or pid))
     if not candidates:
-        error(tr('لا توجد مصادر مرشّحة'))
+        error(tr('No filtered add-ons'))
         return
 
     current = _ms.get_bucket_art_priority(bucket, art_type)
@@ -9345,9 +9340,9 @@ def _bucket_art_pick_priority(bucket, art_type):
 
     # Multi-select preserves order of selection — that's our priority.
     selected = xbmcgui.Dialog().multiselect(
-        tr('اختر مصادر %s بالترتيب') % {
-            'poster': tr('البوستر'),
-            'background': tr('الخلفية'),
+        tr('Order the %s add-ons') % {
+            'poster': tr('Poster'),
+            'background': tr('Background'),
             'landscape': 'Landscape',
             'banner': 'Banner',
             'clearlogo': 'ClearLogo',
@@ -9361,7 +9356,7 @@ def _bucket_art_pick_priority(bucket, art_type):
     new_priority = [ordered[i][0] for i in selected]
     _ms.set_bucket_art_priority(bucket, art_type, new_priority)
     xbmcgui.Dialog().notification('Nuvio Hub',
-        tr('تم حفظ ترتيب %d مصدر') % len(new_priority),
+        tr('Saved the order of %d add-ons') % len(new_priority),
         xbmcgui.NOTIFICATION_INFO, 2500, sound=False)
 
 
@@ -9384,11 +9379,11 @@ def badges_url_action():
     """
     from . import source_browser as _sb
     current = _sb._elite_badge_setting_url()
-    choice = xbmcgui.Dialog().select(tr('شارات الجودة'), [
-        tr('اختيار مجموعة جاهزة'),
-        tr('تعيين رابط JSON للشارات'),
-        tr('استخدام المجموعة المدمجة'),
-        tr('عرض الحالة الحالية'),
+    choice = xbmcgui.Dialog().select(tr('Quality badges'), [
+        tr('Pick a ready-made set'),
+        tr('Set the badges JSON URL'),
+        tr('Use the built-in set'),
+        tr('Show current status'),
     ])
     if choice < 0:
         return
@@ -9402,49 +9397,49 @@ def badges_url_action():
             name, url = entry[0], entry[1]
             preview = _sb.elite_preset_preview(url, entry[2] if len(entry) > 2 else '')
             li = xbmcgui.ListItem(label=name)
-            li.setLabel2(tr('(الحالي)') if url == current else tr('اضغط للتطبيق'))
+            li.setLabel2(tr('(current)') if url == current else tr('Select to apply'))
             if preview:
                 li.setArt({'icon': preview, 'thumb': preview})
             items.append(li)
         try:
-            pick = xbmcgui.Dialog().select(tr('اختيار مجموعة جاهزة'), items,
+            pick = xbmcgui.Dialog().select(tr('Pick a ready-made set'), items,
                                            useDetails=True)
         except Exception:
             # older Kodi builds without useDetails — plain names still work
             pick = xbmcgui.Dialog().select(
-                tr('اختيار مجموعة جاهزة'),
+                tr('Pick a ready-made set'),
                 [e[0] for e in _sb.ELITE_BADGE_PRESETS])
         if pick < 0:
             return
         url = _sb.ELITE_BADGE_PRESETS[pick][1]
         if not _sb._elite_url_override_write(url):
-            return error(tr('تعذر حفظ الرابط'))
+            return error(tr('Could not save the URL'))
         try:
             ADDON.setSetting('elite_badges_json_url', url)
         except Exception:
             pass
         rules = _sb._elite_badge_rules()
         if rules:
-            return notify(tr('تم تطبيق %d قاعدة شارات من الرابط المخصص') % len(rules))
-        return error(tr('تعذر تحميل badges.json المخصص — سيتم استخدام الافتراضي'))
+            return notify(tr('%d badge rules applied from the custom URL') % len(rules))
+        return error(tr('Custom badges.json could not be loaded — using the built-in set'))
     choice -= 1
     if choice == 2:
         rules = _sb._elite_badge_rules()
-        notify(tr('المصدر: %s • القواعد: %d') % (_sb._elite_url_provenance(), len(rules)))
-        xbmcgui.Dialog().ok('Nuvio Hub', '%s\n\n%s' % (current or tr('المجموعة المدمجة'),
-                                                      tr('القواعد: %d') % len(rules)))
+        notify(tr('Add-on: %s - rules: %d') % (_sb._elite_url_provenance(), len(rules)))
+        xbmcgui.Dialog().ok('Nuvio Hub', '%s\n\n%s' % (current or tr('Built-in set'),
+                                                      tr('Rules: %d') % len(rules)))
         return
     if choice == 1:
         _sb._elite_url_override_write('')
-        notify(tr('تم التبديل إلى المجموعة المدمجة'))
+        notify(tr('Switched to the built-in set'))
         return
-    keyboard = xbmc.Keyboard(current, tr('رابط JSON للشارات'))
+    keyboard = xbmc.Keyboard(current, tr('Badges JSON URL'))
     keyboard.doModal()
     if not keyboard.isConfirmed():
         return
     url = (keyboard.getText() or '').strip()
     if not _sb._elite_url_override_write(url):
-        return error(tr('تعذر حفظ الرابط'))
+        return error(tr('Could not save the URL'))
     # keep the Kodi setting in sync when it will accept the write
     try:
         ADDON.setSetting('elite_badges_json_url', url)
@@ -9452,11 +9447,11 @@ def badges_url_action():
         pass
     rules = _sb._elite_badge_rules()
     if rules and url:
-        notify(tr('تم تطبيق %d قاعدة شارات من الرابط المخصص') % len(rules))
+        notify(tr('%d badge rules applied from the custom URL') % len(rules))
     elif url:
-        error(tr('تعذر تحميل badges.json المخصص — سيتم استخدام الافتراضي'))
+        error(tr('Custom badges.json could not be loaded — using the built-in set'))
     else:
-        notify(tr('تم التبديل إلى المجموعة المدمجة'))
+        notify(tr('Switched to the built-in set'))
 
 
 def theme_select_action():
@@ -9497,7 +9492,7 @@ def _upgrade_or_warn_http_url(manifest_url, silent=False):
         validate_manifest(https_candidate)
         xbmc.log('[NuvioHub] HTTPS upgrade succeeded for %s -> %s' %
                  (manifest_url, https_candidate), xbmc.LOGINFO)
-        notify(tr('تم ترقية الرابط إلى HTTPS تلقائياً'))
+        notify(tr('URL automatically upgraded to HTTPS'))
         return https_candidate
     except Exception as exc:
         xbmc.log('[NuvioHub] HTTPS upgrade not possible for %s: %s' %
@@ -9513,14 +9508,14 @@ def _upgrade_or_warn_http_url(manifest_url, silent=False):
     if silent:
         xbmc.log('[NuvioHub] refusing http-only manifest for a headless caller: %s'
                  % manifest_url, xbmc.LOGWARNING)
-        error(tr('هذا المصدر يستخدم HTTP غير مشفّر. أضِفه من التلفاز للموافقة على التحذير.'))
+        error(tr('This add-on uses unencrypted HTTP. Add it from the TV to accept the warning.'))
         return None
 
     proceed = xbmcgui.Dialog().yesno(
         'Nuvio Hub',
-        tr('هذا المصدر يستخدم HTTP غير المشفّر. أي شخص على نفس الشبكة يستطيع اعتراض البيانات أو تبديلها. هل تريد المتابعة على مسؤوليتك؟'),
-        nolabel=tr('إلغاء'),
-        yeslabel=tr('متابعة على HTTP'),
+        tr('This add-on uses unencrypted HTTP. Anyone on the same network could intercept or tamper with the data. Continue at your own risk?'),
+        nolabel=tr('Cancel'),
+        yeslabel=tr('Continue on HTTP'),
         defaultbutton=xbmcgui.DLG_YESNO_NO_BTN,
     )
     return manifest_url if proceed else None
@@ -9546,7 +9541,7 @@ def add_provider(manifest_url=''):
     manifest_url = (manifest_url or '').strip()
     _headless = bool(manifest_url)
     if not manifest_url:
-        keyboard = xbmc.Keyboard('', tr('ألصق رابط manifest.json أو collections.json'))
+        keyboard = xbmc.Keyboard('', tr('Paste a manifest.json or collections.json URL'))
         keyboard.doModal()
         if not keyboard.isConfirmed():
             return end_dir()
@@ -9566,18 +9561,18 @@ def add_provider(manifest_url=''):
     # http-only URL is refused outright rather than hanging on a modal.
     manifest_url = _upgrade_or_warn_http_url(manifest_url, silent=_headless)
     if not manifest_url:
-        notify(tr('تم إلغاء إضافة المصدر'))
+        notify(tr('Add-on addition cancelled'))
         return end_dir()
     try:
         manifest = validate_manifest(manifest_url)
         name = manifest.get('name') or manifest.get('id') or 'Provider'
         store.add_provider(name=name, manifest_url=manifest_url, manifest=manifest)
         if converted:
-            notify(tr('تمت إضافة المصدر من رابط الكوليكشن: %s') % name)
+            notify(tr('Add-on added from collection URL: %s') % name)
         else:
-            notify(tr('تمت إضافة المصدر: %s') % name)
+            notify(tr('Added add-on: %s') % name)
     except Exception as exc:
-        error(tr('فشل إضافة المصدر: %s') % exc)
+        error(tr('Add-on add failed: %s') % exc)
     if _headless:
         # Nothing is rendering a directory for a JSON-RPC caller.
         try:
@@ -9591,22 +9586,22 @@ def providers():
     _set_render_section('stremio')
     rows = store.list_providers()
     # Accounts and home libraries are secondary tools under Sources, not Home.
-    add_item('الحسابات والمزامنة', build_url(action='sync_accounts_menu'),
+    add_item('Accounts & sync', build_url(action='sync_accounts_menu'),
              art=media_path('sync_accounts.png'),
              info={'title': 'Nuvio + Stremio',
-                   'plot': 'Nuvio لمتابعة المشاهدة، وStremio للإضافات والمتابعة.'})
-    add_item('المكتبات', build_url(action='media_libraries_menu'),
+                   'plot': 'Nuvio for Continue Watching, Stremio for addons and Continue Watching.'})
+    add_item('Libraries', build_url(action='media_libraries_menu'),
              art=media_path('media_libraries.png'),
              info={'title': 'Plex + Emby / Jellyfin',
-                   'plot': 'ربط وإدارة المكتبات المنزلية.'})
-    add_item(tr('إضافة مصدر Stremio'),
+                   'plot': 'Link and manage your home libraries.'})
+    add_item(tr('Add a Stremio add-on'),
              build_url(action='add_provider'), art=root_art('add'),
-             info={'title': 'إضافة رابط Manifest', 'plot': 'أضف manifest.json لأي إضافة Stremio.'})
+             info={'title': 'Add Manifest URL', 'plot': 'Add the manifest.json of any Stremio addon.'})
     if not rows:
-        add_item(tr('[COLOR grey]لا توجد إضافات Stremio مثبتة[/COLOR]'),
+        add_item(tr('[COLOR grey]No Stremio addons installed[/COLOR]'),
                  build_url(action='first_run_wizard'), is_folder=False,
                  art=root_art('providers'),
-                 info={'title': 'المصادر', 'plot': 'استخدم Stremio sync أو أضف رابط manifest يدويًا.'})
+                 info={'title': 'Add-ons', 'plot': 'Use Stremio sync or add a manifest URL manually.'})
         return end_dir(content='files', cache=False)
 
     # Identify providers whose stored manifest has no usable logo.
@@ -9653,17 +9648,17 @@ def providers():
         # keeps the Sources page uncluttered.
         ctx_menu = []
         if total >= 2:
-            ctx_menu.append(('تغيير ترتيب المصدر',
+            ctx_menu.append(("\u062a\u063a\u064a\u064a\u0631 \u062a\u0631\u062a\u064a\u0628 \u0627\u0644\u0645\u0635\u062f\u0631",
                 'RunPlugin(%s)' % build_url(action='provider_set_position', provider_id=provider_id)))
         ctx_menu.extend([
-            (tr('تغيير مصدر الميتاداتا'), 'RunPlugin(%s)' % build_url(action='meta_pick_for_provider', provider_id=provider_id)),
-            ('تحديث هذا المصدر', 'RunPlugin(%s)' % build_url(action='refresh_provider', provider_id=provider_id)),
-            ('إزالة هذا المصدر', 'RunPlugin(%s)' % build_url(action='remove_provider', provider_id=provider_id)),
-            ('فتح الفلاتر والأصناف', 'Container.Update(%s)' % build_url(action='provider_menu', provider_id=provider_id)),
+            (tr('Change metadata add-on'), 'RunPlugin(%s)' % build_url(action='meta_pick_for_provider', provider_id=provider_id)),
+            ('Refresh this add-on', 'RunPlugin(%s)' % build_url(action='refresh_provider', provider_id=provider_id)),
+            ('Remove this add-on', 'RunPlugin(%s)' % build_url(action='remove_provider', provider_id=provider_id)),
+            ('Open filters and categories', 'Container.Update(%s)' % build_url(action='provider_menu', provider_id=provider_id)),
         ])
         add_item(display_label, build_url(action='provider_menu', provider_id=provider_id),
                  info={'title': display_label,
-                       'plot': plot + tr('\n\nالموقع الحالي: %d من %d. لتغييره افتح قائمة السياق واختر "تغيير ترتيب المصدر".') % (idx + 1, total)},
+                       'plot': plot + tr('\n\nCurrent position: %d of %d. To change it, open the context menu and choose "Change add-on order".') % (idx + 1, total)},
                  art=provider_art(label, row.get('manifest') or {}, base_url=row.get('base_url') or ''),
                  context_menu=ctx_menu)
     end_dir()
@@ -9679,7 +9674,7 @@ def provider_menu(provider_id):
     for catalog in _provider_catalogs(provider):
         cname = catalog.get('name') or catalog.get('id') or 'Catalog'
         media_type = catalog.get('type')
-        plot = catalog.get('description') or (tr('تصفح قسم %s') % cname)
+        plot = catalog.get('description') or (tr('Browse %s section') % cname)
         extras = [x.get('name') for x in (catalog.get('extra') or []) if isinstance(x, dict) and x.get('name') not in ('skip',)]
         if extras:
             plot += '\nExtras: ' + ', '.join(extras)
@@ -9699,17 +9694,17 @@ def provider_menu(provider_id):
 
     for media_type in _available_types(provider):
         if _provider_supports_search(provider, media_type):
-            s_label = tr('بحث %s') % _group_title(media_type)
-            add_item(s_label, build_url(action='search', media_type=media_type, provider_id=provider_id), info={'title': s_label, 'plot': tr('بحث داخل %s') % pname}, art=root_art('search_movie' if media_type == 'movie' else 'search_series'))
+            s_label = tr('Search %s') % _group_title(media_type)
+            add_item(s_label, build_url(action='search', media_type=media_type, provider_id=provider_id), info={'title': s_label, 'plot': tr('Search inside %s') % pname}, art=root_art('search_movie' if media_type == 'movie' else 'search_series'))
 
-    add_item(tr('تحديث المانيفست'), build_url(action='refresh_provider', provider_id=provider_id), art=root_art('providers'), info={'title': tr('تحديث المانيفست'), 'plot': summary})
-    add_item(tr('حذف المصدر'), build_url(action='remove_provider', provider_id=provider_id), art=root_art('add'))
+    add_item(tr('Refresh manifest'), build_url(action='refresh_provider', provider_id=provider_id), art=root_art('providers'), info={'title': tr('Refresh manifest'), 'plot': summary})
+    add_item(tr('Delete add-on'), build_url(action='remove_provider', provider_id=provider_id), art=root_art('add'))
     end_dir()
 
 
 def remove_provider(provider_id):
     provider = store.get_provider(provider_id)
-    if provider and xbmcgui.Dialog().yesno('Nuvio Hub', tr('حذف المصدر: %s ؟') % provider.get('name')):
+    if provider and xbmcgui.Dialog().yesno('Nuvio Hub', tr('Delete add-on: %s?') % provider.get('name')):
         store.remove_provider(provider_id)
         # v3.9.45: also purge the index data attributed to this provider
         # so its items disappear from Hybrid renders immediately rather
@@ -9719,7 +9714,7 @@ def remove_provider(provider_id):
             index_render.get_db().purge_provider(provider_id)
         except Exception as _exc:
             xbmc.log('[NuvioHub] purge_provider failed: %s' % _exc, xbmc.LOGWARNING)
-        notify(tr('تم حذف المصدر'))
+        notify(tr('Add-on deleted'))
     return providers()
 
 
@@ -10457,8 +10452,8 @@ def catalog(provider_id, media_type, catalog_id, label='', page='0', genre='', y
     # Generic single-extra preset via Window property (set by catalog_extra()).
     try:
         win_now = xbmcgui.Window(WINDOW_ID)
-        _xn = win_now.getProperty('dexhub.catalog_extra_name') or ''
-        _xv = win_now.getProperty('dexhub.catalog_extra_value') or ''
+        _xn = win_now.getProperty('nuviohub.catalog_extra_name') or ''
+        _xv = win_now.getProperty('nuviohub.catalog_extra_value') or ''
         if _xn and _xv:
             preset_filters[_xn] = _xv
     except Exception:
@@ -10477,11 +10472,11 @@ def catalog(provider_id, media_type, catalog_id, label='', page='0', genre='', y
     if force_folders:
         show_genre_folders = True
         try:
-            xbmcgui.Window(WINDOW_ID).clearProperty('dexhub.catalog_skip_gate')
+            xbmcgui.Window(WINDOW_ID).clearProperty('nuviohub.catalog_skip_gate')
         except Exception:
             pass
 
-    if show_genre_folders and not has_preset             and not any(state.get(k) for k in (state or {}))             and xbmcgui.Window(WINDOW_ID).getProperty('dexhub.catalog_skip_gate') != '1':
+    if show_genre_folders and not has_preset             and not any(state.get(k) for k in (state or {}))             and xbmcgui.Window(WINDOW_ID).getProperty('nuviohub.catalog_skip_gate') != '1':
         folder_extras = _folder_extras_with_options(catalog_def)
         cat_fb = _item_fallback_art(provider, media_type, catalog_def, catalog_def.get('name') or catalog_id)
         folder_art = {
@@ -10515,10 +10510,10 @@ def catalog(provider_id, media_type, catalog_id, label='', page='0', genre='', y
             # internal sub-catalogs to always be the entry point.
             if not force_folders:
                 add_item(
-                    '[COLOR yellow]◉ عرض كل العناصر بدون تصفية[/COLOR]',
+                    '[COLOR yellow]◉ Show all items without filtering[/COLOR]',
                     build_url(action='catalog_all', provider_id=provider_id, media_type=media_type, catalog_id=catalog_id, label=label, **_force_remote_query(force_remote)),
                     art=root_art('catalogs'),
-                    info={'title': 'كل العناصر', 'plot': 'تجاوز المجلدات وعرض القائمة الكاملة'},
+                    info={'title': 'All items', 'plot': 'Skip folders and show the full list'},
                 )
             end_dir(content='files')
             return
@@ -10543,7 +10538,7 @@ def catalog(provider_id, media_type, catalog_id, label='', page='0', genre='', y
             data = _apply_catalog_request(provider, media_type, catalog_id, request_state)
             batch = data.get('metas') or []
         except Exception as exc:
-            error(tr('فشل تحميل الكتالوج: %s') % exc)
+            error(tr('Catalog load failed: %s') % exc)
             return end_dir()
         for meta in batch:
             mid = str((meta or {}).get('id') or '')
@@ -10564,7 +10559,7 @@ def catalog(provider_id, media_type, catalog_id, label='', page='0', genre='', y
             data = _apply_catalog_request(provider, media_type, catalog_id, request_state)
             batch = data.get('metas') or []
         except Exception as exc:
-            error(tr('فشل تحميل الكتالوج: %s') % exc)
+            error(tr('Catalog load failed: %s') % exc)
             return end_dir()
         all_metas = []
         for meta in batch:
@@ -10617,11 +10612,11 @@ def catalog(provider_id, media_type, catalog_id, label='', page='0', genre='', y
         # twice (once in the chooser dialog, once as a direct item). Removed.
         already_fav = (str(media_type or ''), str(meta_id or '')) in favorite_keys
         if already_fav:
-            ctx_menu.append(('إزالة من المفضلة', 'RunPlugin(%s)' % build_url(
+            ctx_menu.append(('Remove from favorites', 'RunPlugin(%s)' % build_url(
                 action='fav_remove', media_type=media_type, canonical_id=meta_id,
             )))
         else:
-            ctx_menu.append(('إضافة إلى المفضلة', 'RunPlugin(%s)' % build_url(
+            ctx_menu.append(('Add to favorites', 'RunPlugin(%s)' % build_url(
                 action='fav_add', media_type=media_type, canonical_id=meta_id,
                 title=item_label, poster=art.get('poster') or '',
                 background=art.get('fanart') or '', clearlogo=art.get('clearlogo') or '',
@@ -10640,7 +10635,7 @@ def catalog(provider_id, media_type, catalog_id, label='', page='0', genre='', y
             more_args['force_remote'] = '1'
         more_url = build_url(**more_args)
         if not globals().get('_pagination_hidden', lambda: False)():
-            add_item(tr('المزيد'), more_url, info={'title': tr('المزيد'), 'plot': tr('تحميل المزيد من نتائج هذا الكتالوج')}, art=root_art('catalogs'))
+            add_item(tr('More'), more_url, info={'title': tr('More'), 'plot': tr('Load more results from this catalog')}, art=root_art('catalogs'))
         if skip_supported:
             try:
                 import threading as _thr
@@ -10660,11 +10655,11 @@ def catalog(provider_id, media_type, catalog_id, label='', page='0', genre='', y
 def catalog_all(provider_id, media_type, catalog_id, label='', page='0', genre='', year='', force_remote=''):
     """Bypass genre/year folder gate — show the full unfiltered catalog listing."""
     win = xbmcgui.Window(WINDOW_ID)
-    win.setProperty('dexhub.catalog_skip_gate', '1')
+    win.setProperty('nuviohub.catalog_skip_gate', '1')
     try:
         return catalog(provider_id, media_type, catalog_id, label=label, page=page, genre=genre, year=year, force_remote=force_remote)
     finally:
-        win.clearProperty('dexhub.catalog_skip_gate')
+        win.clearProperty('nuviohub.catalog_skip_gate')
 
 
 def catalog_extra(provider_id, media_type, catalog_id, label='', page='0', extra_name='', extra_value='', force_remote=''):
@@ -10672,15 +10667,15 @@ def catalog_extra(provider_id, media_type, catalog_id, label='', page='0', extra
     that aren't specially named genre/year)."""
     # Temporarily store the preset in a Window property, then call catalog with skip-gate.
     win = xbmcgui.Window(WINDOW_ID)
-    win.setProperty('dexhub.catalog_extra_name', extra_name or '')
-    win.setProperty('dexhub.catalog_extra_value', extra_value or '')
-    win.setProperty('dexhub.catalog_skip_gate', '1')
+    win.setProperty('nuviohub.catalog_extra_name', extra_name or '')
+    win.setProperty('nuviohub.catalog_extra_value', extra_value or '')
+    win.setProperty('nuviohub.catalog_skip_gate', '1')
     try:
         return catalog(provider_id, media_type, catalog_id, label=label, page=page, force_remote=force_remote)
     finally:
-        win.clearProperty('dexhub.catalog_extra_name')
-        win.clearProperty('dexhub.catalog_extra_value')
-        win.clearProperty('dexhub.catalog_skip_gate')
+        win.clearProperty('nuviohub.catalog_extra_name')
+        win.clearProperty('nuviohub.catalog_extra_value')
+        win.clearProperty('nuviohub.catalog_skip_gate')
 
 
 def _return_after_filters(provider_id, media_type, catalog_id, force_remote='', return_action='', return_bucket=''):
@@ -10709,9 +10704,9 @@ def filters_menu(provider_id, media_type, catalog_id, force_remote='', return_ac
         labels.append('%s%s' % (_filter_label(name), ('  •  %s' % current) if current not in (None, '') else ''))
         actions.append(('set', name))
     if state:
-        labels.append('مسح كل الفلاتر')
+        labels.append('Clear all filters')
         actions.append(('clear', ''))
-    idx = xbmcgui.Dialog().select(tr('الفرز والتصفية'), [tr(x) for x in labels])
+    idx = xbmcgui.Dialog().select(tr('Sort & filter'), [tr(x) for x in labels])
     if idx < 0:
         return _return_after_filters(provider_id, media_type, catalog_id, force_remote=force_remote, return_action=return_action, return_bucket=return_bucket)
     action, value = actions[idx]
@@ -10737,8 +10732,8 @@ def select_filter(provider_id, media_type, catalog_id, filter_name, force_remote
     options = list(extra_def.get('options') or [])
     title = _filter_label(filter_name)
     if options:
-        labels = ['إلغاء الفلتر'] + [str(x) for x in options]
-        idx = xbmcgui.Dialog().select(tr('اختر %s') % tr(title), [tr(x) for x in labels])
+        labels = ['Clear filter'] + [str(x) for x in options]
+        idx = xbmcgui.Dialog().select(tr('Choose %s') % tr(title), [tr(x) for x in labels])
         if idx < 0:
             return _return_after_filters(provider_id, media_type, catalog_id, force_remote=force_remote, return_action=return_action, return_bucket=return_bucket)
         if idx == 0:
@@ -10747,7 +10742,7 @@ def select_filter(provider_id, media_type, catalog_id, filter_name, force_remote
             store.set_catalog_filter(provider_id, catalog_id, filter_name, labels[idx])
     else:
         default = _filter_state(provider_id, catalog_id).get(filter_name, '')
-        kb = xbmc.Keyboard(default, tr('اكتب %s') % tr(title))
+        kb = xbmc.Keyboard(default, tr('Type %s') % tr(title))
         kb.doModal()
         if not kb.isConfirmed():
             return _return_after_filters(provider_id, media_type, catalog_id, force_remote=force_remote, return_action=return_action, return_bucket=return_bucket)
@@ -10817,12 +10812,12 @@ def search(media_type, provider_id=None, query=''):
     if not rows:
         return providers()
     win = xbmcgui.Window(WINDOW_ID)
-    last_key = 'dexhub.last_search.%s' % (media_type or 'any')
+    last_key = 'nuviohub.last_search.%s' % (media_type or 'any')
     query = (query or '').strip()
     if not query:
         # Seed keyboard with the last query so users can refine without retyping.
         last_query = win.getProperty(last_key) or ''
-        keyboard = xbmc.Keyboard(last_query, tr('ابحث أو اكتب tmdb:123 / tt1234567'))
+        keyboard = xbmc.Keyboard(last_query, tr('Search or type tmdb:123 / tt1234567'))
         keyboard.doModal()
         if not keyboard.isConfirmed():
             return end_dir()
@@ -10964,13 +10959,13 @@ def search(media_type, provider_id=None, query=''):
 
     # ─── Header row ───
     active_sources = len({p.get('id') for p, _, _ in ordered_rows} | {p.get('id') for p, _ in search_jobs})
-    header_label = tr('🔍 بحث: %s') % query
-    header_parts = [tr('نتائج: %d') % len(ordered_rows)]
-    header_parts.append(tr('مصادر فعّالة: %d') % active_sources)
+    header_label = tr('🔍 Search: %s') % query
+    header_parts = [tr('Results: %d') % len(ordered_rows)]
+    header_parts.append(tr('Active add-ons: %d') % active_sources)
     if not ordered_rows:
-        header_parts.append('لا توجد نتائج — جرّب صياغة أخرى')
+        header_parts.append('No results — try different wording')
     header_subtitle = ' • '.join(header_parts)
-    header_plot = tr('استعلامك: "%s"\n\n%s') % (query, '\n'.join(header_parts))
+    header_plot = tr('Your query: "%s"\n\n%s') % (query, '\n'.join(header_parts))
     # The header is a no-op item (path=current) so clicking it does nothing
     # disruptive. Visually it acts as a section divider.
     add_item('%s — %s' % (header_label, header_subtitle),
@@ -11032,7 +11027,7 @@ def search(media_type, provider_id=None, query=''):
             info = dict(info)
             info['plot'] = (current_plot
                 + ('\n\n' if current_plot else '')
-                + tr('متوفر في %d مصادر: %s') % (n_providers, tr('، ').join(entry['provider_names'])))
+                + tr('Available from %d add-ons: %s') % (n_providers, tr(', ').join(entry['provider_names'])))
         add_item(display_label,
                  path,
                  is_folder=path_is_folder,
@@ -11593,14 +11588,14 @@ def _default_click_mode():
     compact = raw.replace(' ', '').replace('_', '').replace('-', '')
     if compact in ('tmdbhelper', 'helper', '1') or 'tmdb' in compact:
         return 'tmdbhelper'
-    if raw in ('اسأل كل مرة', 'السؤال كل مرة', 'ask') or compact in ('ask', 'askeverytime', '2'):
+    if raw in ('Ask every time', "\u0627\u0644\u0633\u0624\u0627\u0644 \u0643\u0644 \u0645\u0631\u0629", 'ask') or compact in ('ask', 'askeverytime', '2'):
         return 'ask'
-    return 'dexhub'
+    return 'nuviohub'
 
 
 def _default_playback_mode():
     raw = (ADDON.getSetting('playback_open_mode') or 'Choose from sources').strip().lower()
-    if raw in ('1', 'best quality automatically', 'auto', 'autoplay') or ('best' in raw) or ('أفضل' in raw):
+    if raw in ('1', 'best quality automatically', 'auto', 'autoplay') or ('best' in raw) or ('Best' in raw):
         return 'autoplay'
     return 'sources'
 
@@ -11621,7 +11616,7 @@ def _prefer_source_picker():
 #   - 'picker': always show the NuvioHub source picker (legacy default).
 def _source_resolution_mode():
     raw = (ADDON.getSetting('source_resolution_mode') or 'NuvioHub picker').strip().lower()
-    if 'نفس' in raw or 'same' in raw:
+    if "\u0646\u0641\u0633" in raw or 'same' in raw:
         return 'same'
     if 'tmdb' in raw or 'helper' in raw:
         return 'tmdbh'
@@ -11700,7 +11695,7 @@ def _maybe_redirect_default_player(media_type='movie', canonical_id='', title=''
     return _launch_tmdbhelper_url(url)
 
 
-def _dispatch_dexhub_play(media_type='', canonical_id='', title='', video_id='', season='', episode='', resume_seconds='0', resume_percent='', preferred_provider_name='', tmdb_id='', imdb_id='', tvdb_id='', source_provider_id='', source_mode='', ui_seed=None):
+def _dispatch_nuviohub_play(media_type='', canonical_id='', title='', video_id='', season='', episode='', resume_seconds='0', resume_percent='', preferred_provider_name='', tmdb_id='', imdb_id='', tvdb_id='', source_provider_id='', source_mode='', ui_seed=None):
     media_type = str(media_type or 'movie').strip().lower()
     try:
         resume = float(resume_seconds or 0.0)
@@ -12023,10 +12018,10 @@ def _merge_ui_seed_into_art(art, ui_seed=None):
     return merged
 
 
-def _content_click_path(media_type='movie', canonical_id='', title='', tmdb_id='', imdb_id='', tvdb_id='', season='', episode='', video_id='', source_provider_id='', source_mode='', force_dexhub=False, ui_seed=None):
+def _content_click_path(media_type='movie', canonical_id='', title='', tmdb_id='', imdb_id='', tvdb_id='', season='', episode='', video_id='', source_provider_id='', source_mode='', force_nuviohub=False, ui_seed=None):
     media_type = str(media_type or 'movie').strip().lower()
     _ui_seed = _ui_seed_query_from_art(ui_seed or {}, {}) if ui_seed else {}
-    if (not force_dexhub) and (not source_mode) and _default_click_uses_tmdbhelper():
+    if (not force_nuviohub) and (not source_mode) and _default_click_uses_tmdbhelper():
         route_ids = _resolve_routing_ids(
             media_type=media_type,
             canonical_id=canonical_id,
@@ -12204,7 +12199,7 @@ def _prioritize_provider_targets(targets, preferred_provider_name=''):
 
 def _source_mode_only_enabled(source_mode=''):
     mode = str(source_mode or '').strip().lower()
-    return mode in ('only', 'same', 'same_source', 'same-source', 'source_only', 'source-only', 'نفس', 'نفس السورس')
+    return mode in ('only', 'same', 'same_source', 'same-source', 'source_only', 'source-only', "\u0646\u0641\u0633", "\u0646\u0641\u0633 \u0627\u0644\u0633\u0648\u0631\u0633")
 
 
 def _split_targets_by_source_mode(targets, source_provider_id='', source_mode=''):
@@ -12263,7 +12258,7 @@ def _build_player_chooser_menu(media_type='movie', canonical_id='', title='', tm
         video_id=video_id or '',
         source_provider_id=source_provider_id or '',
     )
-    return [('اختيار المشغّل…', 'RunPlugin(%s)' % chooser_url)]
+    return [('Choose player…', 'RunPlugin(%s)' % chooser_url)]
 
 
 def choose_player(media_type='movie', canonical_id='', title='', tmdb_id='', imdb_id='', tvdb_id='', season='', episode='', video_id='', source_provider_id=''):
@@ -12274,7 +12269,7 @@ def choose_player(media_type='movie', canonical_id='', title='', tmdb_id='', imd
         tmdbh_url = _tmdbh_url_from_ids(media_type=media_type, tmdb_id=route_ids.get('tmdb_id') or '', imdb_id=route_ids.get('imdb_id') or '', tvdb_id=route_ids.get('tvdb_id') or '', title=title, season=season, episode=episode)
         if tmdbh_url:
             options.append(('TMDb Helper', tmdbh_url))
-    choice = xbmcgui.Dialog().select(tr('اختر المشغّل'), [tr(label) for label, _ in options])
+    choice = xbmcgui.Dialog().select(tr('Choose player'), [tr(label) for label, _ in options])
     if choice < 0 or choice >= len(options):
         return
     label, url = options[choice]
@@ -12288,13 +12283,13 @@ def _maybe_redirect_player(meta, media_type, title=''):
     if _tmdbh_invocation_active():
         return False
     mode = _default_click_mode()
-    if mode == 'dexhub':
+    if mode == 'nuviohub':
         return False
     if mode == 'ask':
         options = ['Nuvio Hub']
         if _has_tmdbhelper():
             options.append('TMDb Helper')
-        choice = xbmcgui.Dialog().select(tr('اختر المشغل'), [tr(x) for x in options])
+        choice = xbmcgui.Dialog().select(tr('Choose player'), [tr(x) for x in options])
         if choice <= 0:
             return False
         mode = 'tmdbhelper'
@@ -12313,7 +12308,7 @@ def item_open(media_type, canonical_id, title='', tmdb_id='', imdb_id='', tvdb_i
     # the user explicitly chose it, otherwise go straight to playback.
     if not _is_series_media(media_type):
         mode = _default_click_mode()
-        if mode != 'dexhub':
+        if mode != 'nuviohub':
             route_ids = _resolve_routing_ids(media_type=media_type, canonical_id=canonical_id, title=title or canonical_id, tmdb_id=tmdb_id, imdb_id=imdb_id, tvdb_id=tvdb_id)
             if mode == 'tmdbhelper' and _has_tmdbhelper() and (route_ids.get('tmdb_id') or route_ids.get('imdb_id') or route_ids.get('tvdb_id')):
                 helper_url = _tmdbh_url_from_ids(media_type=media_type, tmdb_id=route_ids.get('tmdb_id') or '', imdb_id=route_ids.get('imdb_id') or '', tvdb_id=route_ids.get('tvdb_id') or '', title=title or canonical_id)
@@ -12335,7 +12330,7 @@ def item_open(media_type, canonical_id, title='', tmdb_id='', imdb_id='', tvdb_i
 
     # Series rows still open the seasons screen unless the user explicitly
     # redirects them to TMDb Helper via the click-mode setting.
-    if _default_click_mode() == 'dexhub':
+    if _default_click_mode() == 'nuviohub':
         resolved_title = title or canonical_id
         return series_meta(media_type, canonical_id, title=resolved_title, source_provider_id=source_provider_id or '')
 
@@ -12788,7 +12783,7 @@ def _stream_display_name(row):
 # Language hints we look for inside sub filenames / release names. Order
 # matters — more specific tokens first so 'arabic' beats 'ara' beats 'ar'.
 _FILENAME_LANG_HINTS = [
-    ('arabic',     'ar'), ('عربي',     'ar'), ('عربية',    'ar'), ('ara',  'ar'), ('.ar.', 'ar'), ('-ar-', 'ar'), ('_ar_', 'ar'),
+    ('arabic',     'ar'), ('Arabic',     'ar'), ('Arabic',    'ar'), ('ara',  'ar'), ('.ar.', 'ar'), ('-ar-', 'ar'), ('_ar_', 'ar'),
     ('english',    'en'), ('eng',      'en'), ('.en.', 'en'), ('-en-', 'en'), ('_en_', 'en'),
     ('french',     'fr'), ('français', 'fr'), ('francais', 'fr'), ('fre',  'fr'), ('fra',  'fr'), ('.fr.', 'fr'),
     ('spanish',    'es'), ('español',  'es'), ('espanol',  'es'), ('spa',  'es'), ('.es.', 'es'),
@@ -12853,7 +12848,7 @@ def _tags_from_fact_lists(video_bits, audio_bits, row=None):
         clean = MULTI_WS_RE.sub(' ', str(value or '')).strip()
         if clean and clean not in langs:
             langs.append(clean)
-    for token, label in (('ARABIC', 'عربي'), ('ENGLISH', 'EN'),
+    for token, label in (('ARABIC', 'Arabic'), ('ENGLISH', 'EN'),
                          ('RUSSIAN', 'RU'), ('MULTI', 'Multi')):
         if token in audio and label not in langs:
             langs.append(label)
@@ -13234,7 +13229,7 @@ def _dedup_mode():
     Repeated rows from the SAME provider are handled separately and
     unconditionally by _collapse_repeated_provider_rows.
     """
-    # --- dexhub-406-patch --- honour the setting instead of ignoring it
+    # --- nuviohub-406-patch --- honour the setting instead of ignoring it
     try:
         raw = str(ADDON.getSetting('source_dedup_mode') or '').strip().lower()
     except Exception:
@@ -13308,7 +13303,7 @@ _TAG_PATTERNS = {
 
 # Arabic first — it is what this addon's audience actually filters on.
 _LANG_PATTERNS = [
-    ('\u0639\u0631\u0628\u064a', r'(?<![a-z])(arabic|arab|ara|\u0639\u0631\u0628\u064a|\u0645\u062f\u0628\u0644\u062c|\u0645\u062a\u0631\u062c\u0645)(?![a-z])'),
+    ('Arabic', r'(?<![a-z])(arabic|arab|ara|\u0639\u0631\u0628\u064a|\u0645\u062f\u0628\u0644\u062c|\u0645\u062a\u0631\u062c\u0645)(?![a-z])'),
     ('Multi', r'(?<![a-z])multi(?![a-z])|dual%s?audio' % _SEP),
     ('EN', r'(?<![a-z])(english|eng)(?![a-z])'),
     ('FR', r'(?<![a-z])(french|fre|vff|vfq)(?![a-z])'),
@@ -13552,7 +13547,7 @@ def _source_info_text(row, provider_name, facts=None, provider_origin=''):
 # And for a STREMIO source the addon's OWN subtitles come first, because the
 # addon is what is serving the file: it knows which subtitle belongs to it.
 # ─────────────────────────────────────────────────────────────────────────────
-_SUBS_TMP_DIRNAME = 'dexhub_subs'
+_SUBS_TMP_DIRNAME = 'nuviohub_subs'
 
 
 def _companion_context_from_playback(ctx):
@@ -13670,7 +13665,7 @@ def _publish_playback_art_properties(ctx):
     """Publish playback artwork/skin properties for the current item.
 
     Extracted verbatim from _play_with_context (v3.9.145). Writes the
-    dexhub.* window properties, mirrors artwork onto the always-alive
+    nuviohub.* window properties, mirrors artwork onto the always-alive
     home window (Window 10000), and publishes Arctic Fuse / Arctic
     Zephyr skin properties. Property write ORDER is preserved exactly;
     several skins and the Kodi 22 safe-handoff path depend on it.
@@ -13679,7 +13674,7 @@ def _publish_playback_art_properties(ctx):
     # Always write clearlogo — even when empty — so stale art from the
     # previous item doesn't bleed through to the current one.
     _logo = ctx.get('clearlogo') or ''
-    xbmcgui.Window(WINDOW_ID).setProperty('dexhub.clearlogo', _logo)
+    xbmcgui.Window(WINDOW_ID).setProperty('nuviohub.clearlogo', _logo)
     xbmcgui.Window(WINDOW_ID).setProperty('clearlogo', _logo)
     xbmcgui.Window(WINDOW_ID).setProperty('tvshow.clearlogo', _logo)
     # v3.9.85: scrub the poster URL before propagating. Some Stremio
@@ -13695,8 +13690,8 @@ def _publish_playback_art_properties(ctx):
                               imdb_id=ctx.get('imdb_id') or '')
     _clean_fanart = ctx.get('background') or _clean_p or neutral_fanart()
     if _clean_p:
-        xbmcgui.Window(WINDOW_ID).setProperty('dexhub.poster', _clean_p)
-    xbmcgui.Window(WINDOW_ID).setProperty('dexhub.fanart', _clean_fanart)
+        xbmcgui.Window(WINDOW_ID).setProperty('nuviohub.poster', _clean_p)
+    xbmcgui.Window(WINDOW_ID).setProperty('nuviohub.fanart', _clean_fanart)
     # Mirror the active playback artwork onto the always-alive home window as
     # well. Several skins/player overlays read artwork from Window(10000) or
     # global properties during fullscreen playback, not from our transient
@@ -13713,17 +13708,17 @@ def _publish_playback_art_properties(ctx):
         genre_value = str(ctx.get('genre') or '')
         studio_value = str(ctx.get('studio') or '')
         rating_value = str(ctx.get('rating') or '')
-        home.setProperty('dexhub.source.clearlogo', logo_value)
-        home.setProperty('dexhub.source.poster', poster_value)
-        home.setProperty('dexhub.source.thumb', poster_value)
-        home.setProperty('dexhub.source.fanart', fanart_value)
-        home.setProperty('dexhub.source.title', title_value)
-        home.setProperty('dexhub.source.plot', plot_value)
-        home.setProperty('dexhub.source.year', year_value)
-        home.setProperty('dexhub.source.genre', genre_value)
-        home.setProperty('dexhub.source.studio', studio_value)
-        home.setProperty('dexhub.source.rating', rating_value)
-        home.setProperty('dexhub.source.key', _source_art_identity_key(ctx))
+        home.setProperty('nuviohub.source.clearlogo', logo_value)
+        home.setProperty('nuviohub.source.poster', poster_value)
+        home.setProperty('nuviohub.source.thumb', poster_value)
+        home.setProperty('nuviohub.source.fanart', fanart_value)
+        home.setProperty('nuviohub.source.title', title_value)
+        home.setProperty('nuviohub.source.plot', plot_value)
+        home.setProperty('nuviohub.source.year', year_value)
+        home.setProperty('nuviohub.source.genre', genre_value)
+        home.setProperty('nuviohub.source.studio', studio_value)
+        home.setProperty('nuviohub.source.rating', rating_value)
+        home.setProperty('nuviohub.source.key', _source_art_identity_key(ctx))
         if _safe_playback_handoff_enabled():
             # Kodi 22 safe path: publish ONLY the lightweight logo properties
             # used by Arctic Fuse/skin player overlays.  Do not publish the full
@@ -13934,7 +13929,7 @@ def _play_with_context(ctx, stream_key='', fallback_keys=None, entries_meta=None
         save_session(minimal)
     _invalidate_nextup_cache()
     _publish_playback_art_properties(ctx)
-    # IMPORTANT: do NOT clear dexhub.invoked_by_tmdbh here.
+    # IMPORTANT: do NOT clear nuviohub.invoked_by_tmdbh here.
     # Clearing it before the player actually starts allows internal click/
     # playback paths to think the TMDb Helper handoff is already over, which
     # can bounce back into TMDb Helper one more time just before playback.
@@ -13958,7 +13953,7 @@ def _play_with_context(ctx, stream_key='', fallback_keys=None, entries_meta=None
                 xbmcplugin.setResolvedUrl(HANDLE, False, xbmcgui.ListItem())
             except Exception:
                 pass
-        error(tr('لا يوجد رابط تشغيل'))
+        error(tr('No playback URL'))
         return
 
     try:
@@ -14197,7 +14192,7 @@ def _play_with_context(ctx, stream_key='', fallback_keys=None, entries_meta=None
     subs = [row.get('path') for row in prepared_first if row.get('path')]
     if force_subtitles and not subs and not other_subs:
         try:
-            notify(tr('لم يتم العثور على ترجمة مطابقة لهذا المصدر'))
+            notify(tr('No matching subtitle was found for this add-on'))
         except Exception:
             pass
     # v3.9.105: pick the BEST Arabic subtitle as the auto-selected one, not
@@ -14344,7 +14339,7 @@ def _play_with_context(ctx, stream_key='', fallback_keys=None, entries_meta=None
                 # the same resolve/handoff machinery as play_item.
                 'plex_play',
                 'emby_play',
-                # tmdb_player excluded: dexhub.json is is_resolvable=false,
+                # tmdb_player excluded: nuviohub.json is is_resolvable=false,
                 # so TMDb Helper fires the URL and exits with no open HANDLE
                 # to resolve. NuvioHub drives playback via player.play() here.
                 # (v3.9.156: reverted the 155 resolvable experiment — it
@@ -14505,19 +14500,19 @@ def _source_window_meta_from_entries(entries, meta=None):
     try:
         if home and _home_source_props_match(merged, home):
             if not merged.get('poster'):
-                merged['poster'] = home.getProperty('dexhub.source.poster') or ''
+                merged['poster'] = home.getProperty('nuviohub.source.poster') or ''
             if not merged.get('fanart'):
-                merged['fanart'] = home.getProperty('dexhub.source.fanart') or ''
+                merged['fanart'] = home.getProperty('nuviohub.source.fanart') or ''
             if not merged.get('clearlogo'):
-                merged['clearlogo'] = home.getProperty('dexhub.source.clearlogo') or ''
+                merged['clearlogo'] = home.getProperty('nuviohub.source.clearlogo') or ''
             if not merged.get('title'):
-                merged['title'] = home.getProperty('dexhub.source.title') or ''
+                merged['title'] = home.getProperty('nuviohub.source.title') or ''
             if not merged.get('plot'):
-                merged['plot'] = home.getProperty('dexhub.source.plot') or ''
+                merged['plot'] = home.getProperty('nuviohub.source.plot') or ''
             if not merged.get('year'):
-                merged['year'] = home.getProperty('dexhub.source.year') or ''
+                merged['year'] = home.getProperty('nuviohub.source.year') or ''
             if not merged.get('studio'):
-                merged['studio'] = home.getProperty('dexhub.source.studio') or ''
+                merged['studio'] = home.getProperty('nuviohub.source.studio') or ''
     except Exception:
         pass
     if not merged.get('poster'):
@@ -14555,15 +14550,15 @@ def _current_source_ui_meta(meta=None):
 
     try:
         if home and _home_source_props_match(merged, home):
-            poster = _first(poster, home.getProperty('dexhub.source.poster'), home.getProperty('dexhub.source.thumb'))
-            fanart = _first(fanart, home.getProperty('dexhub.source.fanart'), poster)
-            clearlogo = _first(clearlogo, home.getProperty('dexhub.source.clearlogo'))
-            title = _first(title, home.getProperty('dexhub.source.title'))
-            plot = _first(plot, home.getProperty('dexhub.source.plot'))
-            year = _first(year, home.getProperty('dexhub.source.year'))
-            genre = _first(genre, home.getProperty('dexhub.source.genre'))
-            rating = _first(rating, home.getProperty('dexhub.source.rating'))
-            studio = _first(studio, home.getProperty('dexhub.source.studio'))
+            poster = _first(poster, home.getProperty('nuviohub.source.poster'), home.getProperty('nuviohub.source.thumb'))
+            fanart = _first(fanart, home.getProperty('nuviohub.source.fanart'), poster)
+            clearlogo = _first(clearlogo, home.getProperty('nuviohub.source.clearlogo'))
+            title = _first(title, home.getProperty('nuviohub.source.title'))
+            plot = _first(plot, home.getProperty('nuviohub.source.plot'))
+            year = _first(year, home.getProperty('nuviohub.source.year'))
+            genre = _first(genre, home.getProperty('nuviohub.source.genre'))
+            rating = _first(rating, home.getProperty('nuviohub.source.rating'))
+            studio = _first(studio, home.getProperty('nuviohub.source.studio'))
     except Exception:
         pass
 
@@ -14612,11 +14607,11 @@ def _show_stream_window(entries, meta, session_key=''):
     except Exception as exc:
         xbmc.log('[NuvioHub] source window failed, using dialog fallback: %s' % exc, xbmc.LOGWARNING)
         labels = [e.get('name') or e.get('label2') or e.get('stream_key') or 'Stream' for e in entries]
-        idx = xbmcgui.Dialog().select(tr(meta.get('title') or tr('اختر المصدر')), [tr(x) for x in labels])
+        idx = xbmcgui.Dialog().select(tr(meta.get('title') or tr('Choose add-on')), [tr(x) for x in labels])
         if idx >= 0 and idx < len(entries):
             chosen_key = entries[idx].get('stream_key')
             if play_mode == 'ask':
-                play_choice = xbmcgui.Dialog().select(tr('اختر طريقة التشغيل'), [tr('تشغيل'), tr('تشغيل مع ترجمة')])
+                play_choice = xbmcgui.Dialog().select(tr('Choose playback mode'), [tr('Play'), tr('Play with subtitles')])
                 if play_choice < 0:
                     chosen_key = None
                 else:
@@ -14657,7 +14652,7 @@ def _show_stream_window(entries, meta, session_key=''):
                 current_action = dict(parse_qsl(sys.argv[2].lstrip('?'))).get('action', '')
             except Exception:
                 current_action = ''
-            # dialog:false in dexhub.json → no open HANDLE for tmdb_player.
+            # dialog:false in nuviohub.json → no open HANDLE for tmdb_player.
             use_resolved = (HANDLE >= 0 and current_action in (
                 'play_item', 'cw_resume', 'cw_play_from_start', 'play',
                 # TMDb Helper invokes its player URL through ResolvePath on
@@ -14702,7 +14697,7 @@ def _show_stream_window(entries, meta, session_key=''):
                     pass
                 try:
                     xbmcgui.Dialog().textviewer(
-                        tr('Nuvio Hub — تعذّر بدء التشغيل'),
+                        tr('Nuvio Hub — could not start playback'),
                         ('Crashed before playback could start.\n\n'
                          'Stream key: %s\nProvider: %s\nMedia: %s\n\n'
                          'Error:\n%s\n\n%s') % (
@@ -14804,7 +14799,7 @@ def _renumber_stream_entries(entries):
     return renumber_stream_entries(entries)
 
 
-# --- dexhub-406-patch ---
+# --- nuviohub-406-patch ---
 def _collapse_repeated_provider_rows(entries):
     """Drop rows the SAME provider returned more than once.
 
@@ -14846,7 +14841,7 @@ def _collapse_repeated_provider_rows(entries):
 
 
 def _finalize_stream_entries(entries, resort=True, media_type='', canonical_id='', video_id=''):
-    # --- dexhub-406-patch --- same provider, same url -> one row
+    # --- nuviohub-406-patch --- same provider, same url -> one row
     try:
         entries, _repeat_removed = _collapse_repeated_provider_rows(entries)
         if _repeat_removed:
@@ -15271,7 +15266,7 @@ def _append_stream_entries_from_data(entries, data, provider, request_id, media_
             ('direct',) + _SOURCE_TYPE_STYLES['direct'])
         entries.append({
             'stream_key': cache_key,
-            # --- dexhub-406-patch --- identity for same-provider collapsing
+            # --- nuviohub-406-patch --- identity for same-provider collapsing
             'stream_url': stream_url,
             # v4.1.0: source-type chip (usenet/debrid/torrent/direct/server)
             'source_type': _stype,
@@ -15413,22 +15408,7 @@ def _server_client(backend):
 
 def _server_stream_rows(backend, server, ids, media_type, titles,
                         season=None, episode=None):
-    """ONE lookup for both servers: ID first, titles only as a fallback.
-
-    v3.9.218 — the unified path the user asked for.
-
-    Emby worked because it was asked by ID (AnyProviderIdEquals). Plex was
-    asked by TITLE — and an Arabic title can never match an English library,
-    let alone the literal string "الحلقة 16". Both servers now take the same
-    route through the same code:
-
-        1. every ID we hold (imdb / tmdb / tvdb) -> find_all_by_ids
-        2. only if that finds nothing, the title variants
-        3. every hit is verified against the IDs before it is trusted
-
-    Whatever comes back is a normal Nuvio Hub source row, so the servers ARE
-    sources — ranked, badged, switchable and resumable like any other.
-    """
+    "ONE lookup for both servers: ID first, titles only as a fallback.\n\n    v3.9.218 — the unified path the user asked for.\n\n    Emby worked because it was asked by ID (AnyProviderIdEquals). Plex was\n    asked by TITLE — and an Arabic title can never match an English library,\n    let alone the literal string \"\u0627\u0644\u062d\u0644\u0642\u0629 16\". Both servers now take the same\n    route through the same code:\n\n        1. every ID we hold (imdb / tmdb / tvdb) -> find_all_by_ids\n        2. only if that finds nothing, the title variants\n        3. every hit is verified against the IDs before it is trusted\n\n    Whatever comes back is a normal Nuvio Hub source row, so the servers ARE\n    sources — ranked, badged, switchable and resumable like any other.\n    "
     client = _server_client(backend)
     identity = MediaIdentity(media_type=media_type, ids=ids, title=(titles or [''])[0],
                              titles=titles, season=season, episode=episode)
@@ -15444,7 +15424,7 @@ def _server_stream_rows(backend, server, ids, media_type, titles,
     _budget = _get_int_setting('server_lookup_seconds', 7, minimum=4, maximum=60)
     _deadline = time.time() + float(_budget)
     try:
-        from .dexhub.client import provider_health_pause
+        from .nuviohub.client import provider_health_pause
         provider_health_pause(_budget + 2)
     except Exception:
         pass
@@ -15806,7 +15786,7 @@ def _collect_stream_entries(targets, media_type, canonical_id, best_meta, art, b
     if not targets:
         return entries
 
-    loader_title = title or show_title or best_meta.get('name') or canonical_id or tr('المصادر')
+    loader_title = title or show_title or best_meta.get('name') or canonical_id or tr('Add-ons')
     # v4.6.3: warm the MDBList aggregated-ratings cache in the background
     # while the providers are queried anyway. The picker's tmdbh_context
     # overlay only ever READS the warm cache (no network in its hot path) —
@@ -15883,8 +15863,8 @@ def _collect_stream_entries(targets, media_type, canonical_id, best_meta, art, b
                 loader.update(
                     provider_name=provider.get('name') or (provider.get('manifest') or {}).get('name') or '',
                     index=idx,
-                    status=tr('جار البحث عن المصادر...'),
-                    sub_status='%d %s' % (len(entries), tr('مصدر')) if entries else '',
+                    status=tr('Searching for add-ons...'),
+                    sub_status='%d %s' % (len(entries), tr('add-on')) if entries else '',
                 )
             if isinstance(data, Exception) or not data:
                 continue
@@ -16204,7 +16184,7 @@ def _source_scan_cancelled():
             return True
     except Exception:
         pass
-    for prop in ('dexhub.sources.cancelled', 'dexhub.sources.stopped'):
+    for prop in ('nuviohub.sources.cancelled', 'nuviohub.sources.stopped'):
         try:
             if (xbmcgui.Window(WINDOW_ID).getProperty(prop) or '') == '1':
                 return True
@@ -16411,7 +16391,7 @@ def streams(media_type, canonical_id, title='', resume_seconds='0', resume_perce
                 except Exception:
                     pass
             return end_dir(cache=False)
-        error(tr('لم يتم العثور على روابط تشغيل'))
+        error(tr('No playback links were found'))
         if HANDLE >= 0:
             try:
                 xbmcplugin.setResolvedUrl(HANDLE, False, xbmcgui.ListItem())
@@ -16508,7 +16488,7 @@ def series_meta(media_type, canonical_id, title='', source_provider_id=''):
         except Exception:
             continue
     if not meta:
-        error(tr('تعذر جلب بيانات المسلسل'))
+        error(tr('Could not fetch the series data'))
         return end_dir()
     try:
         from . import meta_source as _meta_source
@@ -16535,7 +16515,7 @@ def series_meta(media_type, canonical_id, title='', source_provider_id=''):
         season_num = _video_season_num(video)
         seasons.setdefault(season_num, []).append(video)
     for season_num in sorted(seasons.keys()):
-        _season_label = 'حلقات خاصة' if season_num == 0 else (tr('الموسم %s') % season_num)
+        _season_label = 'Specials' if season_num == 0 else (tr('Season %s') % season_num)
         add_item(
             _season_label,
             build_url(action='season', media_type=media_type, canonical_id=canonical_id, season=season_num, title=resolved_series_title),
@@ -16833,7 +16813,7 @@ def episode_streams(canonical_id, video_id, season, episode, title='', media_typ
         if _source_scan_cancelled():
             xbmc.log('[NuvioHub] source scan cancelled by the user — no error', xbmc.LOGINFO)
             return end_dir(cache=False)
-        error(tr('لم يتم العثور على روابط تشغيل للحلقة'))
+        error(tr('No playback links were found for the episode'))
         return end_dir()
     entries = _finalize_stream_entries(entries, media_type=media_type, canonical_id=canonical_id, video_id=video_id)
     # Pull plot/year/genre/rating from best_meta so the source window can
@@ -16983,7 +16963,7 @@ def _tmdbh_resume_from_continue(media_type='movie', canonical_id='', tmdb_id='',
             'fanart': row.get('background') or '',
             'clearlogo': row.get('clearlogo') or '',
             'updated_at': int(row.get('updated_at') or 0),
-            'source': 'dexhub',
+            'source': 'nuviohub',
         }
 
     # v3.9.157: New rows have independent standard ids and are found via
@@ -17094,7 +17074,7 @@ def _persist_unified_resume_hint(hint, media_type, canonical_id, video_id, title
     """
     hint = dict(hint or {})
     source = str(hint.get('source') or '').strip().lower()
-    if not hint or source in ('', 'dexhub'):
+    if not hint or source in ('', 'nuviohub'):
         return False
     try:
         position = float(hint.get('resume_seconds') or 0.0)
@@ -17223,7 +17203,7 @@ def tmdb_player(video_type='movie', tmdb_id='', imdb_id='', tvdb_id='', title=''
 
     # Stash optional player-supplied art / Arabic-title hints so downstream
     # meta lookups can use them as a fast-path before hitting TMDb / Trakt.
-    # These come from the v2 dexhub.json player keys: {ar_title}, {poster},
+    # These come from the v2 nuviohub.json player keys: {ar_title}, {poster},
     # {fanart}. Older v1 player files don't pass them; the empty defaults
     # mean nothing breaks.
     try:
@@ -17240,9 +17220,9 @@ def tmdb_player(video_type='movie', tmdb_id='', imdb_id='', tvdb_id='', title=''
 
     try:
         win = xbmcgui.Window(WINDOW_ID)
-        win.setProperty('dexhub.tmdbh_seed_ids', json.dumps(seed_ids))
-        win.setProperty('dexhub.tmdbh_seed_for', canonical_id or '')
-        win.setProperty('dexhub.invoked_by_tmdbh', '1')
+        win.setProperty('nuviohub.tmdbh_seed_ids', json.dumps(seed_ids))
+        win.setProperty('nuviohub.tmdbh_seed_for', canonical_id or '')
+        win.setProperty('nuviohub.invoked_by_tmdbh', '1')
         _mark_tmdbh_handoff(60)
     except Exception:
         pass
@@ -17437,15 +17417,7 @@ def _meta_with_seed_ids(meta, ids):
 
 
 def _local_resume_lookup(media_type, canonical_id, video_id='', season=None, episode=None):
-    """(seconds, percent) from Nuvio Hub's local progress DB, else (0.0, 0.0).
-
-    v3.9.153: playback launched from TMDb Helper's own lists reaches
-    _auto_play_first_* with resume 0 because TMDbH cannot know Nuvio Hub's
-    saved positions. Continue-Watching data already lives in
-    playback_store — look the item up so "استكمال المشاهدة" works no matter
-    which side started playback. Finished items (>=95%) and tiny positions
-    (<=30s) return zero so fresh plays stay fresh.
-    """
+    "(seconds, percent) from Nuvio Hub's local progress DB, else (0.0, 0.0).\n\n    v3.9.153: playback launched from TMDb Helper's own lists reaches\n    _auto_play_first_* with resume 0 because TMDbH cannot know Nuvio Hub's\n    saved positions. Continue-Watching data already lives in\n    playback_store — look the item up so \"\u0627\u0633\u062a\u0643\u0645\u0627\u0644 \u0627\u0644\u0645\u0634\u0627\u0647\u062f\u0629\" works no matter\n    which side started playback. Finished items (>=95%) and tiny positions\n    (<=30s) return zero so fresh plays stay fresh.\n    "
     def _n(v):
         t = str(v).strip() if v is not None else ''
         return str(int(t)) if t.isdigit() else t
@@ -17545,7 +17517,7 @@ def _auto_play_first_movie(canonical_id, title='', seed_ids=None, preferred_prov
     if not entries:
         _clear_tmdbh_transient()
         _clear_source_transient_props(clear_global=True)
-        error(tr('لم يتم العثور على روابط تشغيل'))
+        error(tr('No playback links were found'))
         return end_dir()
     entries = _finalize_stream_entries(entries, media_type='movie', canonical_id=canonical_id)
     if pick_dialog:
@@ -17561,9 +17533,9 @@ def _auto_play_first_movie(canonical_id, title='', seed_ids=None, preferred_prov
                 except Exception:
                     pass
                 items.append(li)
-            choice = xbmcgui.Dialog().select(tr('اختر السورس'), items, useDetails=True)
+            choice = xbmcgui.Dialog().select(tr('Choose add-on'), items, useDetails=True)
         except Exception:
-            choice = xbmcgui.Dialog().select(tr('اختر السورس'), [e.get('name') or '?' for e in entries])
+            choice = xbmcgui.Dialog().select(tr('Choose add-on'), [e.get('name') or '?' for e in entries])
         if choice < 0:
             _clear_tmdbh_transient()
             _clear_source_transient_props(clear_global=True)
@@ -17618,7 +17590,7 @@ def _auto_play_first_episode(canonical_id, video_id, season, episode, title='', 
     if not entries:
         _clear_tmdbh_transient()
         _clear_source_transient_props(clear_global=True)
-        error(tr('لم يتم العثور على روابط تشغيل'))
+        error(tr('No playback links were found'))
         return end_dir()
     entries = _finalize_stream_entries(entries, media_type='series', canonical_id=canonical_id, video_id=video_id)
     if pick_dialog:
@@ -17634,9 +17606,9 @@ def _auto_play_first_episode(canonical_id, video_id, season, episode, title='', 
                 except Exception:
                     pass
                 items.append(li)
-            choice = xbmcgui.Dialog().select(tr('اختر السورس'), items, useDetails=True)
+            choice = xbmcgui.Dialog().select(tr('Choose add-on'), items, useDetails=True)
         except Exception:
-            choice = xbmcgui.Dialog().select(tr('اختر السورس'), [e.get('name') or '?' for e in entries])
+            choice = xbmcgui.Dialog().select(tr('Choose add-on'), [e.get('name') or '?' for e in entries])
         if choice < 0:
             _clear_tmdbh_transient()
             _clear_source_transient_props(clear_global=True)
@@ -17768,13 +17740,13 @@ def _import_pov_progress_if_available(limit=250, force=False):
         now = int(time.time())
         if not force:
             try:
-                last = int(win.getProperty('dexhub.pov_progress_import_ts') or '0')
+                last = int(win.getProperty('nuviohub.pov_progress_import_ts') or '0')
             except Exception:
                 last = 0
             if last and now - last < 180:
                 return 0
         try:
-            win.setProperty('dexhub.pov_progress_import_ts', str(now))
+            win.setProperty('nuviohub.pov_progress_import_ts', str(now))
         except Exception:
             pass
     except Exception:
@@ -18044,7 +18016,7 @@ def cw_resume(media_type='', canonical_id='', video_id='', season='', episode=''
     # here to TMDb Helper discards our stored resume_seconds and the item starts
     # from the beginning. Keep this path inside Nuvio Hub; users still have an
     # explicit player chooser in the context menu when they want TMDb Helper.
-    return _dispatch_dexhub_play(
+    return _dispatch_nuviohub_play(
         media_type=target_media_type,
         canonical_id=canonical_id,
         title=title or canonical_id,
@@ -18205,7 +18177,7 @@ def _home_payload(limit=12):
                 minutes = int(float(duration or 0) / 60.0)
             except (TypeError, ValueError, OverflowError):
                 minutes = 0
-            return (tr('%d دقيقة') % minutes) if minutes > 0 else ''
+            return (tr('%d min') % minutes) if minutes > 0 else ''
         raw_value = value if value not in (None, '') else duration
         try:
             number = int(float(raw_value or 0))
@@ -18215,7 +18187,7 @@ def _home_payload(limit=12):
             number = int(number / 60000.0)
         elif number > 600:  # seconds
             number = int(number / 60.0)
-        return (tr('%d دقيقة') % number) if number > 0 else ''
+        return (tr('%d min') % number) if number > 0 else ''
 
     for index, row in enumerate(raw):
         is_episode = _continue_row_is_episode(row)
@@ -18266,7 +18238,7 @@ def _home_payload(limit=12):
         year = helper.get('year') or ''
         rating = helper.get('rating') or helper.get('imdbRating') or ''
         runtime_label = _runtime_label(helper.get('runtime'), row.get('duration'))
-        kind_label = tr('مسلسل') if helper_type == 'tv' else tr('فيلم')
+        kind_label = tr('Series') if helper_type == 'tv' else tr('Movie')
         meta_bits = [str(bit) for bit in (year, kind_label, runtime_label) if bit not in (None, '')]
         if rating not in (None, '', 0, 0.0):
             try:
@@ -18324,7 +18296,7 @@ def _home_payload(limit=12):
             'clearlogo': home_art.get('clearlogo') or clearlogo,
             'plot': plot,
             'meta_line': '  •  '.join(meta_bits),
-            'resume_label': tr('متابعة من %s') % _clock(row.get('position')),
+            'resume_label': tr('Continue from %s') % _clock(row.get('position')),
             'resume_path': resume_path,
             'progress_key': [row.get('media_type') or '', row.get('canonical_id') or '', row.get('video_id') or ''],
             'target': {
@@ -18339,7 +18311,7 @@ def _home_payload(limit=12):
     # providers/pins/folders once so Home remains as light as the classic
     # implementation even when several Stremio addons are linked.
     sections = [
-        {'label': tr('الحلقة التالية'), 'path': build_url(action='nextup')},
+        {'label': tr('Next episode'), 'path': build_url(action='nextup')},
     ]
     try:
         catalog_buckets = set(
@@ -18387,8 +18359,8 @@ def _home_payload(limit=12):
 
     # Keep setup/management reachable when fewer media buckets are present.
     utilities = [
-        {'label': tr('المصادر'), 'path': build_url(action='providers')},
-        {'label': tr('حساباتي'), 'path': build_url(action='sync_accounts_menu')},
+        {'label': tr('Add-ons'), 'path': build_url(action='providers')},
+        {'label': tr('My accounts'), 'path': build_url(action='sync_accounts_menu')},
     ]
     for utility in utilities:
         if len(sections) >= 8:
@@ -18397,12 +18369,12 @@ def _home_payload(limit=12):
     nav = [
         # Already on Home: keep this button inert instead of closing the
         # cinematic window and exposing the classic fallback underneath it.
-        {'label': tr('الرئيسية'), 'path': ''},
-        {'label': tr('الأفلام'), 'path': build_url(action='hub_section', bucket='movies')},
-        {'label': tr('المسلسلات'), 'path': build_url(action='hub_section', bucket='series')},
-        {'label': tr('الأنمي'), 'path': build_url(action='hub_section', bucket='anime')},
-        {'label': tr('مباشر'), 'path': build_url(action='hub_section', bucket='live')},
-        {'label': tr('البحث'), 'path': build_url(action='hub_search_menu')},
+        {'label': tr('Home'), 'path': ''},
+        {'label': tr('Movies'), 'path': build_url(action='hub_section', bucket='movies')},
+        {'label': tr('Series'), 'path': build_url(action='hub_section', bucket='series')},
+        {'label': tr('Anime'), 'path': build_url(action='hub_section', bucket='anime')},
+        {'label': tr('Live'), 'path': build_url(action='hub_section', bucket='live')},
+        {'label': tr('Search'), 'path': build_url(action='hub_search_menu')},
     ]
     return {'continue': rows_out, 'sections': sections, 'nav': nav}
 
@@ -18442,7 +18414,7 @@ def continue_watching(page='0'):
         if _cw_looks_like_code(title):
             title = _cw_show_name(row) if is_episode else ''
         if not title:
-            title = 'بدون عنوان' if not is_episode else ''
+            title = 'Untitled' if not is_episode else ''
         _show = _cw_show_name(row) if is_episode else ''
         _ep_name = title if (is_episode and title and title != _show) else ''
         # The title that travels in resume/play URLs must be the CLEAN one:
@@ -18583,15 +18555,15 @@ def continue_watching(page='0'):
 
         # row_ids already computed above (line ~4711); reuse it here.
         target_key = _cw_target_key(row)
-        target_title = 'متابعة المشاهدة • مسلسلات/أنمي' if target_key.endswith('series') else 'متابعة المشاهدة • أفلام'
+        target_title = 'Continue Watching • Series/Anime' if target_key.endswith('series') else 'Continue Watching • Movies'
         resume_menu_action     = 'RunPlugin(%s)' % resume_path
         from_start_menu_action = 'RunPlugin(%s)' % play_from_start_path
         context_menu = [
-            ('اختيار المصدر', 'Container.Update(%s)' % source_path),
-            ('استكمال مباشر', resume_menu_action),
-            ('تشغيل من البداية', from_start_menu_action),
-            ('فتح المسلسل' if is_episode else 'فتح التفاصيل', 'Container.Update(%s)' % (build_url(action='series_meta', media_type='series', canonical_id=row.get('canonical_id') or '', title=title) if is_episode else build_url(action='item_open', media_type=row.get('media_type') or 'movie', canonical_id=row.get('canonical_id') or '', title=title, tmdb_id=row_ids.get('tmdb_id') or '', imdb_id=row_ids.get('imdb_id') or '', tvdb_id=row_ids.get('tvdb_id') or ''))),
-            (tr('تغيير مصدر الميتاداتا'), 'RunPlugin(%s)' % build_url(action='meta_pick_target', target_key=target_key, title=target_title)),
+            ('Choose add-on', 'Container.Update(%s)' % source_path),
+            ('Resume directly', resume_menu_action),
+            ('Play from the beginning', from_start_menu_action),
+            ('Open show' if is_episode else 'Open details', 'Container.Update(%s)' % (build_url(action='series_meta', media_type='series', canonical_id=row.get('canonical_id') or '', title=title) if is_episode else build_url(action='item_open', media_type=row.get('media_type') or 'movie', canonical_id=row.get('canonical_id') or '', title=title, tmdb_id=row_ids.get('tmdb_id') or '', imdb_id=row_ids.get('imdb_id') or '', tvdb_id=row_ids.get('tvdb_id') or ''))),
+            (tr('Change metadata add-on'), 'RunPlugin(%s)' % build_url(action='meta_pick_target', target_key=target_key, title=target_title)),
         ] + _build_player_chooser_menu(
             media_type='series' if is_episode else (row.get('media_type') or 'movie'),
             canonical_id=row.get('canonical_id') or '',
@@ -18603,16 +18575,16 @@ def continue_watching(page='0'):
             episode=row.get('episode') or '',
             video_id=row.get('video_id') or '',
         ) + [
-            ('إزالة من متابعة المشاهدة', 'RunPlugin(%s)' % build_url(action='cw_remove', media_type=row.get('media_type'), canonical_id=row.get('canonical_id'), video_id=row.get('video_id'))),
-            ('وسم كمشاهد', 'RunPlugin(%s)' % build_url(action='cw_mark_watched', media_type=row.get('media_type'), canonical_id=row.get('canonical_id'), video_id=row.get('video_id'))),
+            ('Remove from Continue Watching', 'RunPlugin(%s)' % build_url(action='cw_remove', media_type=row.get('media_type'), canonical_id=row.get('canonical_id'), video_id=row.get('video_id'))),
+            ('Mark as watched', 'RunPlugin(%s)' % build_url(action='cw_mark_watched', media_type=row.get('media_type'), canonical_id=row.get('canonical_id'), video_id=row.get('video_id'))),
         ]
 
         add_item(display_title, path, is_folder=path_is_folder, info=info, art=art, properties=properties if not path_is_folder else {}, context_menu=context_menu)
     if has_more:
         add_item(
-            'المزيد',
+            'More',
             build_url(action='continue', page=str(page_num + 1)),
-            info={'title': 'المزيد', 'plot': 'تحميل عناصر إضافية من متابعة المشاهدة'},
+            info={'title': 'More', 'plot': 'Load more items from Continue Watching'},
             art=root_art('continue'),
         )
     end_dir(content=content_type, cache=False)
@@ -18622,9 +18594,9 @@ def cw_remove(media_type='', canonical_id='', video_id=''):
     try:
         playback_store.delete_entry(media_type, canonical_id, video_id)
         _invalidate_nextup_cache()
-        notify(tr('تم الإزالة من متابعة المشاهدة'))
+        notify(tr('Removed from Continue Watching'))
     except Exception as exc:
-        error(tr('تعذّر الإزالة: %s') % exc)
+        error(tr('Could not remove: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -18632,9 +18604,9 @@ def cw_mark_watched(media_type='', canonical_id='', video_id=''):
     try:
         playback_store.mark_watched(media_type, canonical_id, video_id)
         _invalidate_nextup_cache()
-        notify(tr('تم وسمه كمشاهد'))
+        notify(tr('Marked as watched'))
     except Exception as exc:
-        error(tr('تعذّر الوسم: %s') % exc)
+        error(tr('Could not mark item: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -18642,18 +18614,18 @@ def refresh_provider(provider_id):
     """Re-fetch the manifest for a provider and update its cached snapshot."""
     row = store.get_provider(provider_id)
     if not row:
-        error(tr('المصدر غير موجود'))
+        error(tr('Add-on not found'))
         return
     manifest_url = row.get('manifest_url') or ''
     if not manifest_url:
-        error(tr('رابط manifest غير معروف'))
+        error(tr('Unknown manifest URL'))
         return
     try:
         new_manifest = validate_manifest(manifest_url)
         store.refresh_provider_manifest(provider_id, new_manifest)
-        notify(tr('تم تحديث: %s') % (row.get('name') or provider_id))
+        notify(tr('Updated: %s') % (row.get('name') or provider_id))
     except Exception as exc:
-        error(tr('فشل التحديث: %s') % exc)
+        error(tr('Update failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -18672,12 +18644,12 @@ def show_last_silent_error_action():
     from . import log as _log_mod
     text = _log_mod.format_last_silent_error()
     if not text:
-        notify(tr('لا يوجد خطأ صامت مسجّل حالياً'))
+        notify(tr('No silent error recorded right now'))
         return
     dialog = xbmcgui.Dialog()
     choice = dialog.select(
-        tr('آخر خطأ صامت'),
-        [text, tr('نسخ للحافظة'), tr('مسح السجل'), tr('إغلاق')],
+        tr('Last silent error'),
+        [text, tr('Copy to clipboard'), tr('Clear log'), tr('Close')],
     )
     if choice == 1:
         # Copy to clipboard via xbmc API (works on most platforms; on
@@ -18685,19 +18657,19 @@ def show_last_silent_error_action():
         try:
             import json as _json
             xbmc.executebuiltin('SetClipboard("%s")' % text.replace('"', '\\"'))
-            notify(tr('تم النسخ للحافظة'))
+            notify(tr('Copied to clipboard'))
         except Exception as exc:
             _log_mod.log.silent('LAST_ERROR_COPY', exc, 'clipboard copy')
-            notify(tr('تعذّر النسخ للحافظة'))
+            notify(tr('Could not copy to clipboard'))
     elif choice == 2:
         _log_mod.clear_last_silent_error()
-        notify(tr('تم مسح سجل الخطأ'))
+        notify(tr('Error log cleared'))
 
 
 def clear_cache():
     removed = 0
     try:
-        from .dexhub import client as _client_mod
+        from .nuviohub import client as _client_mod
         removed += int(_client_mod.clear_http_cache() or 0)
     except Exception:
         pass
@@ -18733,7 +18705,7 @@ def clear_cache():
         pass
     try:
         win = xbmcgui.Window(WINDOW_ID)
-        for key in ('dexhub.fav_mirror_done', 'dexhub.fav_mirror_syncing', 'dexhub.fav_mirror_syncing_started'):
+        for key in ('nuviohub.fav_mirror_done', 'nuviohub.fav_mirror_syncing', 'nuviohub.fav_mirror_syncing_started'):
             try:
                 win.clearProperty(key)
             except Exception:
@@ -18749,7 +18721,7 @@ def clear_cache():
             pass
     except Exception:
         pass
-    notify(tr('تم مسح الكاش (%s ملف HTTP)') % removed if removed else tr('تم مسح الكاش'))
+    notify(tr('Cache cleared (%s HTTP files)') % removed if removed else tr('Cache cleared'))
     try:
         xbmc.executebuiltin('Container.Refresh')
     except Exception:
@@ -18766,24 +18738,24 @@ def open_addon_settings():
 
 def trakt_menu():
     state = trakt.authorization_status()
-    status = 'متصل' if state == 'connected' else 'جاهز للربط عبر PIN'
-    plot = 'إدارة ربط ومزامنة Trakt عبر PIN فقط'
-    add_item(tr('حالة Trakt: %s') % status, build_url(action='trakt_menu'), is_folder=False, info={'title': 'Trakt', 'plot': plot}, art=root_art('trakt'))
-    add_item(tr('ربط Trakt عبر PIN'), build_url(action='trakt_auth'), is_folder=False, art=root_art('trakt'),
-             info={'title': 'ربط Trakt عبر PIN', 'plot': 'يعرض رابط trakt.tv/activate ورمز الربط ثم ينتظر التفويض'})
-    add_item(tr('استيراد التقدم من Trakt'), build_url(action='trakt_import'), is_folder=False, art=root_art('continue'))
-    add_item(tr('تسجيل خروج Trakt'), build_url(action='trakt_logout'), is_folder=False, art=root_art('add'))
+    status = 'Connected' if state == 'connected' else 'Ready to connect via PIN'
+    plot = 'Manage Trakt linking and sync via PIN only'
+    add_item(tr('Trakt status: %s') % status, build_url(action='trakt_menu'), is_folder=False, info={'title': 'Trakt', 'plot': plot}, art=root_art('trakt'))
+    add_item(tr('Connect Trakt via PIN'), build_url(action='trakt_auth'), is_folder=False, art=root_art('trakt'),
+             info={'title': 'Connect Trakt via PIN', 'plot': 'Shows the trakt.tv/activate link and pairing code, then waits for authorization'})
+    add_item(tr('Import progress from Trakt'), build_url(action='trakt_import'), is_folder=False, art=root_art('continue'))
+    add_item(tr('Disconnect Trakt'), build_url(action='trakt_logout'), is_folder=False, art=root_art('add'))
     end_dir()
 
 
 def trakt_auth():
     try:
         if trakt.device_auth():
-            notify(tr('تم ربط Trakt'))
+            notify(tr('Trakt linked'))
         else:
-            error(tr('تم إلغاء أو انتهت مهلة ربط Trakt'))
+            error(tr('The Trakt link was cancelled or timed out'))
     except Exception as exc:
-        error(tr('فشل ربط Trakt: %s') % exc)
+        error(tr('Trakt link failed: %s') % exc)
     return trakt_menu()
 
 
@@ -18796,7 +18768,7 @@ def trakt_logout():
     try:
         trakt.logout()
     except Exception as exc:
-        error(tr('فشل تسجيل الخروج: %s') % exc)
+        error(tr('Sign-out failed: %s') % exc)
     return trakt_menu()
 
 
@@ -18810,13 +18782,13 @@ def trakt_import():
         count = trakt.import_progress(limit=100)
         total += int(count or 0)
         _invalidate_nextup_cache()
-        notify(tr('تم استيراد %s عنصر من Trakt/POV') % total)
+        notify(tr('Imported %s items from Trakt/POV') % total)
     except Exception as exc:
         if total:
             _invalidate_nextup_cache()
-            notify(tr('تم استيراد %s عنصر من POV') % total)
+            notify(tr('Imported %s items from POV') % total)
         else:
-            error(tr('فشل استيراد Trakt: %s') % exc)
+            error(tr('Trakt import failed: %s') % exc)
     return continue_watching()
 
 
@@ -18826,62 +18798,62 @@ def trakt_import():
 def simkl_menu():
     state = simkl.authorization_status()
     if state == 'connected':
-        status = tr('متصل')
+        status = tr('Connected')
     elif state == 'ready':
-        status = tr('جاهز للربط عبر PIN')
+        status = tr('Ready to connect via PIN')
     else:
-        status = tr('يحتاج Client ID')
-    add_item(tr('حالة Simkl: %s') % status, build_url(action='simkl_menu'), is_folder=False,
-             info={'title': 'Simkl', 'plot': tr('إدارة ربط ومزامنة Simkl: سجل المشاهدة واللستات')},
+        status = tr('Needs a Client ID')
+    add_item(tr('Simkl status: %s') % status, build_url(action='simkl_menu'), is_folder=False,
+             info={'title': 'Simkl', 'plot': tr('Manage Simkl linking and sync: watch history and your lists')},
              art=root_art('simkl'))
     if state != 'connected':
-        add_item(tr('ربط Simkl عبر PIN'), build_url(action='simkl_auth'), is_folder=False,
+        add_item(tr('Link Simkl via PIN'), build_url(action='simkl_auth'), is_folder=False,
                  art=root_art('simkl'),
-                 info={'title': tr('ربط Simkl عبر PIN'),
-                       'plot': tr('يعرض رابط simkl.com/pin ورمز الربط ثم ينتظر التفويض')})
+                 info={'title': tr('Link Simkl via PIN'),
+                       'plot': tr('Shows the simkl.com/pin link and code, then waits for approval')})
     if state == 'connected':
-        add_item(tr('لستاتي في Simkl'), build_url(action='simkl_lists_menu'), is_folder=True,
+        add_item(tr('My Simkl lists'), build_url(action='simkl_lists_menu'), is_folder=True,
                  art=root_art('watchlist'),
-                 info={'title': tr('لستاتي في Simkl'),
-                       'plot': tr('أشاهدها، خطة المشاهدة، مكتملة، معلّقة')})
-        add_item(tr('مزامنة Simkl الآن'), build_url(action='simkl_sync_now'), is_folder=False,
+                 info={'title': tr('My Simkl lists'),
+                       'plot': tr('Watching, plan to watch, completed, on hold')})
+        add_item(tr('Sync Simkl now'), build_url(action='simkl_sync_now'), is_folder=False,
                  art=root_art('simkl'),
-                 info={'title': tr('مزامنة Simkl الآن'),
-                       'plot': tr('متابعة المشاهدة + سجل المشاهدة (أفلام وحلقات) + دمج خطة المشاهدة في قائمة المشاهدة')})
-        add_item(tr('استيراد سجل المشاهدة من Simkl'), build_url(action='simkl_import'), is_folder=False,
+                 info={'title': tr('Sync Simkl now'),
+                       'plot': tr('Continue Watching + watch history (movies & episodes) + merging plan-to-watch into the watchlist')})
+        add_item(tr('Import watch history from Simkl'), build_url(action='simkl_import'), is_folder=False,
                  art=root_art('continue'),
-                 info={'title': tr('استيراد سجل المشاهدة من Simkl'),
-                       'plot': tr('يعلّم الأفلام المكتملة وحلقات المسلسلات المُشاهدة محلياً في Nuvio Hub')})
-        add_item(tr('تسجيل خروج Simkl'), build_url(action='simkl_logout'), is_folder=False, art=root_art('add'))
+                 info={'title': tr('Import watch history from Simkl'),
+                       'plot': tr('Marks completed movies and watched show episodes locally in Nuvio Hub')})
+        add_item(tr('Sign out of Simkl'), build_url(action='simkl_logout'), is_folder=False, art=root_art('add'))
     end_dir()
 
 
 def simkl_auth():
     try:
         if simkl.device_auth():
-            notify(tr('تم ربط Simkl'))
+            notify(tr('Simkl linked'))
         else:
-            error(tr('تم إلغاء أو انتهت مهلة ربط Simkl'))
+            error(tr('Simkl linking was cancelled or timed out'))
     except Exception as exc:
-        error(tr('فشل ربط Simkl: %s') % exc)
+        error(tr('Simkl linking failed: %s') % exc)
     return simkl_menu()
 
 
 def simkl_logout():
     try:
         simkl.logout()
-        notify(tr('تم تسجيل خروج Simkl'))
+        notify(tr('Signed out of Simkl'))
     except Exception as exc:
-        error(tr('فشل تسجيل الخروج: %s') % exc)
+        error(tr('Sign-out failed: %s') % exc)
     return simkl_menu()
 
 
 def simkl_import():
     try:
         movies, episodes = simkl.import_watched()
-        notify(tr('تم استيراد %s فيلم و %s حلقة كمُشاهدة من Simkl') % (int(movies or 0), int(episodes or 0)))
+        notify(tr('Imported %s movies and %s episodes as watched from Simkl') % (int(movies or 0), int(episodes or 0)))
     except Exception as exc:
-        error(tr('فشل استيراد Simkl: %s') % exc)
+        error(tr('Simkl import failed: %s') % exc)
     return simkl_menu()
 
 
@@ -18891,29 +18863,29 @@ def simkl_sync_now():
         cw = simkl.sync_continue_watching()
         movies, episodes = simkl.import_watched()
         _refresh_external_watchlist_mirror()
-        notify(tr('مزامنة Simkl: %s متابعة، %s فيلم، %s حلقة') % (int(cw or 0), int(movies or 0), int(episodes or 0)))
+        notify(tr('Simkl sync: %s continue rows, %s movies, %s episodes') % (int(cw or 0), int(movies or 0), int(episodes or 0)))
     except Exception as exc:
-        error(tr('فشلت مزامنة Simkl: %s') % exc)
+        error(tr('Simkl sync failed: %s') % exc)
     return simkl_menu()
 
 
 def simkl_lists_menu():
     """The user's Simkl shelves, one folder per kind/status."""
     shelves = (
-        ('shows', 'watching', tr('مسلسلات • أشاهدها')),
-        ('shows', 'plantowatch', tr('مسلسلات • خطة المشاهدة')),
-        ('shows', 'completed', tr('مسلسلات • مكتملة')),
-        ('shows', 'hold', tr('مسلسلات • معلّقة')),
-        ('movies', 'plantowatch', tr('أفلام • خطة المشاهدة')),
-        ('movies', 'completed', tr('أفلام • مكتملة')),
-        ('anime', 'watching', tr('أنمي • أشاهده')),
-        ('anime', 'plantowatch', tr('أنمي • خطة المشاهدة')),
+        ('shows', 'watching', tr('Shows • Watching')),
+        ('shows', 'plantowatch', tr('Shows • Plan to watch')),
+        ('shows', 'completed', tr('Shows • Completed')),
+        ('shows', 'hold', tr('Shows • On hold')),
+        ('movies', 'plantowatch', tr('Movies • Plan to watch')),
+        ('movies', 'completed', tr('Movies • Completed')),
+        ('anime', 'watching', tr('Anime • Watching')),
+        ('anime', 'plantowatch', tr('Anime • Plan to watch')),
     )
     for kind, status, label in shelves:
         add_item(label,
                  build_url(action='simkl_list_browse', kind=kind, status=status, title=label),
                  is_folder=True, art=root_art('watchlist'),
-                 info={'title': label, 'plot': tr('قائمة Simkl الخاصة بك')})
+                 info={'title': label, 'plot': tr('Your Simkl list')})
     end_dir()
 
 
@@ -18936,32 +18908,32 @@ def mdblist_menu():
         (account or {}).get('name') or '').strip()
     verified = bool(linked and account_info and not account_error)
     if verified:
-        status = '%s%s' % (tr('متصل ✓'), (' • %s' % account_name) if account_name else '')
+        status = '%s%s' % (tr('Linked ✓'), (' • %s' % account_name) if account_name else '')
     elif linked and account_error:
-        status = tr('المفتاح محفوظ لكن الاتصال فشل')
+        status = tr('The key is saved, but account verification failed')
     else:
-        status = tr('يحتاج API Key')
-    status_plot = tr('لستات وWatchlist حسابك في MDBList داخل Nuvio Hub. المفتاح من mdblist.com/preferences')
+        status = tr('Needs an API Key')
+    status_plot = tr('Your MDBList account lists and watchlist inside Nuvio Hub. Get the key from mdblist.com/preferences')
     if account_error:
         status_plot = '%s\n\n%s' % (status_plot, account_error)
-    add_item(tr('حالة MDBList: %s') % status,
+    add_item(tr('MDBList status: %s') % status,
              build_url(action='mdblist_my_lists' if verified else 'mdblist_set_key'),
              is_folder=verified,
              info={'title': 'MDBList',
                    'plot': status_plot},
              art=root_art('mdblist'))
-    add_item(tr('إدخال / تعديل MDBList API Key'), build_url(action='mdblist_set_key'), is_folder=False,
+    add_item(tr('Enter / edit the MDBList API Key'), build_url(action='mdblist_set_key'), is_folder=False,
              art=root_art('settings'),
-             info={'title': tr('إدخال / تعديل MDBList API Key'),
-                   'plot': tr('احصل على المفتاح مجاناً من mdblist.com/preferences')})
+             info={'title': tr('Enter / edit the MDBList API Key'),
+                   'plot': tr('Get the key for free from mdblist.com/preferences')})
     if linked:
         add_item('MDBList • Watchlist', build_url(action='mdblist_watchlist_browse'), is_folder=True,
                  art=root_art('watchlist'),
-                 info={'title': 'MDBList • Watchlist', 'plot': tr('قائمة المشاهدة لحسابك في MDBList')})
-        add_item(tr('لستاتي في MDBList'), build_url(action='mdblist_my_lists'), is_folder=True,
+                 info={'title': 'MDBList • Watchlist', 'plot': tr('Your MDBList account watchlist')})
+        add_item(tr('My MDBList lists'), build_url(action='mdblist_my_lists'), is_folder=True,
                  art=root_art('catalogs'),
-                 info={'title': tr('لستاتي في MDBList'),
-                       'plot': tr('كل اللستات التي أنشأتها في حسابك')})
+                 info={'title': tr('My MDBList lists'),
+                       'plot': tr('Every list you created on your account')})
     end_dir()
 
 
@@ -18971,7 +18943,7 @@ def mdblist_set_key():
         current = ADDON.getSetting('mdblist_api_key') or ''
     except Exception:
         pass
-    value = xbmcgui.Dialog().input(tr('أدخل MDBList API Key'), defaultt=current)
+    value = xbmcgui.Dialog().input(tr('Enter the MDBList API Key'), defaultt=current)
     value = (value or '').strip()
     try:
         ADDON.setSetting('mdblist_api_key', value)
@@ -18985,14 +18957,14 @@ def mdblist_set_key():
         try:
             info = mdblist.fetch_user_info(strict=True) or {}
         except Exception as exc:
-            error(tr('تم حفظ المفتاح، لكن MDBList رفض التحقق منه:\n%s') % exc)
+            error(tr('The key was saved, but MDBList rejected validation:\n%s') % exc)
             return mdblist_menu()
         if info:
-            notify(tr('تم حفظ مفتاح MDBList والتحقق منه ✓'))
+            notify(tr('MDBList key saved and verified ✓'))
         else:
-            error(tr('تم حفظ المفتاح، لكن MDBList أعاد حسابًا فارغًا. راجع المفتاح.'))
+            error(tr('The key was saved, but MDBList returned an empty account. Check the key.'))
     else:
-        notify(tr('تم مسح مفتاح MDBList'))
+        notify(tr('MDBList key cleared'))
     return mdblist_menu()
 
 
@@ -19005,16 +18977,16 @@ def mdblist_my_lists():
         mdblist.clear_cache()
         rows = mdblist.fetch_my_lists() or []
     except Exception as exc:
-        error(tr('فشل قراءة لستات MDBList: %s') % exc)
-        add_item(tr('إعادة المحاولة'), build_url(action='mdblist_my_lists'),
+        error(tr('Could not read your MDBList lists: %s') % exc)
+        add_item(tr('Try again'), build_url(action='mdblist_my_lists'),
                  is_folder=True, art=root_art('catalogs'),
-                 info={'title': tr('إعادة المحاولة'), 'plot': str(exc)})
+                 info={'title': tr('Try again'), 'plot': str(exc)})
         return end_dir(content='files', cache=False)
     if not rows:
-        add_item(tr('لا توجد لستات في حسابك بعد'), build_url(action='mdblist_my_lists'),
+        add_item(tr('No lists on your account yet'), build_url(action='mdblist_my_lists'),
                  is_folder=True, art=root_art('catalogs'),
-                 info={'title': tr('لا توجد لستات في حسابك بعد'),
-                       'plot': tr('تم التحقق من الحساب ولم يرجع MDBList أي قائمة. إذا أنشأت قائمة الآن اضغط هنا لتحديثها.')})
+                 info={'title': tr('No lists on your account yet'),
+                       'plot': tr('The account was verified, but MDBList returned no lists. If you just created one, select this row to refresh.')})
         return end_dir(content='files', cache=False)
     for row in rows:
         name = row.get('name') or row.get('slug') or ''
@@ -19031,12 +19003,12 @@ def mdblist_my_lists():
         path = build_url(action='mdblist_list_browse_id', list_id=list_id, title=name)
         badges = []
         if row.get('private'):
-            badges.append(tr('خاصة'))
+            badges.append(tr('Private'))
         if row.get('dynamic'):
-            badges.append(tr('ديناميكية'))
+            badges.append(tr('Dynamic'))
         if row.get('mediatype'):
             badges.append(str(row.get('mediatype')))
-        plot = row.get('description') or tr('قائمة من حسابك في MDBList')
+        plot = row.get('description') or tr('A list from your MDBList account')
         if badges:
             plot = '%s\n\n%s' % (plot, ' • '.join(badges))
         add_item(label, path, is_folder=True, art=root_art('catalogs'),
@@ -19046,11 +19018,11 @@ def mdblist_my_lists():
 
 def tmdbh_install():
     if not tmdbh_player.has_tmdbhelper():
-        error(tr('TMDb Helper غير مثبّت'))
+        error(tr('TMDb Helper is not installed'))
         return integrations_menu()
     was_installed = tmdbh_player.player_installed()
     if tmdbh_player.install(silent=False):
-        notify(tr('تم تحديث تسجيل Nuvio Hub في TMDb Helper') if was_installed else tr('تم تسجيل Nuvio Hub في TMDb Helper'))
+        notify(tr('Nuvio Hub registration updated in TMDb Helper') if was_installed else tr('Nuvio Hub was registered in TMDb Helper'))
         # v3.9.66: keep tmdbh_install minimal — TMDb Helper already shows
         # Nuvio Hub as one of the players in its picker dialog at Play time.
         # The previous v3.9.63 "set as default" prompt was reverted at
@@ -19059,7 +19031,7 @@ def tmdbh_install():
         try:
             xbmcgui.Dialog().ok(
                 'Nuvio Hub • TMDb Helper',
-                tr('[B]تم التسجيل بنجاح ✓[/B]\n\nNuvio Hub الآن يظهر كأحد المشغّلات في قائمة TMDb Helper عند الضغط Play، إلى جانب أيّ مشغّلات أخرى مسجّلة لديك.'),
+                tr('[B]Registered successfully ✓[/B]\n\nNuvio Hub now appears as a player in the TMDb Helper list when you press Play, alongside any other players you have registered.'),
             )
         except Exception:
             pass
@@ -19068,9 +19040,9 @@ def tmdbh_install():
 
 def tmdbh_uninstall():
     if tmdbh_player.uninstall(silent=False):
-        notify(tr('تم إلغاء تسجيل Nuvio Hub من TMDb Helper'))
+        notify(tr('Nuvio Hub was removed from TMDb Helper'))
     else:
-        notify(tr('المشغّل غير مسجّل أصلًا'))
+        notify(tr('The player is not registered'))
     return integrations_menu()
 
 
@@ -19080,7 +19052,7 @@ def play(stream_key, resume_seconds='', resume_percent='', fallback_keys=None, s
         return
     ctx = cache_store.get('stream', stream_key)
     if not ctx:
-        error(tr('انتهت بيانات التشغيل. أعد اختيار المصدر.'))
+        error(tr('Playback data expired. Choose the source again.'))
         return end_dir()
     # Backward-compatible parameter only.  v5.3 never follows it: the selected
     # source is authoritative and a failure returns control to the user.
@@ -19134,31 +19106,31 @@ def _make_addon_manifest_resolver(host_hint=''):
         except Exception:
             pass
         msg_lines = [
-            tr('هذه المجموعة تعتمد على إضافة لم تُثبَّت بعد:'),
+            tr('This collection depends on an addon that is not installed yet:'),
             '[COLOR yellow]%s[/COLOR]' % addon_id,
             '',
         ]
         if host_hint:
             msg_lines.extend([
-                tr('يبدو أنها مستضافة على:'),
+                tr('It appears to be hosted on:'),
                 '[COLOR yellow]%s[/COLOR]' % host_hint,
                 '',
             ])
         try:
             if _collections_mod.addon_requires_configuration(addon_id):
-                msg_lines.append(tr('هذه الإضافة تحتاج رابط Manifest مُعدّ بحسابك/مكتبتك، وليس manifest العام.'))
+                msg_lines.append(tr('This addon needs a Manifest URL configured for your account/library, not the public manifest.'))
                 msg_lines.append('')
         except Exception:
             pass
-        msg_lines.append(tr('هل لديك رابط manifest.json الخاص بها؟'))
+        msg_lines.append(tr('Do you have its manifest.json URL?'))
         want = xbmcgui.Dialog().yesno(
-            tr('إضافة مفقودة'),
+            tr('Missing addon'),
             '\n'.join(msg_lines),
-            nolabel=tr('تخطّي'), yeslabel=tr('ألصق رابطًا'),
+            nolabel=tr('Skip'), yeslabel=tr('Paste a URL'),
         )
         if not want:
             return ''
-        kb = xbmc.Keyboard('', tr('ألصق رابط manifest.json أو collections.json لـ %s') % addon_id)
+        kb = xbmc.Keyboard('', tr('Paste a manifest.json or collections.json URL for %s') % addon_id)
         kb.doModal()
         if not kb.isConfirmed():
             return ''
@@ -19173,7 +19145,7 @@ def _make_addon_manifest_resolver(host_hint=''):
 
 def collection_set_add():
     """Prompt for a JSON URL (or paste), then a custom display name."""
-    keyboard = xbmc.Keyboard('', tr('ألصق رابط JSON أو النص كاملًا'))
+    keyboard = xbmc.Keyboard('', tr('Paste the JSON URL or the full text'))
     keyboard.doModal()
     if not keyboard.isConfirmed():
         return end_dir()
@@ -19223,15 +19195,15 @@ def collection_set_add():
         except Exception:
             pass
         try:
-            xbmcgui.Dialog().textviewer(tr('Nuvio Hub — فشل قراءة الملف'),
+            xbmcgui.Dialog().textviewer(tr('Nuvio Hub — file read failed'),
                 'Steps:\n' + '\n'.join(diag) + '\n\nFull error:\n' + str(exc) + '\n\n' + _tb.format_exc())
         except Exception:
-            error(tr('فشل قراءة الملف: %s') % exc)
+            error(tr('Could not read file: %s') % exc)
         return home()
 
     default_name = _collections_mod._derive_set_name(raw if is_url else '', parsed_entries)
     # Optional: ask user for a name.
-    kb2 = xbmc.Keyboard(default_name, tr('اسم المجموعة (اتركه كما هو إذا رضيت)'))
+    kb2 = xbmc.Keyboard(default_name, tr('Collection name (leave it as-is if you like it)'))
     kb2.doModal()
     custom_name = kb2.getText().strip() if kb2.isConfirmed() else default_name
 
@@ -19239,14 +19211,14 @@ def collection_set_add():
     if is_url:
         for existing in _collections_mod.list_sets():
             if existing.get('source_url') == raw:
-                if xbmcgui.Dialog().yesno('Nuvio Hub', tr('هذه المجموعة موجودة بالفعل. هل تريد تحديثها؟')):
+                if xbmcgui.Dialog().yesno('Nuvio Hub', tr('This collection already exists. Update it?')):
                     try:
                         updated = _collections_mod.refresh_set(existing.get('id'), manifest_resolver=_make_addon_manifest_resolver(''))
                         if custom_name and custom_name != updated.get('name'):
                             _collections_mod.rename_set(existing.get('id'), custom_name)
-                        notify(tr('تم تحديث المجموعة'))
+                        notify(tr('Collection updated'))
                     except Exception as exc:
-                        error(tr('تعذّر التحديث: %s') % exc)
+                        error(tr('Could not update: %s') % exc)
                 return collection_sets()
 
     try:
@@ -19267,12 +19239,12 @@ def collection_set_add():
         except Exception:
             pass
         try:
-            xbmcgui.Dialog().textviewer(tr('Nuvio Hub — فشل الاستيراد'),
+            xbmcgui.Dialog().textviewer(tr('Nuvio Hub — import failed'),
                 'Steps:\n' + '\n'.join(diag) + '\n\nFull error:\n' + str(exc) + '\n\n' + _tb.format_exc())
         except Exception:
-            error(tr('فشل الاستيراد: %s') % exc)
+            error(tr('Import failed: %s') % exc)
         return home()
-    notify(tr('تم استيراد %d اختصار') % len(set_row.get('entries') or []))
+    notify(tr('Imported %d shortcuts') % len(set_row.get('entries') or []))
     return collection_sets()
 
 
@@ -19282,17 +19254,17 @@ def collection_set_export(set_id=''):
     rows = [row] if row else _collections_mod.list_sets()
     rows = [r for r in rows if isinstance(r, dict)]
     if not rows:
-        notify(tr('لا يوجد كوليكشن للتصدير'))
+        notify(tr('No collections to export'))
         return collection_sets()
     default_name = 'nuvio-hub-collections-backup.json' if not row else 'nuvio-hub-%s.json' % re.sub(r'[^A-Za-z0-9_-]+', '-', row.get('name') or row.get('id') or 'collection').strip('-')
     try:
-        folder = xbmcgui.Dialog().browse(0, tr('اختر مجلد حفظ النسخة'), 'files')
+        folder = xbmcgui.Dialog().browse(0, tr('Choose a backup folder'), 'files')
     except Exception:
         folder = ''
     if not folder:
         return collection_sets()
     path = os.path.join(xbmcvfs.translatePath(folder), default_name)
-    payload = {'format': 'dexhub.collection.backup', 'version': 1, 'exported_at': int(time.time()), 'collections': rows}
+    payload = {'format': 'nuviohub.collection.backup', 'version': 1, 'exported_at': int(time.time()), 'collections': rows}
     try:
         os.makedirs(os.path.dirname(path), exist_ok=True)
     except Exception:
@@ -19301,16 +19273,16 @@ def collection_set_export(set_id=''):
         fh = xbmcvfs.File(path, 'w')
         fh.write(json.dumps(payload, ensure_ascii=False, indent=2))
         fh.close()
-        notify(tr('تم حفظ نسخة الكوليكشن'))
-        xbmcgui.Dialog().ok('Nuvio Hub', tr('تم حفظ النسخة:\n%s') % path)
+        notify(tr('Collection backup saved'))
+        xbmcgui.Dialog().ok('Nuvio Hub', tr('Backup saved:\n%s') % path)
     except Exception as exc:
-        error(tr('فشل التصدير: %s') % exc)
+        error(tr('Export failed: %s') % exc)
     return collection_sets()
 
 
 def collection_set_import_backup():
     try:
-        path = xbmcgui.Dialog().browse(1, tr('اختر ملف نسخة الكوليكشن'), 'files', '.json')
+        path = xbmcgui.Dialog().browse(1, tr('Choose a collection backup file'), 'files', '.json')
     except Exception:
         path = ''
     if not path:
@@ -19342,18 +19314,18 @@ def collection_set_import_backup():
             name = os.path.splitext(os.path.basename(path))[0]
             imported_row = _collections_mod.add_set_from_text(raw, source_label=name, manifest_resolver=_make_addon_manifest_resolver(''))
             imported = 1 if imported_row else 0
-        notify(tr('تم استيراد %d مجموعة') % int(imported or 0))
+        notify(tr('Imported %d collections') % int(imported or 0))
     except Exception as exc:
-        error(tr('فشل الاستيراد: %s') % exc)
+        error(tr('Import failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
     return collection_sets()
 
 def collection_set_rename(set_id):
     row = _collections_mod.get_set(set_id)
     if not row:
-        error(tr('المجموعة غير موجودة'))
+        error(tr('Collection not found'))
         return
-    kb = xbmc.Keyboard(row.get('name') or '', tr('اسم المجموعة الجديد'))
+    kb = xbmc.Keyboard(row.get('name') or '', tr('New collection name'))
     kb.doModal()
     if not kb.isConfirmed():
         return
@@ -19362,9 +19334,9 @@ def collection_set_rename(set_id):
         return
     try:
         _collections_mod.rename_set(set_id, new_name)
-        notify(tr('تم إعادة التسمية'))
+        notify(tr('Renamed'))
     except Exception as exc:
-        error(tr('تعذّر التعديل: %s') % exc)
+        error(tr('Edit failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -19381,23 +19353,23 @@ def collection_sets():
     clean = _clean_collection_view_enabled()
 
     global_ctx = [
-        (tr('استيراد مجموعة من JSON'), 'RunPlugin(%s)' % build_url(action='collection_set_add')),
-        (tr('استيراد Backup للكوليكشن'), 'RunPlugin(%s)' % build_url(action='collection_set_import_backup')),
-        (tr('تصدير Backup لكل الكوليكشن'), 'RunPlugin(%s)' % build_url(action='collection_set_export')),
-        (tr('إنشاء مجموعة فارغة (يدويًا)'), 'RunPlugin(%s)' % build_url(action='collection_set_create_empty')),
-        ('الحسابات واستيراد الكوليكشن', 'ActivateWindow(Videos,%s,return)' % build_url(action='nuvio_sync_menu')),
+        (tr('Import collection from JSON'), 'RunPlugin(%s)' % build_url(action='collection_set_add')),
+        (tr('Import collection backup'), 'RunPlugin(%s)' % build_url(action='collection_set_import_backup')),
+        (tr('Export backup for all collections'), 'RunPlugin(%s)' % build_url(action='collection_set_export')),
+        (tr('Create empty collection manually'), 'RunPlugin(%s)' % build_url(action='collection_set_create_empty')),
+        ('Accounts and collection import', 'ActivateWindow(Videos,%s,return)' % build_url(action='nuvio_sync_menu')),
     ]
 
     if not clean:
-        add_item(tr('[COLOR yellow]+ استيراد مجموعة من JSON[/COLOR]'), build_url(action='collection_set_add'), is_folder=False, art=root_art('add'))
-        add_item(tr('[COLOR yellow]+ استيراد Backup للكوليكشن[/COLOR]'), build_url(action='collection_set_import_backup'), is_folder=False, art=root_art('add'))
-        add_item(tr('[COLOR yellow]تصدير Backup لكل الكوليكشن[/COLOR]'), build_url(action='collection_set_export'), is_folder=False, art=root_art('catalogs'))
-        add_item(tr('[COLOR yellow]+ إنشاء مجموعة فارغة (يدويًا)[/COLOR]'), build_url(action='collection_set_create_empty'), is_folder=False, art=root_art('add'))
+        add_item(tr('[COLOR yellow]+ Import a collection from JSON[/COLOR]'), build_url(action='collection_set_add'), is_folder=False, art=root_art('add'))
+        add_item(tr('[COLOR yellow]+ Import collection backup[/COLOR]'), build_url(action='collection_set_import_backup'), is_folder=False, art=root_art('add'))
+        add_item(tr('[COLOR yellow]Export collections backup[/COLOR]'), build_url(action='collection_set_export'), is_folder=False, art=root_art('catalogs'))
+        add_item(tr('[COLOR yellow]+ Create an empty collection (manual)[/COLOR]'), build_url(action='collection_set_create_empty'), is_folder=False, art=root_art('add'))
     elif not rows:
         # Empty state still needs a visible way to start, but no backup/export
         # poster cards are shown in the normal populated view.
-        add_item(tr('[COLOR yellow]+ استيراد مجموعة من JSON[/COLOR]'), build_url(action='collection_set_add'), is_folder=False, art=root_art('add'))
-        add_item(tr('[COLOR yellow]+ إنشاء مجموعة فارغة (يدويًا)[/COLOR]'), build_url(action='collection_set_create_empty'), is_folder=False, art=root_art('add'))
+        add_item(tr('[COLOR yellow]+ Import a collection from JSON[/COLOR]'), build_url(action='collection_set_add'), is_folder=False, art=root_art('add'))
+        add_item(tr('[COLOR yellow]+ Create an empty collection (manual)[/COLOR]'), build_url(action='collection_set_create_empty'), is_folder=False, art=root_art('add'))
 
     for row in rows:
         label = row.get('name') or 'Collection Set'
@@ -19407,30 +19379,30 @@ def collection_sets():
             k = e.get('kind') or 'other'
             kinds[k] = kinds.get(k, 0) + 1
         kind_line = ' / '.join('%s: %d' % (k, v) for k, v in kinds.items())
-        plot_lines = ['[B]%s[/B]' % label, tr('%d اختصار') % len(entries)]
+        plot_lines = ['[B]%s[/B]' % label, tr('%d shortcuts') % len(entries)]
         if kind_line:
             plot_lines.append(kind_line)
         if row.get('source_url'):
-            plot_lines.append(tr('المصدر: %s') % row.get('source_url'))
+            plot_lines.append(tr('Add-on: %s') % row.get('source_url'))
         info = {'title': label, 'plot': '\n'.join(plot_lines)}
         ctx_menu = [
-            (tr('إضافة عنصر جديد من مصادر Stremio'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_stremio', set_id=row.get('id'))),
-            (tr('إضافة رابط Trakt جديد'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_trakt_list', set_id=row.get('id'))),
-            (tr('إضافة رابط MDBList جديد'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_mdblist_list', set_id=row.get('id'))),
-            (tr('إضافة اختصار TMDb Helper Native'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_tmdbhelper_native', set_id=row.get('id'))),
-            (tr('إضافة مسار جديد من صفحة الويدجت/المظهر'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_widget', set_id=row.get('id'))),
-            (tr('إضافة عنصر جديد يدويًا'), 'RunPlugin(%s)' % build_url(action='collection_entry_add', set_id=row.get('id'))),
-            (tr('إعادة تسمية'), 'RunPlugin(%s)' % build_url(action='collection_set_rename', set_id=row.get('id'))),
-            (tr('إدارة مصادر الميتاداتا'), 'RunPlugin(%s)' % build_url(action='meta_sources_dialog')),
-            (tr('تحديث المجموعة'), 'RunPlugin(%s)' % build_url(action='collection_set_refresh', set_id=row.get('id'))),
-            (tr('تصدير Backup'), 'RunPlugin(%s)' % build_url(action='collection_set_export', set_id=row.get('id'))),
-            (tr('إزالة المجموعة'), 'RunPlugin(%s)' % build_url(action='collection_set_remove', set_id=row.get('id'))),
+            (tr('Add new item from Stremio add-ons'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_stremio', set_id=row.get('id'))),
+            (tr('Add new Trakt list'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_trakt_list', set_id=row.get('id'))),
+            (tr('Add new MDBList'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_mdblist_list', set_id=row.get('id'))),
+            (tr('Add TMDb Helper Native shortcut'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_tmdbhelper_native', set_id=row.get('id'))),
+            (tr('Add new path from widget/skin picker'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_widget', set_id=row.get('id'))),
+            (tr('Add new item manually'), 'RunPlugin(%s)' % build_url(action='collection_entry_add', set_id=row.get('id'))),
+            (tr('Rename'), 'RunPlugin(%s)' % build_url(action='collection_set_rename', set_id=row.get('id'))),
+            (tr('Manage metadata add-ons'), 'RunPlugin(%s)' % build_url(action='meta_sources_dialog')),
+            (tr('Update collection'), 'RunPlugin(%s)' % build_url(action='collection_set_refresh', set_id=row.get('id'))),
+            (tr('Export Backup'), 'RunPlugin(%s)' % build_url(action='collection_set_export', set_id=row.get('id'))),
+            (tr('Remove collection'), 'RunPlugin(%s)' % build_url(action='collection_set_remove', set_id=row.get('id'))),
         ]
         if clean:
             ctx_menu.extend(global_ctx)
         add_item(label, build_url(action='collection_set_browse', set_id=row.get('id')), info=info, art=root_art('catalogs'), context_menu=ctx_menu)
     if not rows:
-        add_item(tr('[COLOR grey]لا توجد مجموعات حتى الآن[/COLOR]'), build_url(action='collection_sets'), is_folder=False, info={'title': tr('فارغ')})
+        add_item(tr('[COLOR grey]No collections yet[/COLOR]'), build_url(action='collection_sets'), is_folder=False, info={'title': tr('Empty')})
     end_dir(content='files')
 
 
@@ -19566,7 +19538,7 @@ def _provider_for_addon_ref(addon_ref):
 
 
 def _collection_media_filter_options():
-    return [('auto', 'تلقائي / مختلط'), ('movie', 'أفلام'), ('series', 'مسلسلات'), ('anime', 'أنمي')]
+    return [('auto', 'Automatic / mixed'), ('movie', 'Movies'), ('series', 'TV Shows'), ('anime', 'Anime')]
 
 
 def _pick_collection_media_filter(default='auto'):
@@ -19575,9 +19547,9 @@ def _pick_collection_media_filter(default='auto'):
     default_value = str(default or 'auto').strip().lower()
     default_index = next((i for i, (value, _label) in enumerate(opts) if value == default_value), 0)
     try:
-        choice = xbmcgui.Dialog().select(tr('نوع المحتوى'), [tr(x) for x in values], preselect=default_index)
+        choice = xbmcgui.Dialog().select(tr('Content type'), [tr(x) for x in values], preselect=default_index)
     except TypeError:
-        choice = xbmcgui.Dialog().select(tr('نوع المحتوى'), [tr(x) for x in values])
+        choice = xbmcgui.Dialog().select(tr('Content type'), [tr(x) for x in values])
     if choice < 0:
         return None
     return opts[choice][0]
@@ -19585,11 +19557,11 @@ def _pick_collection_media_filter(default='auto'):
 
 def _collection_media_filter_label(value):
     value = str(value or 'auto').strip().lower()
-    return dict(_collection_media_filter_options()).get(value, 'تلقائي / مختلط')
+    return dict(_collection_media_filter_options()).get(value, 'Automatic / mixed')
 
 
 def _collection_open_mode_options():
-    return [('normal', 'عادي'), ('skip', 'تخطي الفلاتر/المجلد الأول')]
+    return [('normal', 'Normal'), ('skip', 'Skip filters/first folder')]
 
 
 def _pick_collection_open_mode(default='normal'):
@@ -19598,9 +19570,9 @@ def _pick_collection_open_mode(default='normal'):
     default_value = str(default or 'normal').strip().lower()
     default_index = next((i for i, (value, _label) in enumerate(opts) if value == default_value), 0)
     try:
-        choice = xbmcgui.Dialog().select(tr('طريقة فتح العنصر'), [tr(x) for x in values], preselect=default_index)
+        choice = xbmcgui.Dialog().select(tr('Item open mode'), [tr(x) for x in values], preselect=default_index)
     except TypeError:
-        choice = xbmcgui.Dialog().select(tr('طريقة فتح العنصر'), [tr(x) for x in values])
+        choice = xbmcgui.Dialog().select(tr('Item open mode'), [tr(x) for x in values])
     if choice < 0:
         return None
     return opts[choice][0]
@@ -19608,7 +19580,7 @@ def _pick_collection_open_mode(default='normal'):
 
 def _collection_open_mode_label(value):
     value = str(value or 'normal').strip().lower()
-    return dict(_collection_open_mode_options()).get(value, 'عادي')
+    return dict(_collection_open_mode_options()).get(value, 'Normal')
 
 
 def _parse_trakt_list_url(raw_url):
@@ -19800,10 +19772,10 @@ def _list_installed_video_addons():
 def _pick_installed_video_addon():
     rows = _list_installed_video_addons()
     if not rows:
-        error(tr('لا توجد إضافات فيديو مثبّتة'))
+        error(tr('No video addons are installed'))
         return None
     labels = [row.get('name') or row.get('id') or 'Addon' for row in rows]
-    choice = xbmcgui.Dialog().select(tr('اختر إضافة Kodi'), [tr(x) for x in labels])
+    choice = xbmcgui.Dialog().select(tr('Choose Kodi addon'), [tr(x) for x in labels])
     if choice < 0 or choice >= len(rows):
         return None
     return rows[choice]
@@ -20166,17 +20138,17 @@ def _browse_kodi_plugin_route(addon_row, start_route=''):
         labels = []
         actions = []
         if history:
-            labels.append('.. %s' % tr('السابق'))
+            labels.append('.. %s' % tr('Previous'))
             actions.append(('back', None))
-        labels.append('[COLOR yellow]%s[/COLOR]' % tr('استخدم هذا المسار'))
+        labels.append('[COLOR yellow]%s[/COLOR]' % tr('Use this route'))
         actions.append(('choose_current', {'file': current, 'label': current_label or addon_name}))
-        labels.append('[COLOR grey]%s[/COLOR]' % tr('إدخال يدوي'))
+        labels.append('[COLOR grey]%s[/COLOR]' % tr('Manual entry'))
         actions.append(('manual', {'file': current, 'label': current_label or addon_name}))
         for item in items:
             icon = '📁 ' if item.get('is_folder') else '▶ '
             labels.append('%s%s' % (icon, item.get('label') or item.get('file') or 'Item'))
             actions.append(('entry', item))
-        title = '%s — %s' % (tr('اختر مسار من الإضافة'), addon_name)
+        title = '%s — %s' % (tr('Pick a route from the addon'), addon_name)
         choice = xbmcgui.Dialog().select(title, labels)
         if choice < 0:
             return '', ''
@@ -20187,13 +20159,13 @@ def _browse_kodi_plugin_route(addon_row, start_route=''):
         if action == 'choose_current':
             return str((payload or {}).get('file') or current).strip(), str((payload or {}).get('label') or current_label or addon_name).strip()
         if action == 'manual':
-            route_text = _prompt_text(str((payload or {}).get('file') or current), 'رابط أو مسار plugin://')
+            route_text = _prompt_text(str((payload or {}).get('file') or current), 'plugin:// URL or route')
             if route_text is None:
                 continue
             route_url = _normalize_plugin_route(addon_id, route_text)
             if route_url:
                 return route_url, str((payload or {}).get('label') or addon_name).strip()
-            error(tr('رابط plugin غير صالح'))
+            error(tr('Invalid plugin route'))
             continue
         item = payload or {}
         item_file = str(item.get('file') or '').strip()
@@ -20211,19 +20183,19 @@ def _browse_kodi_plugin_route(addon_row, start_route=''):
 
 def _pick_kodi_plugin_route(addon_row, default_route=''):
     addon_id = str((addon_row or {}).get('id') or '').strip()
-    choices = [tr('استعراض الإضافة'), tr('إدخال يدوي')]
+    choices = [tr('Browse addon'), tr('Manual entry')]
     default_idx = 0
-    mode_idx = xbmcgui.Dialog().select(tr('طريقة اختيار المسار'), choices, preselect=default_idx)
+    mode_idx = xbmcgui.Dialog().select(tr('Route selection method'), choices, preselect=default_idx)
     if mode_idx < 0:
         return '', ''
     if mode_idx == 0:
         return _browse_kodi_plugin_route(addon_row, start_route=default_route)
-    route_text = _prompt_text(str(default_route or 'plugin://%s/' % addon_id), 'رابط أو مسار plugin://')
+    route_text = _prompt_text(str(default_route or 'plugin://%s/' % addon_id), 'plugin:// URL or route')
     if route_text is None:
         return '', ''
     route_url = _normalize_plugin_route(addon_id, route_text)
     if not route_url:
-        error(tr('رابط plugin غير صالح'))
+        error(tr('Invalid plugin route'))
         return '', ''
     return route_url, str((addon_row or {}).get('name') or addon_id or 'Kodi').strip()
 
@@ -20243,11 +20215,11 @@ def _pick_kodi_plugin_route(addon_row, default_route=''):
 # ─────────────────────────────────────────────────────────────────────
 
 _WIDGET_PICK_KEYS = {
-    'widget': 'dexhub.tmp.widget',
-    'type': 'dexhub.tmp.widget.type',
-    'name': 'dexhub.tmp.widget.name',
-    'target': 'dexhub.tmp.widget.target',
-    'path': 'dexhub.tmp.widget.path',
+    'widget': 'nuviohub.tmp.widget',
+    'type': 'nuviohub.tmp.widget.type',
+    'name': 'nuviohub.tmp.widget.name',
+    'target': 'nuviohub.tmp.widget.target',
+    'path': 'nuviohub.tmp.widget.path',
 }
 
 _KODI_CONTAINER_SCHEMES = (
@@ -20404,7 +20376,7 @@ def _pick_skin_widget_route(default_route='', default_label=''):
     """Use Skin Shortcuts' widget picker and return (path, label, addon_meta)."""
     try:
         if not xbmc.getCondVisibility('System.HasAddon(script.skinshortcuts)'):
-            error(tr('إضافة Skin Shortcuts غير مثبتة، لذلك لا يمكن فتح صفحة الويدجت'))
+            error(tr('Skin Shortcuts is not installed, so the widget page cannot be opened'))
             return '', '', {}
     except Exception:
         pass
@@ -20423,7 +20395,7 @@ def _pick_skin_widget_route(default_route='', default_label=''):
     try:
         xbmc.executebuiltin(cmd)
     except Exception as exc:
-        error(tr('تعذر فتح صفحة الويدجت: %s') % exc)
+        error(tr('Could not open the widget page: %s') % exc)
         return '', '', {}
 
     # The picker is modal in normal skins, but RunScript is asynchronous.  Poll
@@ -20449,7 +20421,7 @@ def _pick_skin_widget_route(default_route='', default_label=''):
     if not route:
         # Keep a manual escape hatch so the user does not lose the flow if the
         # skin returned an unusual custom widget action.
-        typed = _prompt_text(str(default_route or ''), 'لم يرجع السكين مسارًا واضحًا. ألصق المسار يدويًا')
+        typed = _prompt_text(str(default_route or ''), 'The skin did not return a clear path. Paste the path manually')
         route = _extract_kodi_path_from_widget_value(typed or '')
     if not route:
         return '', '', {}
@@ -20479,19 +20451,19 @@ def _kodi_route_payload(route_url, label='', media_filter='auto'):
 
 def _prompt_local_json_file():
     try:
-        path = xbmcgui.Dialog().browseSingle(1, tr('اختر ملف JSON محلي'), 'files', '.json|.txt', False, False, '')
+        path = xbmcgui.Dialog().browseSingle(1, tr('Choose a local JSON file'), 'files', '.json|.txt', False, False, '')
     except Exception:
         path = ''
     path = str(path or '').strip()
     if path:
         return path
-    return _prompt_text('', 'مسار ملف JSON محلي')
+    return _prompt_text('', 'Local JSON file path')
 
 
 def _read_text_from_path(path):
     path = str(path or '').strip()
     if not path:
-        raise ValueError('المسار فارغ')
+        raise ValueError('The path is empty')
     fh = None
     try:
         fh = xbmcvfs.File(path)
@@ -20551,7 +20523,7 @@ def _parse_local_json_catalog(text):
         try:
             data = json.loads((text or '').lstrip('﻿'))
         except Exception:
-            raise ValueError('JSON غير صالح')
+            raise ValueError('Invalid JSON')
     meta = {}
     try:
         data = _collections_mod._flatten_fusion_widgets(data)
@@ -20570,23 +20542,23 @@ def _parse_local_json_catalog(text):
     except Exception:
         pass
     if not isinstance(data, list):
-        raise ValueError('الملف لا يحتوي على قائمة عناصر')
+        raise ValueError('The file does not contain a list of items')
     return data, meta
 
 
 def _render_local_json_catalog(entry, payload):
     file_path = str(payload.get('filePath') or payload.get('path') or '').strip()
     if not file_path:
-        error(tr('مسار الملف غير موجود'))
+        error(tr('File path is missing'))
         return end_dir()
     try:
         text = _read_text_from_path(file_path)
         rows, meta = _parse_local_json_catalog(text)
     except Exception as exc:
-        error(tr('فشل قراءة ملف JSON: %s') % exc)
+        error(tr('Failed to read JSON file: %s') % exc)
         return end_dir()
     if not rows:
-        error(tr('الملف لا يحتوي على عناصر'))
+        error(tr('The file does not contain items'))
         return end_dir()
 
     try:
@@ -20666,7 +20638,7 @@ def _render_local_json_catalog(entry, payload):
         added += 1
 
     if added == 0:
-        error(tr('الملف لا يحتوي على عناصر صالحة'))
+        error(tr('The file does not contain valid items'))
         return end_dir()
     if has_seriesish and has_movies:
         return end_dir(content='videos')
@@ -20713,11 +20685,11 @@ def _collection_entry_preview(entry):
         plot_lines = []
         if catalog_def.get('description'):
             plot_lines.append(str(catalog_def.get('description')))
-        plot_lines.extend([tr('كتالوج: %s') % catalog_id, tr('النوع: %s') % catalog_type, tr('الفتح: %s') % open_mode_label])
+        plot_lines.extend([tr('Catalog: %s') % catalog_id, tr('Type: %s') % catalog_type, tr('Open mode: %s') % open_mode_label])
         if provider:
-            plot_lines.append(tr('من: %s') % (provider.get('name') or provider.get('id') or payload.get('addonId') or ''))
+            plot_lines.append(tr('From: %s') % (provider.get('name') or provider.get('id') or payload.get('addonId') or ''))
         elif payload.get('addonId'):
-            plot_lines.append(tr('من: %s') % payload.get('addonId'))
+            plot_lines.append(tr('From: %s') % payload.get('addonId'))
         preview['plot'] = '\n'.join([x for x in plot_lines if x])
         return preview
     if kind == 'traktList':
@@ -20729,11 +20701,11 @@ def _collection_entry_preview(entry):
         preview['fanart'] = background or trakt_art.get('fanart') or folder_art.get('fanart') or addon_fanart()
         preview['landscape'] = background or trakt_art.get('landscape') or trakt_art.get('fanart') or folder_art.get('landscape') or preview['poster'] or ''
         preview['clearlogo'] = preview.get('clearlogo') or trakt_art.get('clearlogo') or ''
-        plot_lines = [tr('قائمة Trakt: %s') % (payload.get('listName') or slug or label), tr('النوع: %s') % _collection_media_filter_label(payload.get('mediaFilter') or 'auto')]
+        plot_lines = [tr('Trakt list: %s') % (payload.get('listName') or slug or label), tr('Type: %s') % _collection_media_filter_label(payload.get('mediaFilter') or 'auto')]
         if username:
-            plot_lines.append(tr('المستخدم: %s') % username)
+            plot_lines.append(tr('User: %s') % username)
         if slug:
-            plot_lines.append(tr('المعرّف: %s') % slug)
+            plot_lines.append(tr('ID: %s') % slug)
         preview['plot'] = '\n'.join([x for x in plot_lines if x])
         return preview
     if kind == 'mdblistList':
@@ -20743,11 +20715,11 @@ def _collection_entry_preview(entry):
         preview['poster'] = entry_poster or background or folder_art.get('poster') or folder_art.get('thumb') or ''
         preview['fanart'] = background or folder_art.get('fanart') or addon_fanart()
         preview['landscape'] = background or folder_art.get('landscape') or preview['poster'] or ''
-        plot_lines = [tr('قائمة MDBList: %s') % (payload.get('listName') or slug or label), tr('النوع: %s') % _collection_media_filter_label(payload.get('mediaFilter') or 'auto')]
+        plot_lines = [tr('MDBList list: %s') % (payload.get('listName') or slug or label), tr('Type: %s') % _collection_media_filter_label(payload.get('mediaFilter') or 'auto')]
         if username:
-            plot_lines.append(tr('المستخدم: %s') % username)
+            plot_lines.append(tr('User: %s') % username)
         if slug:
-            plot_lines.append(tr('المعرّف: %s') % slug)
+            plot_lines.append(tr('ID: %s') % slug)
         preview['plot'] = '\n'.join([x for x in plot_lines if x])
         return preview
     if kind == 'multiCatalog':
@@ -20764,7 +20736,7 @@ def _collection_entry_preview(entry):
             cid = str(src.get('catalogId') or '').strip()
             ctype = str(src.get('catalogType') or src.get('type') or '').strip()
             names.append('%s/%s %s' % (aid, cid, ctype))
-        plot_lines = [tr('مصادر متعددة: %d') % len(sources), tr('الفتح: %s') % open_mode_label]
+        plot_lines = [tr('Multiple add-ons: %d') % len(sources), tr('Open mode: %s') % open_mode_label]
         if names:
             plot_lines.append('\n'.join(names))
         preview['plot'] = '\n'.join([x for x in plot_lines if x])
@@ -20776,7 +20748,7 @@ def _collection_entry_preview(entry):
         preview['fanart'] = background or payload.get('fanart') or addon_fanart()
         preview['landscape'] = background or payload.get('fanart') or preview['poster'] or ''
         route_url = str(payload.get('route') or payload.get('url') or '').strip()
-        preview['plot'] = '\n'.join([x for x in [tr('إضافة Kodi: %s') % addon_name, tr('المسار: %s') % route_url, tr('الفتح: %s') % open_mode_label] if x])
+        preview['plot'] = '\n'.join([x for x in [tr('Kodi addon: %s') % addon_name, tr('Path: %s') % route_url, tr('Open mode: %s') % open_mode_label] if x])
         return preview
     if kind == 'localJsonCatalog':
         path = str(payload.get('filePath') or payload.get('path') or '').strip()
@@ -20784,9 +20756,9 @@ def _collection_entry_preview(entry):
         preview['poster'] = entry_poster or background or root_art('catalogs').get('poster') or ''
         preview['fanart'] = background or addon_fanart()
         preview['landscape'] = background or preview['poster'] or ''
-        preview['plot'] = '\n'.join([x for x in [tr('ملف محلي: %s') % os.path.basename(path or ''), tr('النوع: %s') % media_filter, tr('المسار: %s') % path] if x])
+        preview['plot'] = '\n'.join([x for x in [tr('Local file: %s') % os.path.basename(path or ''), tr('Type: %s') % media_filter, tr('Path: %s') % path] if x])
         return preview
-    preview['plot'] = tr('نوع غير معروف: %s') % kind
+    preview['plot'] = tr('Unknown type: %s') % kind
     return preview
 
 def _collection_content_type(entries):
@@ -20806,7 +20778,7 @@ def _collection_content_type(entries):
 def collection_entry_meta_source(set_id, entry_id):
     row = _collections_mod.get_set(set_id)
     if not row:
-        error(tr('المجموعة غير موجودة'))
+        error(tr('Collection not found'))
         return
     entry = None
     for e in row.get('entries') or []:
@@ -20814,12 +20786,12 @@ def collection_entry_meta_source(set_id, entry_id):
             entry = e
             break
     if not entry:
-        error(tr('العنصر غير موجود'))
+        error(tr('Item not found'))
         return
     kind = (entry.get('kind') or '').strip()
     payload = entry.get('payload') or {}
     if kind in ('traktList', 'mdblistList'):
-        return _meta_pick_target('virtual.collection.trakt', 'الكوليكشن • عناصر Trakt')
+        return _meta_pick_target('virtual.collection.trakt', 'Collection • Trakt items')
     providers = []
     if kind == 'addonCatalog':
         provider = _provider_for_addon_ref(payload.get('addonId') or '')
@@ -20833,12 +20805,12 @@ def collection_entry_meta_source(set_id, entry_id):
                 seen.add(provider.get('id'))
                 providers.append(provider)
     if not providers:
-        error(tr('هذا العنصر لا يملك إضافة مرتبطة لتغيير الميتاداتا'))
+        error(tr('This item does not have a linked addon for metadata changes'))
         return
     if len(providers) == 1:
         return meta_pick_for_provider(providers[0].get('id') or '')
     labels = [p.get('name') or p.get('id') or 'Provider' for p in providers]
-    choice = xbmcgui.Dialog().select(tr('اختر الإضافة'), [tr(x) for x in labels])
+    choice = xbmcgui.Dialog().select(tr('Choose addon'), [tr(x) for x in labels])
     if choice < 0:
         return
     return meta_pick_for_provider(providers[choice].get('id') or '')
@@ -20852,7 +20824,7 @@ def collection_set_browse(set_id):
     """
     row = _collections_mod.get_set(set_id)
     if not row:
-        error(tr('المجموعة غير موجودة'))
+        error(tr('Collection not found'))
         return end_dir()
     entries = row.get('entries') or []
     win = xbmcgui.Window(WINDOW_ID)
@@ -20861,13 +20833,13 @@ def collection_set_browse(set_id):
 
     if not entries:
         add_item(
-            '[COLOR yellow]+ إضافة عنصر يدويًا[/COLOR]',
+            '[COLOR yellow]+ Add item manually[/COLOR]',
             build_url(action='collection_entry_add', set_id=set_id),
             is_folder=False,
-            info={'title': 'إضافة عنصر', 'plot': 'أضف اختصارًا (كتالوج أو قائمة Trakt) يدويًا'},
+            info={'title': 'Add item', 'plot': 'Add a shortcut manually (catalog or Trakt list)'},
             art=root_art('add'),
         )
-        add_item(tr('[COLOR grey]لا توجد عناصر بعد داخل هذه المجموعة[/COLOR]'), build_url(action='collection_set_browse', set_id=set_id), is_folder=False, info={'title': tr('فارغ')})
+        add_item(tr('[COLOR grey]No items in this collection yet[/COLOR]'), build_url(action='collection_set_browse', set_id=set_id), is_folder=False, info={'title': tr('Empty')})
         return end_dir(content='files')
 
     # Hide entries that have no real poster/background — otherwise Kodi
@@ -20897,7 +20869,7 @@ def collection_set_browse(set_id):
         if bg and not first_fanart:
             first_fanart = bg
 
-        kind_tag = {'addonCatalog': 'كتالوج', 'multiCatalog': 'مصادر', 'traktList': 'Trakt', 'mdblistList': 'MDBList', 'kodiPluginRoute': 'Kodi', 'localJsonCatalog': 'JSON'}.get(kind, kind or 'أخرى')
+        kind_tag = {'addonCatalog': 'Catalog', 'multiCatalog': 'Add-ons', 'traktList': 'Trakt', 'mdblistList': 'MDBList', 'kodiPluginRoute': 'Kodi', 'localJsonCatalog': 'JSON'}.get(kind, kind or 'Other')
         if _clean_collection_view_enabled():
             display_label = '' if hide_title else label
         elif hide_title:
@@ -20941,26 +20913,26 @@ def collection_set_browse(set_id):
                 path = route_url
 
         ctx_menu = [
-            (tr('تغيير الصورة'), 'RunPlugin(%s)' % build_url(action='collection_entry_edit_bg', set_id=set_id, entry_id=entry.get('id') or '')),
-            (tr('تغيير الاسم'), 'RunPlugin(%s)' % build_url(action='collection_entry_edit_name', set_id=set_id, entry_id=entry.get('id') or '')),
-            (tr('تعديل المصدر من مصادر Stremio'), 'RunPlugin(%s)' % build_url(action='collection_entry_edit_stremio', set_id=set_id, entry_id=entry.get('id') or '')),
-            (tr('تعديل إلى رابط Trakt'), 'RunPlugin(%s)' % build_url(action='collection_entry_edit_trakt_list', set_id=set_id, entry_id=entry.get('id') or '')),
-            (tr('تعديل إلى رابط MDBList'), 'RunPlugin(%s)' % build_url(action='collection_entry_edit_mdblist_list', set_id=set_id, entry_id=entry.get('id') or '')),
-            (tr('تحويل إلى اختصار TMDb Helper Native'), 'RunPlugin(%s)' % build_url(action='collection_entry_convert_tmdbhelper_native', set_id=set_id, entry_id=entry.get('id') or '')),
-            (tr('تعديل المسار من صفحة الويدجت/المظهر'), 'RunPlugin(%s)' % build_url(action='collection_entry_edit_widget', set_id=set_id, entry_id=entry.get('id') or '')),
-            (tr('تعديل الرابط/المصدر المتقدم'), 'RunPlugin(%s)' % build_url(action='collection_entry_edit_source', set_id=set_id, entry_id=entry.get('id') or '')),
-            (tr('تبديل التخطيط (Poster / Wide)'), 'RunPlugin(%s)' % build_url(action='collection_entry_toggle_layout', set_id=set_id, entry_id=entry.get('id') or '')),
-            (tr('وضع الفتح: %s') % _collection_open_mode_label(entry.get('open_mode') or 'normal'), 'RunPlugin(%s)' % build_url(action='collection_entry_toggle_open_mode', set_id=set_id, entry_id=entry.get('id') or '')),
-            (tr('إضافة عنصر جديد من مصادر Stremio'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_stremio', set_id=set_id)),
-            (tr('إضافة رابط Trakt جديد'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_trakt_list', set_id=set_id)),
-            (tr('إضافة رابط MDBList جديد'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_mdblist_list', set_id=set_id)),
-            (tr('إضافة اختصار TMDb Helper Native'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_tmdbhelper_native', set_id=set_id)),
-            (tr('إضافة مسار جديد من صفحة الويدجت/المظهر'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_widget', set_id=set_id)),
-            (tr('إضافة عنصر جديد يدويًا'), 'RunPlugin(%s)' % build_url(action='collection_entry_add', set_id=set_id)),
-            (tr('إزالة العنصر'), 'RunPlugin(%s)' % build_url(action='collection_entry_remove', set_id=set_id, entry_id=entry.get('id') or '')),
+            (tr('Change artwork'), 'RunPlugin(%s)' % build_url(action='collection_entry_edit_bg', set_id=set_id, entry_id=entry.get('id') or '')),
+            (tr('Change name'), 'RunPlugin(%s)' % build_url(action='collection_entry_edit_name', set_id=set_id, entry_id=entry.get('id') or '')),
+            (tr('Edit add-on from Stremio add-ons'), 'RunPlugin(%s)' % build_url(action='collection_entry_edit_stremio', set_id=set_id, entry_id=entry.get('id') or '')),
+            (tr('Change to Trakt list'), 'RunPlugin(%s)' % build_url(action='collection_entry_edit_trakt_list', set_id=set_id, entry_id=entry.get('id') or '')),
+            (tr('Change to MDBList'), 'RunPlugin(%s)' % build_url(action='collection_entry_edit_mdblist_list', set_id=set_id, entry_id=entry.get('id') or '')),
+            (tr('Convert to TMDb Helper Native shortcut'), 'RunPlugin(%s)' % build_url(action='collection_entry_convert_tmdbhelper_native', set_id=set_id, entry_id=entry.get('id') or '')),
+            (tr('Edit path from widget/skin picker'), 'RunPlugin(%s)' % build_url(action='collection_entry_edit_widget', set_id=set_id, entry_id=entry.get('id') or '')),
+            (tr('Advanced link/source edit'), 'RunPlugin(%s)' % build_url(action='collection_entry_edit_source', set_id=set_id, entry_id=entry.get('id') or '')),
+            (tr('Toggle layout (Poster / Wide)'), 'RunPlugin(%s)' % build_url(action='collection_entry_toggle_layout', set_id=set_id, entry_id=entry.get('id') or '')),
+            (tr('Open mode: %s') % _collection_open_mode_label(entry.get('open_mode') or 'normal'), 'RunPlugin(%s)' % build_url(action='collection_entry_toggle_open_mode', set_id=set_id, entry_id=entry.get('id') or '')),
+            (tr('Add new item from Stremio add-ons'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_stremio', set_id=set_id)),
+            (tr('Add new Trakt list'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_trakt_list', set_id=set_id)),
+            (tr('Add new MDBList'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_mdblist_list', set_id=set_id)),
+            (tr('Add TMDb Helper Native shortcut'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_tmdbhelper_native', set_id=set_id)),
+            (tr('Add new path from widget/skin picker'), 'RunPlugin(%s)' % build_url(action='collection_entry_add_widget', set_id=set_id)),
+            (tr('Add new item manually'), 'RunPlugin(%s)' % build_url(action='collection_entry_add', set_id=set_id)),
+            (tr('Remove item'), 'RunPlugin(%s)' % build_url(action='collection_entry_remove', set_id=set_id, entry_id=entry.get('id') or '')),
         ]
         if kind in ('addonCatalog', 'multiCatalog', 'traktList', 'mdblistList'):
-            ctx_menu.insert(2, (tr('تغيير مصدر الميتاداتا'), 'RunPlugin(%s)' % build_url(action='collection_entry_meta_source', set_id=set_id, entry_id=entry.get('id') or '')))
+            ctx_menu.insert(2, (tr('Change metadata add-on'), 'RunPlugin(%s)' % build_url(action='collection_entry_meta_source', set_id=set_id, entry_id=entry.get('id') or '')))
         info = {
             'title': label,
             'plot': preview.get('plot') or '',
@@ -20982,16 +20954,16 @@ def collection_entry_edit_bg(set_id, entry_id):
     entry = next((e for e in (row.get('entries') or []) if e.get('id') == entry_id), None)
     if not entry:
         return
-    kb = xbmc.Keyboard(entry.get('background') or '', tr(tr('رابط الصورة (poster/banner/fanart)')))
+    kb = xbmc.Keyboard(entry.get('background') or '', tr(tr('Artwork URL (poster/banner/fanart)')))
     kb.doModal()
     if not kb.isConfirmed():
         return
     new_url = kb.getText().strip()
     try:
         _collections_mod.update_entry(set_id, entry_id, {'background': new_url})
-        notify(tr('تم تحديث الصورة'))
+        notify(tr('Artwork updated'))
     except Exception as exc:
-        error(tr('فشل التحديث: %s') % exc)
+        error(tr('Update failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -21002,7 +20974,7 @@ def collection_entry_edit_name(set_id, entry_id):
     entry = next((e for e in (row.get('entries') or []) if e.get('id') == entry_id), None)
     if not entry:
         return
-    kb = xbmc.Keyboard(entry.get('name') or '', tr('اسم العنصر'))
+    kb = xbmc.Keyboard(entry.get('name') or '', tr('Item name'))
     kb.doModal()
     if not kb.isConfirmed():
         return
@@ -21011,9 +20983,9 @@ def collection_entry_edit_name(set_id, entry_id):
         return
     try:
         _collections_mod.update_entry(set_id, entry_id, {'name': new_name})
-        notify(tr('تم تحديث الاسم'))
+        notify(tr('Name updated'))
     except Exception as exc:
-        error(tr('فشل التحديث: %s') % exc)
+        error(tr('Update failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -21028,9 +21000,9 @@ def collection_entry_toggle_layout(set_id, entry_id):
     new_layout = 'Wide' if current == 'poster' else 'Poster'
     try:
         _collections_mod.update_entry(set_id, entry_id, {'layout': new_layout})
-        notify(tr('التخطيط الآن: %s') % new_layout)
+        notify(tr('Current layout: %s') % new_layout)
     except Exception as exc:
-        error(tr('فشل: %s') % exc)
+        error(tr('Failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -21046,9 +21018,9 @@ def collection_entry_toggle_open_mode(set_id, entry_id):
         return
     try:
         _collections_mod.update_entry(set_id, entry_id, {'open_mode': selected})
-        notify(tr('تم تحديث وضع الفتح'))
+        notify(tr('Open mode updated'))
     except Exception as exc:
-        error(tr('فشل التحديث: %s') % exc)
+        error(tr('Update failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -21114,8 +21086,8 @@ def _pick_catalog_source_extra(catalog_def, current=None):
     extra_defs = _catalog_source_extra_options(catalog_def or {})
     if not extra_defs:
         return {}, ''
-    labels = ['بدون فلتر / افتح الكتالوج كامل'] + ['%s (%d)' % (_filter_label(name), len(opts)) for name, opts in extra_defs]
-    idx = _select_dialog('اختيار مجلد/فلتر من الكتالوج', labels, preselect=0)
+    labels = ['No filter / open the full catalog'] + ['%s (%d)' % (_filter_label(name), len(opts)) for name, opts in extra_defs]
+    idx = _select_dialog('Choose a folder / filter from the catalog', labels, preselect=0)
     if idx < 0:
         return None
     if idx == 0:
@@ -21127,7 +21099,7 @@ def _pick_catalog_source_extra(catalog_def, current=None):
     if not current_value and name == 'genre':
         current_value = str(current.get('genre') or '')
     pre = opts.index(current_value) if current_value in opts else 0
-    opt_idx = _select_dialog(tr('اختر %s') % _filter_label(name), opts, preselect=pre)
+    opt_idx = _select_dialog(tr('Choose %s') % _filter_label(name), opts, preselect=pre)
     if opt_idx < 0:
         return None
     value = opts[opt_idx]
@@ -21162,7 +21134,7 @@ def _pick_stremio_catalog_source(src=None):
     src = src or {}
     rows = _collection_provider_catalog_rows()
     if not rows:
-        error(tr('لا توجد إضافات Stremio مسجلة. أضف manifest أولًا من المصادر.'))
+        error(tr('No Stremio addons are registered. Add a manifest first from Add-ons.'))
         return None
     default_idx = 0
     current_addon = str(src.get('addonId') or src.get('addon_id') or '').strip()
@@ -21176,7 +21148,7 @@ def _pick_stremio_catalog_source(src=None):
             default_idx = i
             break
     labels = [r.get('label') or 'Catalog' for r in rows]
-    idx = _select_dialog(tr('اختر كتالوج Stremio'), labels, preselect=default_idx)
+    idx = _select_dialog(tr('Choose a Stremio catalog'), labels, preselect=default_idx)
     if idx < 0:
         return None
     row = rows[idx]
@@ -21200,12 +21172,12 @@ def _pick_stremio_catalog_source(src=None):
 
 def _manual_collection_catalog_source(src=None):
     src = src or {}
-    addon_id = _prompt_text(str(src.get('addonId') or src.get('addon_id') or ''), 'رابط manifest أو Addon ID')
+    addon_id = _prompt_text(str(src.get('addonId') or src.get('addon_id') or ''), 'Manifest URL or Addon ID')
     if addon_id is None:
         return None
     addon_id = str(addon_id or '').strip()
     if not addon_id:
-        error(tr('Addon ID / manifest فارغ'))
+        error(tr('Addon ID / manifest is empty'))
         return None
 
     catalog_id = _prompt_text(str(src.get('catalogId') or src.get('catalog_id') or ''), 'Catalog ID')
@@ -21213,18 +21185,18 @@ def _manual_collection_catalog_source(src=None):
         return None
     catalog_id = str(catalog_id or '').strip()
     if not catalog_id:
-        error(tr('Catalog ID فارغ'))
+        error(tr('Catalog ID is empty'))
         return None
 
     current_type = str(src.get('catalogType') or src.get('type') or 'movie').strip().lower() or 'movie'
     choices = ['movie', 'series', 'anime']
     default_idx = choices.index(current_type) if current_type in choices else 0
-    idx = _select_dialog('نوع الكتالوج', choices, preselect=default_idx)
+    idx = _select_dialog('Catalog type', choices, preselect=default_idx)
     if idx < 0:
         return None
     catalog_type = choices[idx]
 
-    genre = _prompt_text(str(src.get('genre') or ''), 'Genre / Extra اختياري')
+    genre = _prompt_text(str(src.get('genre') or ''), 'Genre / Extra (optional)')
     if genre is None:
         return None
 
@@ -21243,9 +21215,9 @@ def _manual_collection_catalog_source(src=None):
 def _collection_prompt_catalog_source(src=None):
     """Pick or type a Stremio catalog source for collection folders."""
     src = src or {}
-    modes = [tr('اختيار من إضافات Stremio المسجلة'), tr('إدخال يدوي متقدم')]
+    modes = [tr('Pick from registered Stremio addons'), tr('Advanced manual entry')]
     default_idx = 0 if store.list_providers() else 1
-    mode = _select_dialog('طريقة اختيار المصدر', modes, preselect=default_idx)
+    mode = _select_dialog('Add-on selection method', modes, preselect=default_idx)
     if mode < 0:
         return None
     if mode == 0:
@@ -21263,8 +21235,8 @@ def _collection_edit_multi_sources(payload):
         if isinstance(src, dict):
             sources.append(dict(src))
     labels = [_collection_source_label(src, i) for i, src in enumerate(sources)]
-    labels.append('+ إضافة مصدر جديد')
-    choice = xbmcgui.Dialog().select(tr('مصادر الفولدر'), labels)
+    labels.append('+ Add new add-on')
+    choice = xbmcgui.Dialog().select(tr('Folder add-ons'), labels)
     if choice < 0:
         return None
 
@@ -21275,11 +21247,11 @@ def _collection_edit_multi_sources(payload):
         sources.append(new_src)
         return sources
 
-    action = xbmcgui.Dialog().select(tr('تعديل المصدر'), [tr('تعديل هذا المصدر'), tr('حذف هذا المصدر'), tr('إضافة مصدر جديد')])
+    action = xbmcgui.Dialog().select(tr('Edit add-on'), [tr('Edit this add-on'), tr('Remove this add-on'), tr('Add new add-on')])
     if action < 0:
         return None
     if action == 1:
-        if not xbmcgui.Dialog().yesno('Nuvio Hub', tr('حذف هذا المصدر؟')):
+        if not xbmcgui.Dialog().yesno('Nuvio Hub', tr('Remove this add-on?')):
             return None
         del sources[choice]
         return sources
@@ -21307,8 +21279,8 @@ def collection_entry_edit_source(set_id, entry_id):
     payload = entry.get('payload') or {}
     updates = {}
     if kind == 'addonCatalog':
-        edit_modes = ['اختيار كتالوج من إضافات Stremio', 'تصفح إضافة Kodi', 'اختيار من صفحة الويدجت/المظهر', 'إدخال يدوي متقدم']
-        mode = _select_dialog(tr('تعديل الرابط/المصدر'), [tr(x) for x in edit_modes], preselect=0)
+        edit_modes = ['Pick a catalog from Stremio addons', 'Browse a Kodi addon', 'Choose from widget/skin picker', 'Advanced manual entry']
+        mode = _select_dialog(tr('Edit link/source'), [tr(x) for x in edit_modes], preselect=0)
         if mode < 0:
             return
         if mode == 0:
@@ -21360,8 +21332,8 @@ def collection_entry_edit_source(set_id, entry_id):
             except Exception as exc:
                 xbmc.log('[NuvioHub] auto-register failed after source edit: %s' % exc, xbmc.LOGWARNING)
     elif kind == 'multiCatalog':
-        edit_modes = ['إدارة مصادر Stremio داخل الفولدر', 'تحويل هذا العنصر إلى مسار Kodi', 'تحويل إلى مسار من صفحة الويدجت/المظهر']
-        mode = _select_dialog(tr('تعديل الرابط/المصدر'), [tr(x) for x in edit_modes], preselect=0)
+        edit_modes = ['Manage Stremio add-ons in this folder', 'Convert this item to a Kodi path', 'Convert to path from widget/skin picker']
+        mode = _select_dialog(tr('Edit link/source'), [tr(x) for x in edit_modes], preselect=0)
         if mode < 0:
             return
         if mode == 1:
@@ -21393,7 +21365,7 @@ def collection_entry_edit_source(set_id, entry_id):
             if new_sources is None:
                 return
             if not new_sources:
-                error(tr('لا يمكن ترك الفولدر بدون مصادر'))
+                error(tr('Folder cannot be left with no add-ons'))
                 return
             updates['kind'] = 'multiCatalog'
             updates['payload.sources'] = new_sources
@@ -21406,12 +21378,12 @@ def collection_entry_edit_source(set_id, entry_id):
                         xbmc.log('[NuvioHub] auto-register failed after multi source edit: %s' % exc, xbmc.LOGWARNING)
     elif kind == 'traktList':
         default_url = payload.get('url') or ('https://trakt.tv/users/%s/lists/%s' % (payload.get('username') or '', payload.get('listSlug') or payload.get('slug') or ''))
-        raw_url = _prompt_text(str(default_url or ''), tr('رابط قائمة Trakt'))
+        raw_url = _prompt_text(str(default_url or ''), tr('Trakt list URL'))
         if raw_url is None:
             return
         parsed = _parse_trakt_list_url(raw_url)
         if not parsed:
-            error(tr('رابط Trakt غير صالح'))
+            error(tr('Invalid Trakt URL'))
             return
         media_filter = _pick_collection_media_filter(payload.get('mediaFilter') or 'auto')
         if media_filter is None:
@@ -21419,20 +21391,20 @@ def collection_entry_edit_source(set_id, entry_id):
         updates.update({'payload.username': parsed['username'], 'payload.listSlug': parsed['slug'], 'payload.slug': parsed['slug'], 'payload.listName': payload.get('listName') or parsed.get('name') or '', 'payload.url': parsed['url'], 'payload.mediaFilter': media_filter})
     elif kind == 'mdblistList':
         default_url = payload.get('url') or ('https://mdblist.com/lists/%s/%s' % (payload.get('username') or '', payload.get('listSlug') or payload.get('slug') or ''))
-        raw_url = _prompt_text(str(default_url or ''), tr('رابط قائمة MDBList'))
+        raw_url = _prompt_text(str(default_url or ''), tr('MDBList list URL'))
         if raw_url is None:
             return
         parsed = _parse_mdblist_list_url(raw_url)
         if not parsed:
-            error(tr('رابط MDBList غير صالح'))
+            error(tr('Invalid MDBList URL'))
             return
         media_filter = _pick_collection_media_filter(payload.get('mediaFilter') or 'auto')
         if media_filter is None:
             return
         updates.update({'payload.username': parsed['username'], 'payload.listSlug': parsed['slug'], 'payload.slug': parsed['slug'], 'payload.listName': payload.get('listName') or parsed.get('name') or '', 'payload.url': parsed['url'], 'payload.mediaFilter': media_filter})
     elif kind == 'kodiPluginRoute':
-        edit_modes = ['اختيار من مصادر Stremio', 'اختيار من صفحة الويدجت/المظهر', 'تصفح إضافة Kodi', 'إدخال يدوي للمسار']
-        mode = _select_dialog(tr('تعديل الرابط/المصدر'), [tr(x) for x in edit_modes], preselect=1)
+        edit_modes = ['Choose from Stremio add-ons', 'Choose from widget/skin picker', 'Browse a Kodi addon', 'Manual path entry']
+        mode = _select_dialog(tr('Edit link/source'), [tr(x) for x in edit_modes], preselect=1)
         if mode < 0:
             return
         if mode == 0:
@@ -21471,7 +21443,7 @@ def collection_entry_edit_source(set_id, entry_id):
                     return
                 route_url, route_label = _pick_kodi_plugin_route(addon_row, default_route=str(payload.get('route') or 'plugin://%s/' % addon_row.get('id')))
             else:
-                typed = _prompt_text(str(payload.get('route') or ''), tr('ألصق المسار الكامل plugin:// أو videodb:// أو library://'))
+                typed = _prompt_text(str(payload.get('route') or ''), tr('Paste the full path: plugin://, videodb://, or library://'))
                 if typed is None:
                     return
                 route_url = _extract_kodi_path_from_widget_value(typed)
@@ -21493,12 +21465,12 @@ def collection_entry_edit_source(set_id, entry_id):
             raw_text = _read_text_from_path(file_path)
             _rows, _meta = _parse_local_json_catalog(raw_text)
         except Exception as exc:
-            error(tr('فشل قراءة ملف JSON: %s') % exc)
+            error(tr('Failed to read JSON file: %s') % exc)
             return
         media_filter = _pick_collection_media_filter(payload.get('mediaFilter') or 'auto')
         if media_filter is None:
             return
-        limit_text = _prompt_text(str(payload.get('limit') or '60'), 'عدد العناصر (0 = بدون حد)')
+        limit_text = _prompt_text(str(payload.get('limit') or '60'), 'Item limit (0 = no limit)')
         if limit_text is None:
             return
         try:
@@ -21507,23 +21479,23 @@ def collection_entry_edit_source(set_id, entry_id):
             limit = int(payload.get('limit') or 60)
         updates.update({'payload.filePath': str(file_path).strip(), 'payload.mediaFilter': media_filter, 'payload.limit': limit})
     else:
-        error(tr('نوع غير مدعوم للتعديل'))
+        error(tr('Unsupported shortcut type for editing'))
         return
     try:
         _collections_mod.update_entry(set_id, entry_id, updates)
-        notify(tr('تم تحديث المصدر'))
+        notify(tr('Add-on updated'))
     except Exception as exc:
-        error(tr('فشل التحديث: %s') % exc)
+        error(tr('Update failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 def collection_entry_remove(set_id, entry_id):
-    if not xbmcgui.Dialog().yesno('Nuvio Hub', tr('هل تريد إزالة هذا العنصر؟')):
+    if not xbmcgui.Dialog().yesno('Nuvio Hub', tr('Do you want to remove this item?')):
         return
     try:
         _collections_mod.remove_entry(set_id, entry_id)
-        notify(tr('تم الإزالة'))
+        notify(tr('Removed'))
     except Exception as exc:
-        error(tr('فشل: %s') % exc)
+        error(tr('Failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -21538,11 +21510,11 @@ def collection_entry_edit_widget(set_id, entry_id):
     """
     row = _collections_mod.get_set(set_id)
     if not row:
-        error(tr('المجموعة غير موجودة'))
+        error(tr('Collection not found'))
         return
     entry = next((e for e in (row.get('entries') or []) if e.get('id') == entry_id), None)
     if not entry:
-        error(tr('العنصر غير موجود'))
+        error(tr('Item not found'))
         return
     payload = entry.get('payload') or {}
     route_url, route_label, addon_meta = _pick_skin_widget_route(
@@ -21563,9 +21535,9 @@ def collection_entry_edit_widget(set_id, entry_id):
         updates['name'] = (addon_meta or {}).get('name') or _addon_id_from_kodi_path(route_url) or 'Kodi'
     try:
         _collections_mod.update_entry(set_id, entry_id, updates)
-        notify(tr('تم تعديل المسار'))
+        notify(tr('Path updated'))
     except Exception as exc:
-        error(tr('فشل التعديل: %s') % exc)
+        error(tr('Edit failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -21573,11 +21545,11 @@ def collection_entry_edit_stremio(set_id, entry_id):
     """Replace the current collection item with a Stremio catalog source."""
     row = _collections_mod.get_set(set_id)
     if not row:
-        error(tr('المجموعة غير موجودة'))
+        error(tr('Collection not found'))
         return
     entry = next((e for e in (row.get('entries') or []) if e.get('id') == entry_id), None)
     if not entry:
-        error(tr('العنصر غير موجود'))
+        error(tr('Item not found'))
         return
     payload = entry.get('payload') or {}
     src = _collection_prompt_catalog_source(payload if entry.get('kind') == 'addonCatalog' else {})
@@ -21616,9 +21588,9 @@ def collection_entry_edit_stremio(set_id, entry_id):
         xbmc.log('[NuvioHub] auto-register failed after direct Stremio edit: %s' % exc, xbmc.LOGWARNING)
     try:
         _collections_mod.update_entry(set_id, entry_id, updates)
-        notify(tr('تم تعديل مصدر Stremio'))
+        notify(tr('Stremio add-on updated'))
     except Exception as exc:
-        error(tr('فشل التعديل: %s') % exc)
+        error(tr('Edit failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -21652,12 +21624,12 @@ def _collection_prompt_trakt_payload(current_payload=None):
     default_url = current_payload.get('url') or ''
     if not default_url and current_payload.get('username') and (current_payload.get('listSlug') or current_payload.get('slug')):
         default_url = 'https://trakt.tv/users/%s/lists/%s' % (current_payload.get('username') or '', current_payload.get('listSlug') or current_payload.get('slug') or '')
-    raw_url = _prompt_text(str(default_url or ''), tr('رابط قائمة Trakt'))
+    raw_url = _prompt_text(str(default_url or ''), tr('Trakt list URL'))
     if raw_url is None:
         return None
     parsed = _parse_trakt_list_url(raw_url)
     if not parsed:
-        error(tr('رابط Trakt غير صالح'))
+        error(tr('Invalid Trakt URL'))
         return None
     media_filter = _pick_collection_media_filter(current_payload.get('mediaFilter') or 'auto')
     if media_filter is None:
@@ -21677,12 +21649,12 @@ def _collection_prompt_mdblist_payload(current_payload=None):
     default_url = current_payload.get('url') or ''
     if not default_url and current_payload.get('username') and (current_payload.get('listSlug') or current_payload.get('slug')):
         default_url = 'https://mdblist.com/lists/%s/%s' % (current_payload.get('username') or '', current_payload.get('listSlug') or current_payload.get('slug') or '')
-    raw_url = _prompt_text(str(default_url or ''), tr('رابط قائمة MDBList'))
+    raw_url = _prompt_text(str(default_url or ''), tr('MDBList list URL'))
     if raw_url is None:
         return None
     parsed = _parse_mdblist_list_url(raw_url)
     if not parsed:
-        error(tr('رابط MDBList غير صالح'))
+        error(tr('Invalid MDBList URL'))
         return None
     media_filter = _pick_collection_media_filter(current_payload.get('mediaFilter') or 'auto')
     if media_filter is None:
@@ -21700,11 +21672,11 @@ def _collection_prompt_mdblist_payload(current_payload=None):
 def collection_entry_edit_trakt_list(set_id, entry_id):
     row = _collections_mod.get_set(set_id)
     if not row:
-        error(tr('المجموعة غير موجودة'))
+        error(tr('Collection not found'))
         return
     entry = next((e for e in (row.get('entries') or []) if e.get('id') == entry_id), None)
     if not entry:
-        error(tr('العنصر غير موجود'))
+        error(tr('Item not found'))
         return
     payload = _collection_prompt_trakt_payload(entry.get('payload') or {})
     if not payload:
@@ -21717,20 +21689,20 @@ def collection_entry_edit_trakt_list(set_id, entry_id):
         updates['name'] = default_name
     try:
         _collections_mod.update_entry(set_id, entry_id, updates)
-        notify(tr('تم تعديل العنصر إلى رابط Trakt'))
+        notify(tr('Changed item to a Trakt list'))
     except Exception as exc:
-        error(tr('فشل التعديل: %s') % exc)
+        error(tr('Edit failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
 def collection_entry_edit_mdblist_list(set_id, entry_id):
     row = _collections_mod.get_set(set_id)
     if not row:
-        error(tr('المجموعة غير موجودة'))
+        error(tr('Collection not found'))
         return
     entry = next((e for e in (row.get('entries') or []) if e.get('id') == entry_id), None)
     if not entry:
-        error(tr('العنصر غير موجود'))
+        error(tr('Item not found'))
         return
     payload = _collection_prompt_mdblist_payload(entry.get('payload') or {})
     if not payload:
@@ -21743,9 +21715,9 @@ def collection_entry_edit_mdblist_list(set_id, entry_id):
         updates['name'] = default_name
     try:
         _collections_mod.update_entry(set_id, entry_id, updates)
-        notify(tr('تم تعديل العنصر إلى رابط MDBList'))
+        notify(tr('Changed item to an MDBList'))
     except Exception as exc:
-        error(tr('فشل التعديل: %s') % exc)
+        error(tr('Edit failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -21754,15 +21726,15 @@ def collection_entry_add_trakt_list(set_id):
     if not payload:
         return
     default_name = payload.get('listName') or _derive_name_from_slug(payload.get('listSlug') or '') or 'Trakt'
-    name = _prompt_text(default_name, tr('اسم العنصر'))
+    name = _prompt_text(default_name, tr('Item name'))
     if name is None:
         return
     name = name or default_name or 'Trakt'
     try:
         _collections_mod.add_custom_entry(set_id, name, 'traktList', payload, background='', open_mode='normal')
-        notify(tr('تم إضافة رابط Trakt'))
+        notify(tr('Added Trakt list'))
     except Exception as exc:
-        error(tr('فشل: %s') % exc)
+        error(tr('Failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -21771,15 +21743,15 @@ def collection_entry_add_mdblist_list(set_id):
     if not payload:
         return
     default_name = payload.get('listName') or _derive_name_from_slug(payload.get('listSlug') or '') or 'MDBList'
-    name = _prompt_text(default_name, tr('اسم العنصر'))
+    name = _prompt_text(default_name, tr('Item name'))
     if name is None:
         return
     name = name or default_name or 'MDBList'
     try:
         _collections_mod.add_custom_entry(set_id, name, 'mdblistList', payload, background='', open_mode='normal')
-        notify(tr('تم إضافة رابط MDBList'))
+        notify(tr('Added MDBList'))
     except Exception as exc:
-        error(tr('فشل: %s') % exc)
+        error(tr('Failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -21792,17 +21764,17 @@ def collection_entry_convert_tmdbhelper_native(set_id, entry_id):
     """
     row = _collections_mod.get_set(set_id)
     if not row:
-        error(tr('المجموعة غير موجودة'))
+        error(tr('Collection not found'))
         return
     entry = next((e for e in (row.get('entries') or []) if e.get('id') == entry_id), None)
     if not entry:
-        error(tr('العنصر غير موجود'))
+        error(tr('Item not found'))
         return
     payload = entry.get('payload') or {}
     media_filter = payload.get('mediaFilter') or 'auto'
     route_url, route_label = _tmdbhelper_native_route_from_entry(entry)
     if not route_url:
-        notify(tr('لم أجد مسار TMDb Helper مباشر لهذا العنصر. اختره من صفحة الويدجت/المظهر.'))
+        notify(tr('I could not infer a direct TMDb Helper path for this item. Pick it from the widget/skin path picker.'))
         route_url, route_label, _addon_meta = _pick_skin_widget_route(default_label=entry.get('name') or '')
         if not route_url:
             return
@@ -21813,16 +21785,16 @@ def collection_entry_convert_tmdbhelper_native(set_id, entry_id):
         updates['name'] = route_label
     try:
         _collections_mod.update_entry(set_id, entry_id, updates)
-        notify(tr('تم تحويل العنصر إلى اختصار TMDb Helper Native'))
+        notify(tr('Converted item to a TMDb Helper Native shortcut'))
     except Exception as exc:
-        error(tr('فشل التعديل: %s') % exc)
+        error(tr('Edit failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
 def collection_entry_add_tmdbhelper_native(set_id):
     """Quick-add a native TMDb Helper shortcut without rebuilding the list."""
-    choices = [tr('رابط Trakt'), tr('رابط MDBList'), tr('رابط TMDb List'), tr('اختيار من صفحة الويدجت/المظهر'), tr('إدخال مسار TMDb Helper')]
-    idx = xbmcgui.Dialog().select(tr('نوع اختصار TMDb Helper'), choices)
+    choices = [tr('Trakt URL'), tr('MDBList URL'), tr('TMDb List URL'), tr('Choose from widget/skin picker'), tr('Enter TMDb Helper path')]
+    idx = xbmcgui.Dialog().select(tr('TMDb Helper shortcut type'), choices)
     if idx < 0:
         return
     route_url = ''
@@ -21831,12 +21803,12 @@ def collection_entry_add_tmdbhelper_native(set_id):
     addon_meta = {}
 
     if idx == 0:
-        raw_url = _prompt_text('', tr('رابط قائمة Trakt'))
+        raw_url = _prompt_text('', tr('Trakt list URL'))
         if raw_url is None:
             return
         parsed = _parse_trakt_list_url(raw_url)
         if not parsed:
-            error(tr('رابط Trakt غير صالح'))
+            error(tr('Invalid Trakt URL'))
             return
         media_filter = _pick_collection_media_filter('auto')
         if media_filter is None:
@@ -21844,12 +21816,12 @@ def collection_entry_add_tmdbhelper_native(set_id):
         route_url = _tmdbhelper_trakt_list_url(parsed.get('username'), parsed.get('slug'), media_filter)
         default_name = parsed.get('name') or 'Trakt'
     elif idx == 1:
-        raw_url = _prompt_text('', tr('رابط قائمة MDBList'))
+        raw_url = _prompt_text('', tr('MDBList list URL'))
         if raw_url is None:
             return
         parsed = _parse_mdblist_list_url(raw_url)
         if not parsed:
-            error(tr('رابط MDBList غير صالح'))
+            error(tr('Invalid MDBList URL'))
             return
         media_filter = _pick_collection_media_filter('auto')
         if media_filter is None:
@@ -21857,12 +21829,12 @@ def collection_entry_add_tmdbhelper_native(set_id):
         route_url = _tmdbhelper_mdblist_url(parsed.get('username'), parsed.get('slug'), media_filter, raw_url=parsed.get('url') or raw_url)
         default_name = parsed.get('name') or 'MDBList'
     elif idx == 2:
-        raw_url = _prompt_text('', tr('رابط TMDb List'))
+        raw_url = _prompt_text('', tr('TMDb List URL'))
         if raw_url is None:
             return
         parsed = _parse_tmdb_list_url(raw_url)
         if not parsed:
-            error(tr('رابط TMDb List غير صالح'))
+            error(tr('Invalid TMDb List URL'))
             return
         media_filter = _pick_collection_media_filter('auto')
         if media_filter is None:
@@ -21878,7 +21850,7 @@ def collection_entry_add_tmdbhelper_native(set_id):
             return
         default_name = route_label or (addon_meta or {}).get('name') or 'TMDb Helper'
     else:
-        typed = _prompt_text('plugin://plugin.video.themoviedb.helper/', tr('رابط أو مسار TMDb Helper'))
+        typed = _prompt_text('plugin://plugin.video.themoviedb.helper/', tr('TMDb Helper URL or path'))
         if typed is None:
             return
         route_url = _extract_kodi_path_from_widget_value(typed)
@@ -21889,7 +21861,7 @@ def collection_entry_add_tmdbhelper_native(set_id):
             return
         default_name = 'TMDb Helper'
 
-    name = _prompt_text(default_name, tr('اسم العنصر'))
+    name = _prompt_text(default_name, tr('Item name'))
     if name is None:
         return
     name = name or default_name or 'TMDb Helper'
@@ -21897,9 +21869,9 @@ def collection_entry_add_tmdbhelper_native(set_id):
     background = (addon_meta or {}).get('fanart') or (addon_meta or {}).get('thumbnail') or ''
     try:
         _collections_mod.add_custom_entry(set_id, name, 'kodiPluginRoute', payload, background=background, open_mode='normal')
-        notify(tr('تم حفظ اختصار TMDb Helper Native'))
+        notify(tr('Saved TMDb Helper Native shortcut'))
     except Exception as exc:
-        error(tr('فشل: %s') % exc)
+        error(tr('Failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -21923,23 +21895,23 @@ def collection_entry_add_stremio(set_id):
     try:
         _collections_mod.ensure_addon_registered(payload.get('addonId', ''))
     except Exception as exc:
-        notify(tr('لم يتم تسجيل المصدر تلقائيًا: %s') % exc)
+        notify(tr('The add-on was not registered automatically: %s') % exc)
     default_name = _derive_name_from_slug(src.get('catalogId') or '') or 'Stremio'
-    background = _prompt_text('', tr('رابط الصورة (اختياري)'))
+    background = _prompt_text('', tr('Artwork URL (optional)'))
     if background is None:
         return
     open_mode = _pick_collection_open_mode('normal')
     if open_mode is None:
         return
-    name = _prompt_text(default_name, tr('اسم العنصر'))
+    name = _prompt_text(default_name, tr('Item name'))
     if name is None:
         return
     name = name or default_name or 'Stremio'
     try:
         _collections_mod.add_custom_entry(set_id, name, 'addonCatalog', payload, background=background, open_mode=open_mode)
-        notify(tr('تم إضافة مصدر Stremio'))
+        notify(tr('Stremio add-on added'))
     except Exception as exc:
-        error(tr('فشل: %s') % exc)
+        error(tr('Failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -21950,7 +21922,7 @@ def collection_entry_add_widget(set_id):
     if not route_url:
         return
     default_name = route_label or (addon_meta or {}).get('name') or _addon_id_from_kodi_path(route_url) or 'Kodi'
-    name = _prompt_text(default_name, tr('اسم العنصر'))
+    name = _prompt_text(default_name, tr('Item name'))
     if name is None:
         return
     name = name or default_name or 'Kodi'
@@ -21958,15 +21930,15 @@ def collection_entry_add_widget(set_id):
     background = (addon_meta or {}).get('fanart') or (addon_meta or {}).get('thumbnail') or ''
     try:
         _collections_mod.add_custom_entry(set_id, name, 'kodiPluginRoute', payload, background=background, open_mode='normal')
-        notify(tr('تم حفظ المسار كاختصار مباشر'))
+        notify(tr('Path saved as a direct shortcut'))
     except Exception as exc:
-        error(tr('فشل: %s') % exc)
+        error(tr('Failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
 def collection_entry_add(set_id):
-    choices = [tr(tr('رابط Trakt')), tr(tr('رابط MDBList')), tr('اختيار من مصادر Stremio'), tr(tr('مسار إضافة Kodi')), tr(tr('مسار من صفحة الويدجت/المظهر')), tr(tr('ملف JSON محلي'))]
-    source_idx = xbmcgui.Dialog().select(tr(tr('مصدر العنصر')), choices)
+    choices = [tr(tr('Trakt URL')), tr(tr('MDBList URL')), tr('Choose from Stremio add-ons'), tr(tr('Kodi addon route')), tr(tr('Path from widget/skin picker')), tr(tr('Local JSON file'))]
+    source_idx = xbmcgui.Dialog().select(tr(tr('Item add-on')), choices)
     if source_idx < 0:
         return
 
@@ -21975,12 +21947,12 @@ def collection_entry_add(set_id):
     default_name = ''
 
     if source_idx == 0:
-        raw_url = _prompt_text('', tr('رابط قائمة Trakt'))
+        raw_url = _prompt_text('', tr('Trakt list URL'))
         if raw_url is None:
             return
         parsed = _parse_trakt_list_url(raw_url)
         if not parsed:
-            error(tr('رابط Trakt غير صالح'))
+            error(tr('Invalid Trakt URL'))
             return
         default_name = parsed.get('name') or ''
         media_filter = _pick_collection_media_filter('auto')
@@ -21989,12 +21961,12 @@ def collection_entry_add(set_id):
         payload = {'username': parsed['username'], 'listSlug': parsed['slug'], 'slug': parsed['slug'], 'listName': default_name, 'url': parsed['url'], 'mediaFilter': media_filter}
         kind = 'traktList'
     elif source_idx == 1:
-        raw_url = _prompt_text('', tr('رابط قائمة MDBList'))
+        raw_url = _prompt_text('', tr('MDBList list URL'))
         if raw_url is None:
             return
         parsed = _parse_mdblist_list_url(raw_url)
         if not parsed:
-            error(tr('رابط MDBList غير صالح'))
+            error(tr('Invalid MDBList URL'))
             return
         default_name = parsed.get('name') or ''
         media_filter = _pick_collection_media_filter('auto')
@@ -22014,7 +21986,7 @@ def collection_entry_add(set_id):
         try:
             _collections_mod.ensure_addon_registered(payload.get('addonId', ''))
         except Exception as exc:
-            notify(tr('لم يتم تسجيل المصدر تلقائيًا: %s') % exc)
+            notify(tr('The add-on was not registered automatically: %s') % exc)
         kind = 'addonCatalog'
     elif source_idx == 3:
         addon_row = _pick_installed_video_addon()
@@ -22050,9 +22022,9 @@ def collection_entry_add(set_id):
             raw_text = _read_text_from_path(file_path)
             _rows, meta = _parse_local_json_catalog(raw_text)
         except Exception as exc:
-            error(tr('فشل قراءة ملف JSON: %s') % exc)
+            error(tr('Failed to read JSON file: %s') % exc)
             return
-        limit_text = _prompt_text('60', 'عدد العناصر (0 = بدون حد)')
+        limit_text = _prompt_text('60', 'Item limit (0 = no limit)')
         if limit_text is None:
             return
         try:
@@ -22063,7 +22035,7 @@ def collection_entry_add(set_id):
         default_name = str((meta or {}).get('title') or os.path.splitext(os.path.basename(str(file_path)))[0] or 'Local JSON').strip()
         kind = 'localJsonCatalog'
 
-    background = _prompt_text('', tr('رابط الصورة (اختياري)'))
+    background = _prompt_text('', tr('Artwork URL (optional)'))
     if background is None:
         return
 
@@ -22071,38 +22043,38 @@ def collection_entry_add(set_id):
     if open_mode is None:
         return
 
-    name = _prompt_text(default_name, tr('اسم العنصر'))
+    name = _prompt_text(default_name, tr('Item name'))
     if name is None:
         return
     name = name or default_name or 'Collection'
 
     try:
         _collections_mod.add_custom_entry(set_id, name, kind, payload, background=background, open_mode=open_mode)
-        notify(tr('تم إضافة العنصر'))
+        notify(tr('Item added'))
     except Exception as exc:
-        error(tr('فشل: %s') % exc)
+        error(tr('Failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 def collection_set_refresh(set_id):
     try:
         _collections_mod.refresh_set(set_id, manifest_resolver=_make_addon_manifest_resolver(''))
-        notify(tr('تم تحديث المجموعة'))
+        notify(tr('Collection updated'))
     except Exception as exc:
-        error(tr('تعذّر التحديث: %s') % exc)
+        error(tr('Could not update: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
 def collection_set_remove(set_id):
     try:
         _collections_mod.remove_set(set_id)
-        notify(tr('تم إزالة المجموعة'))
+        notify(tr('Collection removed'))
     except Exception as exc:
-        error(tr('تعذّر الإزالة: %s') % exc)
+        error(tr('Could not remove: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
 def collection_set_create_empty():
-    kb = xbmc.Keyboard(tr('مجموعتي'), tr('اسم المجموعة الجديدة'))
+    kb = xbmc.Keyboard(tr('My Collection'), tr('New collection name'))
     kb.doModal()
     if not kb.isConfirmed():
         return
@@ -22111,9 +22083,9 @@ def collection_set_create_empty():
         return
     try:
         new_set = _collections_mod.create_empty_set(name)
-        notify(tr('تم إنشاء: %s') % new_set.get('name'))
+        notify(tr('Created: %s') % new_set.get('name'))
     except Exception as exc:
-        error(tr('فشل: %s') % exc)
+        error(tr('Failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -22121,7 +22093,7 @@ def collection_entry_open(set_id, entry_id):
     """Dispatch one collection entry to the right browser."""
     row = _collections_mod.get_set(set_id)
     if not row:
-        error(tr('المجموعة غير موجودة'))
+        error(tr('Collection not found'))
         return end_dir()
     entry = None
     for e in row.get('entries') or []:
@@ -22129,7 +22101,7 @@ def collection_entry_open(set_id, entry_id):
             entry = e
             break
     if not entry:
-        error(tr('العنصر غير موجود'))
+        error(tr('Item not found'))
         return end_dir()
     kind = entry.get('kind')
     payload = entry.get('payload') or {}
@@ -22145,7 +22117,7 @@ def collection_entry_open(set_id, entry_id):
         return _open_kodi_plugin_route_entry(entry, payload)
     if kind == 'localJsonCatalog':
         return _render_local_json_catalog(entry, payload)
-    error(tr('نوع اختصار غير مدعوم: %s') % kind)
+    error(tr('Unsupported shortcut type: %s') % kind)
     return end_dir()
 
 
@@ -22190,7 +22162,7 @@ def _open_multi_catalog_entry(entry, payload):
     """
     sources = payload.get('sources') or []
     if not sources:
-        error(tr('لا توجد مصادر داخل هذا الفولدر'))
+        error(tr('No add-ons inside this folder'))
         return end_dir()
 
     win = xbmcgui.Window(WINDOW_ID)
@@ -22256,7 +22228,7 @@ def _open_multi_catalog_entry(entry, payload):
     for row in resolved:
         provider = row.get('provider') or {}
         catalog_type = row.get('catalog_type') or 'movie'
-        type_label = {'movie': 'أفلام', 'series': 'مسلسلات', 'anime': 'أنمي'}.get(catalog_type, catalog_type)
+        type_label = {'movie': 'Movies', 'series': 'TV Shows', 'anime': 'Anime'}.get(catalog_type, catalog_type)
         cat_name = row.get('catalog_name') or row.get('catalog_id') or 'Catalog'
         label = '[%s] %s — %s' % (type_label, cat_name, provider.get('name') or row.get('addon_id'))
         extra_name, extra_value = _catalog_extra_from_source(row.get('source') or row)
@@ -22273,22 +22245,22 @@ def _open_multi_catalog_entry(entry, payload):
                 url_args['genre'] = row.get('genre')
         url = build_url(**url_args)
         add_item(label, url,
-                 info={'title': cat_name, 'plot': tr('من إضافة %s') % (provider.get('name') or row.get('addon_id'))},
+                 info={'title': cat_name, 'plot': tr('From addon %s') % (provider.get('name') or row.get('addon_id'))},
                  art={'poster': entry.get('background') or '', 'fanart': entry.get('background') or ''})
         rendered += 1
 
     if missing_addons:
         names = ', '.join(sorted(missing_addons))
         add_item(
-            tr('[COLOR yellow]⚠ مصادر تحتاج Manifest مُعدّ: %s[/COLOR]') % names,
+            tr('[COLOR yellow]⚠ Add-ons requiring a configured Manifest: %s[/COLOR]') % names,
             build_url(action='add_provider'),
             is_folder=False,
             art=root_art('add'),
-            info={'title': 'مصادر مفقودة', 'plot': 'الصق manifest.json لهذه الإضافات. Plexio مثلًا يحتاج رابطًا مُعدًا بحسابك حتى تظهر كتالوجاته.'},
+            info={'title': 'Missing add-ons', 'plot': 'Paste the manifest.json for these addons. Plexio for instance needs a URL pre-configured with your account before its catalogs appear.'},
         )
 
     if rendered == 0 and not missing_addons:
-        add_item(tr('[COLOR grey]لا توجد مصادر صالحة[/COLOR]'),
+        add_item(tr('[COLOR grey]No valid add-ons[/COLOR]'),
                  build_url(action='collection_entry_open', set_id=entry.get('_set_id', ''), entry_id=entry.get('id', '')),
                  is_folder=False)
 
@@ -22313,7 +22285,7 @@ def _open_addon_catalog_entry(entry, payload):
     if catalog_type not in ('movie', 'series', 'anime'):
         catalog_type = 'movie'
     if not addon_ref or not catalog_id:
-        error(tr('اختصار غير مكتمل'))
+        error(tr('Shortcut is incomplete'))
         return end_dir()
 
     try:
@@ -22323,10 +22295,10 @@ def _open_addon_catalog_entry(entry, payload):
             share_url='',
         )
     except Exception as exc:
-        error(tr('تعذّر تسجيل المصدر: %s') % exc)
+        error(tr('Could not register the add-on: %s') % exc)
         return end_dir()
     if not provider:
-        error(tr('الإضافة غير مثبّتة أو تحتاج Manifest مُعدّ: %s') % addon_ref)
+        error(tr('Addon not installed or needs a configured Manifest: %s') % addon_ref)
         return end_dir()
 
     return _open_catalog_from_collection_source(provider.get('id'), catalog_type, catalog_id, label=entry.get('name') or catalog_id, src=payload, skip=_collection_skip_gate_enabled(entry))
@@ -22336,7 +22308,7 @@ def _open_trakt_list_entry(entry, payload):
     username = (payload.get('username') or '').strip()
     slug = (payload.get('listSlug') or payload.get('slug') or '').strip()
     if not username or not slug:
-        error(tr('اختصار Trakt غير مكتمل'))
+        error(tr('Trakt shortcut is incomplete'))
         return end_dir()
     return trakt_list_browse(username, slug, title=entry.get('name') or slug, background=entry.get('background') or '', media_filter=payload.get('mediaFilter') or 'auto', force_remote='')
 
@@ -22345,7 +22317,7 @@ def _open_mdblist_list_entry(entry, payload):
     username = (payload.get('username') or '').strip()
     slug = (payload.get('listSlug') or payload.get('slug') or '').strip()
     if not username or not slug:
-        error(tr('اختصار MDBList غير مكتمل'))
+        error(tr('MDBList shortcut is incomplete'))
         return end_dir()
     return mdblist_list_browse(username, slug, title=entry.get('name') or slug, background=entry.get('background') or '', media_filter=payload.get('mediaFilter') or 'auto', force_remote='')
 
@@ -22369,7 +22341,7 @@ def _content_type_from_plugin_rows(rows):
 def kodi_route_browse(route='', title='', background='', page='0'):
     route_url = str(route or '').strip()
     if not route_url.startswith('plugin://'):
-        error(tr('رابط plugin غير صالح'))
+        error(tr('Invalid plugin route'))
         return end_dir(content='files')
     rows = _list_plugin_directory_items(route_url)
     if not rows:
@@ -22380,7 +22352,7 @@ def kodi_route_browse(route='', title='', background='', page='0'):
             xbmc.executebuiltin('Container.Update(%s,replace)' % _kodi_builtin_arg(route_url))
             return
         except Exception:
-            error(tr('المسار فارغ أو غير قابل للقراءة'))
+            error(tr('Path is empty or unreadable'))
             return end_dir(content='files')
 
     page_num, _ps, visible, has_more = _page_slice(rows, page)
@@ -22398,16 +22370,16 @@ def kodi_route_browse(route='', title='', background='', page='0'):
         cast = info.pop('cast', None) if isinstance(info.get('cast'), list) else None
         if row.get('is_folder'):
             path = build_url(action='kodi_route_browse', route=item_url, title=label, background=fanart or background, page='0')
-            ctx_menu = [(tr('فتح بالمسار الأصلي'), 'Container.Update(%s)' % _kodi_builtin_arg(item_url))]
+            ctx_menu = [(tr('Open with original path'), 'Container.Update(%s)' % _kodi_builtin_arg(item_url))]
             add_item(label, path, is_folder=True, info=info, art=art, ids=ids, cast=cast, context_menu=ctx_menu)
         else:
             # Keep playable plugin items in Nuvio Hub's list. Kodi will hand them
             # back to their own addon on click, but now with the same rich art
             # and InfoTag fields that the source/TMDb Helper exposed.
-            add_item(label, item_url, is_folder=False, info=info, art=art, ids=ids, cast=cast, properties={'IsPlayable': 'true'}, context_menu=[(tr('فتح بالمسار الأصلي'), 'RunPlugin(%s)' % _kodi_builtin_arg(item_url))])
+            add_item(label, item_url, is_folder=False, info=info, art=art, ids=ids, cast=cast, properties={'IsPlayable': 'true'}, context_menu=[(tr('Open with original path'), 'RunPlugin(%s)' % _kodi_builtin_arg(item_url))])
     if has_more:
         if not globals().get('_pagination_hidden', lambda: False)():
-            add_item(tr('المزيد'), build_url(action='kodi_route_browse', route=route_url, title=root_label, background=background, page=str(page_num + 1)), info={'title': tr('المزيد'), 'plot': tr('تحميل عناصر إضافية من هذا المسار')}, art=root_art('catalogs'))
+            add_item(tr('More'), build_url(action='kodi_route_browse', route=route_url, title=root_label, background=background, page=str(page_num + 1)), info={'title': tr('More'), 'plot': tr('Load more items from this path')}, art=root_art('catalogs'))
     end_dir(content=_content_type_from_plugin_rows(rows), cache=False)
 
 
@@ -22417,7 +22389,7 @@ def _open_kodi_plugin_route_entry(entry, payload):
     # known-good behaviour for avoiding Kodi "playback failed" on shortcuts.
     route_url = str((payload or {}).get('route') or (payload or {}).get('url') or '').strip()
     if not route_url:
-        error(tr('اختصار غير مكتمل'))
+        error(tr('Shortcut is incomplete'))
         return end_dir()
 
     # This handler is only used as a fallback when the card itself was not a
@@ -22449,10 +22421,10 @@ def trakt_list_browse(username, slug, title='', background='', media_filter='aut
     try:
         rows = trakt.fetch_user_list(username, slug) or []
     except Exception as exc:
-        error(tr('فشل قراءة قائمة Trakt: %s') % exc)
+        error(tr('Failed to read Trakt list: %s') % exc)
         return end_dir()
     if not rows:
-        error(tr('القائمة فارغة أو غير متاحة'))
+        error(tr('The list is empty or unavailable'))
         return end_dir()
 
     media_filter = str(media_filter or 'auto').strip().lower()
@@ -22565,7 +22537,7 @@ def trakt_list_browse(username, slug, title='', background='', media_filter='aut
         except Exception:
             pass
         path, path_is_folder = _content_click_path(media_type=media_type, canonical_id=canonical, title=display_name, tmdb_id=tmdb, imdb_id=ids_out.get('imdb_id') or '', tvdb_id=tvdb, source_provider_id='virtual.collection.trakt', ui_seed=art)
-        ctx_menu = [(tr('تغيير مصدر الميتاداتا'), 'RunPlugin(%s)' % build_url(action='meta_pick_target', target_key='virtual.collection.trakt', title=tr('الكوليكشن • عناصر Trakt')))] + _build_source_picker_menu(media_type=media_type, canonical_id=canonical, title=display_name, source_provider_id='virtual.collection.trakt') + _build_player_chooser_menu(
+        ctx_menu = [(tr('Change metadata add-on'), 'RunPlugin(%s)' % build_url(action='meta_pick_target', target_key='virtual.collection.trakt', title=tr('Collection • Trakt items')))] + _build_source_picker_menu(media_type=media_type, canonical_id=canonical, title=display_name, source_provider_id='virtual.collection.trakt') + _build_player_chooser_menu(
             media_type=media_type,
             canonical_id=canonical,
             title=display_name,
@@ -22580,9 +22552,9 @@ def trakt_list_browse(username, slug, title='', background='', media_filter='aut
 
     if has_more:
         add_item(
-            'المزيد',
+            'More',
             build_url(action='trakt_list_browse', username=username, slug=slug, title=title, background=background, media_filter=media_filter, page=str(page_num + 1), **_force_remote_query(force_remote)),
-            info={'title': 'المزيد', 'plot': 'تحميل المزيد من عناصر قائمة Trakt'},
+            info={'title': 'More', 'plot': 'Load more Trakt list items'},
             art=root_art('trakt'),
         )
     if first_fanart:
@@ -22601,7 +22573,7 @@ def _render_idlist_rows(rows, more_url='', title='', background='', media_filter
     `more_url` (prebuilt by the caller) replaces the old inline cursor logic.
     """
     if not rows:
-        error(tr('القائمة فارغة أو غير متاحة'))
+        error(tr('The list is empty or unavailable'))
         return end_dir()
 
     win = xbmcgui.Window(WINDOW_ID)
@@ -22714,12 +22686,12 @@ def _render_idlist_rows(rows, more_url='', title='', background='', media_filter
         except Exception:
             pass
         path, path_is_folder = _content_click_path(media_type=media_type, canonical_id=canonical, title=display_name, tmdb_id=tmdb, imdb_id=ids_out.get('imdb_id') or '', tvdb_id=tvdb, source_provider_id='virtual.collection.trakt', ui_seed=art)
-        ctx_menu = [(tr('تغيير مصدر الميتاداتا'), 'RunPlugin(%s)' % build_url(action='meta_pick_target', target_key='virtual.collection.trakt', title=tr('الكوليكشن • عناصر Trakt')))] + _build_source_picker_menu(media_type=media_type, canonical_id=canonical, title=display_name, source_provider_id='virtual.collection.trakt') + _build_player_chooser_menu(media_type=media_type, canonical_id=canonical, title=display_name, tmdb_id=tmdb, imdb_id=ids_out.get('imdb_id') or '', tvdb_id=tvdb, source_provider_id='virtual.collection.trakt')
+        ctx_menu = [(tr('Change metadata add-on'), 'RunPlugin(%s)' % build_url(action='meta_pick_target', target_key='virtual.collection.trakt', title=tr('Collection • Trakt items')))] + _build_source_picker_menu(media_type=media_type, canonical_id=canonical, title=display_name, source_provider_id='virtual.collection.trakt') + _build_player_chooser_menu(media_type=media_type, canonical_id=canonical, title=display_name, tmdb_id=tmdb, imdb_id=ids_out.get('imdb_id') or '', tvdb_id=tvdb, source_provider_id='virtual.collection.trakt')
         add_item(display_name, path, is_folder=path_is_folder, info=info, art=art, ids=ids_out, context_menu=ctx_menu)
 
     if more_url:
         if not globals().get('_pagination_hidden', lambda: False)():
-            add_item(tr('المزيد'), more_url, info={'title': tr('المزيد'), 'plot': tr('تحميل المزيد من عناصر القائمة')}, art=root_art('catalogs'))
+            add_item(tr('More'), more_url, info={'title': tr('More'), 'plot': tr('Load more items from the list')}, art=root_art('catalogs'))
     if first_fanart:
         win.setProperty('fanart', first_fanart)
     content = ('tvshows' if any_series and not any_movie else
@@ -22733,7 +22705,7 @@ def mdblist_list_browse(username, slug, title='', background='', media_filter='a
     try:
         rows, next_cursor = mdblist.fetch_items(username, slug, media_filter=media_filter, cursor=cursor, limit=_listing_page_size())
     except Exception as exc:
-        error(tr('فشل قراءة قائمة MDBList: %s') % exc)
+        error(tr('Failed to read MDBList list: %s') % exc)
         return end_dir()
     more_url = ''
     if next_cursor:
@@ -22747,7 +22719,7 @@ def mdblist_list_browse_id(list_id, title='', background='', media_filter='auto'
     try:
         rows, next_cursor = mdblist.fetch_items_by_id(list_id, media_filter=media_filter, cursor=cursor, limit=_listing_page_size())
     except Exception as exc:
-        error(tr('فشل قراءة قائمة MDBList: %s') % exc)
+        error(tr('Failed to read MDBList list: %s') % exc)
         return end_dir()
     more_url = ''
     if next_cursor:
@@ -22758,13 +22730,13 @@ def mdblist_list_browse_id(list_id, title='', background='', media_filter='auto'
 def mdblist_watchlist_browse(media_filter='auto', cursor='', title='', background='', force_remote=''):
     """The MDBList account watchlist as a catalog (v4.1.0)."""
     if not mdblist.configured():
-        error(tr('أدخل MDBList API Key في الإعدادات أولاً'))
+        error(tr('Enter the MDBList API Key in settings first'))
         return end_dir()
     force_remote = _force_remote_posters_enabled(force_remote)
     try:
         rows, next_cursor = mdblist.fetch_watchlist_items(media_filter=media_filter, cursor=cursor, limit=_listing_page_size())
     except Exception as exc:
-        error(tr('فشل قراءة Watchlist من MDBList: %s') % exc)
+        error(tr('Could not read the MDBList watchlist: %s') % exc)
         return end_dir()
     more_url = ''
     if next_cursor:
@@ -22779,13 +22751,13 @@ def simkl_list_browse(kind='shows', status='watching', media_filter='auto', page
     paging is local via _page_slice — same UX as the Trakt list browse.
     """
     if not simkl.authorized():
-        error(tr('حساب Simkl غير مرتبط'))
+        error(tr('Simkl account is not linked'))
         return end_dir()
     force_remote = _force_remote_posters_enabled(force_remote)
     try:
         all_rows = simkl.fetch_all_items(kind, status) or []
     except Exception as exc:
-        error(tr('فشل قراءة قائمة Simkl: %s') % exc)
+        error(tr('Could not read the Simkl list: %s') % exc)
         return end_dir()
     if media_filter in ('movie', 'movies'):
         all_rows = [r for r in all_rows if (r.get('_type') or '') == 'movie']
@@ -22830,7 +22802,7 @@ def _nextup_items_cached(limit=40):
 def nextup():
     rows = _nextup_items_cached(limit=60)
     if not rows:
-        notify(tr('لا توجد حلقات قادمة بعد. شاهد حلقة من أي مسلسل ليظهر هنا.'))
+        notify(tr('No upcoming episodes yet. Watch an episode from any show and it will appear here.'))
         return end_dir(content='episodes', cache=False)
 
     # Bug fix (3.7.90): previously, art backfill was deferred to a background
@@ -22996,10 +22968,10 @@ def nextup():
                 tvdb_id=row_ids.get('tvdb_id') or '',
                 season=season, episode=episode, video_id=video_id,
             ) + [
-                ('فتح بيانات المسلسل', 'Container.Update(%s)' % build_url(
+                ('Open series info', 'Container.Update(%s)' % build_url(
                     action='series_meta', media_type='series',
                     canonical_id=canonical, title=title or canonical)),
-                ('إضافة إلى المفضلة', 'RunPlugin(%s)' % build_url(
+                ('Add to favorites', 'RunPlugin(%s)' % build_url(
                     action='fav_add', media_type='series',
                     canonical_id=canonical, title=title or canonical,
                     poster=art.get('poster') or '',
@@ -23087,7 +23059,7 @@ def _resolve_row_art(row):
     poster = _wrap_tokenized_url(row.get('poster') or '')
     fanart = _wrap_tokenized_url(row.get('background') or row.get('fanart') or row.get('landscape') or '')
     clearlogo = _wrap_tokenized_url(row.get('clearlogo') or row.get('logo') or '')
-    target_key = str(row.get('_dexhub_virtual_meta_target') or '').strip()
+    target_key = str(row.get('_nuviohub_virtual_meta_target') or '').strip()
 
     # If no virtual picker is involved and the row already has complete art,
     # keep the fast path. With Favorites metadata override enabled we must not
@@ -23337,7 +23309,7 @@ def _favorite_row_art(row):
     so the next visit is instant (no network needed)."""
     row = row or {}
     target_key = _fav_target_key(row)
-    art = _resolve_row_art(dict(row, _dexhub_virtual_meta_target=target_key))
+    art = _resolve_row_art(dict(row, _nuviohub_virtual_meta_target=target_key))
     # Persist non-empty resolved art back to favorites DB so it's cached
     # for all future visits without any lookup. Do not persist explicit
     # Favorites metadata picks; otherwise switching the picker later would
@@ -23403,37 +23375,37 @@ def favorites():
     _set_render_section('favorites')
     # Refresh the Trakt mirror in the background once per session.
     win = xbmcgui.Window(WINDOW_ID)
-    if not win.getProperty('dexhub.fav_mirror_done') and not win.getProperty('dexhub.fav_mirror_syncing'):
+    if not win.getProperty('nuviohub.fav_mirror_done') and not win.getProperty('nuviohub.fav_mirror_syncing'):
         try:
-            win.setProperty('dexhub.fav_mirror_syncing', '1')
+            win.setProperty('nuviohub.fav_mirror_syncing', '1')
             def _bg():
                 try:
                     _refresh_trakt_favorites_mirror()
                 finally:
                     try:
-                        win.setProperty('dexhub.fav_mirror_done', '1')
-                        win.clearProperty('dexhub.fav_mirror_syncing')
+                        win.setProperty('nuviohub.fav_mirror_done', '1')
+                        win.clearProperty('nuviohub.fav_mirror_syncing')
                     except Exception:
                         pass
                     _refresh_visible_favorites_container()
             accepted = _submit_optional(
                 _bg, key='favorites-external-mirror')
             if not accepted:
-                win.clearProperty('dexhub.fav_mirror_syncing')
+                win.clearProperty('nuviohub.fav_mirror_syncing')
         except Exception:
             try:
-                win.clearProperty('dexhub.fav_mirror_syncing')
+                win.clearProperty('nuviohub.fav_mirror_syncing')
             except Exception:
                 pass
 
     rows = favorites_store.list_favorites(limit=300) or []
     if not rows:
-        if win.getProperty('dexhub.fav_mirror_syncing'):
-            add_item(tr('[COLOR grey]جارِ تحميل المفضلة…[/COLOR]'), build_url(action='favorites'), is_folder=False,
-                     info={'title': 'المفضلة', 'plot': 'يتم تجهيز المفضلة المحلية ونسخة Trakt.'},
+        if win.getProperty('nuviohub.fav_mirror_syncing'):
+            add_item(tr('[COLOR grey]Loading favorites…[/COLOR]'), build_url(action='favorites'), is_folder=False,
+                     info={'title': 'Favorites', 'plot': 'Preparing local favorites and the Trakt mirror.'},
                      art=root_art('favorites'))
             return end_dir(content='videos')
-        notify(tr('قائمة المفضلة فارغة. أضف عنصراً عبر "إضافة إلى المفضلة" من قائمة السياق.'))
+        notify(tr('Favorites is empty. Add an item from the context menu using "Add to favorites".'))
         return end_dir(content='videos')
 
     any_series = any((r.get('media_type') or '').lower() in ('series', 'anime', 'tv', 'show') for r in rows)
@@ -23441,9 +23413,9 @@ def favorites():
     content_type = ('movies' if any_movie and not any_series else
                     ('tvshows' if any_series and not any_movie else 'videos'))
 
-    if win.getProperty('dexhub.fav_mirror_syncing'):
-        add_item(tr('[COLOR grey]جارِ تحديث مزامنة Trakt للمفضلة…[/COLOR]'), build_url(action='favorites'), is_folder=False,
-                 info={'title': 'مزامنة Trakt', 'plot': 'يتم تحديث نسخة المفضلة المحلية من Trakt في الخلفية.'},
+    if win.getProperty('nuviohub.fav_mirror_syncing'):
+        add_item(tr('[COLOR grey]Refreshing Trakt favorites sync…[/COLOR]'), build_url(action='favorites'), is_folder=False,
+                 info={'title': 'Trakt sync', 'plot': 'The local favorites mirror from Trakt is being refreshed in the background.'},
                  art=root_art('trakt'))
 
     # Parallel art resolve: rows that need a backfill (missing poster /
@@ -23523,7 +23495,7 @@ def favorites():
             art = art_map.get(idx) or _favorite_row_art(row)
             row_ids = _merge_seed_ids(extract_ids({'id': canonical}), _get_tmdbh_seed_ids(canonical))
             target_key = _fav_target_key(row)
-            target_title = 'المفضلة • مسلسلات/أنمي' if target_key.endswith('series') else 'المفضلة • أفلام'
+            target_title = 'Favorites • Series/Anime' if target_key.endswith('series') else 'Favorites • Movies'
             path, path_is_folder = _content_click_path(
                 media_type=media_type, canonical_id=canonical, title=title,
                 tmdb_id=row_ids.get('tmdb_id') or '', imdb_id=row_ids.get('imdb_id') or '', tvdb_id=row_ids.get('tvdb_id') or '',
@@ -23535,14 +23507,14 @@ def favorites():
                 'mediatype': 'tvshow' if media_type in ('series', 'anime', 'tv', 'show') else 'movie',
             }
             ctx_menu = [
-                (tr('تغيير مصدر الميتاداتا'), 'RunPlugin(%s)' % build_url(action='meta_pick_target', target_key=target_key, title=target_title)),
+                (tr('Change metadata add-on'), 'RunPlugin(%s)' % build_url(action='meta_pick_target', target_key=target_key, title=target_title)),
             ] + _build_source_picker_menu(media_type=media_type, canonical_id=canonical, title=title, source_provider_id=target_key) + [
-                ('إزالة من المفضلة', 'RunPlugin(%s)' % build_url(
+                ('Remove from favorites', 'RunPlugin(%s)' % build_url(
                     action='fav_remove', media_type=media_type, canonical_id=canonical,
                 )),
             ]
             if 'trakt' in (row.get('sources') or []):
-                ctx_menu.append(('مزامنة مع Trakt الآن', 'RunPlugin(%s)' % build_url(action='fav_sync_trakt')))
+                ctx_menu.append(('Sync with Trakt now', 'RunPlugin(%s)' % build_url(action='fav_sync_trakt')))
             add_item(display_title, path, is_folder=path_is_folder, info=info, art=art, context_menu=ctx_menu, is_favorite=True)
         except Exception:
             continue
@@ -23557,9 +23529,9 @@ def fav_add(media_type='movie', canonical_id='', title='', poster='', background
                             poster=poster or '', background=background or '',
                             clearlogo=clearlogo or '', year=int(year or 0), plot=plot or '',
                             source='local')
-        notify(tr('تمت الإضافة إلى المفضلة'))
+        notify(tr('Added to favorites'))
     except Exception as exc:
-        error(tr('تعذّر الإضافة: %s') % exc)
+        error(tr('Could not add: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -23568,18 +23540,18 @@ def fav_remove(media_type='', canonical_id=''):
         return
     try:
         favorites_store.remove(media_type or '', canonical_id)
-        notify(tr('تمت الإزالة من المفضلة'))
+        notify(tr('Removed from favorites'))
     except Exception as exc:
-        error(tr('تعذّر الإزالة: %s') % exc)
+        error(tr('Could not remove: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
 def fav_sync_trakt():
     try:
         _refresh_trakt_favorites_mirror()
-        notify(tr('تمت مزامنة المفضلة مع Trakt'))
+        notify(tr('Favorites synced with Trakt'))
     except Exception as exc:
-        error(tr('فشل المزامنة: %s') % exc)
+        error(tr('Sync failed: %s') % exc)
     xbmc.executebuiltin('Container.Refresh')
 
 
@@ -23623,25 +23595,25 @@ def discover_menu():
     """Top-level menu for the new v3.9 discovery features."""
     fanart = addon_fanart()
     art = {'poster': fanart, 'thumb': fanart, 'fanart': fanart}
-    add_item(tr('سجل البحث'),
+    add_item(tr('Search History'),
              build_url(action='search_history', media_type='all'),
-             info={'title': tr('سجل البحث'),
-                   'plot': tr('عمليات البحث الأخيرة — اختر منها بدل إعادة الكتابة')},
+             info={'title': tr('Search History'),
+                   'plot': tr('Recent searches — pick one to skip retyping')},
              art=art)
-    add_item(tr('البحث عن ممثل/مخرج'),
+    add_item(tr('Search People'),
              build_url(action='people_search'),
-             info={'title': tr('البحث عن ممثل/مخرج'),
-                   'plot': tr('ابحث في TMDb عن ممثل أو مخرج وشاهد كل أعماله')},
+             info={'title': tr('Search People'),
+                   'plot': tr('Search TMDb for an actor or director and view their full filmography')},
              art=art)
-    add_item(tr('تقويم الحلقات (متابعتي)'),
+    add_item(tr('Episode Calendar (My Shows)'),
              build_url(action='calendar', scope='my', days='14'),
-             info={'title': tr('تقويم الحلقات (متابعتي)'),
-                   'plot': tr('الحلقات القادمة من المسلسلات في قائمة Trakt')},
+             info={'title': tr('Episode Calendar (My Shows)'),
+                   'plot': tr('Upcoming episodes from your Trakt watchlist')},
              art=art)
-    add_item(tr('تقويم الحلقات (الكل)'),
+    add_item(tr('Episode Calendar (All Shows)'),
              build_url(action='calendar', scope='all', days='7'),
-             info={'title': tr('تقويم الحلقات (الكل)'),
-                   'plot': tr('الحلقات القادمة لكل المسلسلات الشهيرة')},
+             info={'title': tr('Episode Calendar (All Shows)'),
+                   'plot': tr('Upcoming episodes for every popular show')},
              art=art)
     end_dir(content=None, cache=False)
 
@@ -23654,16 +23626,16 @@ def search_history_view(media_type='all'):
         return end_dir()
     rows = _sh.recent(limit=30, media_type=media_type)
     if not rows:
-        notify(tr('لا يوجد سجل بحث بعد'))
+        notify(tr('No search history yet'))
         return end_dir(content=None)
     art = catalog_art('search', media_type or 'movie')
     for r in rows:
         q = r['query']
         path = build_url(action='search_from_history', query=q, media_type=media_type)
-        info = {'title': q, 'plot': tr('عمليات البحث: %s') % r.get('count', 1)}
+        info = {'title': q, 'plot': tr('Searched: %s') % r.get('count', 1)}
         cm = [
-            (tr('إزالة من السجل'), 'RunPlugin(%s)' % build_url(action='search_history_remove', query=q)),
-            (tr('مسح كل السجل'), 'RunPlugin(%s)' % build_url(action='search_history_clear')),
+            (tr('Remove from history'), 'RunPlugin(%s)' % build_url(action='search_history_remove', query=q)),
+            (tr('Clear all history'), 'RunPlugin(%s)' % build_url(action='search_history_clear')),
         ]
         add_item(q, path, is_folder=True, info=info, art=art, context_menu=cm)
     return end_dir(content=None, cache=False, sortable=False)
@@ -23673,7 +23645,7 @@ def search_history_clear():
     try:
         from . import search_history as _sh
         _sh.clear_all()
-        notify(tr('تم مسح سجل البحث'))
+        notify(tr('Search history cleared'))
     except Exception:
         pass
     try:
@@ -23704,7 +23676,7 @@ def search_from_history(query='', media_type='all'):
     # actually searches immediately instead of reopening the keyboard.
     try:
         win = xbmcgui.Window(WINDOW_ID)
-        win.setProperty('dexhub.last_search.%s' % (media_type or 'any'), query)
+        win.setProperty('nuviohub.last_search.%s' % (media_type or 'any'), query)
     except Exception:
         pass
     if not media_type or media_type == 'all':
@@ -23718,7 +23690,7 @@ def people_search_view():
         from . import people as _people
     except Exception:
         return end_dir()
-    kb = xbmc.Keyboard('', tr('ابحث عن ممثل أو مخرج'))
+    kb = xbmc.Keyboard('', tr('Search for an actor or director'))
     kb.doModal()
     if not kb.isConfirmed():
         return end_dir()
@@ -23727,7 +23699,7 @@ def people_search_view():
         return end_dir()
     results = _people.search_people(query)
     if not results:
-        notify(tr('لم يتم العثور على نتائج. تأكد من إعداد TMDb API key'))
+        notify(tr('No results. Check that you set a TMDb API key.'))
         return end_dir(content=None)
     for p in results:
         name = p.get('name') or ''
@@ -23735,7 +23707,7 @@ def people_search_view():
             continue
         profile = _people.profile_url(p.get('profile_path') or '')
         kf_titles = ', '.join((k.get('title') or '')[:40] for k in (p.get('known_for') or [])[:3] if k.get('title'))
-        plot = tr('معروف بـ: %s') % kf_titles if kf_titles else ''
+        plot = tr('Known for: %s') % kf_titles if kf_titles else ''
         if p.get('known_for_department'):
             plot = ('%s\n%s' % (p['known_for_department'], plot)).strip()
         info = {'title': name, 'plot': plot}
@@ -23759,9 +23731,9 @@ def people_filmography_view(person_id='', name=''):
         return end_dir()
     data = _people.person_filmography(person_id)
     sections = [
-        (tr('كممثل'),     data.get('as_actor', [])),
-        (tr('كمخرج'),     data.get('as_director', [])),
-        (tr('ككاتب'),     data.get('as_writer', [])),
+        (tr('As Actor'),     data.get('as_actor', [])),
+        (tr('As Director'),     data.get('as_director', [])),
+        (tr('As Writer'),     data.get('as_writer', [])),
     ]
     any_added = False
     for section_label, items in sections:
@@ -23795,7 +23767,7 @@ def people_filmography_view(person_id='', name=''):
                      context_menu=_build_source_picker_menu(media_type=mt, canonical_id=cid, title=title))
             any_added = True
     if not any_added:
-        notify(tr('لا توجد أعمال لعرضها'))
+        notify(tr('No filmography to show'))
     return end_dir(content=None, cache=False)
 
 
@@ -23815,9 +23787,9 @@ def calendar_view(scope='my', days='14'):
         rows = _cal.my_shows_calendar(days=days_int)
     if not rows:
         if scope == 'my':
-            notify(tr('لا توجد حلقات قادمة. تحقق من قائمة المتابعة في Trakt'))
+            notify(tr('No upcoming episodes. Check your Trakt watchlist.'))
         else:
-            notify(tr('لا توجد حلقات في التقويم'))
+            notify(tr('No episodes on the calendar'))
         return end_dir(content=None)
     last_date = ''
     for r in rows:
@@ -23839,13 +23811,13 @@ def calendar_view(scope='my', days='14'):
         days_until = r.get('days_until')
         when = ''
         if days_until == 0:
-            when = tr('اليوم')
+            when = tr('Today')
         elif days_until == 1:
-            when = tr('غداً')
+            when = tr('Tomorrow')
         elif isinstance(days_until, int) and days_until > 0:
-            when = tr('بعد %d أيام') % days_until
+            when = tr('In %d days') % days_until
         elif isinstance(days_until, int) and days_until < 0:
-            when = tr('قبل %d أيام') % abs(days_until)
+            when = tr('%d days ago') % abs(days_until)
         label = '%s — S%02dE%02d' % (title, season, episode)
         if ep_title:
             label = '%s — %s' % (label, ep_title)
@@ -23879,7 +23851,7 @@ def subs_feedback_bad(sub_id='', stream_key='', lang='', source=''):
         _sfb.report_bad(sub_id=sub_id, stream_key=stream_key, lang=lang, source=source)
     except Exception:
         pass
-    notify(tr('شكراً، تم إرسال الملاحظة'))
+    notify(tr('Thanks — feedback sent'))
     return
 
 
@@ -23888,11 +23860,11 @@ def meta_cache_clear():
     try:
         from . import meta_cache as _mc
         if _mc.clear_all():
-            notify(tr('تم مسح كاش الميتاداتا'))
+            notify(tr('Metadata cache cleared'))
         else:
-            notify(tr('فشل مسح الكاش'))
+            notify(tr('Cache clear failed'))
     except Exception:
-        notify(tr('فشل مسح الكاش'))
+        notify(tr('Cache clear failed'))
     return
 
 
@@ -23911,14 +23883,14 @@ def diagnose_sources():
     """
     rows = store.list_providers()
     if not rows:
-        add_item('[COLOR yellow]%s[/COLOR]' % tr('لا توجد مصادر مضافة'),
+        add_item('[COLOR yellow]%s[/COLOR]' % tr('No add-ons configured'),
                  build_url(action='add_provider'),
                  art=root_art('add'),
-                 info={'title': tr('لا توجد مصادر مضافة'),
-                       'plot': tr('أضف رابط Manifest أولاً')})
+                 info={'title': tr('No add-ons configured'),
+                       'plot': tr('Add a Manifest URL first')})
         return end_dir(content='files', cache=False)
 
-    notify(tr('جاري فحص المصادر…'))
+    notify(tr('Probing add-ons…'))
 
     def _probe(row):
         url = (row.get('manifest_url') or '').strip()
@@ -23963,12 +23935,12 @@ def diagnose_sources():
     failed  = len(results) - healthy
 
     summary = '[COLOR cyan]%s: %d %s · %d %s · %d %s[/COLOR]' % (
-        tr('ملخص'), healthy, tr('سليم'), slow, tr('بطيء'), failed, tr('فشل')
+        tr('Summary'), healthy, tr('healthy'), slow, tr('slow'), failed, tr('Failed')
     )
     add_item(summary, build_url(action='diagnose_sources'),
              art=root_art('catalogs'), is_folder=False,
-             info={'title': tr('تشخيص المصادر'),
-                   'plot': tr('اضغط لإعادة الفحص')})
+             info={'title': tr('Add-on diagnostics'),
+                   'plot': tr('Press to re-run the probe')})
 
     for row, ms, status in results:
         name = row.get('name') or row.get('id') or '?'
@@ -23977,37 +23949,37 @@ def diagnose_sources():
             if ms is None or ms < 1000:
                 color = 'lime'
                 icon  = '✓'
-                label_status = tr('سليم')
+                label_status = tr('healthy')
             elif ms < 3000:
                 color = 'yellow'
                 icon  = '⚠'
-                label_status = tr('بطيء')
+                label_status = tr('slow')
             else:
                 color = 'orange'
                 icon  = '⚠'
-                label_status = tr('بطيء جداً')
+                label_status = tr('very slow')
         else:
             color = 'red'
             icon  = '✗'
-            label_status = tr('فشل')
+            label_status = tr('Failed')
 
-        timing = ('%d ms' % ms) if ms is not None else (tr('انتهت المهلة'))
+        timing = ('%d ms' % ms) if ms is not None else (tr('timed out'))
         label = '[COLOR %s]%s  %s[/COLOR]   [COLOR grey]%s · %s[/COLOR]' % (
             color, icon, name, label_status, timing
         )
 
         ctx = [
-            (tr('إعدادات هذا المصدر'),
+            (tr('Add-on settings'),
              'Container.Update(%s)' % build_url(action='provider_menu',
                                                   provider_id=row.get('id', ''))),
-            (tr('حذف هذا المصدر'),
+            (tr('Remove this add-on'),
              'RunPlugin(%s)' % build_url(action='provider_remove',
                                           provider_id=row.get('id', ''))),
         ]
         plot = '%s\n%s\n%s: %s' % (
             url, name,
-            tr('الحالة'),
-            status if status != 'ok' else (tr('استجاب في %d ms') % (ms or 0))
+            tr('Status'),
+            status if status != 'ok' else (tr('Responded in %d ms') % (ms or 0))
         )
         add_item(label,
                  build_url(action='provider_menu', provider_id=row.get('id', '')),
@@ -24090,23 +24062,23 @@ def widget_help_menu():
     contains the value the user pastes into the skin."""
     base = sys.argv[0]  # e.g. 'plugin://plugin.video.nuviohub/'
     widgets = [
-        ('📺 متابعة المشاهدة',
+        ('📺 Continue Watching',
          '%s?action=widget_continue' % base,
-         'يعرض الأعمال التي بدأت مشاهدتها ولم تنتهِ منها بعد. مثالي لصف Widget في الصفحة الرئيسية لـ Kodi.'),
-        ('⭐ المفضلة',
+         'Shows what you started watching but have not finished. Ideal as a widget row on the Kodi home screen.'),
+        ('⭐ Favourites',
          '%s?action=widget_favorites' % base,
-         'يعرض الأعمال التي وضعتها في المفضلة. ثابت ولا يتغير إلا عندما تُضيف أو تُزيل عنصراً.'),
-        ('🎬 أفلام مُضافة حديثاً',
+         'Shows what you marked as a favourite. Stable — it only changes when you add or remove an item.'),
+        ('🎬 Recently added movies',
          '%s?action=widget_recent&media_type=movie' % base,
-         'يعرض أحدث الأفلام التي ظهرت في كتالوجاتك المُثبَّتة. يتحدث تلقائياً مع كل مزامنة للفهرس.'),
-        ('📺 مسلسلات مُضافة حديثاً',
+         'Shows the newest movies that appeared in your pinned catalogs. Updates automatically with every index sync.'),
+        ('📺 Recently added series',
          '%s?action=widget_recent&media_type=series' % base,
-         'يعرض أحدث المسلسلات التي ظهرت في كتالوجاتك المُثبَّتة.'),
+         'Shows the newest series that appeared in your pinned catalogs.'),
     ]
-    add_item(tr('[B][COLOR cyan]📋 روابط Widgets للصفحة الرئيسية لـ Kodi[/COLOR][/B]'),
+    add_item(tr('[B][COLOR cyan]📋 Widget links for Kodi home screen[/COLOR][/B]'),
              '', is_folder=False,
              info={'title': 'Widgets',
-                   'plot': 'انسخ الرابط من القائمة أدناه وألصقه في إعدادات Widget في skin Kodi لديك. كل skin له طريقة مختلفة لإضافة widget — راجع توثيق skin الذي تستخدمه (Arctic Horizon أو Aura أو Estuary Mod أو غيرها).'})
+                   'plot': 'Copy the link from the list below and paste it into the widget settings of your Kodi skin. Every skin adds widgets differently — check the documentation for the skin you use (Arctic Horizon, Aura, Estuary Mod, or another).'})
     for label, url, plot in widgets:
         # Make each row's title carry the URL so the user can see the
         # value to copy. The URL itself goes into the 'path' field of
@@ -24114,7 +24086,7 @@ def widget_help_menu():
         # find it.
         add_item('%s\n[COLOR grey]%s[/COLOR]' % (label, url),
                  url, is_folder=True,
-                 info={'title': label, 'plot': plot + '\n\nالرابط للنسخ:\n' + url})
+                 info={'title': label, 'plot': plot + '\n\nLink to copy:\n' + url})
     end_dir(content='files', cache=False)
 
 
@@ -24153,7 +24125,7 @@ def library_export(media_type='', canonical_id='', title='', year=''):
     media_type = (media_type or 'movie').strip().lower()
     title = title or canonical_id
     if not title or not canonical_id:
-        error(tr('بيانات العنصر ناقصة'))
+        error(tr('Item data is incomplete'))
         return
     root = _library_export_root()
     # Sanitize the title for a filesystem-friendly folder name.
@@ -24173,7 +24145,7 @@ def library_export(media_type='', canonical_id='', title='', year=''):
         try:
             xbmcvfs.mkdirs(item_folder)
         except Exception as exc:
-            error(tr('فشل إنشاء المجلد: %s') % exc)
+            error(tr('Failed to create folder: %s') % exc)
             return
     # Build the playback URL that goes inside the STRM file. This is
     # a normal plugin:// URL that routes back through NuvioHub's source
@@ -24221,9 +24193,9 @@ def library_export(media_type='', canonical_id='', title='', year=''):
             _episodes_written = _library_export_episodes(
                 item_folder, canonical_id, title)
         if media_type != 'movie' and not _episodes_written:
-            notify(tr('تم التصدير (بدون حلقات — لم يُعثر على قائمة الحلقات)'))
+            notify(tr('Exported (without episodes — no episode list found)'))
         else:
-            notify(tr('تم التصدير: %s') % folder_name)
+            notify(tr('Exported: %s') % folder_name)
         # Ask Kodi to pick the new files up. Scans are incremental and cheap;
         # without this the item does not appear until the user remembers to
         # run a scan manually.
@@ -24232,7 +24204,7 @@ def library_export(media_type='', canonical_id='', title='', year=''):
         except Exception:
             pass
     except Exception as exc:
-        error(tr('فشل التصدير: %s') % exc)
+        error(tr('Export failed: %s') % exc)
 
 
 def _library_export_episodes(show_folder, canonical_id, show_title):
@@ -24245,7 +24217,7 @@ def _library_export_episodes(show_folder, canonical_id, show_title):
     """
     meta = {}
     try:
-        from .dexhub.client import fetch_meta
+        from .nuviohub.client import fetch_meta
         for _prov in (store.list_providers() or []):
             try:
                 _m = fetch_meta(_prov, 'series', canonical_id,
@@ -24302,7 +24274,7 @@ def library_setup_help():
     msg = (
         tr('Library folder:\n%s\n\nTo add it as a video source in Kodi:\n1. Open Settings > Media > Library.\n2. Select Add video source.\n3. Choose the folder above.\n4. Select Movies or TV shows.\n5. Choose TMDb as the metadata provider.\n6. Run Update library.\n\nExported titles will appear in the Kodi library with artwork and descriptions and play through Nuvio Hub.')
     ) % root
-    xbmcgui.Dialog().textviewer(tr('Nuvio Hub — إعداد المكتبة'), msg)
+    xbmcgui.Dialog().textviewer(tr('Nuvio Hub — library setup'), msg)
 
 
 def _reset_invocation_state():
@@ -24385,7 +24357,7 @@ def run():
             except Exception:
                 pass
             xbmcgui.Dialog().textviewer(
-                tr('Nuvio Hub — حدث خطأ غير متوقع'),
+                tr('Nuvio Hub — unexpected error'),
                 ('Action: %s\nArgv: %s\n\nError:\n%s\n\n%s') % (
                     _action_for_dialog or '?',
                     sys.argv[2] if len(sys.argv) > 2 else '?',
@@ -24450,7 +24422,7 @@ def _publish_last_streams_index(canonical_id, season, episode, entries, poster='
         'ts': int(time.time()),
     }
     data = json.dumps(payload)
-    xbmcgui.Window(WINDOW_ID).setProperty('dexhub.last_streams', data)
+    xbmcgui.Window(WINDOW_ID).setProperty('nuviohub.last_streams', data)
     # Window properties can disappear when Kodi replaces the player or starts a
     # fresh plugin invocation. Keep the exact same list in the lightweight
     # SQLite cache so source switching never needs to scrape providers again.
@@ -24460,7 +24432,7 @@ def _publish_last_streams_index(canonical_id, season, episode, entries, poster='
         pass
 
 
-_SOURCE_SWITCH_HANDOFF_PROP = 'dexhub.source_switch_handoff.v2'
+_SOURCE_SWITCH_HANDOFF_PROP = 'nuviohub.source_switch_handoff.v2'
 
 
 def _source_switch_handoff_write(payload):
@@ -24659,7 +24631,7 @@ def switch_source():
 
     rows, poster = [], ''
     try:
-        raw = xbmcgui.Window(WINDOW_ID).getProperty('dexhub.last_streams')
+        raw = xbmcgui.Window(WINDOW_ID).getProperty('nuviohub.last_streams')
         data = json.loads(raw) if raw else {}
         idx_rows = [r for r in (data.get('rows') or []) if r.get('k')]
         if idx_rows:
@@ -24703,16 +24675,16 @@ def switch_source():
                 except Exception:
                     pass
                 items.append(li)
-            choice = xbmcgui.Dialog().select(tr('تبديل السورس'), items, useDetails=True)
+            choice = xbmcgui.Dialog().select(tr('Switch source'), items, useDetails=True)
         except Exception:
-            choice = xbmcgui.Dialog().select(tr('تبديل السورس'), [r.get('l') or '?' for r in rows])
+            choice = xbmcgui.Dialog().select(tr('Switch source'), [r.get('l') or '?' for r in rows])
         if choice < 0:
             return  # cancelled: playback untouched
         if has_current and choice == 0:
             # v5.4.8: the top row IS the live source. Stopping and replaying
             # it would interrupt playback for nothing — same contract as
             # cancel, with a hint so the press doesn't feel ignored.
-            notify(tr('هذا المصدر يشتغل حالياً'))
+            notify(tr('This add-on is already playing'))
             return
         key = rows[choice].get('k')
         handoff_token = _source_switch_begin_handoff(ctx, pos, duration, resume_percent)
@@ -24743,7 +24715,7 @@ def shortcut_configure():
         return shortcut_manager.configure()
     except Exception as exc:
         xbmc.log('[NuvioHub] shortcut configure failed: %s' % exc, xbmc.LOGERROR)
-        notify(tr('تعذر حفظ اختصار تبديل المصدر'))
+        notify(tr('Could not save the source-switch shortcut'))
         return False
 
 
@@ -24759,11 +24731,11 @@ def shortcut_remove():
     try:
         from . import shortcut_manager
         if shortcut_manager.remove_binding():
-            notify(tr('تمت إزالة اختصار تبديل المصدر'))
+            notify(tr('Source-switch shortcut removed'))
             return True
     except Exception as exc:
         xbmc.log('[NuvioHub] shortcut removal failed: %s' % exc, xbmc.LOGWARNING)
-    notify(tr('تعذر إزالة اختصار تبديل المصدر'))
+    notify(tr('Could not remove the source-switch shortcut'))
     return False
 
 
@@ -24842,7 +24814,7 @@ def _dispatch():
         try:
             xbmc.executebuiltin('ActivateWindow(Videos,plugin://plugin.video.themoviedb.helper/,return)')
         except Exception as exc:
-            notify(tr('فشل فتح TMDb Helper: %s') % exc)
+            notify(tr('Failed to open TMDb Helper: %s') % exc)
         return
     # v3.9.39: numeric-position reorder. The user invokes "📝 ترتيب
     # الموقع بالرقم" from the context menu of any provider, types the
@@ -24854,7 +24826,7 @@ def _dispatch():
         rows = store.list_providers() or []
         total = len(rows)
         if total < 2:
-            notify(tr('تحتاج مصدرين على الأقل للترتيب'))
+            notify(tr('You need at least two providers to reorder'))
             return
         current_idx = None
         for i, r in enumerate(rows):
@@ -24862,12 +24834,12 @@ def _dispatch():
                 current_idx = i
                 break
         if current_idx is None:
-            notify(tr('لم يُعثر على المصدر'))
+            notify(tr('Provider not found'))
             return
         provider_name = rows[current_idx].get('name') or provider_id
         raw = xbmcgui.Dialog().numeric(
             0,
-            tr('ضع %s في الموقع رقم (1 إلى %d)  •  الموقع الحالي: %d')
+            tr('Move %s to position (1 to %d) — current: %d')
                 % (provider_name, total, current_idx + 1),
             str(current_idx + 1))
         if not raw:
@@ -24875,15 +24847,15 @@ def _dispatch():
         try:
             new_pos_1based = int(str(raw).strip())
         except Exception:
-            notify(tr('قيمة غير صالحة'))
+            notify(tr('Invalid value'))
             return
         new_pos_1based = max(1, min(new_pos_1based, total))
         new_idx = new_pos_1based - 1
         if new_idx == current_idx:
-            notify(tr('%s موجود أصلاً في الموقع %d') % (provider_name, new_pos_1based))
+            notify(tr('%s is already at position %d') % (provider_name, new_pos_1based))
             return
         store.move_provider_to(provider_id, new_idx)
-        notify(tr('%s ⟵ الموقع %d') % (provider_name, new_pos_1based))
+        notify(tr('%s ⟵ position %d') % (provider_name, new_pos_1based))
         xbmc.executebuiltin('Container.Refresh')
         return
     if action == 'diagnose_sources':

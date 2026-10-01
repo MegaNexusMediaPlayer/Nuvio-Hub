@@ -26,7 +26,7 @@ sb = kodi_stub.import_lib_module('source_browser')
 
 PLUGIN = io.open(os.path.join(ROOT, 'resources', 'lib', 'plugin.py'), encoding='utf-8').read()
 SB = io.open(os.path.join(ROOT, 'resources', 'lib', 'source_browser.py'), encoding='utf-8').read()
-SYNC = io.open(os.path.join(ROOT, 'resources', 'lib', 'dexhub', 'nuvio_stremio_sync.py'), encoding='utf-8').read()
+SYNC = io.open(os.path.join(ROOT, 'resources', 'lib', 'nuviohub', 'nuvio_stremio_sync.py'), encoding='utf-8').read()
 
 # Verbatim shapes from the real sets (Sterzeck rules 'DV.HDR10+' and
 # 'ATMOS TRUEHD' both gate on a media file extension, which is why the raw
@@ -102,7 +102,7 @@ class TestSyncSectionsHonourSettings(unittest.TestCase):
     setting was dead and switching it on changed nothing."""
 
     def _sections(self, svc, store):
-        sync = kodi_stub.import_lib_module('dexhub.nuvio_stremio_sync')
+        sync = kodi_stub.import_lib_module('nuviohub.nuvio_stremio_sync')
         orig = sync._setting
         try:
             sync._setting = lambda key, default='': store.get(key, default)

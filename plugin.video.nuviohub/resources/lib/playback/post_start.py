@@ -36,7 +36,7 @@ import xbmcgui
 import xbmcvfs
 
 WINDOW_ID = 10000
-PROP_JOB = 'dexhub.post_start_job_v1'
+PROP_JOB = 'nuviohub.post_start_job_v1'
 
 # Files that must never count as "our media has started": TMDb Helper opens
 # a local dummy clip before every real play, and NuvioHub's own plugin:// nav

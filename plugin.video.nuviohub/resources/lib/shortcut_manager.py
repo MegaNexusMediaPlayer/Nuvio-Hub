@@ -18,7 +18,8 @@ import xbmcvfs
 
 ADDON_ID = 'plugin.video.nuviohub'
 WINDOW_ID = 10000
-KEYMAP_FILENAME = 'dexhub-switch-source.xml'
+KEYMAP_FILENAME = 'nuviohub-switch-source.xml'
+LEGACY_KEYMAP_FILENAMES = ('dexhub-switch-source.xml',)
 SETTING_ID = 'switch_source_keymap_data'
 ACTION = 'RunPlugin(plugin://plugin.video.nuviohub/?action=switch_source)'
 
@@ -31,9 +32,19 @@ def _addon_path():
     return _addon().getAddonInfo('path')
 
 
-def _keymap_path():
+def _keymap_path(filename=KEYMAP_FILENAME):
     folder = xbmcvfs.translatePath('special://profile/keymaps/')
-    return os.path.join(folder, KEYMAP_FILENAME)
+    return os.path.join(folder, filename)
+
+
+def _remove_legacy_keymaps():
+    for filename in LEGACY_KEYMAP_FILENAMES:
+        try:
+            path = _keymap_path(filename)
+            if os.path.exists(path):
+                os.remove(path)
+        except Exception:
+            pass
 
 
 def _safe_action_ids():
@@ -128,6 +139,7 @@ def save_binding(data):
         with open(tmp, 'w', encoding='utf-8') as fh:
             fh.write(payload)
         os.replace(tmp, target)
+        _remove_legacy_keymaps()
     except Exception as exc:
         xbmc.log('[NuvioHub] keymap write failed: %s' % exc, xbmc.LOGERROR)
         return False
@@ -141,6 +153,7 @@ def remove_binding():
     try:
         if os.path.exists(target):
             os.remove(target)
+        _remove_legacy_keymaps()
     except Exception as exc:
         xbmc.log('[NuvioHub] keymap removal failed: %s' % exc, xbmc.LOGWARNING)
         return False

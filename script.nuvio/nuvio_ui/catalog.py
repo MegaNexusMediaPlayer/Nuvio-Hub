@@ -68,9 +68,10 @@ class Catalog(Dialog):
             else:self._more()
             return
         if cid==500 and self.rows:
-            from .details import open_context
+            from .details import open_context,open_person
             self._selected=self.getControl(500).getSelectedPosition()
-            self.outcome=self.child(open_context,self.rows[self._selected]['target'],row=self.rows[self._selected])
+            row=self.rows[self._selected]
+            self.outcome=self.child(open_person,row['person']) if row.get('person') else self.child(open_context,row['target'],row=row)
             if self.outcome=='playing' or isinstance(self.outcome,dict):self.close()
             else:
                 watched=simkl_watched.snapshot()
@@ -80,9 +81,10 @@ class Catalog(Dialog):
     def onAction(self,action):
         if action.getId() in (9,10,92,216):self.close()
         elif action.getId() in (117,101,1009,11) and self.getFocusId()==500 and self.rows:
-            from .details import context_menu
+            from .details import context_menu,open_person
             self._selected=self.getControl(500).getSelectedPosition()
-            self.outcome=self.child(context_menu,self.rows[self._selected]['target'],info=action.getId()==11,row=self.rows[self._selected])
+            row=self.rows[self._selected]
+            self.outcome=self.child(open_person,row['person']) if row.get('person') else self.child(context_menu,row['target'],info=action.getId()==11,row=row)
             if self.outcome=='playing' or isinstance(self.outcome,dict):self.close()
 
 def open_catalog(params):

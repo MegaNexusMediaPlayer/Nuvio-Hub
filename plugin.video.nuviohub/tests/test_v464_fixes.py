@@ -10,7 +10,7 @@
    sync section. BASE_URL is now a constant derived from the addon id and
    HANDLE is refreshed at the start of every dispatch.
 
-2. THEME REACH — dexhub_home.xml and search_results.xml hardcoded the old
+2. THEME REACH — nuviohub_home.xml and search_results.xml hardcoded the old
    amber FFFFA500, so switching the theme preset never touched Home or
    Search; both now consume the published accent token. theme_select also
    invalidates the settings cache before republishing (the per-invocation
@@ -37,7 +37,7 @@ PLUGIN = io.open(os.path.join(ROOT, 'resources', 'lib', 'plugin.py'), encoding='
 CTX_SRC = io.open(os.path.join(ROOT, 'resources', 'lib', 'context.py'), encoding='utf-8').read()
 LOADING_PY = io.open(os.path.join(ROOT, 'resources', 'lib', 'sources_loading.py'), encoding='utf-8').read()
 _home_path = os.path.join(ROOT, 'resources', 'skins', 'Default',
-                          '1080i', 'dexhub_home.xml')
+                          '1080i', 'nuviohub_home.xml')
 # v5.4.1: Home renders through Kodi's own skin in the 5.x line;
 # the custom window is gone, so this file is optional now.
 HOME_XML = (io.open(_home_path, encoding='utf-8').read()
@@ -132,7 +132,7 @@ class TestThemeReach(unittest.TestCase):
                 continue
             checked += 1
             self.assertNotIn('FFFFA500', blob, name)
-            self.assertIn('dexhub.theme.accent', blob, name)
+            self.assertIn('nuviohub.theme.accent', blob, name)
         self.assertGreater(checked, 0, 'no themed skin file found')
 
     def test_theme_select_invalidates_settings_cache_before_publish(self):

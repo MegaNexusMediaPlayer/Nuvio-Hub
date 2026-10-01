@@ -16,7 +16,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 import xbmcvfs
-# --- dexhub-403-patch ---
+# --- nuviohub-403-patch ---
 try:
     from .i18n import tr as tr
 except Exception:
@@ -116,17 +116,17 @@ class QRLinkWindow(xbmcgui.WindowDialog):
         self.addControl(xbmcgui.ControlImage(x, y, w, h, '', colorDiffuse='DD000000'))
         if qr_path:
             self.addControl(xbmcgui.ControlImage(x + 40, y + 60, 340, 340, qr_path))
-        head = xbmcgui.ControlLabel(x + 410, y + 60, w - 450, 40, 'ربط Plex',
+        head = xbmcgui.ControlLabel(x + 410, y + 60, w - 450, 40, 'Link Plex',
                                     textColor='FFFFFFFF')
         self.addControl(head)
         body = xbmcgui.ControlTextBox(x + 410, y + 120, w - 450, 280)
         self.addControl(body)
         body.setText(
-            tr('امسح الباركود بكاميرا الجوال — تنفتح صفحة الربط مباشرة.\n\n'
-            'أو افتح: plex.tv/link\n'
-            'وأدخل الرمز:\n\n'
+            tr('Scan the QR code with your phone camera to open the Plex link page.\n\n'
+            'Or open: plex.tv/link\n'
+            'and enter the code:\n\n'
             '[B]%s[/B]\n\n'
-            'بانتظار التأكيد… (رجوع للإلغاء)') % code)
+            'Waiting for confirmation… (Back to cancel)') % code)
         self._body = body
 
     def set_status(self, text):

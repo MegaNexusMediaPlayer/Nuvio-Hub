@@ -63,7 +63,7 @@ def _setting(name, value=None):
 
 
 def _auth_prop(name):
-    return 'dexhub.emby.auth' if name.endswith('auth_json') else ''
+    return 'nuviohub.emby.auth' if name.endswith('auth_json') else ''
 
 
 def _parse_json_setting(name, default):
@@ -170,7 +170,7 @@ def is_signed_in():
 def sign_out():
     _setting('emby_auth_json', '')
     try:
-        xbmcgui.Window(WINDOW_ID).clearProperty('dexhub.emby.auth')
+        xbmcgui.Window(WINDOW_ID).clearProperty('nuviohub.emby.auth')
     except Exception:
         pass
     _VIEWS_MEM.clear()
@@ -181,7 +181,7 @@ def sign_in(url, username, password=''):
     server = {'url': url}
     base = _base(server)
     if not base:
-        raise EmbyError('أدخل عنوان سيرفر Emby')
+        raise EmbyError('Enter the Emby server address')
     raw = _request('%s/emby/Users/AuthenticateByName?format=json' % base,
                    method='POST',
                    data={'Username': str(username or ''), 'Pw': str(password or '')})
@@ -189,7 +189,7 @@ def sign_in(url, username, password=''):
     token = value.get('AccessToken') or ''
     user = value.get('User') or {}
     if not token or not user.get('Id'):
-        raise EmbyError('فشل تسجيل الدخول إلى Emby')
+        raise EmbyError('Emby login failed')
     auth = {
         'url': base,
         'token': str(token),
@@ -537,7 +537,7 @@ def libraries(server, force=False):
         return list(cached['rows'])
     if not force and key:
         try:
-            raw = xbmcgui.Window(WINDOW_ID).getProperty('dexhub.emby.libs.%s' % key) or ''
+            raw = xbmcgui.Window(WINDOW_ID).getProperty('nuviohub.emby.libs.%s' % key) or ''
             if raw:
                 data = json.loads(raw)
                 if data.get('at', 0) + CACHE_SECONDS > time.time():
@@ -560,7 +560,7 @@ def libraries(server, force=False):
     _VIEWS_MEM[key] = payload
     if key:
         try:
-            xbmcgui.Window(WINDOW_ID).setProperty('dexhub.emby.libs.%s' % key,
+            xbmcgui.Window(WINDOW_ID).setProperty('nuviohub.emby.libs.%s' % key,
                                                   json.dumps(payload))
         except Exception:
             pass
@@ -603,11 +603,7 @@ def children(server, parent_id, start=0, size=PAGE_SIZE, sort='', include_types=
 
 
 def resume(server, start=0, size=PAGE_SIZE):
-    """Emby's Continue Watching — the direct equivalent of Plex's On Deck.
-
-    Emby exposes partially-played items on /Users/{id}/Items/Resume. Nuvio Hub
-    never called it, which is why Emby had no "متابعة المشاهدة" while Plex did.
-    """
+    "Emby's Continue Watching — the direct equivalent of Plex's On Deck.\n\n    Emby exposes partially-played items on /Users/{id}/Items/Resume. Nuvio Hub\n    never called it, which is why Emby had no \"\u0645\u062a\u0627\u0628\u0639\u0629 \u0627\u0644\u0645\u0634\u0627\u0647\u062f\u0629\" while Plex did.\n    "
     params = {
         'StartIndex': int(start or 0),
         'Limit': int(size or PAGE_SIZE),

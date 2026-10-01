@@ -28,7 +28,7 @@ import json
 import os
 import uuid
 
-from .dexhub.common import profile_path
+from .nuviohub.common import profile_path
 from . import store as _store
 from .client import validate_manifest
 
@@ -97,7 +97,7 @@ def _write(rows):
     # v3.9.17: atomic write so a crash mid-save doesn't lose all custom
     # collection sets. Caller invariant unchanged — rows are persisted
     # then memory cache is updated.
-    from .dexhub.safe_io import write_json as _safe_write_json
+    from .nuviohub.safe_io import write_json as _safe_write_json
     global _CACHE_ROWS, _CACHE_MTIME
     _safe_write_json(SETS_FILE, rows)
     _CACHE_ROWS = list(rows)
@@ -297,17 +297,7 @@ def _normalize_entry(raw):
 
 
 def _expand_groups(data):
-    """Walk top-level groups with `folders[]` and emit each folder as an entry.
-
-    Supports the share-URL export format:
-        [
-          {"id": "...", "title": "خدمات البث", "folders": [
-              {"id": "...", "title": "Netflix", "catalogSources": [...]},
-              ...
-          ]},
-          ...
-        ]
-    """
+    "Walk top-level groups with `folders[]` and emit each folder as an entry.\n\n    Supports the share-URL export format:\n        [\n          {\"id\": \"...\", \"title\": \"\u062e\u062f\u0645\u0627\u062a \u0627\u0644\u0628\u062b\", \"folders\": [\n              {\"id\": \"...\", \"title\": \"Netflix\", \"catalogSources\": [...]},\n              ...\n          ]},\n          ...\n        ]\n    "
     if not isinstance(data, list):
         return data
     expanded = []
@@ -412,7 +402,7 @@ def parse_collection_json(text):
         try:
             data = json.loads(text.strip().lstrip('\ufeff'))
         except Exception:
-            raise ValueError('JSON غير صالح')
+            raise ValueError('Invalid JSON')
 
     data = _flatten_fusion_widgets(data)
 
@@ -427,7 +417,7 @@ def parse_collection_json(text):
     data = _flatten_fusion_widgets(data)
 
     if not isinstance(data, list):
-        raise ValueError('الملف لا يحتوي على قائمة عناصر')
+        raise ValueError('The file does not contain a list of items')
 
     # Expand any top-level groups so each folder becomes its own entry.
     data = _expand_groups(data)
@@ -438,7 +428,7 @@ def parse_collection_json(text):
         if entry:
             out.append(entry)
     if not out:
-        raise ValueError('لم يتم العثور على عناصر صالحة في الملف')
+        raise ValueError('No valid items were found in the file')
     return out
 
 
@@ -649,7 +639,7 @@ def add_set_from_url(url, name=None, manifest_resolver=None):
     """
     url = (url or '').strip()
     if not url:
-        raise ValueError('رابط فارغ')
+        raise ValueError('Empty URL')
     text = _fetch_raw_text(url)
     entries = parse_collection_json(text)
 
@@ -732,7 +722,7 @@ def add_set_from_url(url, name=None, manifest_resolver=None):
 def rename_set(set_id, new_name):
     new_name = (new_name or '').strip()
     if not new_name:
-        raise ValueError('الاسم فارغ')
+        raise ValueError('Name is empty')
     rows = _read()
     changed = False
     for r in rows:
@@ -741,7 +731,7 @@ def rename_set(set_id, new_name):
             changed = True
             break
     if not changed:
-        raise ValueError('المجموعة غير موجودة')
+        raise ValueError('Collection not found')
     _write(rows)
 
 
@@ -759,14 +749,14 @@ def update_entry(set_id, entry_id, updates):
             target_set = r
             break
     if not target_set:
-        raise ValueError('المجموعة غير موجودة')
+        raise ValueError('Collection not found')
     target_entry = None
     for e in (target_set.get('entries') or []):
         if e.get('id') == entry_id:
             target_entry = e
             break
     if not target_entry:
-        raise ValueError('العنصر غير موجود')
+        raise ValueError('Item not found')
     for k, v in (updates or {}).items():
         if k.startswith('payload.'):
             payload = target_entry.setdefault('payload', {})
@@ -784,12 +774,12 @@ def remove_entry(set_id, entry_id):
             before = len(r.get('entries') or [])
             r['entries'] = [e for e in (r.get('entries') or []) if e.get('id') != entry_id]
             if len(r['entries']) == before:
-                raise ValueError('العنصر غير موجود')
+                raise ValueError('Item not found')
             # Deleting one entry should be instant from the context menu.  Use
             # the compact atomic writer instead of the full backup+fsync path.
             _write_fast(rows)
             return True
-    raise ValueError('المجموعة غير موجودة')
+    raise ValueError('Collection not found')
 
 
 def add_custom_entry(set_id, name, kind, payload, background='', open_mode='normal'):
@@ -812,7 +802,7 @@ def add_custom_entry(set_id, name, kind, payload, background='', open_mode='norm
             r.setdefault('entries', []).append(entry)
             _write(rows)
             return entry
-    raise ValueError('المجموعة غير موجودة')
+    raise ValueError('Collection not found')
 
 
 def create_empty_set(name):
@@ -824,7 +814,7 @@ def create_empty_set(name):
         new_id = _uuid.uuid4().hex[:12]
     set_row = {
         'id': new_id,
-        'name': (name or 'مجموعة جديدة').strip() or 'مجموعة جديدة',
+        'name': (name or 'New collection').strip() or 'New collection',
         'source_url': '',
         'entries': [],
         'created_at': int(_t.time()),
@@ -834,7 +824,7 @@ def create_empty_set(name):
     return set_row
 
 
-def add_set_from_text(text, source_label='مُدخل يدويًا', manifest_resolver=None):
+def add_set_from_text(text, source_label='Entered manually', manifest_resolver=None):
     """Parse raw JSON text (paste) and persist as a new set.
 
     Mirrors `add_set_from_url`: collects unique addonIds across all entry
@@ -875,7 +865,7 @@ def remove_set(set_id):
 def refresh_set(set_id, manifest_resolver=None):
     row = get_set(set_id)
     if not row or not row.get('source_url'):
-        raise ValueError('لا يمكن تحديث مجموعة بدون رابط مصدر')
+        raise ValueError('Cannot update a collection without a add-on URL')
     return add_set_from_url(row['source_url'], name=row.get('name') or None, manifest_resolver=manifest_resolver)
 
 
@@ -1014,7 +1004,7 @@ def _fetch_raw_text(url):
     # Attempt 3: third-party requests library if available.
     try:
         import requests as _requests  # type: ignore
-        # --- dexhub-401-patch --- verify TLS; this is a public https endpoint
+        # --- nuviohub-401-patch --- verify TLS; this is a public https endpoint
         resp = _requests.get(url, headers=headers, timeout=20)
         resp.raise_for_status()
         try:

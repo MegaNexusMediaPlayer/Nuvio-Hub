@@ -69,7 +69,7 @@ class TestRendererGuardAndLightness(unittest.TestCase):
         self.assertNotIn("ids = dict(meta.get('ids') or {})", body)
 
     def test_mirror_throttled_in_service(self):
-        self.assertIn('dexhub.mirror.last', SERVICE)
+        self.assertIn('nuviohub.mirror.last', SERVICE)
         self.assertIn('30 * 60', SERVICE)
 
 

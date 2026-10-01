@@ -26,6 +26,8 @@ class Details(Dialog):
 
     def onInit(self):
         m=self.meta
+        from .session import scene
+        scene(art_cache.url(m.get('background') or m.get('poster') or ''), m.get('name') or m.get('title') or '')
         self._season=None
         self.setProperty('nuvio.title',m.get('name') or m.get('title') or m['id'])
         self.setProperty('nuvio.plot',m.get('description') or m.get('overview') or '')
@@ -91,7 +93,9 @@ class Details(Dialog):
         self.episodes=title_details.episodes(self.meta,season)
         items=[]
         for e in self.episodes:
-            li=xbmcgui.ListItem(label='E%s  %s'%(e['episode'],e.get('title') or e.get('name') or 'Episode'))
+            from resources.lib.display_text import clean, episode_line
+            li=xbmcgui.ListItem(label=clean(e.get('title') or e.get('name') or 'Episode %s'%e['episode']))
+            li.setProperty('episode_meta', episode_line(e, season))
             art=(e.get('thumbnail') or e.get('background') or self.meta.get('background') or e.get('poster') or self.meta.get('poster')) if self.landscape else (e.get('poster') or self.meta.get('poster') or e.get('thumbnail'))
             li.setArt(art_cache.art({'thumb':art or ''}))
             li.setProperty('plot',title_details.episode_plot(e,self.meta))
@@ -118,6 +122,9 @@ class Details(Dialog):
 
     def tick(self):
         if self.closed:return
+        # Kodi moves horizontal list selection without another onFocus callback.
+        if self.seasons and self.getFocusId()==501:
+            self._episodes(self.getControl(501).getSelectedPosition())
         if self._metadata_job is not None and self._metadata_job.done():
             future,self._metadata_job=self._metadata_job,None
             try:
@@ -183,9 +190,7 @@ class Details(Dialog):
         pos=self.getControl(503).getSelectedPosition()
         if not 0<=pos<len(persons):return
         person=persons[pos]
-        try:rows=job(lambda:title_details.person_titles(person),label='Loading movies and series')
-        except Exception:rows=[]
-        if rows is not None:self.child(open_catalog,{'label':person['name']+' · Movies & series','rows':rows})
+        self.child(open_person,person)
 
     def _info(self,episode=False):
         if self._metadata_pending or self._metadata_error:return
@@ -440,3 +445,16 @@ def open_context(context,row=None):
         finally:window.close()
         if action=='playing':playing=True;continue
         return action
+
+
+def open_person(person):
+    from .playback import job
+    from .person import open_page
+    try:
+        page = job(lambda: title_details.person_page(person), label='Loading actor · Movies and Series')
+    except Exception as exc:
+        xbmcgui.Dialog().ok('Actor filmography', str(exc) if isinstance(exc, ValueError) else 'Filmography could not load. Check the metadata add-ons and retry.')
+        return ''
+    if page is None:
+        return ''
+    return open_page(page)

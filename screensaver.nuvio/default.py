@@ -1,18 +1,13 @@
-import xbmc
+"""Nuvio screensaver entry point."""
+import os
+import sys
 import xbmcaddon
-import xbmcgui
 
-class Saver(xbmcgui.WindowXMLDialog):
-    def onInit(self):
-        art=xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_screensaver_art') or 'special://home/addons/script.nuvio/resources/media/nuvio_banner.png'
-        self.setProperty('nuvio.background',art)
-    def onAction(self,action):self.close()
+backend=xbmcaddon.Addon('plugin.video.nuviohub').getAddonInfo('path')
+frontend=xbmcaddon.Addon('script.nuvio').getAddonInfo('path')
+for path in (backend,os.path.join(backend,'resources','lib'),frontend):
+    if path not in sys.path:sys.path.insert(0,path)
 
-class Monitor(xbmc.Monitor):
-    def onScreensaverDeactivated(self):window.close()
-    def onAbortRequested(self):window.close()
-
-window=Saver('nuvio_screensaver.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),'Default','1080i')
-monitor=Monitor()
-try:window.doModal()
-finally:window.close()
+if __name__=='__main__':
+    from nuvio_ui.saver import launch
+    launch()

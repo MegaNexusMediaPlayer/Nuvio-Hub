@@ -8,7 +8,7 @@ import urllib.request
 import xbmc
 import xbmcaddon
 
-# --- dexhub-401-patch ---
+# --- nuviohub-401-patch ---
 try:
     from .settings_cache import cached_addon as _dh_cached_addon
 except Exception:
@@ -37,17 +37,17 @@ def _error_message(status=0, details=''):
     status = int(status or 0)
     detail = str(details or '').strip()
     if status == 401:
-        return 'مفتاح MDBList غير صحيح أو منتهي الصلاحية.'
+        return 'The MDBList API key is invalid or expired.'
     if status == 403:
-        return 'MDBList رفض صلاحية الوصول إلى بيانات هذا الحساب.'
+        return 'MDBList denied access to this account.'
     if status == 429:
-        return 'تم بلوغ حد طلبات MDBList. انتظر قليلًا ثم حدّث الصفحة.'
+        return 'MDBList rate limit reached. Wait a moment and refresh.'
     if status >= 500:
-        return 'خدمة MDBList غير متاحة مؤقتًا (HTTP %d).' % status
+        return 'MDBList is temporarily unavailable (HTTP %d).' % status
     if status:
-        return 'فشل طلب MDBList (HTTP %d)%s' % (
+        return 'MDBList request failed (HTTP %d)%s' % (
             status, (': %s' % detail[:160]) if detail else '.')
-    return detail or 'تعذّر الاتصال بخدمة MDBList.'
+    return detail or 'Could not connect to MDBList.'
 
 
 def _response_error_detail(body):
@@ -101,7 +101,7 @@ def _request(path, params=None, timeout=20):
             try:
                 data = json.loads(body) if body else {}
             except Exception as exc:
-                raise MDBListError('استجابة MDBList ليست JSON صالحًا.',
+                raise MDBListError('MDBList returned invalid JSON.',
                                    status=getattr(resp, 'status', 0),
                                    code='invalid_json', details=str(exc))
             has_more = str(resp.headers.get('X-Has-More') or '').strip().lower() == 'true'
@@ -111,7 +111,7 @@ def _request(path, params=None, timeout=20):
             # the public (data, has_more) return contract used by callers.
             if isinstance(data, dict) and (next_cursor or has_more):
                 data = dict(data)
-                data['_dexhub_meta'] = {
+                data['_nuviohub_meta'] = {
                     'next_cursor': next_cursor,
                     'has_more': has_more,
                 }
@@ -129,10 +129,10 @@ def _request(path, params=None, timeout=20):
                            code='http_error', details=detail)
     except urllib.error.URLError as exc:
         detail = str(getattr(exc, 'reason', '') or exc)
-        raise MDBListError(_error_message(0, 'تعذّر الاتصال بـ MDBList: %s' % detail),
+        raise MDBListError(_error_message(0, 'Could not connect to MDBList: %s' % detail),
                            code='network_error', details=detail)
     except Exception as exc:
-        raise MDBListError(_error_message(0, 'تعذّر الاتصال بـ MDBList: %s' % exc),
+        raise MDBListError(_error_message(0, 'Could not connect to MDBList: %s' % exc),
                            code='network_error', details=str(exc))
 
 
@@ -273,7 +273,7 @@ def _normalize_items_response(data, has_more, mf, current_cursor='', limit=100):
     pagination = {}
     if isinstance(data, dict):
         pagination = data.get('pagination') if isinstance(data.get('pagination'), dict) else {}
-        response_meta = data.get('_dexhub_meta') if isinstance(data.get('_dexhub_meta'), dict) else {}
+        response_meta = data.get('_nuviohub_meta') if isinstance(data.get('_nuviohub_meta'), dict) else {}
         next_cursor = str(
             pagination.get('next_cursor') or data.get('next_cursor') or
             response_meta.get('next_cursor') or ''
@@ -390,7 +390,7 @@ def fetch_items_by_id(list_id, media_filter='auto', cursor='', limit=100):
     # v4.4.1: NO unified=true here. Unified responses replace the flat
     # imdb_id/tvdb_id fields with an `ids` ARRAY for movie/show twins —
     # the renderer's id extraction gets nothing and every private list
-    # opened empty ('القائمة فارغة'). Non-unified keeps the classic
+    # opened empty ('list is empty'). Non-unified keeps the classic
     # movies/shows buckets with flat ids: exactly what the renderer eats.
     params = {'limit': int(limit or 100)}
     offset = _offset_cursor(cursor)

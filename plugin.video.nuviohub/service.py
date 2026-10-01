@@ -22,7 +22,7 @@ if __name__ == '__main__':
 # can race over progress rows.  A non-blocking lock lets the later cycle defer
 # cleanly instead of creating another waiting worker.
 _SYNC_CYCLE_LOCK = threading.Lock()
-# --- dexhub-402-patch ---
+# --- nuviohub-402-patch ---
 try:
     from resources.lib.i18n import tr as tr
 except Exception:
@@ -39,14 +39,14 @@ def _purge_http_cache():
     cache dir bounded on long-running installs.
 
     Also purges:
-      * special://temp/dexhub_subs/  → subtitle files older than 24h
+      * special://temp/nuviohub_subs/  → subtitle files older than 24h
       * addon_data/subtitle_cache/    → switched subtitle copies older than 7d
       * meta_cache.db expired rows
       * fanarttv_cache.db expired rows
     """
     import os as _os, time as _t
     try:
-        from resources.lib.dexhub.client import HTTP_CACHE_DIR, catalog_ttl, meta_ttl
+        from resources.lib.nuviohub.client import HTTP_CACHE_DIR, catalog_ttl, meta_ttl
         max_ttl = max(catalog_ttl(), meta_ttl(), 3600) * 2
         if _os.path.isdir(HTTP_CACHE_DIR):
             now = _t.time()
@@ -67,7 +67,7 @@ def _purge_http_cache():
     # Subtitle files dir — wasn't being touched in earlier versions.
     try:
         import xbmcvfs
-        subs_dir = xbmcvfs.translatePath('special://temp/dexhub_subs/')
+        subs_dir = xbmcvfs.translatePath('special://temp/nuviohub_subs/')
         if _os.path.isdir(subs_dir):
             now = _t.time()
             cutoff = now - 86400  # 24h
@@ -147,7 +147,7 @@ def _interactive_busy(max_age=180.0):
         pass
     try:
         win = _win()
-        raw = win.getProperty('dexhub.interactive_busy') if win else ''
+        raw = win.getProperty('nuviohub.interactive_busy') if win else ''
         return bool(raw and (time.time() - float(raw)) < float(max_age))
     except Exception:
         return False
@@ -168,9 +168,9 @@ def _primary_player_mode():
     compact = raw.replace(' ', '').replace('_', '').replace('-', '')
     if compact in ('tmdbhelper', 'helper', '1') or 'tmdb' in compact:
         return 'tmdbhelper'
-    if compact in ('ask', 'askeverytime', '2') or raw in ('اسأل كل مرة', 'السؤال كل مرة'):
+    if compact in ('ask', 'askeverytime', '2') or raw in ('Ask every time', "\u0627\u0644\u0633\u0624\u0627\u0644 \u0643\u0644 \u0645\u0631\u0629"):
         return 'ask'
-    return 'dexhub'
+    return 'nuviohub'
 
 
 
@@ -200,14 +200,14 @@ def _publish_core_props(last_sync=''):
         trakt_enabled = '0'
         trakt_connected = '0'
     payload = {
-        'dexhub.core.ready': '1',
-        'dexhub.core.tmdbh.available': tmdbh_available,
-        'dexhub.core.tmdbh.player_installed': tmdbh_installed,
-        'dexhub.core.tmdbh.primary': tmdbh_primary,
-        'dexhub.core.trakt.enabled': trakt_enabled,
-        'dexhub.core.trakt.connected': trakt_connected,
-        'dexhub.core.trakt.last_sync': str(last_sync or ''),
-        'dexhub.core.formatter.enabled': '1' if ((_setting('enable_source_formatter', 'true') or 'true').lower() == 'true') else '0',
+        'nuviohub.core.ready': '1',
+        'nuviohub.core.tmdbh.available': tmdbh_available,
+        'nuviohub.core.tmdbh.player_installed': tmdbh_installed,
+        'nuviohub.core.tmdbh.primary': tmdbh_primary,
+        'nuviohub.core.trakt.enabled': trakt_enabled,
+        'nuviohub.core.trakt.connected': trakt_connected,
+        'nuviohub.core.trakt.last_sync': str(last_sync or ''),
+        'nuviohub.core.formatter.enabled': '1' if ((_setting('enable_source_formatter', 'true') or 'true').lower() == 'true') else '0',
     }
     for k, v in payload.items():
         try:
@@ -221,7 +221,7 @@ def _invalidate_ui_caches():
     win = _win()
     if not win:
         return
-    for key in ('dexhub.nextup_cache', 'dexhub.nextup_cache_ts', 'dexhub.fav_mirror_done'):
+    for key in ('nuviohub.nextup_cache', 'nuviohub.nextup_cache_ts', 'nuviohub.fav_mirror_done'):
         try:
             win.clearProperty(key)
         except Exception:
@@ -268,14 +268,14 @@ def _sync_trakt_state(reason='manual'):
         win = _win()
         last = 0.0
         try:
-            last = float(win.getProperty('dexhub.mirror.last') or 0) if win else 0.0
+            last = float(win.getProperty('nuviohub.mirror.last') or 0) if win else 0.0
         except Exception:
             last = 0.0
         if _t.time() - last >= 30 * 60:
             include_trakt = (_setting('trakt_sync_watchlist', 'true') or 'true').lower() == 'true'
             favorites_store.refresh_external_mirror(include_trakt=include_trakt)
             if win:
-                win.setProperty('dexhub.mirror.last', str(int(_t.time())))
+                win.setProperty('nuviohub.mirror.last', str(int(_t.time())))
             did_work = True
     except Exception as exc:
         xbmc.log('[NuvioHub] watchlist mirror sync failed (%s): %s' % (reason, exc), xbmc.LOGWARNING)
@@ -322,13 +322,13 @@ def _sync_simkl_state(reason='manual'):
         win = _win()
         last = 0.0
         try:
-            last = float(win.getProperty('dexhub.simkl.last_import') or 0) if win else 0.0
+            last = float(win.getProperty('nuviohub.simkl.last_import') or 0) if win else 0.0
         except Exception:
             last = 0.0
         if _t.time() - last >= 6 * 3600:
             simkl.import_watched()
             if win:
-                win.setProperty('dexhub.simkl.last_import', str(int(_t.time())))
+                win.setProperty('nuviohub.simkl.last_import', str(int(_t.time())))
             did_work = True
     except Exception as exc:
         xbmc.log('[NuvioHub] simkl watched import failed (%s): %s' % (reason, exc), xbmc.LOGWARNING)
@@ -402,7 +402,7 @@ def _background_sync_loop(monitor):
             _last_purge = now
 
         if not deferred:
-            _publish_core_props(_win().getProperty('dexhub.core.trakt.last_sync') if _win() else '')
+            _publish_core_props(_win().getProperty('nuviohub.core.trakt.last_sync') if _win() else '')
         # If the user is browsing/playing or the cloud cycle owns the lock,
         # retry gently in one minute. A completed cycle follows the normal
         # account interval (30 minutes by default).
@@ -412,29 +412,21 @@ def _background_sync_loop(monitor):
 
 
 def _autodetect_language_first_run():
-    """If the user hasn't picked a UI language yet, infer one from Kodi's
-    locale on the very first start. Saves new users from seeing English when
-    their Kodi UI is already Arabic (or vice versa). Runs once and writes a
-    sentinel setting so subsequent starts don't override the user's choice.
+    """Pin the Nuvio Hub interface to English on first start/update.
+
+    Subtitle preferences are deliberately left untouched: removing the Arabic
+    UI must not remove the user's ability to play media or subtitles in any
+    language.
     """
     try:
         import xbmcaddon
         addon = xbmcaddon.Addon('plugin.video.nuviohub')
-        if (addon.getSetting('ui_lang_autodetected') or '').strip() == 'true':
-            return
-        # Read Kodi's UI language. xbmc.getLanguage gives English name; the
-        # ISO 639-1 form is the most reliable signal.
-        kodi_lang = (xbmc.getLanguage(xbmc.ISO_639_1) or '').strip().lower()
-        if kodi_lang.startswith('ar'):
-            addon.setSetting('ui_language', 'Arabic')
-            addon.setSetting('preferred_subtitle_langs', 'ar,en')
-        else:
+        if (addon.getSetting('ui_language') or '').strip() != 'English':
             addon.setSetting('ui_language', 'English')
         addon.setSetting('ui_lang_autodetected', 'true')
-        xbmc.log('[NuvioHub] auto-detected UI language from Kodi locale=%s' % kodi_lang,
-                 xbmc.LOGINFO)
+        xbmc.log('[NuvioHub] English-only UI language applied', xbmc.LOGINFO)
     except Exception as exc:
-        xbmc.log('[NuvioHub] language auto-detect failed: %s' % exc, xbmc.LOGWARNING)
+        xbmc.log('[NuvioHub] English UI language migration failed: %s' % exc, xbmc.LOGWARNING)
 
 
 def _migrate_performance_defaults():
@@ -482,6 +474,28 @@ def _migrate_subtitle_broker_defaults():
         xbmc.log('[NuvioHub] subtitle-default migration failed: %s' % exc, xbmc.LOGDEBUG)
 
 
+def _migrate_legacy_brand_settings():
+    """Carry hidden migration sentinels forward from Dex Hub-era profiles."""
+    try:
+        import xbmcaddon
+        addon = xbmcaddon.Addon('plugin.video.nuviohub')
+        pairs = (
+            ('dexhub_defaults_rev', 'nuviohub_defaults_rev', 'text'),
+            ('dexhub_v510_defaults_applied', 'nuviohub_v510_defaults_applied', 'bool'),
+            ('dexhub_v520_defaults_applied', 'nuviohub_v520_defaults_applied', 'bool'),
+        )
+        for old_key, new_key, kind in pairs:
+            old = (addon.getSetting(old_key) or '').strip()
+            new = (addon.getSetting(new_key) or '').strip()
+            if kind == 'bool':
+                if old.lower() == 'true' and new.lower() != 'true':
+                    addon.setSetting(new_key, 'true')
+            elif old and not new:
+                addon.setSetting(new_key, old)
+    except Exception as exc:
+        xbmc.log('[NuvioHub] legacy brand-settings migration failed: %s' % exc, xbmc.LOGDEBUG)
+
+
 def _migrate_v510_light_defaults():
     """One-time production profile requested for speed and stability.
 
@@ -493,14 +507,14 @@ def _migrate_v510_light_defaults():
     try:
         import xbmcaddon
         addon = xbmcaddon.Addon('plugin.video.nuviohub')
-        if (addon.getSetting('dexhub_v510_defaults_applied') or '').strip().lower() == 'true':
+        if (addon.getSetting('nuviohub_v510_defaults_applied') or '').strip().lower() == 'true':
             return
         try:
-            revision = int((addon.getSetting('dexhub_defaults_rev') or '0').strip())
+            revision = int((addon.getSetting('nuviohub_defaults_rev') or '0').strip())
         except Exception:
             revision = 0
         if revision >= 510:
-            addon.setSetting('dexhub_v510_defaults_applied', 'true')
+            addon.setSetting('nuviohub_v510_defaults_applied', 'true')
             return
         # v5.4.1: this migration force-wrote every value below into existing
         # installs — including two the user had deliberately turned ON:
@@ -526,7 +540,7 @@ def _migrate_v510_light_defaults():
         # Features the user opts into keep whatever they already are.
         for key, value in values.items():
             addon.setSetting(key, value)
-        addon.setSetting('dexhub_v510_defaults_applied', 'true')
+        addon.setSetting('nuviohub_v510_defaults_applied', 'true')
         xbmc.log('[NuvioHub] applied v5.1 light production defaults', xbmc.LOGINFO)
     except Exception as exc:
         xbmc.log('[NuvioHub] v5.1 defaults migration failed: %s' % exc,
@@ -538,14 +552,14 @@ def _migrate_v520_search_defaults():
     try:
         import xbmcaddon
         addon = xbmcaddon.Addon('plugin.video.nuviohub')
-        if (addon.getSetting('dexhub_v520_defaults_applied') or '').strip().lower() == 'true':
+        if (addon.getSetting('nuviohub_v520_defaults_applied') or '').strip().lower() == 'true':
             return
         try:
-            revision = int((addon.getSetting('dexhub_defaults_rev') or '0').strip())
+            revision = int((addon.getSetting('nuviohub_defaults_rev') or '0').strip())
         except Exception:
             revision = 0
         if revision >= 520:
-            addon.setSetting('dexhub_v520_defaults_applied', 'true')
+            addon.setSetting('nuviohub_v520_defaults_applied', 'true')
             return
         subtitle = (addon.getSetting('subtitle_timeout') or '').strip()
         # Every old supported value is outside the new safe range. Move it to
@@ -564,7 +578,7 @@ def _migrate_v520_search_defaults():
             addon.setSetting('streams_enough_wait_seconds', '8')
         # This is a permanent safe default (see apply_clean_defaults_once).
         addon.setSetting('clean_catalog_view', 'false')
-        addon.setSetting('dexhub_v520_defaults_applied', 'true')
+        addon.setSetting('nuviohub_v520_defaults_applied', 'true')
         xbmc.log('[NuvioHub] applied v5.2 source/subtitle timing defaults', xbmc.LOGINFO)
     except Exception as exc:
         xbmc.log('[NuvioHub] v5.2 defaults migration failed: %s' % exc,
@@ -573,6 +587,7 @@ def _migrate_v520_search_defaults():
 
 if __name__ == '__main__':
     xbmc.log('[NuvioHub] companion service started', xbmc.LOGINFO)
+    _migrate_legacy_brand_settings()
     # v3.9.71: log Kodi version on startup so platform-specific issues
     # (e.g. deprecated API native crashes on Kodi 22 alpha) are easy to
     # correlate with bug reports.
@@ -633,7 +648,7 @@ if __name__ == '__main__':
     else:
         try:
             from resources.lib import index_render as _idx_render
-            from resources.lib.dexhub import sync_engine as _sync_eng
+            from resources.lib.nuviohub import sync_engine as _sync_eng
             _idx_db = _idx_render.get_db()
 
             def _pinned_provider():
@@ -665,7 +680,7 @@ if __name__ == '__main__':
                         if (info.get('total') or 0) > 0:
                             _xg.Dialog().notification(
                                 'Nuvio Hub',
-                                tr('بدء مزامنة المكتبة (%d كتالوج)') % info['total'],
+                                tr('Starting library sync (%d catalogs)') % info['total'],
                                 _xg.NOTIFICATION_INFO, 2500, sound=False,
                             )
                     elif stage == 'catalog':
@@ -689,7 +704,7 @@ if __name__ == '__main__':
                         if (info.get('total') or 0) > 0:
                             _xg.Dialog().notification(
                                 'Nuvio Hub',
-                                tr('انتهت المزامنة: %d ناجح في %.0f ث') % (ok, elapsed),
+                                tr('Sync finished: %d succeeded in %.0f s') % (ok, elapsed),
                                 _xg.NOTIFICATION_INFO, 3500, sound=False,
                             )
                 except Exception as exc:
@@ -737,98 +752,30 @@ if __name__ == '__main__':
 
     monitor = _NuvioHubMonitor()
 
-    SYNC_DIRTY_PROP = 'dexhub.sync_dirty'
+    SYNC_DIRTY_PROP = 'nuviohub.sync_dirty'
 
     def _cloud_sync_loop(mon):
-        """Native Nuvio/Stremio sync.
-
-        v5.1 adaptive mode: local writes are debounced, cloud pulls use a
-        minimum 30-minute cadence, and all network/database work is deferred
-        while playback or an interactive source/search screen is active.
-        Pulled account rows use a bulk transaction and do not raise the dirty
-        flag, eliminating the old sync feedback loop.
-        """
-        if mon.waitForAbort(30):
-            return
-        from resources.lib.dexhub import nuvio_stremio_sync as sync
-        win = _win()
-        last_pull = time.time()  # never force a full pull during Kodi boot
-        dirty_since = None
-        next_retry = 0.0
-
+        """Infrequent, idle-only configuration/library work; progress has its own loop."""
+        from resources.lib.nuviohub import nuvio_stremio_sync as sync
+        if mon.waitForAbort(30):return
+        next_run = time.monotonic()
         while not mon.abortRequested():
-            try:
-                interval = int(float(_setting('cloud_sync_interval_min', '30') or '30'))
-            except Exception:
-                interval = 30
-
-            if interval <= 0:                     # user switched sync off
-                if mon.waitForAbort(60):
-                    break
-                continue
-
-            dirty = False
-            try:
-                dirty = bool(win and win.getProperty(SYNC_DIRTY_PROP))
-            except Exception:
-                dirty = False
-            now = time.time()
-            if dirty and dirty_since is None:
-                dirty_since = now
-            elif not dirty:
-                dirty_since = None
-            # v5.4.1: continuous mode is honoured again. 5.4.0 kept the
-            # sturdier loop (cycle lock, retry backoff, no sync while the
-            # user is interacting) but hardcoded a 45s debounce and a 30
-            # minute floor on pulls, so the cloud_sync_continuous setting
-            # did nothing at all. Continuous debounces 8s and pulls on the
-            # user's interval; periodic keeps the conservative numbers.
-            continuous = (_setting('cloud_sync_continuous', 'true') or 'true'
-                          ).strip().lower() in ('true', '1', 'yes', 'on')
-            debounce = 8.0 if continuous else 45.0
-            pull_floor = max(120, interval * 60) if continuous else max(1800, interval * 60)
-            dirty_due = bool(dirty and dirty_since is not None and
-                             (now - dirty_since) >= debounce)
-            pull_due = (now - last_pull) >= pull_floor
-
-            if ((dirty_due or pull_due) and now >= next_retry and
-                    not _interactive_busy() and sync.enabled_targets()):
-                acquired = _SYNC_CYCLE_LOCK.acquire(False)
-                if not acquired:
-                    if mon.waitForAbort(30):
-                        break
-                    continue
-                try:
-                    if win:
-                        win.clearProperty(SYNC_DIRTY_PROP)
-                except Exception:
-                    pass
-                try:
-                    # Each service resolves its own direction and sections.
-                    result = sync.run_sync()
-                    if result and result.get('ok'):
-                        last_pull = time.time()
-                        dirty_since = None
-                        next_retry = 0.0
-                    else:
-                        next_retry = time.time() + 300.0
-                        if dirty and win:
-                            win.setProperty(SYNC_DIRTY_PROP, '1')
-                except Exception as exc:
-                    next_retry = time.time() + 300.0
-                    if dirty and win:
-                        try:
-                            win.setProperty(SYNC_DIRTY_PROP, '1')
-                        except Exception:
-                            pass
-                    xbmc.log('[NuvioHub] cloud sync failed: %s' % exc, xbmc.LOGDEBUG)
-                finally:
-                    _SYNC_CYCLE_LOCK.release()
-
-            # Continuous mode has to wake often enough for its 8s debounce
-            # to be real; periodic keeps the cheap 30s tick.
-            if mon.waitForAbort(5 if continuous else 30):
-                break
+            try:interval=max(0, int(float(_setting('cloud_sync_interval_min', '30') or 30)))
+            except (ValueError, TypeError):interval=30
+            if interval and time.monotonic()>=next_run and not _interactive_busy() and sync.enabled_targets():
+                if _SYNC_CYCLE_LOCK.acquire(False):
+                    try:
+                        sections=sync._sections_for('nuvio')
+                        # Home collection replacements always go through explicit validation/import.
+                        sections.update(progress=False, collections=False)
+                        if sections.get('addons') or sections.get('library'):
+                            sync.run_sync(targets=['nuvio'], sections=sections)
+                    except Exception:
+                        pass
+                    finally:
+                        next_run=time.monotonic()+max(300, interval*60)
+                        _SYNC_CYCLE_LOCK.release()
+            if mon.waitForAbort(15):return
 
 
     def _bytecode_warm_job():
@@ -853,11 +800,18 @@ if __name__ == '__main__':
         import threading as _thr
         _thr.Thread(target=_background_sync_loop, args=(monitor,), name='NuvioHubCoreLoop', daemon=True).start()
         _thr.Thread(target=_cloud_sync_loop, args=(monitor,), name='NuvioHubCloudLoop', daemon=True).start()
+        from resources.lib.progress_sync import run as _progress_sync_run
+        _thr.Thread(target=_progress_sync_run, args=(monitor, _SYNC_CYCLE_LOCK), name='NuvioProgressSync', daemon=True).start()
         _thr.Thread(target=_bytecode_warm_job, name='NuvioHubBytecodeWarm', daemon=True).start()
         from resources.lib.skip_service import run as _skip_run
         _thr.Thread(target=_skip_run, args=(player, monitor), name='NuvioHubSkip', daemon=True).start()
     except Exception as exc:
         xbmc.log('[NuvioHub] could not spawn core sync thread: %s' % exc, xbmc.LOGWARNING)
+    try:
+        from resources.lib.presentation_settings import sync as sync_appearance
+        sync_appearance()
+    except Exception:
+        xbmc.log('[Nuvio] Appearance preference will be restored when the interface opens.', xbmc.LOGWARNING)
     try:
         ProgressLoop(player).run()
     finally:

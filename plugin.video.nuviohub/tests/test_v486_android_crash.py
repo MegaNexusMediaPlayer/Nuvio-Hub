@@ -27,7 +27,7 @@ import unittest
 import kodi_stub
 
 ROOT = kodi_stub.ADDON_ROOT
-cs = kodi_stub.import_lib_module('dexhub.cache_store')
+cs = kodi_stub.import_lib_module('nuviohub.cache_store')
 pl = kodi_stub.import_lib_module('plugin')
 PLUGIN = io.open(os.path.join(ROOT, 'resources', 'lib', 'plugin.py'), encoding='utf-8').read()
 

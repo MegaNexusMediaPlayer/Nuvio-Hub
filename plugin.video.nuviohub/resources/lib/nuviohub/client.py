@@ -233,8 +233,8 @@ def gzip_enabled():
 
 def _rate_limit_url(url, max_wait=2.0):
     """Apply the host token-bucket limiter, regardless of how this module
-    was imported (as dexhub.client through the compatibility shim, or as
-    resources.lib.dexhub.client inside Kodi). Older builds used a single
+    was imported (as nuviohub.client through the compatibility shim, or as
+    resources.lib.nuviohub.client inside Kodi). Older builds used a single
     relative import that failed silently in the shim path, disabling the
     limiter and allowing bursty parallel requests to trigger 429s/stalls.
     """

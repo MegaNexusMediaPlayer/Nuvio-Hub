@@ -1,0 +1,236 @@
+<?xml version='1.0' encoding='utf-8'?>
+<window>
+  <defaultcontrol always="true">500</defaultcontrol>
+  <controls>
+    <control type="image">
+      <left>0</left>
+      <top>0</top>
+      <width>1920</width>
+      <height>1080</height>
+      <texture colordiffuse="FF090B11">special://home/addons/script.nuvio/resources/media/white.png</texture>
+    </control>
+    <control type="image">
+      <left>75</left>
+      <top>36</top>
+      <width>170</width>
+      <height>170</height>
+      <aspectratio>scale</aspectratio>
+      <texture diffuse="special://home/addons/script.nuvio/resources/media/person_circle.png">$INFO[Window.Property(nuvio.person.photo)]</texture>
+    </control>
+    <control type="image">
+      <left>72</left>
+      <top>33</top>
+      <width>176</width>
+      <height>176</height>
+      <texture>special://home/addons/script.nuvio/resources/media/person_ring.png</texture>
+    </control>
+    <control type="label">
+      <left>275</left>
+      <top>59</top>
+      <width>1250</width>
+      <height>66</height>
+      <font>font45</font>
+      <textcolor>FFFFFFFF</textcolor>
+      <label>$INFO[Window.Property(nuvio.person.name)]</label>
+      <scroll>true</scroll>
+    </control>
+    <control type="label">
+      <left>279</left>
+      <top>133</top>
+      <width>1250</width>
+      <height>42</height>
+      <font>font13</font>
+      <textcolor>FFABB1C0</textcolor>
+      <label>$INFO[Window.Property(nuvio.person.role)]</label>
+      <scroll>true</scroll>
+    </control>
+    <control type="label">
+      <left>75</left>
+      <top>235</top>
+      <width>1200</width>
+      <height>48</height>
+      <font>font32</font>
+      <textcolor>FFFFFFFF</textcolor>
+      <label>Movies · $INFO[Window.Property(nuvio.person.movies)]</label>
+    </control>
+    <control type="button" id="502">
+      <left>1580</left>
+      <top>235</top>
+      <width>260</width>
+      <height>46</height>
+      <label>View all movies</label>
+      <font>font12</font>
+      <align>center</align>
+      <aligny>center</aligny>
+      <textcolor>FFFFFFFF</textcolor>
+      <texturefocus colordiffuse="FF666080">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturenofocus colordiffuse="FF252733">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <onleft>500</onleft>
+      <onright>502</onright>
+      <onup>510</onup>
+      <ondown>500</ondown>
+    </control>
+    <control type="list" id="500">
+      <left>65</left>
+      <top>290</top>
+      <width>1790</width>
+      <height>315</height>
+      <orientation>horizontal</orientation>
+      <scrolltime>120</scrolltime>
+      <onup>510</onup>
+      <ondown>501</ondown>
+      <onleft>500</onleft>
+      <onright>502</onright>
+      <itemlayout width="218" height="315">
+        <control type="image">
+          <left>20</left>
+          <top>8</top>
+          <width>164</width>
+          <height>246</height>
+          <aspectratio>scale</aspectratio>
+          <texture diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+        </control>
+        <control type="label">
+          <left>10</left>
+          <top>264</top>
+          <width>194</width>
+          <height>34</height>
+          <font>font12</font>
+          <textcolor>FFFFFFFF</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+          <scroll>true</scroll>
+        </control>
+      </itemlayout>
+      <focusedlayout width="218" height="315">
+        <control type="image">
+          <left>20</left>
+          <top>8</top>
+          <width>164</width>
+          <height>246</height>
+          <aspectratio>scale</aspectratio>
+          <texture diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+        </control>
+        <control type="image">
+          <left>16</left>
+          <top>4</top>
+          <width>172</width>
+          <height>254</height>
+          <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+          <visible>Control.HasFocus(500)</visible>
+        </control>
+        <control type="label">
+          <left>10</left>
+          <top>264</top>
+          <width>194</width>
+          <height>34</height>
+          <font>font12</font>
+          <textcolor>FFFFFFFF</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+          <scroll>true</scroll>
+        </control>
+      </focusedlayout>
+    </control>
+    <control type="label">
+      <left>75</left>
+      <top>620</top>
+      <width>1200</width>
+      <height>48</height>
+      <font>font32</font>
+      <textcolor>FFFFFFFF</textcolor>
+      <label>Series · $INFO[Window.Property(nuvio.person.series)]</label>
+    </control>
+    <control type="button" id="503">
+      <left>1580</left>
+      <top>620</top>
+      <width>260</width>
+      <height>46</height>
+      <label>View all series</label>
+      <font>font12</font>
+      <align>center</align>
+      <aligny>center</aligny>
+      <textcolor>FFFFFFFF</textcolor>
+      <texturefocus colordiffuse="FF666080">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturenofocus colordiffuse="FF252733">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <onleft>501</onleft>
+      <onright>503</onright>
+      <onup>500</onup>
+      <ondown>501</ondown>
+    </control>
+    <control type="list" id="501">
+      <left>65</left>
+      <top>675</top>
+      <width>1790</width>
+      <height>315</height>
+      <orientation>horizontal</orientation>
+      <scrolltime>120</scrolltime>
+      <onup>500</onup>
+      <ondown>501</ondown>
+      <onleft>501</onleft>
+      <onright>503</onright>
+      <itemlayout width="218" height="315">
+        <control type="image">
+          <left>20</left>
+          <top>8</top>
+          <width>164</width>
+          <height>246</height>
+          <aspectratio>scale</aspectratio>
+          <texture diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+        </control>
+        <control type="label">
+          <left>10</left>
+          <top>264</top>
+          <width>194</width>
+          <height>34</height>
+          <font>font12</font>
+          <textcolor>FFFFFFFF</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+          <scroll>true</scroll>
+        </control>
+      </itemlayout>
+      <focusedlayout width="218" height="315">
+        <control type="image">
+          <left>20</left>
+          <top>8</top>
+          <width>164</width>
+          <height>246</height>
+          <aspectratio>scale</aspectratio>
+          <texture diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+        </control>
+        <control type="image">
+          <left>16</left>
+          <top>4</top>
+          <width>172</width>
+          <height>254</height>
+          <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+          <visible>Control.HasFocus(501)</visible>
+        </control>
+        <control type="label">
+          <left>10</left>
+          <top>264</top>
+          <width>194</width>
+          <height>34</height>
+          <font>font12</font>
+          <textcolor>FFFFFFFF</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+          <scroll>true</scroll>
+        </control>
+      </focusedlayout>
+    </control>
+    <control type="button" id="510">
+      <left>1650</left>
+      <top>55</top>
+      <width>190</width>
+      <height>56</height>
+      <label>Back</label>
+      <font>font13</font>
+      <align>center</align>
+      <textcolor>FFFFFFFF</textcolor>
+      <texturefocus colordiffuse="FF666080">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturenofocus colordiffuse="FF252733">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+      <ondown>500</ondown>
+      <onleft>500</onleft>
+      <onright>502</onright>
+      <onup>510</onup>
+    </control>
+  </controls>
+</window>

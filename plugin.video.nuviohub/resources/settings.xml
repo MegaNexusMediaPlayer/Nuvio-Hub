@@ -1,5 +1,12 @@
 <settings>
   <category label="Nuvio Hub">
+    <setting id="nuvio_metadata_providers" type="text" default="" visible="false" />
+    <setting id="nuvio_progress_interval" type="text" default="60" visible="false" />
+    <setting id="nuvio_stream_providers" type="text" default="" visible="false" />
+    <setting id="nuvio_hide_weather_clock" type="bool" default="false" visible="false" />
+    <setting id="nuvio_weather_clock_migrated" type="bool" default="false" visible="false" />
+    <setting id="nuvio_screensaver_type" type="text" default="image" visible="false" />
+    <setting id="nuvio_screensaver_video" type="text" default="" visible="false" />
     <setting type="action" label="Open Nuvio settings" action="RunScript(script.nuvio,settings)" option="close" />
     <setting type="action" label="Install or repair the bundled Nuvio interface and skin" action="RunPlugin(plugin://plugin.video.nuviohub/?action=nuvio_install)" option="close" />
     <setting type="lsep" label="AIOMetadata: catalogs and posters. AIOStreams: stream filtering and sorting." />
@@ -27,6 +34,10 @@
     <setting id="show_collection_home" type="bool" label="30330" default="true" visible="false" />
     <setting id="catalog_genre_folders" type="bool" label="30117" default="false" visible="false" />
     <setting id="hide_empty_collection_entries" type="bool" label="30118" default="true" visible="false" />
+    <setting id="nuviohub_defaults_rev" type="text" default="" visible="false" />
+    <setting id="nuviohub_v510_defaults_applied" type="bool" default="false" visible="false" />
+    <setting id="nuviohub_v520_defaults_applied" type="bool" default="false" visible="false" />
+    <!-- Legacy 5.x/6.0.7 migration aliases; hidden and never shown in the UI. -->
     <setting id="dexhub_defaults_rev" type="text" default="" visible="false" />
     <setting id="dexhub_v510_defaults_applied" type="bool" default="false" visible="false" />
     <setting id="dexhub_v520_defaults_applied" type="bool" default="false" visible="false" />
@@ -158,9 +169,9 @@
     <setting id="nuvio_skin_applied" type="bool" default="false" visible="false" />
     <setting id="nuvio_autoplay" type="text" default="false" visible="false" />
     <setting id="nuvio_trailer_delay" type="text" default="6" visible="false" />
-    <setting id="nuvio_trailer_duration" type="text" default="30" visible="false" />
+    <setting id="nuvio_trailer_duration" type="text" default="90" visible="false" />
     <setting id="nuvio_animated_art" type="text" default="false" visible="false" />
-    <setting id="nuvio_art_cache" type="text" default="disk246" visible="false" />
+    <setting id="nuvio_art_cache" type="text" default="ram200" visible="false" />
     <setting id="nuvio_card_shape" type="text" default="poster" visible="false" />
     <setting id="nuvio_animation_map" type="text" default="{}" visible="false" />
     <setting id="nuvio_iptv_instance" type="text" default="" visible="false" />

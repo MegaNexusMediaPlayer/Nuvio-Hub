@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """TMDb Helper handoff state machine.
 
-Replaces the scattered Window(10000) properties (dexhub.invoked_by_tmdbh,
-dexhub.tmdbh_seed_ids, dexhub.tmdbh_seed_for, dexhub.tmdbh_handoff_until)
+Replaces the scattered Window(10000) properties (nuviohub.invoked_by_tmdbh,
+nuviohub.tmdbh_seed_ids, nuviohub.tmdbh_seed_for, nuviohub.tmdbh_handoff_until)
 with a single class that owns the handoff lifecycle.
 
 Lifecycle:
@@ -35,10 +35,10 @@ _WIN_ID = 10000
 
 # Public property names — kept identical to legacy so existing skin XMLs
 # that read them keep working without skin updates.
-_PROP_ACTIVE     = 'dexhub.invoked_by_tmdbh'
-_PROP_SEED_IDS   = 'dexhub.tmdbh_seed_ids'
-_PROP_SEED_FOR   = 'dexhub.tmdbh_seed_for'
-_PROP_UNTIL      = 'dexhub.tmdbh_handoff_until'
+_PROP_ACTIVE     = 'nuviohub.invoked_by_tmdbh'
+_PROP_SEED_IDS   = 'nuviohub.tmdbh_seed_ids'
+_PROP_SEED_FOR   = 'nuviohub.tmdbh_seed_for'
+_PROP_UNTIL      = 'nuviohub.tmdbh_handoff_until'
 
 ALL_PROPS = (_PROP_ACTIVE, _PROP_SEED_IDS, _PROP_SEED_FOR, _PROP_UNTIL)
 

@@ -5,8 +5,8 @@ import time
 
 import xbmc
 
-NEXTUP_CACHE_KEY = 'dexhub.nextup_cache'
-NEXTUP_CACHE_TS_KEY = 'dexhub.nextup_cache_ts'
+NEXTUP_CACHE_KEY = 'nuviohub.nextup_cache'
+NEXTUP_CACHE_TS_KEY = 'nuviohub.nextup_cache_ts'
 SERIES_CACHE_TTL = 3600
 NEXTUP_CACHE_TTL = 600  # fresh for 10 min
 NEXTUP_STALE_TTL = 21600  # serve stale cache up to 6h while refreshing in background
@@ -14,7 +14,7 @@ NEXTUP_STALE_TTL = 21600  # serve stale cache up to 6h while refreshing in backg
 
 def _cache_file_path():
     try:
-        from .dexhub.common import profile_path
+        from .nuviohub.common import profile_path
         return os.path.join(profile_path(), 'nextup_cache.json')
     except Exception:
         return ''
@@ -44,7 +44,7 @@ def _write_file_cache(items):
         # v3.9.17: atomic write — minor reliability win since this cache is
         # rebuildable, but consistency means a corrupt next-up cache no
         # longer blocks the home screen on reload.
-        from .dexhub.safe_io import write_json as _safe_write_json
+        from .nuviohub.safe_io import write_json as _safe_write_json
         _safe_write_json(path, {'ts': int(time.time()), 'items': items or []})
     except Exception:
         pass

@@ -36,7 +36,7 @@ ALLOWED_FALLBACK_DIVERGENCE = {
     # the enum accepts both the index and the legacy word
     'continue_art_style': 'enum accepts both the index and the legacy name',
     # writer-side sentinel, not a user default
-    'dexhub_defaults_rev': 'migration sentinel, not a user-facing default',
+    'nuviohub_defaults_rev': 'migration sentinel, not a user-facing default',
     # service picks its own routing when the user has expressed no opinion
     'catalog_click_mode': 'service-side routing default, user value wins',
     # perf lane sizes itself from the device, the setting caps it

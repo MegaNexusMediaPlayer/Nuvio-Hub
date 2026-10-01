@@ -7,7 +7,7 @@ to swap the legacy router for fully split routes.
 """
 
 def run():
-    # --- dexhub-401-patch ---
+    # --- nuviohub-401-patch ---
     try:
         from .settings_cache import invalidate as _dh_invalidate
         _dh_invalidate()

@@ -45,17 +45,17 @@ SIMKL = io.open(os.path.join(ROOT, 'resources', 'lib', 'simkl.py'), encoding='ut
 class TestLiveValueBridge(unittest.TestCase):
     def setUp(self):
         self.win = xbmcgui.Window(10000)
-        self.win.clearProperty('dexhub.badges.url')
-        self.win.clearProperty('dexhub.badges.enabled')
+        self.win.clearProperty('nuviohub.badges.url')
+        self.win.clearProperty('nuviohub.badges.enabled')
 
     tearDown = setUp
 
     def test_published_url_wins_over_the_stale_setting(self):
-        self.win.setProperty('dexhub.badges.url', 'https://new/set.json')
+        self.win.setProperty('nuviohub.badges.url', 'https://new/set.json')
         self.assertEqual(sb._elite_badge_setting_url(), 'https://new/set.json')
 
     def test_empty_sentinel_means_unset(self):
-        self.win.setProperty('dexhub.badges.url', '-')
+        self.win.setProperty('nuviohub.badges.url', '-')
         self.assertEqual(sb._elite_badge_setting_url(), '')
 
     def test_falls_back_to_getsetting_when_unpublished(self):
@@ -63,16 +63,16 @@ class TestLiveValueBridge(unittest.TestCase):
         self.assertIsInstance(sb._elite_badge_setting_url(), str)
 
     def test_toggle_uses_the_live_value_too(self):
-        self.win.setProperty('dexhub.badges.enabled', 'false')
+        self.win.setProperty('nuviohub.badges.enabled', 'false')
         self.assertFalse(sb._elite_badges_enabled())
-        self.win.setProperty('dexhub.badges.enabled', 'true')
+        self.win.setProperty('nuviohub.badges.enabled', 'true')
         self.assertTrue(sb._elite_badges_enabled())
 
     def test_service_publishes_on_startup_and_on_change(self):
         self.assertIn('def _publish_badge_props():', SERVICE)
         body = SERVICE.split('def _publish_badge_props():', 1)[1].split('\ndef ', 1)[0]
-        self.assertIn("setProperty('dexhub.badges.url', url or '-')", body)
-        self.assertIn("setProperty('dexhub.badges.enabled'", body)
+        self.assertIn("setProperty('nuviohub.badges.url', url or '-')", body)
+        self.assertIn("setProperty('nuviohub.badges.enabled'", body)
         changed = SERVICE.split('def onSettingsChanged(self):', 1)[1][:600]
         self.assertIn('_publish_badge_props()', changed)
         self.assertEqual(SERVICE.count('_publish_badge_props()'), 3)  # def + change + boot

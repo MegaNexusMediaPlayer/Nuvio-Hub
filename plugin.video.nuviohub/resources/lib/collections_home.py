@@ -19,24 +19,31 @@ def find_collection(collection_id):
 
 
 def matching_catalog(source, providers, selected=None):
-    """Require the manifest identity AND catalog identity; names are not identifiers."""
-    if selected is None:selected=xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_metadata_provider')
+    """Exact manifest/catalog/type identity; ambiguous configured variants fail closed.
+
+    ``selected`` is retained for callers from older builds, never an ID override.
+    Catalog-only add-ons may supply lists that enabled metadata add-ons resolve.
+    """
+    matches = []
     for provider in providers:
         manifest = provider.get('manifest') or {}
-        if selected and provider.get('id')!=selected:
+        if not source.get('addonId') or manifest.get('id') != source['addonId']:
             continue
-        if manifest.get('id') != source.get('addonId') and not (selected and provider.get('id')==selected):
+        if source.get('providerId') and provider.get('id') != source['providerId']:
             continue
         for catalog in manifest.get('catalogs') or []:
             if catalog.get('id') == source.get('catalogId') and catalog.get('type') == source.get('type'):
-                return provider, catalog
-    return None
+                matches.append((provider, catalog))
+    return matches[0] if len(matches) == 1 else None
 
 
 def folder_shelf(folder, providers, media_type=None, title=None):
     from . import home_data as hd
     p = hd._api()
     jobs = []
+    from .metadata_providers import entries
+    switches={p['id']:on for p,on in entries(providers)}
+    providers=[p for p in providers if switches.get(p['id'],True)]
     selected=xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_metadata_provider')
     for source in folder['sources']:
         if media_type and source['type'] != media_type:
@@ -52,7 +59,7 @@ def folder_shelf(folder, providers, media_type=None, title=None):
     path = p.build_url(action='nuvio_collection', collection_id=folder['id'])
     if not jobs:
         return {'title': title or folder['title'], 'rows': [hd.placeholder(
-            'Connect collection catalogs', 'Select the metadata provider for all collections in Settings > Collections.',
+            'Connect collection catalogs', 'Validate this collection against your configured add-ons in Settings > Collections.',
             p.build_url(action='first_run_wizard'), folder=False)]}
     return {'title': title or folder['title'], 'path': path, 'collection_job': jobs,
             'rows': [hd.placeholder('Loading titles', 'Loading your collection.', path)]}
@@ -91,13 +98,13 @@ def tiles(group):
 
 
 def home_rows():
-    from .dexhub import store
+    from .nuviohub import store
     rows=[tiles(group) for group in groups()]
     return [row for row in rows if row['rows']]
 
 
 def collection_shelves(collection_id):
-    from .dexhub import store
+    from .nuviohub import store
     from .home_data import placeholder, _api
     folder = find_collection(collection_id)
     if not folder:
@@ -111,7 +118,7 @@ def collection_shelves(collection_id):
 def render_native(collection_id):
     """Full catalog links preserve required genre filters and native pagination."""
     from .home_data import _api
-    from .dexhub import store
+    from .nuviohub import store
     p = _api()
     folder = find_collection(collection_id)
     for source in (folder or {}).get('sources', []):

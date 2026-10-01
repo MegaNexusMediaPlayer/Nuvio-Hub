@@ -89,6 +89,22 @@ def _ensure_db():
             conn.execute('CREATE INDEX IF NOT EXISTS idx_playback_tmdb ON playback(tmdb_id, updated_at DESC)')
             conn.execute('CREATE INDEX IF NOT EXISTS idx_playback_show_tmdb ON playback(show_tmdb_id, season, episode, updated_at DESC)')
             conn.execute('CREATE INDEX IF NOT EXISTS idx_playback_tvdb ON playback(tvdb_id, updated_at DESC)')
+            # Repair 6.0.9 cloud timestamps written as milliseconds into a seconds column.
+            conn.execute('UPDATE playback SET updated_at=updated_at/1000.0 WHERE updated_at>=100000000000')
+            from resources.lib.nuvio_progress import ensure
+            ensure(conn)
+            # Older cloud imports used 'tv' while local playback uses 'series'.
+            cursor=conn.execute("SELECT * FROM playback WHERE media_type='tv'")
+            names=[column[0] for column in cursor.description]
+            for values in cursor.fetchall():
+                row=dict(zip(names, values))
+                old=(row['media_type'], row['canonical_id'], row['video_id'])
+                row['media_type']='series';row['ext_updated_at']=row.get('updated_at')
+                if row.get('duration') and row.get('event_type')=='account_sync':
+                    row['percent']=min(100, max(0, 100*float(row.get('position') or 0)/float(row['duration'])))
+                conn.execute(_UPSERT_SQL, _upsert_params(conn, row))
+                conn.execute('DELETE FROM playback WHERE media_type=? AND canonical_id=? AND video_id=?',old)
+
             conn.commit()
             _DB_READY = True
         finally:
@@ -111,8 +127,8 @@ _UPSERT_SQL = """
             clearlogo=CASE WHEN excluded.clearlogo != '' THEN excluded.clearlogo ELSE playback.clearlogo END,
             season=excluded.season,
             episode=excluded.episode,
-            position=excluded.position,
-            duration=excluded.duration,
+            position=CASE WHEN excluded.duration<=0 AND playback.duration>0 THEN playback.duration*excluded.percent/100.0 ELSE excluded.position END,
+            duration=CASE WHEN excluded.duration>0 THEN excluded.duration ELSE playback.duration END,
             percent=excluded.percent,
             stream_url=excluded.stream_url,
             event_type=excluded.event_type,
@@ -130,20 +146,22 @@ _UPSERT_SQL = """
 def _mark_sync_dirty():
     try:
         import xbmcgui
-        xbmcgui.Window(10000).setProperty('dexhub.sync_dirty', '1')
+        xbmcgui.Window(10000).setProperty('nuviohub.sync_dirty', str(time.time_ns()))
     except Exception:
         pass
 
 
 def _upsert_params(conn, row):
     media_type = row.get('media_type') or ''
+    if media_type in ('tv', 'show', 'tvshow', 'episode'):media_type='series'
     canonical_id = row.get('canonical_id') or ''
     video_id = row.get('video_id') or ''
     ext_updated_at = row.get('ext_updated_at')
     try:
-        ts = int(ext_updated_at) if ext_updated_at else int(time.time())
+        from resources.lib.progress_model import timestamp
+        ts = timestamp(ext_updated_at) if ext_updated_at is not None else time.time()
     except Exception:
-        ts = int(time.time())
+        ts = time.time()
     # We avoid clobbering updated_at on no-op local updates: when the new
     # position and completion state are unchanged, keep the existing timestamp.
     # A 30-second tolerance froze recency forever with 15-second heartbeats.
@@ -156,7 +174,7 @@ def _upsert_params(conn, row):
     if existing:
         try:
             if abs(float(row.get('position') or 0.0) - float(existing[0] or 0.0)) < 0.01 and (row.get('event_type') or '') == existing[2]:
-                ts = int(existing[1] or ts)
+                ts = float(existing[1] or ts)
         except Exception:
             pass
     return (
@@ -189,13 +207,19 @@ def upsert_entries(entries, mark_dirty=True):
         return 0
     _ensure_db()
     changed = 0
+    from resources.lib import nuvio_progress
+    account = nuvio_progress.scope() if mark_dirty else ''
     with _DB_LOCK:
         conn = _connect()
         try:
             for row in rows:
                 if not (row.get('canonical_id') or row.get('video_id')):
                     continue
-                cursor = conn.execute(_UPSERT_SQL, _upsert_params(conn, row))
+                values = _upsert_params(conn, row)
+                cursor = conn.execute(_UPSERT_SQL, values)
+                if mark_dirty and cursor.rowcount and account:
+                    queued = dict(row, media_type=values[0], updated_at=values[15])
+                    nuvio_progress.queue(conn, queued, account=account)
                 try:
                     changed += max(0, int(cursor.rowcount or 0))
                 except Exception:
@@ -407,28 +431,55 @@ def find_resume_entry(media_type='movie', canonical_id='', tmdb_id='', imdb_id='
     return None
 
 
-def delete_entry(media_type, canonical_id, video_id):
+def _mutate_progress(media_type, canonical_id, video_id, operation, mark_dirty=True):
+    from resources.lib import nuvio_progress
+    import json
     _ensure_db()
+    account = nuvio_progress.scope() if mark_dirty else ''
     conn = _connect()
-    conn.execute(
-        "DELETE FROM playback WHERE media_type=? AND canonical_id=? AND video_id=?",
-        (media_type or '', canonical_id or '', video_id or ''),
-    )
-    conn.commit()
-    conn.close()
+    changed = False
+    try:
+        cursor = conn.execute('SELECT * FROM playback WHERE media_type=? AND canonical_id=? AND video_id=?',
+                              (media_type or '', canonical_id or '', video_id or ''))
+        names = [item[0] for item in cursor.description]
+        values = cursor.fetchone()
+        if values:
+            row = dict(zip(names, values))
+            row['updated_at'] = time.time()
+            if operation == 'delete':
+                conn.execute('DELETE FROM playback WHERE media_type=? AND canonical_id=? AND video_id=?', (media_type, canonical_id, video_id))
+            else:
+                row.update(percent=100.0, position=row.get('duration') or row.get('position') or 0, event_type='watched')
+                conn.execute("UPDATE playback SET percent=100.0, position=CASE WHEN duration>0 THEN duration ELSE position END, event_type='watched', updated_at=? WHERE media_type=? AND canonical_id=? AND video_id=?", (row['updated_at'], media_type, canonical_id, video_id))
+            if mark_dirty:
+                nuvio_progress.queue(conn, row, operation=operation, account=account)
+                exists = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='nuvio_continue'").fetchone()
+                if exists:
+                    for key, raw in conn.execute('SELECT identity,payload FROM nuvio_continue').fetchall():
+                        local = json.loads(raw)
+                        if local.get('canonical_id') == canonical_id and local.get('video_id') == video_id:
+                            local.update(percent=100, event_type='removed' if operation=='delete' else 'watched', updated_at=row['updated_at'])
+                            conn.execute('UPDATE nuvio_continue SET updated=?,payload=? WHERE identity=?', (row['updated_at'], json.dumps(local), key))
+            changed = True
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+    if changed and mark_dirty:
+        _mark_sync_dirty()
+        from resources.lib.simkl_watched import _invalidate_view
+        _invalidate_view()
+    return changed
 
 
-def mark_watched(media_type, canonical_id, video_id):
-    """Set percent=100 so the row is filtered out of continue_watching without deleting it."""
-    import time as _t
-    _ensure_db()
-    conn = _connect()
-    conn.execute(
-        "UPDATE playback SET percent=100.0, updated_at=? WHERE media_type=? AND canonical_id=? AND video_id=?",
-        (int(_t.time()), media_type or '', canonical_id or '', video_id or ''),
-    )
-    conn.commit()
-    conn.close()
+def delete_entry(media_type, canonical_id, video_id, mark_dirty=True):
+    return _mutate_progress(media_type, canonical_id, video_id, 'delete', mark_dirty)
+
+
+def mark_watched(media_type, canonical_id, video_id, mark_dirty=True):
+    return _mutate_progress(media_type, canonical_id, video_id, 'upsert', mark_dirty)
 
 
 _WATCHED_MEM={}

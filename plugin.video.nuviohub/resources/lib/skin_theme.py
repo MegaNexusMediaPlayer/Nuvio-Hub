@@ -11,18 +11,18 @@ Supported skins get their real accent read directly; any unknown skin falls
 back to the DexWorld brand palette so nothing ever looks broken.
 
 Published properties (Window 10000):
-    dexhub.theme.accent        AARRGGBB  primary accent
-    dexhub.theme.accent_soft   AARRGGBB  ~70% accent (sub-accents, icons)
-    dexhub.theme.accent_dim    AARRGGBB  ~28% accent (fills, hovers)
-    dexhub.theme.accent_glow   AARRGGBB  lightened accent (highlights/sheen)
-    dexhub.theme.secondary     AARRGGBB  complementary/secondary accent
-    dexhub.theme.surface       AARRGGBB  deep surface background
-    dexhub.theme.surface_card  AARRGGBB  raised card surface
-    dexhub.theme.text          AARRGGBB  primary text
-    dexhub.theme.muted         AARRGGBB  muted/secondary text
-    dexhub.theme.ok            AARRGGBB  success/cached green (kept stable)
-    dexhub.theme.skin          string    active skin id
-    dexhub.theme.ready         '1' once published
+    nuviohub.theme.accent        AARRGGBB  primary accent
+    nuviohub.theme.accent_soft   AARRGGBB  ~70% accent (sub-accents, icons)
+    nuviohub.theme.accent_dim    AARRGGBB  ~28% accent (fills, hovers)
+    nuviohub.theme.accent_glow   AARRGGBB  lightened accent (highlights/sheen)
+    nuviohub.theme.secondary     AARRGGBB  complementary/secondary accent
+    nuviohub.theme.surface       AARRGGBB  deep surface background
+    nuviohub.theme.surface_card  AARRGGBB  raised card surface
+    nuviohub.theme.text          AARRGGBB  primary text
+    nuviohub.theme.muted         AARRGGBB  muted/secondary text
+    nuviohub.theme.ok            AARRGGBB  success/cached green (kept stable)
+    nuviohub.theme.skin          string    active skin id
+    nuviohub.theme.ready         '1' once published
 """
 
 import xbmc
@@ -276,15 +276,15 @@ def publish_theme(window=None, log=None):
     for win in targets:
         try:
             for key, val in palette.items():
-                win.setProperty('dexhub.theme.%s' % key, val)
+                win.setProperty('nuviohub.theme.%s' % key, val)
             # v4.4.0: glass-card token — surface_card with translucent alpha
             # so result rows let the fanart backdrop breathe through.
             try:
-                win.setProperty('dexhub.theme.card_glass', 'B8' + palette['surface_card'][2:])
+                win.setProperty('nuviohub.theme.card_glass', 'B8' + palette['surface_card'][2:])
             except Exception:
                 pass
-            win.setProperty('dexhub.theme.skin', skin_id)
-            win.setProperty('dexhub.theme.ready', '1')
+            win.setProperty('nuviohub.theme.skin', skin_id)
+            win.setProperty('nuviohub.theme.ready', '1')
         except Exception:  # pylint: disable=broad-except
             pass
 
@@ -303,7 +303,7 @@ def clear_theme():
         for key in ('accent', 'accent_soft', 'accent_dim', 'accent_glow',
                     'secondary', 'surface', 'surface_card', 'text', 'muted',
                     'ok', 'skin', 'ready'):
-            HOME.clearProperty('dexhub.theme.%s' % key)
+            HOME.clearProperty('nuviohub.theme.%s' % key)
     except Exception:  # pylint: disable=broad-except
         pass
 

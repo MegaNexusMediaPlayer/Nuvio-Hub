@@ -32,7 +32,7 @@ class TestImdbResolution(unittest.TestCase):
         fake = types.SimpleNamespace(imdb_id_for=lambda tmdb_id, media_type='movie':
                                      'tt%s' % tmdb_id)
         import sys
-        real = sys.modules.get('dexhub_lib.tmdb_direct')
+        real = sys.modules.get('nuviohub_lib.tmdb_direct')
         try:
             mod = kodi_stub.import_lib_module('tmdb_direct')
             orig = mod.imdb_id_for
@@ -48,7 +48,7 @@ class TestImdbResolution(unittest.TestCase):
         finally:
             mod.imdb_id_for = orig
             if real is not None:
-                sys.modules['dexhub_lib.tmdb_direct'] = real
+                sys.modules['nuviohub_lib.tmdb_direct'] = real
 
     def test_resolver_is_safe_without_a_tmdb_id(self):
         for ctx in ({}, {'canonical_id': 'tt123'}, {'tmdb_id': ''}, None):

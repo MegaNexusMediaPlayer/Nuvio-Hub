@@ -1,0 +1,82 @@
+{
+  "version": "6.0.9",
+  "date": "2026-09-30",
+  "status": "local test candidate; target-device runtime not tested",
+  "baseline": "User supplied Nuvio-Hub-6.0.8-source.zip",
+  "github_main_written": false,
+  "python_runtime": "CPython 3.13.5",
+  "unit_tests": {
+    "passed": 243,
+    "new_issue_tests": 51,
+    "method": "Kodi API boundary stubs"
+  },
+  "guard": {
+    "result": "PASS",
+    "version": "6.0.9",
+    "checks_passed": 24,
+    "python_files_compiled": 255,
+    "xml_files_parsed": 145,
+    "json_files_parsed": 7,
+    "errors": []
+  },
+  "packaged_smoke": {
+    "imported_packaged_modules": 39,
+    "validated_xml_asset_refs": 1441,
+    "unified_version": "6.0.9",
+    "components": [
+      "script.nuvio",
+      "skin.nuvio",
+      "screensaver.nuvio"
+    ],
+    "result": "PASS"
+  },
+  "bundle": {
+    "bundle": {
+      "id": "plugin.video.nuviohub",
+      "file": "Nuvio-Hub-Complete-6.0.9.zip",
+      "version": "6.0.9",
+      "sha256": "78280e8ea1f5a12e10d870b9857f8a65199e95dc916d2ce432b6f17bc00e2e49",
+      "files": 184,
+      "bytes": 38627750
+    },
+    "components": [
+      {
+        "id": "script.nuvio",
+        "file": "script.nuvio.zip",
+        "version": "6.0.9",
+        "sha256": "73ed35151e2f37c9ae8b20e3d8a1f037d22bc02cf46f42ef970d42d5f5a8d5b0",
+        "files": 172,
+        "bytes": 33620672
+      },
+      {
+        "id": "skin.nuvio",
+        "file": "skin.nuvio.zip",
+        "version": "6.0.9",
+        "sha256": "ed0b963d510c504c4fb3aabf45fc1622548bc3b43148d61bc418338ffeb4f7a3",
+        "files": 900,
+        "bytes": 4073506
+      },
+      {
+        "id": "screensaver.nuvio",
+        "file": "screensaver.nuvio.zip",
+        "version": "6.0.9",
+        "sha256": "612bfd4625f930ddaa7d47c1e2b66f5069965a1b96305a4681c9349b5d05bbc9",
+        "files": 6,
+        "bytes": 183046
+      }
+    ]
+  },
+  "commands": [
+    "PYTHONPATH=plugin.video.nuviohub/tests python -m unittest test_nuvio_601 test_nuvio_602 test_nuvio_603 test_nuvio_604 test_nuvio_605 test_nuvio_609 test_nuvio_home_iptv test_nuvio_build test_nuvio_extras test_nuvio_reliability test_nuvio_architecture",
+    "python review/check_608_rebrand_kodi22.py 6.0.9",
+    "python review/build_bundle.py --output Nuvio-Hub-Complete-6.0.9.zip",
+    "python review/check_packaged_build.py Nuvio-Hub-Complete-6.0.9.zip"
+  ],
+  "not_tested": [
+    "Kodi 22 RC1 installation on a real device",
+    "Windows native PVR preview/fullscreen composition and Escape",
+    "CoreELEC hardware video plane/rendering",
+    "Live configured metadata/stream provider accounts",
+    "Real movie/subtitle playback and video screensaver codec/EOF/wake behavior"
+  ]
+}

@@ -47,7 +47,7 @@ from .i18n import tr
 # plugin invocation (argv[1] = handle, argv[0] = base plugin:// url).
 # ADDON is the single Addon() instance shared by the whole process.
 # ─────────────────────────────────────────────────────────────────────
-# --- dexhub-401-patch ---
+# --- nuviohub-401-patch ---
 try:
     from .settings_cache import cached_addon as _dh_cached_addon
 except Exception:
@@ -85,9 +85,9 @@ def refresh_invocation():
     return HANDLE
 
 WINDOW_ID = 10000
-PROP = 'dexhub.play_context'
-SERIES_PROP_PREFIX = 'dexhub.series.'
-SUBS_DIR = xbmcvfs.translatePath('special://temp/dexhub_subs/')
+PROP = 'nuviohub.play_context'
+SERIES_PROP_PREFIX = 'nuviohub.series.'
+SUBS_DIR = xbmcvfs.translatePath('special://temp/nuviohub_subs/')
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -215,7 +215,15 @@ def apply_clean_defaults_once():
     except Exception:
         _fresh = ADDON
     try:
-        rev = (_fresh.getSetting('dexhub_defaults_rev') or '').strip()
+        rev = (_fresh.getSetting('nuviohub_defaults_rev') or '').strip()
+        if not rev:
+            legacy_rev = (_fresh.getSetting('dexhub_defaults_rev') or '').strip()
+            if legacy_rev:
+                rev = legacy_rev
+                try:
+                    ADDON.setSetting('nuviohub_defaults_rev', legacy_rev)
+                except Exception:
+                    pass
     except Exception:
         rev = ''
     if rev == '470-release-defaults':
@@ -250,7 +258,7 @@ def apply_clean_defaults_once():
         except Exception:
             pass
         try:
-            ADDON.setSetting('dexhub_defaults_rev', '470-release-defaults')
+            ADDON.setSetting('nuviohub_defaults_rev', '470-release-defaults')
         except Exception:
             pass
         return
@@ -271,6 +279,6 @@ def apply_clean_defaults_once():
             except Exception:
                 pass
     try:
-        ADDON.setSetting('dexhub_defaults_rev', '470-release-defaults')
+        ADDON.setSetting('nuviohub_defaults_rev', '470-release-defaults')
     except Exception:
         pass

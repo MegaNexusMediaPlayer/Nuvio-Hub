@@ -1,34 +1,5 @@
 # -*- coding: utf-8 -*-
-"""NuvioHub Library Index — SQLite-backed local mirror of Stremio catalogs.
-
-Architectural shift from v3.9.26 → v3.9.27:
-  Before: every folder open = N parallel HTTP requests to N federated
-          Stremio catalogs. Even with SWR + prefetch + 600s cache, the
-          first open of a folder is bounded by network latency (1-4s).
-  After:  folder open = SQLite query (≈ 5ms). Catalogs are synced into
-          a local index by a background worker. Sources only consulted
-          at Play time (for streams).
-
-This module is the LOW-LEVEL data layer. It knows nothing about how
-catalogs are fetched (that's sync_engine.py) or how folders are
-rendered (that's index_render.py). It just exposes a clean upsert/query
-API over the SQLite database.
-
-Schema invariants:
-  - Items deduped globally by `id` (canonical imdb_id where possible,
-    composite otherwise). Same movie from 3 catalogs = 1 row in `items`,
-    3 rows in `item_sources`.
-  - Sources tracked per (item, provider, catalog, bucket) so we know
-    which catalog vouched for which item, and so we can resolve streams
-    from those same sources at Play time.
-  - FTS5 index on title/description/genres maintained by triggers — no
-    manual sync needed. Unicode + diacritics-folded so "naruto" matches
-    "Naruto" and "حُروب" matches "حروب".
-
-Safe to call concurrently: SQLite WAL mode + a per-connection lock means
-the sync engine writing in one thread doesn't block the read thread
-serving the home folder.
-"""
+"NuvioHub Library Index — SQLite-backed local mirror of Stremio catalogs.\n\nArchitectural shift from v3.9.26 → v3.9.27:\n  Before: every folder open = N parallel HTTP requests to N federated\n          Stremio catalogs. Even with SWR + prefetch + 600s cache, the\n          first open of a folder is bounded by network latency (1-4s).\n  After:  folder open = SQLite query (≈ 5ms). Catalogs are synced into\n          a local index by a background worker. Sources only consulted\n          at Play time (for streams).\n\nThis module is the LOW-LEVEL data layer. It knows nothing about how\ncatalogs are fetched (that's sync_engine.py) or how folders are\nrendered (that's index_render.py). It just exposes a clean upsert/query\nAPI over the SQLite database.\n\nSchema invariants:\n  - Items deduped globally by `id` (canonical imdb_id where possible,\n    composite otherwise). Same movie from 3 catalogs = 1 row in `items`,\n    3 rows in `item_sources`.\n  - Sources tracked per (item, provider, catalog, bucket) so we know\n    which catalog vouched for which item, and so we can resolve streams\n    from those same sources at Play time.\n  - FTS5 index on title/description/genres maintained by triggers — no\n    manual sync needed. Unicode + diacritics-folded so \"naruto\" matches\n    \"Naruto\" and \"\u062d\u064f\u0631\u0648\u0628\" matches \"\u062d\u0631\u0648\u0628\".\n\nSafe to call concurrently: SQLite WAL mode + a per-connection lock means\nthe sync engine writing in one thread doesn't block the read thread\nserving the home folder.\n"
 from __future__ import annotations
 
 import json
@@ -332,7 +303,7 @@ class IndexDB:
         "play from same source" feature in v3.9.40 by sending the user's
         click to a provider that did not actually have the item. The
         attribution flows through to the rendered meta as
-        `_dexhub_provider_id` and `_dexhub_catalog_id` for the play path.
+        `_nuviohub_provider_id` and `_nuviohub_catalog_id` for the play path.
         """
         sort_col, sort_dir = _normalize_sort(sort)
 

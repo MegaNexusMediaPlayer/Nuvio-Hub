@@ -19,7 +19,7 @@ import xbmcaddon
 
 from .log import log
 
-# --- dexhub-401-patch ---
+# --- nuviohub-401-patch ---
 try:
     from .settings_cache import cached_addon as _dh_cached_addon
 except Exception:

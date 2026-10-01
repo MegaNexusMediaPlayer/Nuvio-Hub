@@ -8,7 +8,7 @@ import xbmcaddon
 from .tmdbhelper import get_art_bundle_from_db, get_clearlogo_from_db
 from .tmdb_direct import art_for as get_tmdb_direct_art
 
-# --- dexhub-401-patch ---
+# --- nuviohub-401-patch ---
 try:
     from .settings_cache import cached_addon as _dh_cached_addon
 except Exception:
@@ -58,7 +58,7 @@ def posters_prefer_local():
     if 'tmdb' in meta_choice or 'helper' in meta_choice:
         return False
     # Auto / not set — fall back to legacy setting for backward compatibility
-    return str(poster_source_mode() or '').strip().lower() in ('محلي فقط', 'local only', 'local', '0')
+    return str(poster_source_mode() or '').strip().lower() in ('Local only', 'local only', 'local', '0')
 
 ROOT_ICONS = {
     'add':            'root_add.png',

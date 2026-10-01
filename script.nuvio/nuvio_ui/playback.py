@@ -53,7 +53,7 @@ class Loading(xbmcgui.WindowXMLDialog):
         xbmcgui.Window(10000).clearProperty('nuvio.loading.active')
         super().close()
 
-def job(fn,meta=None,full=False,label='Loading sources'):
+def job(fn,meta=None,full=False,label='Loading sources',cancel=None):
     win=Loading('nuvio_loading.xml',ROOT,'Default','1080i',meta=meta,full=full,label=label)
     results=queue.Queue()
     def work():
@@ -71,6 +71,7 @@ def job(fn,meta=None,full=False,label='Loading sources'):
                 xbmc.Monitor().waitForAbort(.05)
         return None
     finally:
+        if cancel is not None:cancel.set()
         future.cancel();win.close()
 
 class Sources(xbmcgui.WindowXMLDialog):
@@ -80,8 +81,11 @@ class Sources(xbmcgui.WindowXMLDialog):
         items=[]
         for i,row in enumerate(self.rows):
             name=' '.join(plain_label(row.get('name')).split()) or 'Source %d'%(i+1)
+            provider=plain_label((row.get('_nuvio_source') or {}).get('name') or '')
+            if provider:name=provider+' · '+name
             details='  |  '.join(plain_label(row.get('title') or row.get('description')).splitlines())
             item=xbmcgui.ListItem(label=name,label2=details)
+            item.setProperty('provider',provider)
             item.setProperty('size',source_size(row))
             for index,badge in enumerate(source_badges(row)):item.setProperty('badge%d'%index,badge)
             items.append(item)
@@ -132,6 +136,8 @@ def play(meta,context):
     result=job(lambda:backend_api.streams(meta.get('type') or 'movie',context.get('video_id') or meta['id']),meta,auto,label=loading_label)
     if result is None:return False
     source,rows=result
+    if source.get('_nuvio_errors'):
+        xbmcgui.Dialog().notification('Stream add-ons', '%d add-on(s) unavailable; showing available results.' % len(source['_nuvio_errors']))
     if not rows:xbmcgui.Dialog().ok('Sources','No streams matched your provider configuration.');return False
     selected=0 if auto else select_source(rows)
     if selected<0:return False

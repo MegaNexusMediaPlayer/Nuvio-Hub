@@ -47,6 +47,7 @@
         <textcolor>FFABB1C0</textcolor>
         <label>$INFO[System.Time(hh:mm)]</label>
         <scroll>true</scroll>
+        <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
       </control>
       <control type="grouplist" id="9000">
         <left>0</left>
@@ -61,7 +62,7 @@
           <left>0</left>
           <top>0</top>
           <width>1920</width>
-          <height>320</height>
+          <height>382</height>
           <control type="image">
             <left>75</left>
             <top>7</top>
@@ -103,14 +104,15 @@
             <left>290</left>
             <top>112</top>
             <width>1490</width>
-            <height>100</height>
+            <height>160</height>
             <font>font13</font>
             <textcolor>FFF3F4F8</textcolor>
             <label>$INFO[Window.Property(nuvio.plot)]</label>
+            <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
           </control>
           <control type="button" id="100">
             <left>290</left>
-            <top>228</top>
+            <top>288</top>
             <width>225</width>
             <height>56</height>
             <label>Play</label>
@@ -130,7 +132,7 @@
           </control>
           <control type="button" id="103">
             <left>533</left>
-            <top>228</top>
+            <top>288</top>
             <width>190</width>
             <height>56</height>
             <label>Trailer</label>
@@ -150,7 +152,7 @@
           </control>
           <control type="button" id="101">
             <left>741</left>
-            <top>228</top>
+            <top>288</top>
             <width>250</width>
             <height>56</height>
             <label>Add to Library</label>
@@ -170,7 +172,7 @@
           </control>
           <control type="button" id="104">
             <left>1009</left>
-            <top>228</top>
+            <top>288</top>
             <width>250</width>
             <height>56</height>
             <label>Mark watched</label>
@@ -190,7 +192,7 @@
           </control>
           <control type="button" id="106">
             <left>1277</left>
-            <top>228</top>
+            <top>288</top>
             <width>175</width>
             <height>56</height>
             <label>Info</label>
@@ -210,7 +212,7 @@
           </control>
           <control type="button" id="102">
             <left>1470</left>
-            <top>228</top>
+            <top>288</top>
             <width>175</width>
             <height>56</height>
             <label>Back</label>
@@ -230,7 +232,7 @@
           </control>
           <control type="label">
             <left>290</left>
-            <top>286</top>
+            <top>350</top>
             <width>1490</width>
             <height>28</height>
             <font>font10</font>
@@ -332,12 +334,23 @@
               </control>
               <control type="textbox">
                 <left>10</left>
-                <top>321</top>
+                <top>355</top>
                 <width>240</width>
-                <height>125</height>
+                <height>91</height>
                 <font>font10</font>
                 <textcolor>FFABB1C0</textcolor>
                 <label>$INFO[ListItem.Property(plot)]</label>
+                <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
+              </control>
+              <control type="label">
+                <left>10</left>
+                <top>321</top>
+                <width>240</width>
+                <height>30</height>
+                <font>font10</font>
+                <textcolor>FFCAD0DB</textcolor>
+                <label>$INFO[ListItem.Property(episode_meta)]</label>
+                <scroll>true</scroll>
               </control>
             </itemlayout>
             <focusedlayout width="260" height="456">
@@ -387,13 +400,23 @@
               </control>
               <control type="textbox">
                 <left>10</left>
-                <top>321</top>
+                <top>355</top>
                 <width>240</width>
-                <height>125</height>
+                <height>91</height>
                 <font>font10</font>
                 <textcolor>FFABB1C0</textcolor>
                 <label>$INFO[ListItem.Property(plot)]</label>
                 <autoscroll delay="3500" time="1800" repeat="10000">Control.HasFocus(502)</autoscroll>
+              </control>
+              <control type="label">
+                <left>10</left>
+                <top>321</top>
+                <width>240</width>
+                <height>30</height>
+                <font>font10</font>
+                <textcolor>FFCAD0DB</textcolor>
+                <label>$INFO[ListItem.Property(episode_meta)]</label>
+                <scroll>true</scroll>
               </control>
             </focusedlayout>
             <ondown>105</ondown>
@@ -626,6 +649,7 @@
                 <font>font10</font>
                 <textcolor>FFABB1C0</textcolor>
                 <label>$INFO[ListItem.Property(plot)]</label>
+                <autoscroll delay="5000" time="2200" repeat="9000">true</autoscroll>
               </control>
             </itemlayout>
             <focusedlayout width="260" height="398">

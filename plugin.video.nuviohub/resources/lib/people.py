@@ -15,7 +15,7 @@ import xbmcaddon
 from .log import log
 from .ratelimit import limiter, host_of
 
-# --- dexhub-401-patch ---
+# --- nuviohub-401-patch ---
 try:
     from .settings_cache import cached_addon as _dh_cached_addon
 except Exception:

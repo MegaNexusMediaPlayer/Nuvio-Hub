@@ -10,3 +10,7 @@ The baseline includes the original source notices and license texts. Relevant or
 The four component directories contain the detailed notices. Third-party Python code and skin assets retain their individual headers and license files. Do not remove them when redistributing or contributing.
 
 This community project is independent of Nuvio, Kodi/Team Kodi, Simkl and the metadata/stream providers it can connect to. Collection labels identify categories and do not grant subscriptions or playback rights.
+
+## Font handling in 6.0.10
+
+This candidate references the Unicode font installed with Kodi through `special://xbmc/media/Fonts/arial.ttf`; it does not redistribute font binaries. Historic upstream font credits remain as attribution. Actual glyph coverage depends on the installed Kodi build.

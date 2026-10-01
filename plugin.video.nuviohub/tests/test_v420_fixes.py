@@ -194,8 +194,8 @@ class TestRatingsPipeline(unittest.TestCase):
         self.assertIn('fetch_ratings', TMDBHCTX)
 
     def test_skin_has_new_chips_and_icon_priority(self):
-        for prop in ('dexhub.rating.metacritic', 'dexhub.rating.letterboxd',
-                     'dexhub.rating.mdblist', 'dexhub.rating.mal'):
+        for prop in ('nuviohub.rating.metacritic', 'nuviohub.rating.letterboxd',
+                     'nuviohub.rating.mdblist', 'nuviohub.rating.mal'):
             self.assertIn(prop, SKIN)
         # bundled icon is now the primary texture, skin extras the fallback
         # (v4.3.1 moved the bundled set to media/ratings/ for cache-busting)

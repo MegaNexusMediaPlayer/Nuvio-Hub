@@ -48,7 +48,7 @@
             <height>36</height>
             <font>font12</font>
             <textcolor>FFD2D8E0</textcolor>
-            <label>|  $INFO[Window.Property(dexhub.search.title)]</label>
+            <label>|  $INFO[Window.Property(nuviohub.search.title)]</label>
         </control>
         <control type="button" id="3200">
             <left>610</left>
@@ -62,7 +62,7 @@
             <focusedcolor>FFFFFFFF</focusedcolor>
             <texturenofocus border="26" colordiffuse="88303A47">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texturenofocus>
             <texturefocus border="26" colordiffuse="CC8A5A08">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texturefocus>
-            <label>$INFO[Window.Property(dexhub.search.query)]</label>
+            <label>$INFO[Window.Property(nuviohub.search.query)]</label>
             <ondown>3101</ondown>
         </control>
         <control type="label">
@@ -92,8 +92,8 @@
                 <textcolor>FFE8ECF2</textcolor>
                 <focusedcolor>FFFFFFFF</focusedcolor>
                 <texturenofocus border="22" colordiffuse="7A26313D">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texturenofocus>
-                <texturefocus border="22" colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texturefocus>
-                <label>$INFO[Window.Property(dexhub.search.all_label)]</label>
+                <texturefocus border="22" colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texturefocus>
+                <label>$INFO[Window.Property(nuviohub.search.all_label)]</label>
             </control>
             <control type="button" id="3102">
                 <width>160</width>
@@ -103,8 +103,8 @@
                 <textcolor>FFE8ECF2</textcolor>
                 <focusedcolor>FFFFFFFF</focusedcolor>
                 <texturenofocus border="22" colordiffuse="7A26313D">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texturenofocus>
-                <texturefocus border="22" colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texturefocus>
-                <label>$INFO[Window.Property(dexhub.search.movies_label)]</label>
+                <texturefocus border="22" colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texturefocus>
+                <label>$INFO[Window.Property(nuviohub.search.movies_label)]</label>
             </control>
             <control type="button" id="3103">
                 <width>180</width>
@@ -114,8 +114,8 @@
                 <textcolor>FFE8ECF2</textcolor>
                 <focusedcolor>FFFFFFFF</focusedcolor>
                 <texturenofocus border="22" colordiffuse="7A26313D">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texturenofocus>
-                <texturefocus border="22" colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texturefocus>
-                <label>$INFO[Window.Property(dexhub.search.series_label)]</label>
+                <texturefocus border="22" colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texturefocus>
+                <label>$INFO[Window.Property(nuviohub.search.series_label)]</label>
             </control>
             <control type="button" id="3104">
                 <width>150</width>
@@ -125,8 +125,8 @@
                 <textcolor>FFE8ECF2</textcolor>
                 <focusedcolor>FFFFFFFF</focusedcolor>
                 <texturenofocus border="22" colordiffuse="7A26313D">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texturenofocus>
-                <texturefocus border="22" colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texturefocus>
-                <label>$INFO[Window.Property(dexhub.search.anime_label)]</label>
+                <texturefocus border="22" colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texturefocus>
+                <label>$INFO[Window.Property(nuviohub.search.anime_label)]</label>
             </control>
         </control>
         <control type="image">
@@ -186,7 +186,7 @@
             <height>34</height>
             <font>font12</font>
             <textcolor>FFFFFFFF</textcolor>
-            <label>[B]$INFO[Window.Property(dexhub.search.count)] $INFO[Window.Property(dexhub.search.result_label)][/B]</label>
+            <label>[B]$INFO[Window.Property(nuviohub.search.count)] $INFO[Window.Property(nuviohub.search.result_label)][/B]</label>
         </control>
         <control type="list" id="3000">
             <left>54</left>

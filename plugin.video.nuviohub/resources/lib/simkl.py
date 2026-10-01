@@ -34,7 +34,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 
-from .dexhub.common import profile_path
+from .nuviohub.common import profile_path
 from . import playback_store
 from .i18n import tr
 
@@ -182,7 +182,7 @@ def _headers(auth=False):
         data=token_data() or {}
         token = data.get('access_token') or ''
         if not token:
-            raise RuntimeError(tr('حساب Simkl غير مرتبط'))
+            raise RuntimeError(tr('Simkl account is not linked'))
         headers['Authorization'] = 'Bearer %s' % token
         headers['simkl-api-key'] = token_client_id(data)
     return headers
@@ -237,7 +237,7 @@ def _build_pin_message(verify_url, user_code, remaining=None):
 def device_auth():
     ensure_enabled()
     if not credentials_configured():
-        raise RuntimeError(tr('أدخل Simkl Client ID في الإعدادات أولاً (من simkl.com/settings/developer)'))
+        raise RuntimeError(tr('Enter a Simkl Client ID in settings first (from simkl.com/settings/developer)'))
 
     # Step 1: request a user code.
     try:
@@ -247,27 +247,27 @@ def device_auth():
             body = exc.read().decode('utf-8', 'ignore')
         except Exception:
             body = ''
-        raise RuntimeError(tr('فشل طلب رمز Simkl (%s): %s') % (exc.code, body[:200]))
+        raise RuntimeError(tr('Simkl code request failed (%s): %s') % (exc.code, body[:200]))
     except Exception as exc:
-        raise RuntimeError(tr('فشل الاتصال بـ Simkl: %s') % exc)
+        raise RuntimeError(tr('Could not reach Simkl: %s') % exc)
 
     user_code = str((code or {}).get('user_code') or '').strip()
     verify = str((code or {}).get('verification_url') or PIN_URL_FALLBACK)
     interval = max(5, int((code or {}).get('interval') or 5))
     expires_in = max(60, int((code or {}).get('expires_in') or 900))
     if not user_code:
-        raise RuntimeError(tr('لم يرجع Simkl رمز ربط صالح'))
+        raise RuntimeError(tr('Simkl did not return a valid pairing code'))
 
     # Step 2: show the PIN (dialog + sticky notification so it is never lost).
     try:
-        xbmcgui.Dialog().ok(tr('Nuvio Hub • ربط Simkl'), tr(_build_pin_message(verify, user_code)))
+        xbmcgui.Dialog().ok(tr('Nuvio Hub • Link Simkl'), tr(_build_pin_message(verify, user_code)))
     except Exception as exc:
         xbmc.log('[NuvioHub] simkl Dialog.ok fallback: %s' % exc, xbmc.LOGWARNING)
     xbmc.executebuiltin('Notification(Nuvio Hub,Simkl code: %s,10000)' % user_code)
 
     # Step 3: poll until the user approves on simkl.com/pin.
     dlg = xbmcgui.DialogProgress()
-    dlg.create(tr('Nuvio Hub • ربط Simkl'), tr(_build_pin_message(verify, user_code, remaining=expires_in)))
+    dlg.create(tr('Nuvio Hub • Link Simkl'), tr(_build_pin_message(verify, user_code, remaining=expires_in)))
     poll_path = '/oauth/pin/%s?client_id=%s' % (urllib.parse.quote(user_code), urllib.parse.quote(client_id()))
     start = time.time()
     try:
@@ -280,7 +280,7 @@ def device_auth():
                 if isinstance(token, dict) and token.get('access_token'):
                     save_token({'access_token': token.get('access_token'), 'created_at': int(time.time())})
                     dlg.close()
-                    xbmcgui.Dialog().notification('Nuvio Hub', tr('تم ربط Simkl بنجاح'), xbmcgui.NOTIFICATION_INFO, 3000)
+                    xbmcgui.Dialog().notification('Nuvio Hub', tr('Simkl linked successfully'), xbmcgui.NOTIFICATION_INFO, 3000)
                     invalidate_cache()
                     return True
                 # {"result":"KO"} → pending; keep polling quietly.
@@ -514,7 +514,7 @@ def import_watched_movies(limit=500):
     show on Simkl's API; deferred until the batched endpoint is verified live.
     """
     if not (enabled() and authorized()):
-        raise RuntimeError(tr('حساب Simkl غير مرتبط'))
+        raise RuntimeError(tr('Simkl account is not linked'))
     rows = fetch_all_items('movies', 'completed')
     count = 0
     for row in rows[:max(1, int(limit))]:
@@ -525,7 +525,7 @@ def import_watched_movies(limit=500):
         if not canonical:
             continue
         try:
-            playback_store.mark_watched('movie', canonical, canonical)
+            playback_store.mark_watched('movie', canonical, canonical, mark_dirty=False)
             count += 1
         except Exception:
             continue
@@ -577,7 +577,7 @@ def import_watched(limit=1000):
     the shows pipeline. Returns (movies_marked, episodes_marked).
     """
     if not (enabled() and authorized()):
-        raise RuntimeError(tr('حساب Simkl غير مرتبط'))
+        raise RuntimeError(tr('Simkl account is not linked'))
     from . import playback_store
     movies = 0
     for row in fetch_all_items('movies', 'completed')[:max(1, int(limit))]:
@@ -585,7 +585,7 @@ def import_watched(limit=1000):
         if not canonical:
             continue
         try:
-            playback_store.mark_watched('movie', canonical, canonical)
+            playback_store.mark_watched('movie', canonical, canonical, mark_dirty=False)
             movies += 1
         except Exception as exc:
             xbmc.log('[NuvioHub] simkl movie import failed for %s: %s' % (canonical, exc), xbmc.LOGDEBUG)
@@ -600,7 +600,7 @@ def import_watched(limit=1000):
                 season, episode = marker
                 for e_num in range(1, episode + 1):
                     try:
-                        playback_store.mark_watched('series', canonical, '%s:%s:%s' % (canonical, season, e_num))
+                        playback_store.mark_watched('series', canonical, '%s:%s:%s' % (canonical, season, e_num), mark_dirty=False)
                         episodes += 1
                     except Exception:
                         pass
@@ -712,7 +712,9 @@ def flush_progress():
                 _request('/scrobble/' + data['action'], data['body'], method='POST', auth=True, timeout=6)
             except urllib.error.HTTPError as exc:
                 if exc.code != 409:
-                    _SCROBBLE_RETRY_AT = time.monotonic() + 60
+                    try:delay=max(60,min(3600,float(exc.headers.get('Retry-After') or 60)))
+                    except (ValueError,TypeError,AttributeError):delay=60
+                    _SCROBBLE_RETRY_AT = time.monotonic() + delay
                     break
             except Exception:
                 _SCROBBLE_RETRY_AT = time.monotonic() + 60
@@ -731,10 +733,12 @@ def flush_progress():
 def sync_playback_progress(limit=50):
     if not (enabled() and authorized()): return 0
     from . import trakt
+    account = _progress_account()
     data = _request('/sync/playback?limit=%d&hide_watched=true' % min(50, max(1, int(limit))), auth=True, timeout=8)
-    if not isinstance(data, list): return 0
+    if not isinstance(data, list) or account != _progress_account(): return 0
     rows = []
     for entry in data:
+        if not isinstance(entry,dict):continue
         node = entry.get('movie') or entry.get('show') or entry.get('anime') or {}
         ids = node.get('ids') or {}; mid = _canonical_for(ids)
         try: percent = float(entry.get('progress') or 0)
@@ -753,6 +757,7 @@ def sync_playback_progress(limit=50):
             season=season,episode=number,position=0,duration=0,percent=percent,
             event_type='progress',ext_updated_at=stamp,imdb_id=ids.get('imdb') or '',
             tmdb_id=ids.get('tmdb') or '',tvdb_id=ids.get('tvdb') or ''))
+    if account != _progress_account():return 0
     changed = playback_store.upsert_entries(rows, mark_dirty=False)
     if changed:
         from .simkl_watched import _invalidate_view

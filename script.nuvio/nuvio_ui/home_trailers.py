@@ -103,6 +103,10 @@ class Controller:
         if self.stop_event.is_set() or now-self.last_tick<.25:return
         self.last_tick=now
         addon=cached_addon();home=xbmcgui.Window(10000)
+        from resources.lib.saver_state import active as screensaver_active
+        if screensaver_active():
+            self.pause()
+            return
         def number(key,default,low,high):
             try:return min(high,max(low,float(addon.getSetting(key) or default)))
             except ValueError:return default
@@ -130,7 +134,8 @@ class Controller:
             if self.player.ready or self.player.getTime()>.15:
                 self.player.ready=True;self.window.setProperty('nuvio.preview','1')
                 self.window.setProperty('nuvio.preview.loading','')
-            if now-self.play_started>=number('nuvio_trailer_duration',30,15,60):
+            duration=number('nuvio_trailer_duration',90,0,600)
+            if duration>0 and self.player.getTime()>=duration:
                 self.player.cancel();self.player.stop_owned();self._clear()
         if self.player.failed or (self.play_started and not self.player.ready and now-self.play_started>20):
             self.player.cancel();self.player.stop_owned();self.failed_session=True;self._clear();return

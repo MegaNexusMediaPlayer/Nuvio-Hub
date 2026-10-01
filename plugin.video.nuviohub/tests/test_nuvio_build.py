@@ -83,7 +83,7 @@ class MigrationTests(unittest.TestCase):
             settings = b'<settings><setting id="ui_language">Arabic</setting><setting id="home_style">0</setting><setting id="token">private-test-value</setting></settings>'
             (source/'settings.xml').write_bytes(settings)
             (source/'providers.json').write_text(json.dumps([{'url':'https://provider.invalid/token/manifest.json'}]))
-            (source/'home_folders.json').write_text(json.dumps({'path':'plugin://plugin.video.dexhub/?action=continue'}))
+            (source/'home_folders.json').write_text(json.dumps({'path':'plugin://plugin.video.nuviohub/?action=continue'}))
             (source/'active_session.json').write_text('{}')
             db = sqlite3.connect(str(source/'playback.db'))
             try:

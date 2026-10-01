@@ -97,6 +97,30 @@ def current_id():
     except Exception:pass
     return None
 
+
+def open_preview(channel_id):
+    """Kodi Player.Open(channelid) obeys the PVR fullscreen preference.
+
+    JSON-RPC has no windowed option for a channel. Temporarily override the
+    documented native preference while its synchronous PlayMedia call decides
+    the playback mode, then restore it even on errors. Never change app-window
+    fullscreen, video zoom, resolution, or the user's saved channel setup.
+    """
+    setting='pvrplayback.switchtofullscreenchanneltypes'
+    previous=(rpc('Settings.GetSettingValue',{'setting':setting}) or {}).get('value')
+    if type(previous) is not int or previous not in (0,1,2,3):
+        raise ValueError('Kodi could not enable the IPTV preview. Check PVR playback settings.')
+    changed=previous!=0
+    if changed and rpc('Settings.SetSettingValue',{'setting':setting,'value':0}) is not True:
+        raise ValueError('Kodi did not allow windowed IPTV playback.')
+    try:
+        return rpc('Player.Open',{'item':{'channelid':channel_id}})
+    finally:
+        if changed:
+            # Do not overwrite a preference the user changed in another window.
+            current=(rpc('Settings.GetSettingValue',{'setting':setting}) or {}).get('value')
+            if current==0:rpc('Settings.SetSettingValue',{'setting':setting,'value':previous})
+
 class IPTV(Dialog):
     def __init__(self,*args,**kwargs):
         super().__init__(*args)
@@ -107,7 +131,22 @@ class IPTV(Dialog):
         self._cache=OrderedDict();self._generation=0;self._selection=None;self._selected_at=0
         self._epg_channel=None;self._epg=[];self._epg_refresh=0;self._ready=False
         self._requested_group=self.group;self._pending_group=None
+        self._initialized=False;self._selected=0;self._back_block_until=0
     def onInit(self):
+        if self._initialized:
+            self.getControl(501).reset()
+            self.getControl(501).addItems([xbmcgui.ListItem(label=plain_label(g['label'])) for g in self.groups])
+            selected=next((i for i,g in enumerate(self.groups) if g['channelgroupid']==self.group),0)
+            self.getControl(501).selectItem(selected)
+            self.setProperty('nuvio.group',plain_label(self.groups[selected]['label']))
+            current=next((r for r in self.rows if r['channelid']==self.playing),None)
+            self.setProperty('nuvio.playing',plain_label(current.get('label')) if current else '')
+            self._paint()
+            if self.rows:self.getControl(500).selectItem(min(self._selected,len(self.rows)-1))
+            if self._epg:self._paint_epg(self._epg)
+            self._ready=True;self.restore_focus()
+            return
+        self._initialized=True
         self.getControl(501).reset()
         self.getControl(501).addItems([xbmcgui.ListItem(label=plain_label(g['label'])) for g in self.groups])
         selected=next((i for i,g in enumerate(self.groups) if g['channelgroupid']==self.group),0)
@@ -210,9 +249,9 @@ class IPTV(Dialog):
 
     def _play(self,row):
         # Opening a channel via JSON-RPC uses Kodi PVR's EPG, buffering and tuner.
-        try:rpc('Player.Open',{'item':{'channelid':row['channelid']}})
-        except RuntimeError:
-            self.setProperty('nuvio.iptv.status','This channel could not start. Check the playlist or try another channel.')
+        try:open_preview(row['channelid'])
+        except (RuntimeError,ValueError):
+            self.setProperty('nuvio.iptv.status','This channel could not start in preview. Check the playlist or try another channel.')
             return
         self.playing=row['channelid']
         ADDON.setSetting('nuvio_iptv_last_unique',channel_key(row))
@@ -222,8 +261,13 @@ class IPTV(Dialog):
         if cid==500 and self.rows:
             row=self.rows[self.getControl(500).getSelectedPosition()]
             if self.playing==row['channelid'] and current_id()==row['channelid']:
-                self.fullscreen=True;self.finish()
+                self._selected=self.getControl(500).getSelectedPosition()
+                self.child(self._fullscreen)
+                self._back_block_until=time.monotonic()+.3
             else:self._play(row)
+        elif cid==505:
+            if xbmc.getCondVisibility('Pvr.IsPlayingTV'):xbmc.Player().stop()
+            self.finish()
         elif cid==501:
             pick=self.getControl(501).getSelectedPosition()
             if not 0<=pick<len(self.groups):return
@@ -241,10 +285,39 @@ class IPTV(Dialog):
             if 0<=pos<len(self._epg):
                 row=self._epg[pos]
                 xbmcgui.Dialog().textviewer(plain_label(row.get('title') or 'Programme'),programme_time(row)+'\n\n'+plain_label(row.get('plot') or 'No description available.'))
+    def _fullscreen(self):
+        """The SAME IPTV page survives native fullscreen, Stop and stream EOF."""
+        self.fullscreen=True
+        monitor=xbmc.Monitor()
+        try:
+            xbmc.executebuiltin('ActivateWindow(fullscreenvideo)')
+            seen=False;start=time.monotonic()
+            while not monitor.waitForAbort(.05):
+                full=xbmc.getCondVisibility('Window.IsActive(fullscreenvideo)')
+                if full:seen=True
+                if seen and not full:break
+                if not xbmc.Player().isPlayingVideo():break
+                if not seen and time.monotonic()-start>5:break
+        finally:
+            self.fullscreen=False
+            # Stop/EOF must return to the guide without auto-restarting a channel.
+            if not xbmc.Player().isPlayingVideo():
+                self.playing=None
+                self.setProperty('nuvio.playing','')
+
     def onAction(self,action):
-        if action.getId() in (9,10,92,216,247,257,275,61448,61467,13):
-            if xbmc.getCondVisibility('Pvr.IsPlayingTV'):xbmc.Player().stop()
-            self.finish()
+        aid=action.getId()
+        if aid not in (9,10,92,216,247,257,275,61448,61467,13):return
+        if time.monotonic()<self._back_block_until:return
+        if xbmc.getCondVisibility('Pvr.IsPlayingTV'):
+            xbmc.Player().stop()
+            self.playing=None
+            self.setProperty('nuvio.playing','')
+            self.setProperty('nuvio.iptv.status','Preview stopped. Select a channel to play.')
+            self.setFocusId(500)
+        else:
+            # HUB is deliberate, not a side effect of Escape or Stop.
+            self.setFocusId(505 if aid!=13 else 500)
 
     def finish(self):
         if self.closed:return
@@ -275,23 +348,14 @@ def open_iptv():
         if not rows:
             xbmcgui.Dialog().ok('IPTV','No channels are available yet. Check the playlist in IPTV Simple settings, or restart Kodi after installing the PVR client.');return
         if group=='alltv':category_rows=groups()
-        while True:
-            win=IPTV('nuvio_iptv.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),'Default','1080i',rows=rows,groups=category_rows,group=group)
-            monitor=xbmc.Monitor()
-            try:
-                win.show()
-                while not win.closed and not monitor.abortRequested():
-                    win.tick();monitor.waitForAbort(.1)
-                fullscreen=win.fullscreen;group=win.group
-            finally:win.finish()
-            if not fullscreen:return
-            xbmc.executebuiltin('ActivateWindow(fullscreenvideo)')
-            monitor=xbmc.Monitor();monitor.waitForAbort(.3)
-            while xbmc.Player().isPlayingVideo() and xbmc.getCondVisibility('Window.IsActive(fullscreenvideo)'):
-                if monitor.waitForAbort(.2):return
-            if not xbmc.Player().isPlayingVideo():return
-            rows=channels(group)
+        win=IPTV('nuvio_iptv.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),'Default','1080i',rows=rows,groups=category_rows,group=group)
+        monitor=xbmc.Monitor()
+        try:
+            win.show_ready()
+            while not win.closed and not monitor.abortRequested():
+                win.tick();monitor.waitForAbort(.1)
+        finally:win.finish()
+
     except Exception as exc:
         xbmcgui.Dialog().ok('IPTV',str(exc) if isinstance(exc,ValueError) else 'IPTV could not open. Check IPTV Simple and your playlist in Kodi PVR settings.')
-    finally:
-        xbmc.executebuiltin('ActivateWindow(Home)')
+

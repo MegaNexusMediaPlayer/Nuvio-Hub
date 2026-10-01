@@ -43,7 +43,7 @@ def _enrich_rows(rows):
                 row['target']=target
                 key=row.get('progress_key')
                 if isinstance(key,(list,tuple)) and len(key)==3:
-                    from .dexhub.playback_store import update_metadata
+                    from .nuviohub.playback_store import update_metadata
                     update_metadata(*key,title='' if _missing_title(row.get('title')) else row['title'],
                                     poster=row['poster'],background=row['fanart'],clearlogo=row['clearlogo'])
             except Exception:

@@ -11,7 +11,7 @@ from unittest import mock
 import frontend_test_support
 frontend_test_support.install()
 companion=importlib.import_module('resources.lib.companion')
-store=importlib.import_module('dexhub.playback_store')
+store=importlib.import_module('nuviohub.playback_store')
 watched=importlib.import_module('resources.lib.simkl_watched')
 nextup=importlib.import_module('resources.lib.watch_nextup')
 subs=importlib.import_module('resources.lib.nuvio_subtitles')

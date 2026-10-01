@@ -1,19 +1,11 @@
 # -*- coding: utf-8 -*-
-"""Local favorites store.
-
-Lightweight SQLite-backed favourites/watchlist for users who don't have Trakt
-linked, AND a stable mirror cache for users who do (so the home-screen
-"المفضلة" row stays instant even when Trakt is slow/offline).
-
-Schema mirrors the Continue Watching shape so the same row-rendering code in
-plugin.py can consume both.
-"""
+"Local favorites store.\n\nLightweight SQLite-backed favourites/watchlist for users who don't have Trakt\nlinked, AND a stable mirror cache for users who do (so the home-screen\n\"\u0627\u0644\u0645\u0641\u0636\u0644\u0629\" row stays instant even when Trakt is slow/offline).\n\nSchema mirrors the Continue Watching shape so the same row-rendering code in\nplugin.py can consume both.\n"
 import os
 import sqlite3
 import threading
 import time
 
-from .dexhub.common import profile_path
+from .nuviohub.common import profile_path
 
 DB_PATH = os.path.join(profile_path(), 'favorites.db')
 _DB_READY = False
@@ -123,7 +115,7 @@ def _mark_sync_dirty():
     """
     try:
         import xbmcgui
-        xbmcgui.Window(10000).setProperty('dexhub.sync_dirty', '1')
+        xbmcgui.Window(10000).setProperty('nuviohub.sync_dirty', '1')
     except Exception:
         pass
 

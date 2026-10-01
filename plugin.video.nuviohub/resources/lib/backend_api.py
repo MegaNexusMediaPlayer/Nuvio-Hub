@@ -6,7 +6,7 @@ ADDON_ID = 'plugin.video.nuviohub'
 
 
 def provider(role, providers=None):
-    from .dexhub import store
+    from .nuviohub import store
     providers = list(providers if providers is not None else store.list_providers())
     chosen = xbmcaddon.Addon(ADDON_ID).getSetting('nuvio_' + role + '_provider')
     if chosen:
@@ -20,45 +20,85 @@ def provider(role, providers=None):
     return compatible[0] if len(compatible)==1 else None
 
 
-def metadata(media_type, canonical_id, timeout=8):
-    from .dexhub.client import fetch_meta
-    source = provider('metadata')
-    if not source: raise ValueError('Connect AIOMetadata in Settings > Add-ons.')
-    data = fetch_meta(source, media_type, canonical_id, timeout_override=timeout,retry=False,rate_wait=.1)
-    meta = (data or {}).get('meta')
-    if not isinstance(meta, dict): raise ValueError('AIOMetadata did not return details for this title.')
-    from .plugin import _normalize_meta_art_urls
-    meta=_normalize_meta_art_urls(source,meta)
-    from .title_details import normalize_people_art
-    meta=normalize_people_art(meta,source)
-    result=dict(meta, id=canonical_id, type=media_type)
-    if media_type=='series':
+def metadata(media_type, canonical_id, timeout=8, preferred=''):
+    """Resolve only through enabled, compatible add-ons; never relabel another title."""
+    import time
+    from .nuviohub.client import fetch_meta
+    from . import metadata_providers
+    from .resource_support import same_identity
+    sources = metadata_providers.enabled(media_type, canonical_id, preferred=preferred)
+    if not sources:
+        raise ValueError('Enable a metadata add-on supporting this title ID in Settings > Add-ons.')
+    deadline = time.monotonic() + max(1, timeout)
+    for index, source in enumerate(sources):
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            break
         try:
-            from .watch_nextup import remember
-            remember(result,source['id'])
-        except Exception:pass
-    return result
+            data = fetch_meta(source, media_type, canonical_id,
+                              timeout_override=max(.25, min(4, remaining / max(1, len(sources)-index))), retry=False, rate_wait=.1)
+            meta = (data or {}).get('meta')
+            if not same_identity(meta, media_type, canonical_id):
+                continue
+            from .plugin import _normalize_meta_art_urls
+            from .title_details import normalize_people_art
+            meta = normalize_people_art(_normalize_meta_art_urls(source, meta), source)
+            result = dict(meta, id=canonical_id, type=media_type,
+                          _nuvio_metadata_provider=source['id'])
+            if media_type == 'series':
+                try:
+                    from .watch_nextup import remember
+                    remember(result, source['id'])
+                except Exception:
+                    pass
+            return result
+        except Exception:
+            # Configured URLs and keys must not escape into logs or UI errors.
+            continue
+    raise ValueError('No enabled metadata add-on returned matching details. Check the collection mapping and connection.')
 
 
 def streams(media_type, video_id):
-    from .dexhub.client import get_json, build_resource_url
-    source = provider('streams')
-    if not source: raise ValueError('Connect AIOStreams in Settings > Add-ons.')
-    # AIOStreams already owns filtering, ranking, debrid and formatting. Preserve its
-    # response order, duplicates, labels and hints. Do not call the legacy race pipeline.
-    data = get_json(build_resource_url(source, 'stream', media_type, video_id),
-                    ttl_seconds=0, timeout_override=20, retry=False, rate_wait=0.25)
-    rows = (data or {}).get('streams')
-    if not isinstance(rows, list): raise ValueError('AIOStreams returned an invalid stream response.')
-    if any(not isinstance(row, dict) for row in rows): raise ValueError('AIOStreams returned an invalid stream entry.')
-    return source, rows
+    """Query enabled providers independently and retain each provider's ordering."""
+    from concurrent.futures import ThreadPoolExecutor
+    from . import stream_providers
+    from .nuviohub.client import get_json, build_resource_url
+    sources = stream_providers.enabled(media_type, video_id)
+    if not sources:
+        raise ValueError('Enable a compatible stream add-on in Settings > Add-ons > Stream add-ons.')
+
+    def fetch(source):
+        data = get_json(build_resource_url(source, 'stream', media_type, video_id),
+                        ttl_seconds=0, timeout_override=20, retry=False, rate_wait=0.25)
+        rows = (data or {}).get('streams')
+        if not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows):
+            raise ValueError('Invalid stream response')
+        # A provider cannot spoof provenance. Never alter its labels, hints,
+        # duplicate streams, headers, or ranking; attach our own trusted origin.
+        origin = {key: source.get(key) or '' for key in ('id', 'name', 'base_url')}
+        origin['name'] = origin['name'] or (source.get('manifest') or {}).get('name') or source['id']
+        return [dict(row, _nuvio_source=origin) for row in rows]
+
+    rows, errors = [], []
+    with ThreadPoolExecutor(max_workers=min(4, len(sources))) as pool:
+        pending = [(source, pool.submit(fetch, source)) for source in sources]
+        for source, future in pending:
+            try:
+                rows.extend(future.result())
+            except Exception:
+                # Do not log configured URLs: they can contain account tokens.
+                errors.append(source.get('name') or source['id'])
+    if not rows and len(errors) == len(sources):
+        raise ValueError('Stream add-ons could not respond. Check their configuration and connection.')
+    return dict(sources[0], _nuvio_errors=errors), rows
 
 
 def playback_context(meta, row, source, season='', episode='', video_id='', resume_seconds=0):
     from . import plugin as p, title_details
+    source = row.get('_nuvio_source') or source
     url = p._stream_play_url_from_row(row)
     if not url:
-        raise ValueError('This AIOStreams result has no Kodi-playable URL. Check its provider/debrid configuration or choose another result.')
+        raise ValueError('This stream add-on result has no Kodi-playable URL. Check its provider/debrid configuration or choose another result.')
     ids = p.extract_ids(meta)
     info = p._meta_info(meta)
     try:resume_seconds=max(0.0,float(resume_seconds or 0))
@@ -68,7 +108,7 @@ def playback_context(meta, row, source, season='', episode='', video_id='', resu
         'video_id': video_id or meta['id'], 'season': season, 'episode': episode,
         'title': meta.get('name') or meta.get('title') or meta['id'],
         'show_title': meta.get('name') or meta.get('title') or '',
-        'stream_url': url, 'provider_id': source['id'], 'provider_name': source.get('name') or 'AIOStreams',
+        'stream_url': url, 'provider_id': source['id'], 'provider_name': source.get('name') or source['id'],
         'provider_base_url': source.get('base_url') or '', 'poster': meta.get('poster') or '',
         'background': meta.get('background') or '', 'clearlogo': meta.get('logo') or '',
         'tmdb_id': ids.get('tmdb_id') or '', 'imdb_id': ids.get('imdb_id') or '', 'tvdb_id': ids.get('tvdb_id') or '',
@@ -100,13 +140,15 @@ def play_queued(key):
 
 
 def catalog_entries(bucket=''):
-    source = provider('metadata')
-    if not source: return []
-    desired = {'movies':'movie','series':'series'}.get(bucket)
-    result=[]
-    for catalog in (source.get('manifest') or {}).get('catalogs') or []:
-        mt=catalog.get('type')
-        if mt not in ('movie','series') or desired and mt!=desired: continue
-        if bucket=='anime' and 'anime' not in (str(catalog.get('id',''))+str(catalog.get('name',''))).lower(): continue
-        result.append((source,catalog,'movies' if mt=='movie' else 'series'))
+    from .metadata_providers import enabled
+    desired = {'movies': 'movie', 'series': 'series'}.get(bucket)
+    result = []
+    for source in enabled():
+        for catalog in (source.get('manifest') or {}).get('catalogs') or []:
+            mt = catalog.get('type')
+            if mt not in ('movie', 'series') or (desired and mt != desired):
+                continue
+            if bucket == 'anime' and 'anime' not in (str(catalog.get('id', '')) + str(catalog.get('name', ''))).lower():
+                continue
+            result.append((source, catalog, 'movies' if mt == 'movie' else 'series'))
     return result

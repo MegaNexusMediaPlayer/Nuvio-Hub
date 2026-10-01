@@ -29,9 +29,9 @@ import urllib.request
 import xbmcaddon
 
 from .log import log
-from .dexhub.common import profile_path
+from .nuviohub.common import profile_path
 
-# --- dexhub-401-patch ---
+# --- nuviohub-401-patch ---
 try:
     from .settings_cache import cached_addon as _dh_cached_addon
 except Exception:

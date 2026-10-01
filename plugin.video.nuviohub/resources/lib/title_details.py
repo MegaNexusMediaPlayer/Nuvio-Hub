@@ -27,6 +27,7 @@ def season_label(value):
 
 
 def people(meta):
+    from .search_catalogs import person_id
     extras = meta.get('app_extras') or {}
     if not isinstance(extras, dict):
         extras = {}
@@ -44,7 +45,8 @@ def people(meta):
             row = {'name': row} if isinstance(row, str) else row
             if not isinstance(row, dict) or not row.get('name'):
                 continue
-            name = str(row['name']).strip()
+            from .display_text import clean
+            name = clean(row['name']).strip()
             credit = str(row.get('character') or row.get('role') or 'Cast') if role == 'Cast' else role
             identity = (name.casefold(), credit.casefold())
             if identity in seen:
@@ -55,8 +57,9 @@ def people(meta):
                 path = str(row['profile_path'])
                 photo = path if path.startswith('http') else 'https://image.tmdb.org/t/p/w185' + path
             result.append({'name': name, 'role': credit, 'photo': photo,
-                           'tmdb_id': row.get('tmdbId') or row.get('tmdb_id') or row.get('id') or '',
-                           'imdb_id': row.get('imdbId') or row.get('imdb_id') or ''})
+                           'tmdb_id': person_id(row),
+                           'imdb_id': row.get('imdbId') or row.get('imdb_id') or '',
+                           'source_provider_id': meta.get('_nuvio_metadata_provider') or ''})
     return result[:80]
 
 
@@ -86,7 +89,7 @@ def related(meta, limit=24):
     are optional; the configured metadata provider works without another key.
     """
     from . import backend_api, home_data
-    from .dexhub.client import fetch_catalog
+    from .nuviohub.client import fetch_catalog
     mt = meta.get('type') or 'movie'
     source = backend_api.provider('metadata')
     rows = []
@@ -161,68 +164,93 @@ _PERSON_CACHE = {}
 
 
 def _provider_person_titles(person, source):
-    """AIOMetadata advertises dedicated people catalogs using its own keys."""
+    """Query both film and TV credits using advertised People Search catalogs."""
     if not source:return []
-    from .dexhub.client import fetch_catalog
-    from . import home_data
+    from .nuviohub.client import fetch_catalog
+    from . import home_data, search_catalogs
     from concurrent.futures import ThreadPoolExecutor
-    catalogs=[]
-    for mt in ('movie','series'):
-        match=next((c for c in (source.get('manifest') or {}).get('catalogs') or []
-                    if c.get('type')==mt and ('people_search' in c.get('id','') or 'people.search' in c.get('id',''))
-                    and any(e.get('name')=='search' for e in c.get('extra') or [] if isinstance(e,dict))),None)
-        if match:catalogs.append(match)
+    catalogs=[c for c in search_catalogs.entries(source) if search_catalogs.is_people(c)
+              and c['type'] in ('movie','series','tv','anime','anime.movie','anime.series')]
+    errors=[]
     def fetch(catalog):
-        try:
-            data=fetch_catalog(source,catalog['type'],catalog['id'],extra={'search':person['name']},timeout_override=6)
-            return [(row,catalog['type']) for row in (data or {}).get('metas') or [] if isinstance(row,dict) and row.get('id')]
-        except Exception:return []
+        # People search can be slower than a cached home catalog (provider ID
+        # resolution/credits/artwork). Keep it bounded, but not at six seconds.
+        data=fetch_catalog(source,catalog['type'],catalog['id'],
+                           extra={'search':person['name']},timeout_override=15)
+        if not isinstance(data,dict) or not isinstance(data.get('metas'),list):
+            raise ValueError('Metadata add-on returned an invalid filmography.')
+        return [(row,catalog['type']) for row in data['metas'] if isinstance(row,dict) and row.get('id')]
     result=[];seen=set()
     if catalogs:
-        with ThreadPoolExecutor(max_workers=2) as pool:
-            for values in pool.map(fetch,catalogs):
+        with ThreadPoolExecutor(max_workers=min(4,len(catalogs))) as pool:
+            futures=[pool.submit(fetch,c) for c in catalogs]
+            for future in futures:
+                try:values=future.result()
+                except Exception:errors.append(True);continue
                 for row,mt in values:
-                    identity=(mt,row['id'])
+                    mt=row.get('type') or mt
+                    if mt in ('person','people','actor'):continue
+                    identity=(mt,str(row['id']))
                     if identity in seen:continue
-                    seen.add(identity);result.append(home_data.media_card(row,source,mt))
+                    seen.add(identity)
+                    from .plugin import _normalize_meta_art_urls
+                    result.append(home_data.media_card(_normalize_meta_art_urls(source,row),source,mt))
+    if errors and not result:
+        raise ValueError('The metadata add-on could not load this filmography. Check its connection and retry.')
     return result
 
 
 def person_titles(person):
-    """Combined cast and crew credits, including both movies and TV series."""
-    from . import tmdb_direct, home_data, backend_api
+    """Use provider credits first, with optional authenticated TMDb fallback."""
+    from . import tmdb_direct, home_data, backend_api, search_catalogs
     import time
-    source=backend_api.provider('metadata')
-    key=(str((source or {}).get('id') or ''),str(person.get('tmdb_id') or ''),person.get('name') or '')
+    name=str(person.get('name') or '').strip()
+    if not name:raise ValueError('This cast entry has no actor name.')
+    from . import metadata_providers
+    sources=metadata_providers.enabled(preferred=person.get('source_provider_id') or '')
+    source=sources[0] if sources else None
+    catalogs=tuple((c['type'],c['id']) for c in search_catalogs.entries(source))
+    key=(metadata_providers.signature(),search_catalogs.person_id(person),name,catalogs)
     cached=_PERSON_CACHE.get(key)
     if cached and time.monotonic()-cached[0]<3600:return cached[1]
-    if not tmdb_direct._api_key():
-        result=_provider_person_titles(person,source)
-        if result:
-            _PERSON_CACHE[key]=(time.monotonic(),result)
-            while len(_PERSON_CACHE)>24:_PERSON_CACHE.pop(next(iter(_PERSON_CACHE)))
-            return result
-    pid=str(person.get('tmdb_id') or '')
-    if not pid.isdigit():
-        data=tmdb_direct._request('/search/person',{'query':person['name']},timeout=6)
-        results=data.get('results') or []
-        exact=[p for p in results if str(p.get('name') or '').casefold()==person['name'].casefold()]
-        if not exact:return []
-        pid=str(max(exact,key=lambda p:float(p.get('popularity') or 0))['id'])
-    data=tmdb_direct._request('/person/%s/combined_credits'%pid,timeout=6)
-    values=(data.get('cast') or [])+(data.get('crew') or [])
-    values.sort(key=lambda r:float(r.get('popularity') or 0),reverse=True)
-    result=[];seen=set()
-    for row in values:
-        if row.get('media_type') not in ('movie','tv') or not row.get('id'):continue
-        mt='series' if row['media_type']=='tv' else 'movie'
-        identity=(mt,row['id'])
-        if identity in seen:continue
-        seen.add(identity)
-        meta=dict(row,id='tmdb:%s'%row['id'],type=mt,name=row.get('title') or row.get('name'),
-                  poster=tmdb_direct._image_url(row.get('poster_path')),
-                  background=tmdb_direct._image_url(row.get('backdrop_path'),'backdrop'),description=row.get('overview') or '')
-        result.append(home_data.media_card(meta,source,mt))
+    result=[];provider_error=None
+    exact_tmdb=bool(search_catalogs.person_id(person) and tmdb_direct._api_key())
+    if not exact_tmdb:
+        for candidate in sources:
+            try:result.extend(_provider_person_titles(dict(person,name=name),candidate))
+            except ValueError as exc:provider_error=exc
+    if not result and tmdb_direct._api_key():
+        pid=search_catalogs.person_id(person)
+        if not pid and person.get('imdb_id'):
+            found=tmdb_direct._request('/find/'+str(person['imdb_id']),{'external_source':'imdb_id'},timeout=10)
+            matches=found.get('person_results') or []
+            if matches:pid=str(matches[0]['id'])
+        if not pid:
+            data=tmdb_direct._request('/search/person',{'query':name},timeout=10)
+            matches=[p for p in data.get('results') or [] if str(p.get('name') or '').casefold()==name.casefold()]
+            if matches:pid=str(max(matches,key=lambda p:float(p.get('popularity') or 0))['id'])
+        if pid:
+            data=tmdb_direct._request('/person/%s/combined_credits'%pid,timeout=10)
+            values=(data.get('cast') or [])+(data.get('crew') or [])
+            values=[r for r in values if isinstance(r,dict) and r.get('media_type') in ('movie','tv') and r.get('id')]
+            values.sort(key=lambda r:float(r.get('popularity') or 0),reverse=True)
+            seen=set()
+            for row in values:
+                mt='series' if row['media_type']=='tv' else 'movie';identity=(mt,row['id'])
+                if identity in seen:continue
+                seen.add(identity)
+                meta=dict(row,id='tmdb:%s'%row['id'],type=mt,name=row.get('title') or row.get('name'),
+                          poster=tmdb_direct._image_url(row.get('poster_path')),
+                          background=tmdb_direct._image_url(row.get('backdrop_path'),'backdrop'),description=row.get('overview') or '')
+                result.append(home_data.media_card(meta,source,mt))
+    if not result and exact_tmdb:
+        try:result=_provider_person_titles(dict(person,name=name),source)
+        except ValueError as exc:provider_error=exc
+    if not result:
+        if provider_error:raise provider_error
+        if not any(search_catalogs.is_people(c) for c in search_catalogs.entries(source)) and not tmdb_direct._api_key():
+            raise ValueError('Enable People Search for movies and series in your metadata add-on and re-import its manifest, or set the optional TMDb key in Settings → Add-ons → Actor search fallback.')
+        return []
     _PERSON_CACHE[key]=(time.monotonic(),result)
     while len(_PERSON_CACHE)>24:_PERSON_CACHE.pop(next(iter(_PERSON_CACHE)))
     return result
@@ -294,3 +322,38 @@ def season_descriptions(meta,season):
     _SEASON_CACHE[key]=(time.monotonic(),summaries)
     while len(_SEASON_CACHE)>32:_SEASON_CACHE.pop(next(iter(_SEASON_CACHE)))
     return summaries
+
+
+def person_page(person):
+    from . import tmdb_direct, search_catalogs
+    from .display_text import clean
+    profile = dict(person, name=clean(person.get('name') or 'Filmography'))
+    rows = person_titles(person)
+    pid = search_catalogs.person_id(person)
+    if tmdb_direct._api_key():
+        try:
+            if not pid:
+                data = tmdb_direct._request('/search/person', {'query': profile['name']}, timeout=5)
+                matches = [r for r in data.get('results') or [] if clean(r.get('name')).casefold() == profile['name'].casefold()]
+                if matches:
+                    match = max(matches, key=lambda r: float(r.get('popularity') or 0))
+                    pid = str(match['id'])
+                    if match.get('profile_path'):
+                        profile['photo'] = tmdb_direct._image_url(match['profile_path'])
+            if pid and not profile.get('photo'):
+                data = tmdb_direct._request('/person/' + pid, timeout=5)
+                if data.get('profile_path'):
+                    profile['photo'] = tmdb_direct._image_url(data['profile_path'])
+                profile['role'] = data.get('known_for_department') or profile.get('role') or 'Filmography'
+        except Exception:
+            pass  # Keep the provider portrait/name, never invent a translated name.
+    result = {'person': profile, 'movies': [], 'series': []}
+    seen = set()
+    for row in rows:
+        target = row.get('target') or {}
+        mt, cid = target.get('media_type'), target.get('canonical_id')
+        if mt not in ('movie', 'series') or (mt, cid) in seen:
+            continue
+        seen.add((mt, cid))
+        result['movies' if mt == 'movie' else 'series'].append(row)
+    return result

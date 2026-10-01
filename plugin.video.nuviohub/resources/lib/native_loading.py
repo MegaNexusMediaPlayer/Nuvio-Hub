@@ -27,7 +27,7 @@ class SourcesLoadingDialog(object):
                  media_type='', imdb_id='', tmdb_id='', provider_count=0,
                  provider_names=None):
         del fanart, poster, clearlogo, media_type, imdb_id, tmdb_id
-        self._title = str(title or tr('جار البحث عن المصادر...'))
+        self._title = str(title or tr('Searching for add-ons...'))
         self._subtitle = str(subtitle or '')
         self._provider_names = []
         for name in provider_names or []:
@@ -46,7 +46,7 @@ class SourcesLoadingDialog(object):
         self._current_provider = ''
         self._completed = 0
         self._results_so_far = 0
-        self._status = tr('جار البحث عن المصادر...')
+        self._status = tr('Searching for add-ons...')
         self._sub_status = ''
         self._cached_cancelled = False
         self._cached_sufficient = False
@@ -93,18 +93,18 @@ class SourcesLoadingDialog(object):
     def _message(self):
         lines = [self._status]
         if self._current_provider:
-            lines.append('%s %s' % (tr('يفحص الآن:'), self._current_provider))
+            lines.append('%s %s' % (tr('Now checking:'), self._current_provider))
         elif self._subtitle:
             lines.append(self._subtitle)
         progress = []
         if self._provider_count:
             progress.append('%s %d/%d' % (
-                tr('المصادر'), min(self._completed, self._provider_count),
+                tr('Add-ons'), min(self._completed, self._provider_count),
                 self._provider_count))
         if self._results_so_far:
-            progress.append('%d %s' % (self._results_so_far, tr('نتيجة')))
+            progress.append('%d %s' % (self._results_so_far, tr('result')))
         elapsed = max(0.0, time.monotonic() - self._started_at)
-        progress.append('%.1f %s' % (elapsed, tr('ث')))
+        progress.append('%.1f %s' % (elapsed, tr('s')))
         if self._sub_status:
             progress.insert(0, self._sub_status)
         lines.append('  •  '.join(progress))
@@ -199,11 +199,11 @@ class SourcesLoadingDialog(object):
 
     def mark_sufficient(self, auto_seconds=0):
         del auto_seconds
-        self._status = tr('تم الوصول إلى نتائج كافية')
+        self._status = tr('Enough results found')
         self._render(force=True)
 
     def clear_sufficient(self):
-        self._status = tr('جار البحث عن المصادر...')
+        self._status = tr('Searching for add-ons...')
         self._render(force=True)
 
     def consume_continue_search(self):
@@ -213,5 +213,5 @@ class SourcesLoadingDialog(object):
 
     def set_finalizing(self, msg=None):
         self._completed = max(self._completed, self._provider_count)
-        self._status = str(msg or tr('جار تنظيم النتائج...'))
+        self._status = str(msg or tr('Sorting results...'))
         self._render(force=True)

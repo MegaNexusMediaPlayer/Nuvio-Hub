@@ -38,6 +38,7 @@
       <onup>102</onup>
       <ondown>503</ondown>
       <pagecontrol>511</pagecontrol>
+      <autoscroll delay="5000" time="2200" repeat="9000">!Control.HasFocus(511)</autoscroll>
     </control>
     <control type="scrollbar" id="511">
       <left>1830</left>

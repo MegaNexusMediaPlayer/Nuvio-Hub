@@ -41,6 +41,7 @@ def release_version(root=ROOT):
 def files_for(source):
     for path in source.rglob('*'):
         if not path.is_file():continue
+        if path.suffix.lower() in ('.ttf','.otf','.ttc','.woff','.woff2'):continue
         rel=path.relative_to(source)
         if any(p.startswith('.') or p in ('tests','__pycache__') for p in rel.parts) or path.suffix in ('.pyc','.pyo'):continue
         if 'language' in rel.parts and any(p.startswith('resource.language.') and p!='resource.language.en_gb' for p in rel.parts):continue

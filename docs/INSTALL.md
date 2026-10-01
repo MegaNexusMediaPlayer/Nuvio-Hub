@@ -1,41 +1,88 @@
-# Install and configure Nuvio Hub for Kodi 6.0.7
+# Install and configure Nuvio Hub 6.0.10 candidate
 
-## Before installation
+This is a supplied local test bundle, not an automatically published release.
+The supported code/API target is Kodi 21 and Kodi 22; actual rendering, native
+playback and live synchronization still need device acceptance.
 
-Use Kodi 21 / Omega. Prepare a Nuvio account, a configured AIOStreams or another compatible stream provider, AIOMetadata and a Simkl account. AIOMetadata is mandatory for the intended metadata experience, and Simkl is required for the full Continue Watching/tracking setup documented by this project. Local progress storage also exists without cloud tracking.
+## Safe upgrade
 
-Your providers and accounts are configured separately. The bundle includes the four Nuvio components, not a ready-to-play personal provider profile.
+Back up your Kodi profile first. Stop playback and close the Nuvio frontend.
+Install `Nuvio-Hub-Complete-6.0.10.zip` via Add-ons → Install from zip file. Open
+backend **Nuvio Hub** once to update the interface, skin and screensaver, then
+restart Kodi. All four Nuvio components must report 6.0.10. Keep userdata; do
+not uninstall or delete credentials/settings to update. The source archive is
+for development and is not installable through Kodi's ZIP installer.
 
-## Install the bundle
+## Accounts are optional; validated provider setup is required
 
-1. Download `Nuvio-Hub-Complete-6.0.7.zip` from the repository's **Releases** page. Do not install GitHub's automatically generated source archive.
-2. Enable **Kodi Settings → System → Add-ons → Unknown sources**, if Kodi requests it.
-3. Open **Add-ons → Install from zip file** and select the bundle.
-4. Launch **Nuvio Hub** from **Video add-ons** once. Allow it to install the included components.
-5. Restart Kodi. Open **Nuvio** from **Program add-ons**. The Nuvio skin can also be selected under **Kodi Settings → Interface → Skin**.
-6. In **Nuvio Settings → Accounts & tracking**, connect Nuvio and Simkl. Complete the displayed account/PIN flow.
-7. In **Add-ons**, configure your AIOMetadata and stream provider setup, or synchronize the add-ons associated with your Nuvio account. Use the URLs supplied by your own provider configuration.
-8. Open a title, confirm that metadata loads and that your provider returns playable sources. Play briefly and stop to create a fresh local resume record.
-9. Use built in collections/you will need to setup aiometadata with https://numb3rs.stream or set up collections in nuvio web.
+In Nuvio Settings → Add-ons, add your own configured manifest URLs and enable
+metadata providers under **Metadata add-ons**, then stream providers under
+**Stream add-ons**. Multiple metadata providers can be ON independently. A
+provider marked OFF must never be used as a silent metadata fallback.
 
-All four Nuvio components should report **6.0.7**: `plugin.video.nuviohub`, `script.nuvio`, `skin.nuvio` and `screensaver.nuvio`. External add-ons keep their own version numbers.
+Next open Collections. Choose one of: import from a connected Nuvio account;
+import a collections JSON export without any account; or create a collection
+from installed catalogs. Provide required catalog filter values. Home requires
+nonempty validated collections and enabled metadata and stream providers.
+An old saved collection set is revalidated without resetting its layout.
 
-## Update an existing installation
+Internal presets are available only as an explicit validation candidate. They
+are not automatically installed, and a provider name/domain alone is not a
+match: manifest addon ID, catalog ID, type, filters and actual sample metadata
+must agree. Each source validates up to two returned IDs; this is an import
+sanity check, not exhaustive proof for every item. Empty/unreachable catalogs
+cannot be verified during initial setup. A failed or canceled import does not
+replace the previous collection file.
 
-Stop playback and close the Nuvio interface before installing the ZIP. Open Nuvio Hub once after installation, then restart Kodi. Keep the existing installation and userdata to retain accounts, settings, providers and playback positions. Manual ZIP updates are the current update mechanism.
+A metadata toggle or configuration change invalidates the validation proof.
+Revalidate or update affected collections before returning to Home. A source
+providing catalogs only may use a separately enabled compatible metadata addon.
 
-## Optional integrations
+## Continue Watching
 
-IPTV requires the appropriate IPTV Simple component and your own authorized playlist/EPG configuration. YouTube and weather integrations are separate options. Skip/next-episode behavior depends on available episode metadata and timing data; missing data cannot be reconstructed by the interface.
+Local progress works without Nuvio or Simkl. Optional account configuration is
+under Accounts & tracking. Nuvio settings include upload/download/two-way
+progress direction and a 30/60/120/300-second cadence (default 60). Local dirty
+progress is debounced and sent sooner when connected; failed writes remain in
+an account/profile-scoped queue. Do not disable the master cloud sync interval
+and expect the faster progress worker to override that explicit OFF setting.
 
-## Common questions
+Simkl playback positions use the same configurable cadence; watched-history
+refresh is no more often than 120 seconds. Requests may be delayed by active
+sync cycles, network timeouts or retry backoff. Test with two devices before
+relying on exact cross-device behavior. Outgoing Nuvio removals are queued;
+remote delete-event/delta consumption is not implemented in this candidate.
+A missing item in a remote snapshot is deliberately not treated as deletion.
 
-**No playable sources:** check the stream provider configuration. AIOMetadata supplies metadata; it does not replace a provider that returns streams.
+## Performance, display and trailers
 
-**Missing descriptions or cast pictures:** check AIOMetadata and the selected metadata provider. Some titles have incomplete upstream data.
+Performance & image cache offers **RAM 200 MiB**: 160 MiB compressed artwork
+payload plus 40 MiB serialized browse payload, with a 128 MiB logical browse
+cache on disk. The previous RAM 150 preset upgrades to RAM 200. Existing disk
+or OFF choices are retained. This is not a global process-RAM limit: decoded
+textures, Python objects, other caches and separate Kodi interpreters add use.
 
-**A title is missing from Continue Watching:** confirm Simkl is connected for the full tracking setup, then start and stop the title once. Positions never saved by an older version cannot be recovered retroactively.
+Initial Home loading promotes cached pages and warms missing initial pages
+with four workers and a 40-second foreground ceiling. Back skips preparation;
+remaining pages/details load on demand. Not every poster or full metadata body
+is prefetched. Explicit Clear cache clears images and browse data. A normal
+Settings visit does not clear persistent data.
 
-**Continue Watching order:** 6.0.7 places recently watched local titles first, newest first, then remote-only records. The first card is selected when you return to Home. Continue Watching cards still resume playback; the separate Home/launcher Resume button was removed.
+Under Skin configuration → Automatic trailer settings, choose 90 seconds or
+Full trailer (other durations remain available). New installations default to
+90; an existing explicitly saved duration is kept until changed.
 
-**Reporting a problem:** include device, OS, Kodi version, component versions and reproduction steps. Remove account tokens, personalized provider URLs and personal history from logs/screenshots before attaching them.
+Names are preserved as Unicode, not machine-translated or transliterated. The
+skin now uses Kodi's installed Unicode font. Exact CJK/emoji coverage and
+colored emoji depend on that Kodi build; font binaries are not bundled.
+
+## Regression checks on the device
+
+Check Home final-row Down/focus after sync, actor round portrait and both
+filmography rows, Season 2 labels and air dates, long plot scrolling, both card
+layouts, cached/offline browsing, HUB access, film return without HUB flash,
+IPTV preview/fullscreen/Esc, global clock/weather switch and screensaver wake.
+
+For reports include device/OS/Kodi/component versions and reproduction steps.
+Remove tokens, personalized URLs, PINs, profile exports and viewing history
+from any shared log. A backup plus the previous bundle enables manual rollback.

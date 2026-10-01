@@ -1,8 +1,12 @@
-# Nuvio Hub for Kodi — 6.0.7
+# Nuvio Hub for Kodi — 6.0.10 test candidate
 
 A community-built Nuvio-style experience inside Kodi: browse collections, explore films and series, and return to what you were watching from a remote-friendly home screen.
 
-**6.0.7 is the first public baseline for this project.** It brings together the Nuvio Hub backend, Nuvio interface, skin and screensaver in one installation package. This is an unofficial community project with a custom Kodi interface. It is not an official Nuvio or Team Kodi release.
+**6.0.10 is a local test candidate, not a verified Windows/CoreELEC runtime release.** It is based on the supplied 6.0.9 source. The GitHub main branch has not been modified. See [candidate changes and limitations](docs/RELEASE-6.0.10.md), [setup](docs/INSTALL.md) and [the engineering contract](AGENTS.md).
+
+This candidate adds validated collections, independently enabled metadata providers, a person page, corrected progress wire identities and timestamps, a frequent outbox-based sync cycle, persistent browse caching and bounded startup prewarming. Nuvio and Simkl accounts are optional. No internal collection set is silently installed as a substitute for your configuration.
+
+**6.0.7 was the first public baseline for this project. 6.0.8 is the branding, language and Kodi 22 compatibility maintenance release.** It keeps the Nuvio Hub backend, Nuvio interface, skin and screensaver in one installation package, removes the old Arabic UI layer, and completes the runtime Nuvio Hub rebrand while retaining only upgrade-safe legacy aliases. This is an unofficial community project with a custom Kodi interface. It is not an official Nuvio or Team Kodi release.
 
 ![Nuvio home with demonstration content](docs/screenshots/home.png)
 
@@ -21,34 +25,36 @@ Nuvio Hub brings a complete Nuvio-style experience to Kodi, combining browsing, 
 - A unified Kodi interface — access your addons, sources, metadata, subtitles, and playback through the Nuvio Hub skin.
 The experience depends on your connected accounts, configured addons, and available sources.
 
-[Download 6.0.7](https://github.com/MegaNexusMediaPlayer/Nuvio-Hub/releases/tag/v6.0.7) · [View screenshots](docs/SCREENSHOTS.md) · [Installation](docs/INSTALL.md) · [Contribute](CONTRIBUTING.md) · [6.0.7 release notes](docs/RELEASE-6.0.7.md)
+[Download latest](https://github.com/MegaNexusMediaPlayer/Nuvio-Hub/releases/latest) · [View screenshots](docs/SCREENSHOTS.md) · [Installation](docs/INSTALL.md) · [Contribute](CONTRIBUTING.md) · [6.0.10 candidate notes](docs/RELEASE-6.0.10.md)
 
 ## What you need
 
-For the complete setup documented and supported by this project:
+For Home browsing, configure the following:
 
 | Requirement | Purpose |
 | --- | --- |
-| **Kodi 21 / Omega** | Runs the add-on, interface and skin. Local runtime checks used Kodi 21.3. |
-| **Nuvio account** | Required for the intended account and add-on synchronization workflow. |
-| **AIOStreams or another compatible stream-providing add-on** | Supplies playable sources. You configure your own provider and any accounts it requires. |
-| **AIOMetadata** | Mandatory for the intended full metadata experience: title information, artwork, seasons, episodes and available cast data. |
-| **Simkl account connected in Nuvio Hub** | Required for the complete Continue Watching and watch-tracking setup described here. |
+| **Kodi 21 / Omega or Kodi 22 / Piers** | Python 3 and the retained GUI ABI; target-device verification is still required. |
+| **At least one enabled metadata addon** | Compatible title metadata. AIOMetadata is supported but is not the only allowed provider. |
+| **At least one enabled stream addon** | Playable sources from your authorized configuration. |
+| **Imported or manually created, validated collections** | Source addon, catalog, filters and sample metadata identities must agree. |
+| **Nuvio account — optional** | Account addon/collection import and cloud progress synchronization. JSON import and manual catalog setup work without login. |
+| **Simkl account — optional** | Simkl progress/history synchronization; local resume works without it. |
 
-Some local browsing and resume functions can work without all accounts connected. These requirements describe the project's full setup; they are not a claim that the software blocks every screen without login. Local playback progress is also stored on the device. Metadata completeness and stream availability depend on the providers you configure.
+Collection validation samples up to two items per catalog source. An empty, unreachable or incompatible source cannot pass initial verification. Internal presets are explicit candidates and must pass the same validation. A successful check is not a guarantee that every title or future provider response has full metadata.
 
 The project does not host films, series or subscription services. Configure sources you are authorized to access. A collection name or service logo does not provide access to that service.
 
-## Install 6.0.7
+## Install the 6.0.10 test candidate
 
-1. Open the **[Releases](https://github.com/MegaNexusMediaPlayer/Nuvio-Hub/releases/latest)** page and download **`Nuvio-Hub-Complete-6.0.7.zip`**. GitHub's automatic **Source code (zip)** download is for development and is not the Kodi installer.
-2. In Kodi, enable **Settings → System → Add-ons → Unknown sources** if required, then use **Add-ons → Install from zip file** and select the downloaded bundle.
-3. Open **Nuvio Hub** once to install/update the bundled interface, skin and screensaver. Restart Kodi.
-4. Connect your Nuvio and Simkl accounts. Configure AIOMetadata and your stream provider under **Nuvio Settings → Add-ons**.
+1. Back up your Kodi profile. Use **`Nuvio-Hub-Complete-6.0.10.zip`**, not GitHub's automatic source archive. This local candidate has not been published to GitHub Releases.
+2. Stop playback, close Nuvio and select the bundle through **Add-ons → Install from zip file**.
+3. Open the backend **Nuvio Hub** once to update the three bundled components, then restart Kodi. Keep existing userdata; do not uninstall to update.
+4. Under **Nuvio Settings → Add-ons**, enable your metadata and stream providers separately.
+5. Under **Collections**, import from Nuvio, import a JSON export without login, or create from installed catalogs. Existing collections are preserved and rechecked. Home opens only after validation succeeds.
 
-Updating an existing Nuvio installation: stop playback, close the interface, install the ZIP, open Nuvio Hub once and restart Kodi. Keep your existing add-on data. Back up your profile first if you want a rollback copy. Updates are currently distributed as manual ZIP bundles.
+The first Home load shows a cancellable collection preparation screen when cache pages are missing. It warms initial catalog pages within bounded time and memory; it does not download all pages or full details of an unlimited catalog.
 
-See [the complete installation guide](docs/INSTALL.md) for setup and troubleshooting.
+See [the complete installation guide](docs/INSTALL.md) for accounts, cache, trailers and troubleshooting.
 
 ## Help shape the next release
 
@@ -64,7 +70,7 @@ Ko-fi support is optional. Contributions help cover development tools, AI token 
 
 ## Testing and current limits
 
-The 6.0.7 baseline received targeted Continue Watching regression checks and local Kodi 21.3 and  Amazon cube 2 with CoreELEC runtime checks. Hardware-specific behavior and live account synchronization still need broader testing; please include your device, OS and Kodi version in reports.
+Run `python review/check_610.py`, the release guard, builder and packaged smoke test documented in [AGENTS.md](AGENTS.md). Results are in `review/results-6.0.10.json` and the candidate report. These checks use Kodi/HTTP stubs and local SQLite, not a native Kodi process or live user accounts. Unicode glyph coverage, two-device sync and visual/navigation behavior require the manual checklist. No target-device speed benchmark has been performed.
 
 The screenshots use fictional demonstration content. One separate development capture has identifying content and collection artwork blurred. They illustrate the interface, not bundled playable media.
 

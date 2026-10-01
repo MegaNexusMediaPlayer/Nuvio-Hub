@@ -32,7 +32,7 @@ SB = io.open(os.path.join(ROOT, 'resources', 'lib', 'source_browser.py'),
 class TestSharedLiveReader(unittest.TestCase):
     def setUp(self):
         self.win = xbmcgui.Window(10000)
-        self.win.clearProperty('dexhub.test.prop')
+        self.win.clearProperty('nuviohub.test.prop')
         live._SETTINGS_FILE_MEMO.update({'sig': None, 'values': {}})
 
     tearDown = setUp
@@ -42,13 +42,13 @@ class TestSharedLiveReader(unittest.TestCase):
             self.assertTrue(callable(getattr(live, name, None)), name)
 
     def test_published_value_is_used_when_no_file_value(self):
-        self.win.setProperty('dexhub.test.prop', 'from-service')
-        self.assertEqual(live.live_setting('nope', 'dexhub.test.prop', 'fb'),
+        self.win.setProperty('nuviohub.test.prop', 'from-service')
+        self.assertEqual(live.live_setting('nope', 'nuviohub.test.prop', 'fb'),
                          'from-service')
 
     def test_dash_sentinel_means_empty(self):
-        self.win.setProperty('dexhub.test.prop', '-')
-        self.assertEqual(live.live_setting('nope', 'dexhub.test.prop', 'fb'), '')
+        self.win.setProperty('nuviohub.test.prop', '-')
+        self.assertEqual(live.live_setting('nope', 'nuviohub.test.prop', 'fb'), '')
 
     def test_default_is_shared_by_every_layer(self):
         """The badge bug in one line: one default, not three."""
@@ -58,7 +58,7 @@ class TestSharedLiveReader(unittest.TestCase):
     def test_source_browser_uses_the_shared_reader(self):
         self.assertIn("_live.live_bool('elite_badges_enabled'", SB)
         # the hand-rolled three-layer copy is gone
-        self.assertNotIn("getProperty('dexhub.badges.enabled')", SB)
+        self.assertNotIn("getProperty('nuviohub.badges.enabled')", SB)
 
     def test_badges_still_default_on_end_to_end(self):
         self.assertTrue(sb._elite_badges_enabled())

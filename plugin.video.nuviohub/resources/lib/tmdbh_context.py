@@ -12,7 +12,7 @@ pick up a stale neighbour — and:
 
   1. Back-fills any artwork NuvioHub is still missing (clearlogo / fanart).
   2. Extracts the aggregate rating set (IMDb / TMDb / Trakt / Rotten Tomatoes
-     critics + audience) and republishes it under the ``dexhub.rating.*``
+     critics + audience) and republishes it under the ``nuviohub.rating.*``
      namespace so the sources dialog can show the same ratings row the skin's
      info screen shows.
 
@@ -276,9 +276,9 @@ def apply_to_meta(meta, ctx):
 
 
 def publish_ratings(window, ctx):
-    """Publish the rating set as dexhub.rating.* on the given window + Home.
+    """Publish the rating set as nuviohub.rating.* on the given window + Home.
 
-    Also sets dexhub.rating.any = '1' when at least one rating exists, so the
+    Also sets nuviohub.rating.any = '1' when at least one rating exists, so the
     dialog can show/hide the whole ratings row with one condition.
     """
     ratings = (ctx or {}).get('ratings') or {}
@@ -292,10 +292,10 @@ def publish_ratings(window, ctx):
         try:
             for k in keys:
                 val = ratings.get(k, '')
-                win.setProperty('dexhub.rating.%s' % k, val)
+                win.setProperty('nuviohub.rating.%s' % k, val)
                 if val:
                     any_rating = True
-            win.setProperty('dexhub.rating.any', '1' if ratings else '')
+            win.setProperty('nuviohub.rating.any', '1' if ratings else '')
         except Exception:  # pylint: disable=broad-except
             pass
     return any_rating

@@ -147,15 +147,15 @@ class SourcesAndMetadata(unittest.TestCase):
     def test_person_credits_include_directed_movies_and_tv_without_duplicates(self):
         tmdb=importlib.import_module('resources.lib.tmdb_direct');home=importlib.import_module('resources.lib.home_data');api=importlib.import_module('resources.lib.backend_api')
         data={'cast':[{'id':1,'media_type':'movie','title':'One'}],'crew':[{'id':2,'media_type':'tv','name':'Two'},{'id':1,'media_type':'movie','title':'One'}]}
-        with mock.patch.object(tmdb,'_request',return_value=data),mock.patch.object(home,'media_card',side_effect=lambda row,*args:row),mock.patch.object(api,'provider',return_value={}):rows=models.person_titles({'name':'Test','tmdb_id':98765})
+        with mock.patch.object(tmdb,'_api_key',return_value='fixture-key'),mock.patch.object(tmdb,'_request',return_value=data),mock.patch.object(home,'media_card',side_effect=lambda row,*args:row),mock.patch.object(api,'provider',return_value={}):rows=models.person_titles({'name':'Test','tmdb_id':98765})
         self.assertEqual([r['type'] for r in rows],['movie','series'])
     def test_people_catalogs_work_without_a_separate_tmdb_key(self):
-        tmdb=importlib.import_module('resources.lib.tmdb_direct');home=importlib.import_module('resources.lib.home_data');api=importlib.import_module('resources.lib.backend_api');client=importlib.import_module('resources.lib.dexhub.client')
+        tmdb=importlib.import_module('resources.lib.tmdb_direct');home=importlib.import_module('resources.lib.home_data');api=importlib.import_module('resources.lib.backend_api');client=importlib.import_module('resources.lib.nuviohub.client')
         source={'id':'people-provider','manifest':{'catalogs':[{'id':'people_search.'+kind,'type':kind,'extra':[{'name':'search','isRequired':True}]} for kind in ('movie','series')]}}
         def fetch(source,kind,catalog,**kwargs):
             self.assertEqual(kwargs['extra'],{'search':'Person fixture'})
             return {'metas':[{'id':'tt-'+kind,'type':kind,'name':'Credit'}]}
-        with mock.patch.object(tmdb,'_api_key',return_value=''),mock.patch.object(api,'provider',return_value=source),mock.patch.object(client,'fetch_catalog',side_effect=fetch),mock.patch.object(home,'media_card',side_effect=lambda row,*args:row):
+        with mock.patch.object(tmdb,'_api_key',return_value=''),mock.patch('resources.lib.metadata_providers.enabled',return_value=[source]),mock.patch.object(client,'fetch_catalog',side_effect=fetch),mock.patch.object(home,'media_card',side_effect=lambda row,*args:row):
             rows=models.person_titles({'name':'Person fixture'})
         self.assertEqual({row['type'] for row in rows},{'movie','series'})
 

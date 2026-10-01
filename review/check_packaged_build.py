@@ -47,6 +47,7 @@ for path in OUT.rglob('*.xml'):
         assert not tree.findall("extension[@point='xbmc.addon.repository']")
 assert not (BACK/'resources/skins').exists()
 assert not list(OUT.rglob('resource.language.ar_*'))
+assert not [p for p in OUT.rglob('*') if p.suffix.lower() in ('.ttf','.otf','.ttc','.woff','.woff2')]
 assert not list(OUT.rglob('default_movie_poster.png'))
 for group in json.loads((BACK/'resources/collections.json').read_text(encoding='utf-8')):
     assert group['id'] not in ('collections.world','collections.sports')
@@ -82,7 +83,12 @@ modules=('resources.lib.plugin','resources.lib.backend_api','resources.lib.backe
          'resources.lib.nuvio_subtitles','resources.lib.iptv_config','resources.lib.simkl',
          'nuvio_ui.home_window','nuvio_ui.home_trailers','nuvio_ui.details','nuvio_ui.settings',
          'nuvio_ui.browse_meta','nuvio_ui.source_text','nuvio_ui.catalog','nuvio_ui.playback','nuvio_ui.iptv','nuvio_ui.subtitles',
-         'nuvio_ui.trailers','nuvio_ui.system_setup','nuvio_ui.onboarding','nuvio_ui.simkl_account')
+         'nuvio_ui.trailers','nuvio_ui.system_setup','nuvio_ui.onboarding','nuvio_ui.simkl_account',
+         'resources.lib.stream_providers','resources.lib.presentation_settings','resources.lib.search_catalogs',
+         'resources.lib.saver_state','nuvio_ui.session','nuvio_ui.saver',
+         'resources.lib.resource_support','resources.lib.metadata_providers','resources.lib.collection_validation',
+         'resources.lib.browse_cache','resources.lib.display_text','resources.lib.progress_model',
+         'resources.lib.nuvio_progress','resources.lib.progress_sync','nuvio_ui.person','nuvio_ui.setup_gate','nuvio_ui.startup')
 for name in modules:
     mod=importlib.import_module(name)
     assert Path(mod.__file__).is_relative_to(OUT),mod.__file__

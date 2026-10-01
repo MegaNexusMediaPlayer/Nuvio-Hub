@@ -26,6 +26,14 @@ def aio():
 
 
 class CollectionsTests(unittest.TestCase):
+    def setUp(self):
+        # These tests cover a deliberately imported preset, not first-run defaults.
+        profile=importlib.import_module('resources.lib.collection_profile')
+        patch=mock.patch.object(c,'groups',return_value=profile.defaults())
+        patch.start();self.addCleanup(patch.stop)
+        switches=mock.patch('resources.lib.metadata_providers.entries',return_value=[(aio(),True)])
+        switches.start();self.addCleanup(switches.stop)
+
     def test_artwork_is_bundled_and_promotional_fields_removed(self):
         groups = c.groups()
         self.assertEqual(sum(len(g['folders']) for g in groups),69)

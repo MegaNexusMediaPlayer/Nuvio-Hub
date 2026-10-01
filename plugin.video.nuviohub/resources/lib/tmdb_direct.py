@@ -11,9 +11,9 @@ import urllib.parse
 import xbmc
 import xbmcaddon
 
-from .dexhub.common import profile_path
+from .nuviohub.common import profile_path
 
-# --- dexhub-401-patch ---
+# --- nuviohub-401-patch ---
 try:
     from .settings_cache import cached_addon as _dh_cached_addon
 except Exception:
@@ -89,7 +89,7 @@ def _normalize_media_type(media_type):
 
 
 def _preferred_image_languages():
-    raw = (_setting('preferred_subtitle_langs', 'ar,en') or 'ar,en').strip()
+    raw = (_setting('preferred_subtitle_langs', 'en') or 'en').strip()
     langs = [x.strip().lower().replace('_', '-') for x in raw.split(',') if x.strip()]
     out = []
     # Artwork looks cleaner and clearer in English more often than localized variants.
@@ -285,7 +285,7 @@ def search_multi(query, limit=40):
     query = str(query or '').strip()
     if not query or not _api_key():
         return []
-    language = 'ar-SA' if any('\u0600' <= ch <= '\u06ff' for ch in query) else 'en-US'
+    language = 'ar-SA' if any("\u0600" <= ch <= "\u06ff" for ch in query) else 'en-US'
     cache_key = 'search_multi:%s:%s' % (language, query.casefold())
     cached = _cache_get(cache_key)
     if cached is not None:
@@ -354,15 +354,15 @@ def search_metas(query, limit=40):
 # poster: no id conversion, no per-item lookup, and the existing click path
 # opens them like any other catalog row.
 READY_SETS = (
-    ('trending_movie', 'رائج الآن • أفلام',      '/trending/movie/week',   'movie'),
-    ('trending_tv',    'رائج الآن • مسلسلات',   '/trending/tv/week',      'series'),
-    ('popular_movie',  'الأكثر شعبية • أفلام',   '/movie/popular',         'movie'),
-    ('popular_tv',     'الأكثر شعبية • مسلسلات', '/tv/popular',           'series'),
-    ('top_movie',      'الأعلى تقييماً • أفلام',  '/movie/top_rated',      'movie'),
-    ('top_tv',         'الأعلى تقييماً • مسلسلات', '/tv/top_rated',        'series'),
-    ('now_playing',    'في السينما الآن',        '/movie/now_playing',     'movie'),
-    ('upcoming',       'قريباً',                 '/movie/upcoming',        'movie'),
-    ('airing_today',   'يُعرض اليوم',            '/tv/airing_today',       'series'),
+    ('trending_movie', 'Trending now - Movies',      '/trending/movie/week',   'movie'),
+    ('trending_tv',    'Trending now - Series',   '/trending/tv/week',      'series'),
+    ('popular_movie',  'Most popular - Movies',   '/movie/popular',         'movie'),
+    ('popular_tv',     'Most popular - Series', '/tv/popular',           'series'),
+    ('top_movie',      'Top rated - Movies',  '/movie/top_rated',      'movie'),
+    ('top_tv',         'Top rated - Series', '/tv/top_rated',        'series'),
+    ('now_playing',    'Now playing',        '/movie/now_playing',     'movie'),
+    ('upcoming',       'Coming soon',                 '/movie/upcoming',        'movie'),
+    ('airing_today',   'Airing today',            '/tv/airing_today',       'series'),
 )
 
 
@@ -438,16 +438,7 @@ def imdb_id_for(tmdb_id, media_type='movie', timeout=None):
 
 
 def english_titles_for(tmdb_id, media_type='movie'):
-    """The ENGLISH and ORIGINAL titles of an item — cached.
-
-    v3.9.215 — the reason Plex kept answering "no match".
-
-    Nuvio Hub searched the user's Plex libraries with the title it had, which for
-    an Arabic user is the ARABIC one ("برشامة") — while the library catalogues
-    the film under its English name ("Cheat Sheet"). For episodes it was worse:
-    the title passed was literally "الحلقة 16" (Episode 16), so Plex was asked
-    for a show by that name and, truthfully, found nothing.
-    """
+    "The ENGLISH and ORIGINAL titles of an item — cached.\n\n    v3.9.215 — the reason Plex kept answering \"no match\".\n\n    Nuvio Hub searched the user's Plex libraries with the title it had, which for\n    an Arabic user is the ARABIC one (\"\u0628\u0631\u0634\u0627\u0645\u0629\") — while the library catalogues\n    the film under its English name (\"Cheat Sheet\"). For episodes it was worse:\n    the title passed was literally \"\u0627\u0644\u062d\u0644\u0642\u0629 16\" (Episode 16), so Plex was asked\n    for a show by that name and, truthfully, found nothing.\n    "
     tmdb_id = str(tmdb_id or '').strip()
     mt = _normalize_media_type(media_type)
     if not tmdb_id.isdigit() or not _api_key():

@@ -31,7 +31,7 @@ class TitleModels(unittest.TestCase):
     def test_related_uses_advertised_genre_and_excludes_self_duplicates_other_type(self):
         source={'id':'metadata','manifest':{'catalogs':[{'id':'genre-movies','type':'movie','extra':[{'name':'genre','options':['Drama']}]}]}}
         rows=[{'id':'tt1','name':'Self'},{'id':'tt2','name':'Related','genres':['Drama']},{'id':'tt2','name':'Duplicate'},{'id':'tt3','name':'Wrong type','type':'series'}]
-        client=importlib.import_module('resources.lib.dexhub.client')
+        client=importlib.import_module('resources.lib.nuviohub.client')
         tmdb=importlib.import_module('resources.lib.tmdb_direct')
         with mock.patch.object(backend,'provider',return_value=source),mock.patch.object(tmdb,'_api_key',return_value=''),mock.patch.object(client,'fetch_catalog',return_value={'metas':rows}) as fetch:
             result=models.related({'id':'tt1','type':'movie','genres':['Drama']})
@@ -142,7 +142,7 @@ class PlaybackOwnership(unittest.TestCase):
         finally:home.clearProperty('nuvio.preview.active')
 
     def test_local_record_is_visible_without_any_tracking_account(self):
-        store=importlib.import_module('dexhub.playback_store')
+        store=importlib.import_module('nuviohub.playback_store')
         with tempfile.TemporaryDirectory() as temp,mock.patch.object(store,'DB_PATH',str(Path(temp)/'playback.db')),mock.patch.object(store,'_DB_READY',False),mock.patch.object(companion,'_invalidate_nextup_cache'),mock.patch.object(companion,'_refresh_cw_containers'):
             companion._save_local_progress({'media_type':'movie','canonical_id':'ttshort','video_id':'ttshort','title':'Short start'},4500,7200000)
             rows=store.list_continue_items()

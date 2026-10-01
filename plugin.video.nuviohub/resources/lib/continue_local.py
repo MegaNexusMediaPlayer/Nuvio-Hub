@@ -5,7 +5,7 @@ local resume. Completed entries act as tombstones against older cloud progress.
 """
 import json
 import time
-from dexhub import playback_store as db
+from nuviohub import playback_store as db
 
 _FIELDS = ('media_type', 'canonical_id', 'video_id', 'title', 'show_title',
            'season', 'episode', 'poster', 'background', 'clearlogo',

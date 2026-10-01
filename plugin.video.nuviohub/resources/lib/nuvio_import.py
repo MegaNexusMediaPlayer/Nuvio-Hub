@@ -1,6 +1,6 @@
 """Fetch first, then commit a manual account import after the UI job completes."""
 from . import collection_profile, backend_api
-from .dexhub import nuvio_stremio_sync as sync, store, client
+from .nuviohub import nuvio_stremio_sync as sync, store, client
 
 
 def fetch():

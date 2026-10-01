@@ -22,8 +22,8 @@ import unittest
 import kodi_stub
 
 ROOT = kodi_stub.ADDON_ROOT
-sync = kodi_stub.import_lib_module('dexhub.nuvio_stremio_sync')
-SYNC = io.open(os.path.join(ROOT, 'resources', 'lib', 'dexhub',
+sync = kodi_stub.import_lib_module('nuviohub.nuvio_stremio_sync')
+SYNC = io.open(os.path.join(ROOT, 'resources', 'lib', 'nuviohub',
                             'nuvio_stremio_sync.py'), encoding='utf-8').read()
 
 

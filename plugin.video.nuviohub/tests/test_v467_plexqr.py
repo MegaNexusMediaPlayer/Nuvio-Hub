@@ -38,7 +38,7 @@ QR_SRC = io.open(os.path.join(ROOT, 'resources', 'lib', 'plex_qr.py'), encoding=
 
 class _TempProfile:
     def __enter__(self):
-        self.dir = tempfile.mkdtemp(prefix='dexhub_qr_')
+        self.dir = tempfile.mkdtemp(prefix='nuviohub_qr_')
         self._orig = plex_qr._profile_dir
         plex_qr._profile_dir = lambda: self.dir
         return self.dir

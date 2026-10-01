@@ -1,4 +1,4 @@
-"""Ordered Nuvio collection profiles and one metadata binding for the whole home."""
+"""Ordered Nuvio collection profiles and validated per-catalog metadata bindings."""
 import json
 import os
 from pathlib import Path
@@ -30,8 +30,12 @@ def normalize(data):
             clean=[]
             for s in sources:
                 if not isinstance(s,dict):continue
+                extra=s.get('extra') or {}
+                if not isinstance(extra,dict) or any(not isinstance(k,str) or isinstance(v,(dict,list)) for k,v in extra.items()):
+                    raise ValueError('Collection filters must be an object of text values.')
                 cid=s.get('catalogId') or s.get('catalog_id')
                 if cid:clean.append({'addonId':s.get('addonId') or s.get('addon_id') or '',
+                    'providerId':s.get('providerId') or s.get('provider_id') or '',
                     'catalogId':cid,'type':s.get('type') or s.get('catalogType') or 'movie',
                     'genre':s.get('genre') or '', 'extra':s.get('extra') or {}})
             if not clean:continue
@@ -44,30 +48,41 @@ def normalize(data):
         if folders:groups.append({'id':gid,'title':name,'folders':folders})
     return groups
 
-def save(data):
-    groups=normalize(data)
-    if not groups:raise ValueError('This export has no supported movie or series collections.')
-    path=profile_file();path.parent.mkdir(parents=True,exist_ok=True)
-    from .dexhub.safe_io import write_json
-    write_json(str(path),groups)
+def save(data, validation=None):
+    groups = normalize(data)
+    if not groups:
+        raise ValueError('This export has no supported movie or series collections.')
+    from . import collection_validation as validation_api
+    # All writers, including sync and native settings, obey the same gate.
+    if validation is not None and not validation_api.accepts(groups, validation):
+        raise ValueError('Configuration changed. Validate the collections again before saving.')
+    proof = validation if validation is not None else validation_api.validate(groups)
+    if not proof.get('ok'):
+        raise ValueError(validation_api.message(proof))
+    path = profile_file()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    from .nuviohub.safe_io import write_json
+    write_json(str(path), groups)
+    write_json(str(path.with_suffix('.verified.json')), proof)
     return sum(len(g['folders']) for g in groups)
+
 
 def load():
     path=profile_file()
     if path.exists():
         try:return normalize(json.loads(path.read_text(encoding='utf-8-sig')))
         except (ValueError,OSError):pass
-    return defaults()
+    return []
 
 
 def defaults():
-    # The supplied Nuvio design is fixed until the user explicitly edits/imports it.
+    # Presets are candidates only. They must pass validation before installation.
     root=Path(xbmcaddon.Addon(ADDON_ID).getAddonInfo('path'))
     return normalize(json.loads((root/'resources/collections.json').read_text(encoding='utf-8')))
 
 def mapping_report():
     from .collections_home import matching_catalog
-    from .dexhub import store
+    from .nuviohub import store
     providers=store.list_providers();matched=missing=0
     for group in load():
         for folder in group['folders']:
@@ -77,7 +92,7 @@ def mapping_report():
     return matched,missing
 
 def sync_from_nuvio():
-    from .dexhub import nuvio_stremio_sync as sync
+    from .nuviohub import nuvio_stremio_sync as sync
     if not sync.Nuvio.is_linked():raise ValueError('Sign in to Nuvio in Settings > Account first.')
     # Never upload local presets over somebody's Nuvio profile.
     remote=sync.Nuvio.sync_collections([],direction='pull')

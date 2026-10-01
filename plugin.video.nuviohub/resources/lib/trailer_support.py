@@ -44,7 +44,7 @@ def selected_trailer(row,direct_only=False):
         target = row['target']
         source=backend_api.provider('metadata')
         if not source:return ''
-        from .dexhub.client import get_json,build_resource_url
+        from .nuviohub.client import get_json,build_resource_url
         data=get_json(build_resource_url(source,'meta',target.get('media_type') or 'movie',target['canonical_id']),ttl_seconds=3600,timeout_override=3,retry=False,rate_wait=.1)
         url=trailer_url((data or {}).get('meta') or {},allow_youtube=not direct_only)
     if url.startswith('plugin://plugin.video.youtube/') and not xbmc.getCondVisibility('System.HasAddon(plugin.video.youtube)'):

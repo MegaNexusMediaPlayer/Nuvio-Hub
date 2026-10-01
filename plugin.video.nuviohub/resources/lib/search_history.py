@@ -13,7 +13,7 @@ import threading
 import time
 
 from .log import log
-from .dexhub.common import profile_path
+from .nuviohub.common import profile_path
 
 DB_PATH = os.path.join(profile_path(), 'search_history.db')
 

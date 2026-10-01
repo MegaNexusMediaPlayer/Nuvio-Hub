@@ -2,18 +2,29 @@
 from . import backend_api
 
 def jobs_for(params):
-    source=backend_api.provider('metadata')
-    if not source:raise ValueError('Choose your metadata provider in Settings > Collections.')
+    from .nuviohub import store
+    from .collections_home import matching_catalog
+    providers = store.list_providers()
+    from .metadata_providers import entries
+    switches={p['id']:on for p,on in entries(providers)}
+    providers=[p for p in providers if switches.get(p['id'],True)]
     specs=[]
     if params.get('collection_id'):
         from .collections_home import find_collection
         folder=find_collection(params['collection_id'])
         specs=(folder or {}).get('sources') or []
-    else:specs=[{'catalogId':params.get('catalog_id'),'type':params.get('media_type') or 'movie','extra':{k:params[k] for k in ('genre','search','year') if params.get(k)}}]
+    else:
+        source = next((p for p in providers if p['id'] == params.get('provider_id')), None)
+        if not source:
+            raise ValueError('This catalog provider is not configured.')
+        specs=[{'addonId':(source.get('manifest') or {}).get('id'), 'providerId': source['id'],
+                'catalogId':params.get('catalog_id'),'type':params.get('media_type') or 'movie',
+                'extra':{k:params[k] for k in ('genre','search','year') if params.get(k)}}]
     jobs=[]
     for spec in specs:
-        catalog=next((c for c in (source.get('manifest') or {}).get('catalogs') or [] if c.get('id')==spec.get('catalogId') and c.get('type')==spec.get('type')),None)
-        if catalog:
+        match = matching_catalog(spec, providers)
+        if match:
+            source, catalog = match
             extra=dict(spec.get('extra') or {})
             if spec.get('genre') and spec['genre']!='None':extra['genre']=spec['genre']
             jobs.append({'provider':source,'catalog':catalog,'extra':extra,'offset':0,'done':False})
@@ -21,7 +32,7 @@ def jobs_for(params):
     return jobs
 
 def fetch_page(jobs,stopped=None):
-    from .dexhub.client import fetch_catalog
+    from .nuviohub.client import fetch_catalog
     from .home_data import media_card
     rows=[];states=[]
     for job in jobs:
@@ -30,7 +41,8 @@ def fetch_page(jobs,stopped=None):
         if job['done']:states.append(updated);continue
         c=job['catalog'];extra=dict(job['extra'])
         if job['offset']:extra['skip']=job['offset']
-        data=fetch_catalog(job['provider'],c['type'],c['id'],extra=extra,timeout_override=8,retry=False,rate_wait=.1)
+        from . import browse_cache
+        data=browse_cache.catalog(job['provider'], c, extra, timeout=8)
         raw=(data or {}).get('metas') or []
         rows.extend(media_card(m,job['provider'],c['type']) for m in raw if isinstance(m,dict) and m.get('id'))
         updated['offset']+=len(raw)

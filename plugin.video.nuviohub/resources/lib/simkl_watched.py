@@ -79,11 +79,11 @@ def parse(data,kind):
         for mid in aliases(node.get('ids') or {}):result[key(media,mid)]=entry
     return result
 
-def refresh(force=False):
+def refresh(force=False, max_age=900):
     old=snapshot();account=old.get('account')
     if not account:return old
     start=time.time()
-    if not force and start-float(old.get('updated') or 0)<900:return old
+    if not force and start-float(old.get('updated') or 0)<max_age:return old
     items={}
     for kind in ('movies','shows','anime'):
         data=simkl._request('/sync/all-items/%s/?extended=full'%kind,auth=True,timeout=8)

@@ -30,19 +30,19 @@
             <!-- Base surface (accent-tinted dark) -->
             <control type="image">
                 <left>0</left><top>0</top><width>1920</width><height>1080</height>
-                <texture colordiffuse="$INFO[Window(Home).Property(dexhub.theme.surface)]">special://home/addons/plugin.video.nuviohub/resources/media/black.png</texture>
+                <texture colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.surface)]">special://home/addons/plugin.video.nuviohub/resources/media/black.png</texture>
             </control>
             <!-- Fanart backdrop, slowly drifting (Ken Burns) for depth -->
             <control type="image">
                 <left>-40</left><top>-30</top><width>2000</width><height>1140</height>
                 <aspectratio>scale</aspectratio>
-                <texture>$INFO[Window.Property(dexhub.results.fanart)]</texture>
+                <texture>$INFO[Window.Property(nuviohub.results.fanart)]</texture>
                 <animation effect="fade" start="0" end="100" time="600" tween="sine">WindowOpen</animation>
             </control>
             <!-- Accent glow sheen at the top edge -->
             <control type="image">
                 <left>0</left><top>0</top><width>1920</width><height>360</height>
-                <texture colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent_dim)]">special://home/addons/plugin.video.nuviohub/resources/media/glow_top.png</texture>
+                <texture colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent_dim)]">special://home/addons/plugin.video.nuviohub/resources/media/glow_top.png</texture>
                 <animation effect="fade" start="0" end="100" time="800" delay="200">WindowOpen</animation>
             </control>
             <!-- Vertical scrim: keeps the lower source list readable -->
@@ -70,31 +70,31 @@
             <control type="label">
                 <left>112</left><top>34</top><width>900</width><height>26</height>
                 <font>font12</font>
-                <textcolor>$INFO[Window(Home).Property(dexhub.theme.accent)]</textcolor>
+                <textcolor>$INFO[Window(Home).Property(nuviohub.theme.accent)]</textcolor>
                 <shadowcolor>FF000000</shadowcolor>
                 <label>[B]$INFO[Window.Property(total_results)][/B]  $INFO[Window.Property(results_label)]  $INFO[Window.Property(filter_info)]</label>
             </control>
             <control type="label">
                 <left>112</left><top>58</top><width>900</width><height>20</height>
                 <font>font10</font>
-                <textcolor>$INFO[Window(Home).Property(dexhub.theme.secondary)]</textcolor>
+                <textcolor>$INFO[Window(Home).Property(nuviohub.theme.secondary)]</textcolor>
                 <shadowcolor>FF000000</shadowcolor>
                 <label>$INFO[Window.Property(loading_label)]$INFO[Window.Property(provider_stats),  ·  ,]</label>
             </control>
             <control type="label">
                 <left>112</left><top>80</top><width>900</width><height>20</height>
                 <font>font10</font>
-                <textcolor>$INFO[Window(Home).Property(dexhub.theme.muted)]</textcolor>
+                <textcolor>$INFO[Window(Home).Property(nuviohub.theme.muted)]</textcolor>
                 <shadowcolor>FF000000</shadowcolor>
-                <label>$INFO[Window.Property(dexhub.search.summary)]</label>
+                <label>$INFO[Window.Property(nuviohub.search.summary)]</label>
             </control>
 
             <control type="label">
                 <left>1340</left><top>80</top><width>520</width><height>20</height>
                 <font>font10</font><align>center</align>
-                <textcolor>$INFO[Window(Home).Property(dexhub.theme.secondary)]</textcolor>
+                <textcolor>$INFO[Window(Home).Property(nuviohub.theme.secondary)]</textcolor>
                 <shadowcolor>FF000000</shadowcolor>
-                <label>$INFO[Window.Property(dexhub.subtitle.status)]</label>
+                <label>$INFO[Window.Property(nuviohub.subtitle.status)]</label>
             </control>
 
             <!-- Play-mode pill, top-right -->
@@ -124,12 +124,12 @@
                 </control>
                 <control type="image">
                     <left>-6</left><top>-6</top><width>352</width><height>522</height>
-                    <texture border="26" colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent_dim)]">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture>
+                    <texture border="26" colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent_dim)]">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture>
                 </control>
                 <control type="image" id="200">
                     <left>0</left><top>0</top><width>340</width><height>510</height>
                     <aspectratio aligny="top" align="center">scale</aspectratio>
-                    <texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/poster_mask.png" fallback="special://home/addons/plugin.video.nuviohub/resources/media/default_video.png">$INFO[Window.Property(dexhub.results.poster)]</texture>
+                    <texture background="true" diffuse="special://home/addons/plugin.video.nuviohub/resources/media/poster_mask.png" fallback="special://home/addons/plugin.video.nuviohub/resources/media/default_video.png">$INFO[Window.Property(nuviohub.results.poster)]</texture>
                 </control>
                 <control type="image">
                     <left>0</left><top>384</top><width>340</width><height>126</height>
@@ -165,18 +165,18 @@
                 </control>
                 <control type="image">
                     <left>0</left><top>18</top><width>4</width><height>30</height>
-                    <texture colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture>
+                    <texture colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture>
                 </control>
                 <control type="label">
                     <left>18</left><top>15</top><width>304</width><height>30</height>
-                    <font>font12</font><textcolor>$INFO[Window(Home).Property(dexhub.theme.text)]</textcolor>
+                    <font>font12</font><textcolor>$INFO[Window(Home).Property(nuviohub.theme.text)]</textcolor>
                     <shadowcolor>FF000000</shadowcolor>
                     <label>[B]$INFO[Window.Property(nav_hint_title)][/B]</label>
                 </control>
-                <control type="label"><left>18</left><top>52</top><width>304</width><height>23</height><font>font10</font><textcolor>$INFO[Window(Home).Property(dexhub.theme.muted)]</textcolor><shadowcolor>FF000000</shadowcolor><label>$INFO[Window.Property(nav_hint_updown)]</label></control>
-                <control type="label"><left>18</left><top>78</top><width>304</width><height>23</height><font>font10</font><textcolor>$INFO[Window(Home).Property(dexhub.theme.muted)]</textcolor><shadowcolor>FF000000</shadowcolor><label>$INFO[Window.Property(nav_hint_left)]</label></control>
-                <control type="label"><left>18</left><top>104</top><width>304</width><height>23</height><font>font10</font><textcolor>$INFO[Window(Home).Property(dexhub.theme.muted)]</textcolor><shadowcolor>FF000000</shadowcolor><label>$INFO[Window.Property(nav_hint_right)]</label></control>
-                <control type="label"><left>18</left><top>130</top><width>304</width><height>23</height><font>font10</font><textcolor>$INFO[Window(Home).Property(dexhub.theme.muted)]</textcolor><shadowcolor>FF000000</shadowcolor><label>$INFO[Window.Property(nav_hint_info)]</label></control>
+                <control type="label"><left>18</left><top>52</top><width>304</width><height>23</height><font>font10</font><textcolor>$INFO[Window(Home).Property(nuviohub.theme.muted)]</textcolor><shadowcolor>FF000000</shadowcolor><label>$INFO[Window.Property(nav_hint_updown)]</label></control>
+                <control type="label"><left>18</left><top>78</top><width>304</width><height>23</height><font>font10</font><textcolor>$INFO[Window(Home).Property(nuviohub.theme.muted)]</textcolor><shadowcolor>FF000000</shadowcolor><label>$INFO[Window.Property(nav_hint_left)]</label></control>
+                <control type="label"><left>18</left><top>104</top><width>304</width><height>23</height><font>font10</font><textcolor>$INFO[Window(Home).Property(nuviohub.theme.muted)]</textcolor><shadowcolor>FF000000</shadowcolor><label>$INFO[Window.Property(nav_hint_right)]</label></control>
+                <control type="label"><left>18</left><top>130</top><width>304</width><height>23</height><font>font10</font><textcolor>$INFO[Window(Home).Property(nuviohub.theme.muted)]</textcolor><shadowcolor>FF000000</shadowcolor><label>$INFO[Window.Property(nav_hint_info)]</label></control>
             </control>
 
             <!-- Title block. In fanart mode it slides into the freed poster
@@ -188,8 +188,8 @@
                 <control type="image">
                     <left>0</left><top>0</top><width>540</width><height>112</height>
                     <aspectratio align="left" aligny="center">keep</aspectratio>
-                    <texture background="true">$INFO[Window.Property(dexhub.results.clearlogo)]</texture>
-                    <visible>!String.IsEmpty(Window.Property(dexhub.results.clearlogo))</visible>
+                    <texture background="true">$INFO[Window.Property(nuviohub.results.clearlogo)]</texture>
+                    <visible>!String.IsEmpty(Window.Property(nuviohub.results.clearlogo))</visible>
                 </control>
                 <!-- Title fallback when no clearlogo -->
                 <control type="label">
@@ -200,14 +200,14 @@
                     <align>left</align><aligny>top</aligny>
                     <wrapmultiline>true</wrapmultiline>
                     <label>[B]$INFO[Window.Property(title)][/B]</label>
-                    <visible>String.IsEmpty(Window.Property(dexhub.results.clearlogo))</visible>
+                    <visible>String.IsEmpty(Window.Property(nuviohub.results.clearlogo))</visible>
                 </control>
 
                 <!-- Year · Genre · Rating row -->
                 <control type="label">
                     <left>0</left><top>124</top><width>1020</width><height>22</height>
                     <font>font10</font>
-                    <textcolor>$INFO[Window(Home).Property(dexhub.theme.accent)]</textcolor>
+                    <textcolor>$INFO[Window(Home).Property(nuviohub.theme.accent)]</textcolor>
                     <shadowcolor>FF000000</shadowcolor>
                     <label>[UPPERCASE]$INFO[Window.Property(year)]$INFO[Window.Property(genre),   ·   ,]$INFO[Window.Property(studio),   ·   ,][/UPPERCASE]</label>
                 </control>
@@ -229,65 +229,65 @@
                      positions = no reflow / jitter. -->
                 <control type="group">
                     <left>2</left><top>152</top><width>1400</width><height>48</height>
-                    <visible>!String.IsEmpty(Window(Home).Property(dexhub.rating.any))</visible>
+                    <visible>!String.IsEmpty(Window(Home).Property(nuviohub.rating.any))</visible>
                     <!-- IMDb -->
                     <control type="group">
-                        <visible>!String.IsEmpty(Window(Home).Property(dexhub.rating.imdb))</visible>
+                        <visible>!String.IsEmpty(Window(Home).Property(nuviohub.rating.imdb))</visible>
                         <control type="image"><left>0</left><top>4</top><width>40</width><height>40</height><aspectratio>keep</aspectratio><texture fallback="special://skin/extras/flags/color/ratings/imdb.png">special://home/addons/plugin.video.nuviohub/resources/media/ratings/imdb.png</texture></control>
-                        <control type="label"><left>48</left><top>0</top><width>90</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(dexhub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(dexhub.rating.imdb)][/B]</label></control>
+                        <control type="label"><left>48</left><top>0</top><width>90</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(nuviohub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(nuviohub.rating.imdb)][/B]</label></control>
                     </control>
                     <!-- TMDb -->
                     <control type="group">
                         <left>160</left>
-                        <visible>!String.IsEmpty(Window(Home).Property(dexhub.rating.tmdb))</visible>
+                        <visible>!String.IsEmpty(Window(Home).Property(nuviohub.rating.tmdb))</visible>
                         <control type="image"><left>0</left><top>4</top><width>40</width><height>40</height><aspectratio>keep</aspectratio><texture fallback="special://skin/extras/flags/color/ratings/tmdb.png">special://home/addons/plugin.video.nuviohub/resources/media/ratings/tmdb.png</texture></control>
-                        <control type="label"><left>48</left><top>0</top><width>90</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(dexhub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(dexhub.rating.tmdb)][/B]</label></control>
+                        <control type="label"><left>48</left><top>0</top><width>90</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(nuviohub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(nuviohub.rating.tmdb)][/B]</label></control>
                     </control>
                     <!-- Trakt -->
                     <control type="group">
                         <left>320</left>
-                        <visible>!String.IsEmpty(Window(Home).Property(dexhub.rating.trakt))</visible>
+                        <visible>!String.IsEmpty(Window(Home).Property(nuviohub.rating.trakt))</visible>
                         <control type="image"><left>0</left><top>4</top><width>40</width><height>40</height><aspectratio>keep</aspectratio><texture fallback="special://skin/extras/flags/color/ratings/trakt.png">special://home/addons/plugin.video.nuviohub/resources/media/ratings/trakt.png</texture></control>
-                        <control type="label"><left>48</left><top>0</top><width>90</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(dexhub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(dexhub.rating.trakt)][/B]</label></control>
+                        <control type="label"><left>48</left><top>0</top><width>90</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(nuviohub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(nuviohub.rating.trakt)][/B]</label></control>
                     </control>
                     <!-- RT critics -->
                     <control type="group">
                         <left>480</left>
-                        <visible>!String.IsEmpty(Window(Home).Property(dexhub.rating.rt_crit))</visible>
+                        <visible>!String.IsEmpty(Window(Home).Property(nuviohub.rating.rt_crit))</visible>
                         <control type="image"><left>0</left><top>4</top><width>40</width><height>40</height><aspectratio>keep</aspectratio><texture fallback="special://skin/extras/flags/color/ratings/rottentomatoes.png">special://home/addons/plugin.video.nuviohub/resources/media/ratings/rt_critics.png</texture></control>
-                        <control type="label"><left>48</left><top>0</top><width>100</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(dexhub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(dexhub.rating.rt_crit)]%[/B]</label></control>
+                        <control type="label"><left>48</left><top>0</top><width>100</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(nuviohub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(nuviohub.rating.rt_crit)]%[/B]</label></control>
                     </control>
                     <!-- RT audience -->
                     <control type="group">
                         <left>650</left>
-                        <visible>!String.IsEmpty(Window(Home).Property(dexhub.rating.rt_aud))</visible>
+                        <visible>!String.IsEmpty(Window(Home).Property(nuviohub.rating.rt_aud))</visible>
                         <control type="image"><left>0</left><top>4</top><width>40</width><height>40</height><aspectratio>keep</aspectratio><texture fallback="special://skin/extras/flags/color/ratings/rottentomatoes_user.png">special://home/addons/plugin.video.nuviohub/resources/media/ratings/rt_audience.png</texture></control>
-                        <control type="label"><left>48</left><top>0</top><width>100</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(dexhub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(dexhub.rating.rt_aud)]%[/B]</label></control>
+                        <control type="label"><left>48</left><top>0</top><width>100</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(nuviohub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(nuviohub.rating.rt_aud)]%[/B]</label></control>
                     </control>
                     <!-- Metacritic (v4.2.0) -->
                     <control type="group">
                         <left>810</left>
-                        <visible>!String.IsEmpty(Window(Home).Property(dexhub.rating.metacritic))</visible>
+                        <visible>!String.IsEmpty(Window(Home).Property(nuviohub.rating.metacritic))</visible>
                         <control type="image"><left>0</left><top>4</top><width>40</width><height>40</height><aspectratio>keep</aspectratio><texture fallback="special://skin/extras/flags/color/ratings/metacritic.png">special://home/addons/plugin.video.nuviohub/resources/media/ratings/metacritic.png</texture></control>
-                        <control type="label"><left>48</left><top>0</top><width>90</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(dexhub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(dexhub.rating.metacritic)][/B]</label></control>
+                        <control type="label"><left>48</left><top>0</top><width>90</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(nuviohub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(nuviohub.rating.metacritic)][/B]</label></control>
                     </control>
                     <control type="group">
                         <left>970</left>
-                        <visible>!String.IsEmpty(Window(Home).Property(dexhub.rating.letterboxd))</visible>
+                        <visible>!String.IsEmpty(Window(Home).Property(nuviohub.rating.letterboxd))</visible>
                         <control type="image"><left>0</left><top>4</top><width>40</width><height>40</height><aspectratio>keep</aspectratio><texture>special://home/addons/plugin.video.nuviohub/resources/media/ratings/letterboxd.png</texture></control>
-                        <control type="label"><left>48</left><top>0</top><width>90</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(dexhub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(dexhub.rating.letterboxd)][/B]</label></control>
+                        <control type="label"><left>48</left><top>0</top><width>90</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(nuviohub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(nuviohub.rating.letterboxd)][/B]</label></control>
                     </control>
                     <control type="group">
                         <left>1130</left>
-                        <visible>!String.IsEmpty(Window(Home).Property(dexhub.rating.mdblist))</visible>
+                        <visible>!String.IsEmpty(Window(Home).Property(nuviohub.rating.mdblist))</visible>
                         <control type="image"><left>0</left><top>4</top><width>40</width><height>40</height><aspectratio>keep</aspectratio><texture>special://home/addons/plugin.video.nuviohub/resources/media/ratings/mdblist.png</texture></control>
-                        <control type="label"><left>48</left><top>0</top><width>90</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(dexhub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(dexhub.rating.mdblist)][/B]</label></control>
+                        <control type="label"><left>48</left><top>0</top><width>90</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(nuviohub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(nuviohub.rating.mdblist)][/B]</label></control>
                     </control>
                     <control type="group">
                         <left>1290</left>
-                        <visible>!String.IsEmpty(Window(Home).Property(dexhub.rating.mal))</visible>
+                        <visible>!String.IsEmpty(Window(Home).Property(nuviohub.rating.mal))</visible>
                         <control type="image"><left>0</left><top>4</top><width>40</width><height>40</height><aspectratio>keep</aspectratio><texture>special://home/addons/plugin.video.nuviohub/resources/media/ratings/mal.png</texture></control>
-                        <control type="label"><left>48</left><top>0</top><width>90</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(dexhub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(dexhub.rating.mal)][/B]</label></control>
+                        <control type="label"><left>48</left><top>0</top><width>90</width><height>48</height><font>font14</font><aligny>center</aligny><textcolor>$INFO[Window(Home).Property(nuviohub.theme.text)]</textcolor><shadowcolor>FF000000</shadowcolor><label>[B]$INFO[Window(Home).Property(nuviohub.rating.mal)][/B]</label></control>
                     </control>
                 </control>
             </control>
@@ -325,7 +325,7 @@
                 <orientation>Horizontal</orientation>
                 <itemlayout height="46" width="240">
                     <control type="image"><left>0</left><top>0</top><width>228</width><height>42</height><texture border="19" colordiffuse="DE141A26">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture></control>
-                    <control type="image"><left>0</left><top>0</top><width>228</width><height>42</height><texture border="19" colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent_dim)]">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture><visible>String.IsEqual(ListItem.Property(active),1)</visible></control>
+                    <control type="image"><left>0</left><top>0</top><width>228</width><height>42</height><texture border="19" colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent_dim)]">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture><visible>String.IsEqual(ListItem.Property(active),1)</visible></control>
                     <control type="image"><left>16</left><top>14</top><width>14</width><height>14</height><texture colordiffuse="FF22D3EE">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture><visible>String.IsEqual(ListItem.Property(coloridx),1)</visible></control>
                     <control type="image"><left>16</left><top>14</top><width>14</width><height>14</height><texture colordiffuse="FFF59E0B">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture><visible>String.IsEqual(ListItem.Property(coloridx),2)</visible></control>
                     <control type="image"><left>16</left><top>14</top><width>14</width><height>14</height><texture colordiffuse="FFA78BFA">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture><visible>String.IsEqual(ListItem.Property(coloridx),3)</visible></control>
@@ -335,10 +335,10 @@
                     <control type="image"><left>16</left><top>14</top><width>14</width><height>14</height><texture colordiffuse="FFFB923C">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture><visible>String.IsEqual(ListItem.Property(coloridx),7)</visible></control>
                     <control type="image"><left>16</left><top>14</top><width>14</width><height>14</height><texture colordiffuse="FFA3E635">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture><visible>String.IsEqual(ListItem.Property(coloridx),8)</visible></control>
                     <control type="label"><left>38</left><top>0</top><width>180</width><height>42</height><font>font10</font><aligny>center</aligny><textcolor>FFDDE3EC</textcolor><shadowcolor>CC000000</shadowcolor><label>[B]$INFO[ListItem.Property(label)][/B]</label></control>
-                    <control type="image"><left>14</left><top>36</top><width>200</width><height>3</height><texture colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture><visible>String.IsEqual(ListItem.Property(active),1)</visible></control>
+                    <control type="image"><left>14</left><top>36</top><width>200</width><height>3</height><texture colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture><visible>String.IsEqual(ListItem.Property(active),1)</visible></control>
                 </itemlayout>
                 <focusedlayout height="46" width="240">
-                    <control type="image"><left>0</left><top>0</top><width>228</width><height>42</height><texture border="19" colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture></control>
+                    <control type="image"><left>0</left><top>0</top><width>228</width><height>42</height><texture border="19" colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture></control>
                     <control type="image"><left>16</left><top>14</top><width>14</width><height>14</height><texture colordiffuse="FF22D3EE">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture><visible>String.IsEqual(ListItem.Property(coloridx),1)</visible></control>
                     <control type="image"><left>16</left><top>14</top><width>14</width><height>14</height><texture colordiffuse="FFF59E0B">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture><visible>String.IsEqual(ListItem.Property(coloridx),2)</visible></control>
                     <control type="image"><left>16</left><top>14</top><width>14</width><height>14</height><texture colordiffuse="FFA78BFA">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture><visible>String.IsEqual(ListItem.Property(coloridx),3)</visible></control>
@@ -405,7 +405,7 @@
                             <control type="image"><left>0</left><top>0</top><width>214</width><height>26</height><texture border="12" colordiffuse="F01C232F">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture></control>
                             <control type="label"><left>8</left><top>1</top><width>198</width><height>24</height><font>font10</font><textcolor>FFE7EBF2</textcolor><align>center</align><label>$INFO[ListItem.Property(size_label)]</label></control>
                         </control>
-                        <control type="label"><left>0</left><top>30</top><width>1240</width><height>18</height><font>font10</font><textcolor>$INFO[Window(Home).Property(dexhub.theme.secondary)]</textcolor><shadowcolor>FF000000</shadowcolor><label>$INFO[ListItem.Property(origin_line)]</label></control>
+                        <control type="label"><left>0</left><top>30</top><width>1240</width><height>18</height><font>font10</font><textcolor>$INFO[Window(Home).Property(nuviohub.theme.secondary)]</textcolor><shadowcolor>FF000000</shadowcolor><label>$INFO[ListItem.Property(origin_line)]</label></control>
                         <control type="label"><left>0</left><top>50</top><width>1240</width><height>18</height><font>font10</font><textcolor>FF98A1B0</textcolor><shadowcolor>FF000000</shadowcolor><label>$INFO[ListItem.Property(video_bits)]$INFO[ListItem.Property(audio_bits),  ·  ,]</label></control>
                         <control type="group">
                             <left>0</left><top>66</top><width>1240</width><height>44</height>
@@ -435,11 +435,11 @@
                          list layouts, and the old highlight band rendered as
                          raw white — erasing the quality and provider text. -->
                     <control type="image"><left>0</left><top>5</top><width>1440</width><height>112</height><texture colordiffuse="F2151B29" border="20">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture></control>
-                    <control type="image"><left>0</left><top>5</top><width>1440</width><height>112</height><texture colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent_dim)]" border="20">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture></control>
-                    <control type="image"><left>0</left><top>5</top><width>1440</width><height>3</height><texture colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture></control>
-                    <control type="image"><left>0</left><top>114</top><width>1440</width><height>3</height><texture colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture></control>
-                    <control type="image"><left>0</left><top>5</top><width>3</width><height>112</height><texture colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture></control>
-                    <control type="image"><left>1437</left><top>5</top><width>3</width><height>112</height><texture colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture></control>
+                    <control type="image"><left>0</left><top>5</top><width>1440</width><height>112</height><texture colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent_dim)]" border="20">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture></control>
+                    <control type="image"><left>0</left><top>5</top><width>1440</width><height>3</height><texture colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture></control>
+                    <control type="image"><left>0</left><top>114</top><width>1440</width><height>3</height><texture colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture></control>
+                    <control type="image"><left>0</left><top>5</top><width>3</width><height>112</height><texture colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture></control>
+                    <control type="image"><left>1437</left><top>5</top><width>3</width><height>112</height><texture colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture></control>
                     <control type="group">
                         <left>0</left><top>5</top><width>192</width><height>112</height>
                         <control type="image"><left>0</left><top>10</top><width>6</width><height>92</height><texture colordiffuse="FF22D3EE">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture><visible>String.IsEqual(ListItem.Property(pcolor),1)</visible></control>
@@ -479,7 +479,7 @@
                             <control type="image"><left>0</left><top>0</top><width>214</width><height>26</height><texture border="12" colordiffuse="F01C232F">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture></control>
                             <control type="label"><left>8</left><top>1</top><width>198</width><height>24</height><font>font10</font><textcolor>FFE7EBF2</textcolor><align>center</align><label>$INFO[ListItem.Property(size_label)]</label></control>
                         </control>
-                        <control type="label"><left>0</left><top>30</top><width>1240</width><height>18</height><font>font10</font><textcolor>$INFO[Window(Home).Property(dexhub.theme.secondary)]</textcolor><shadowcolor>FF000000</shadowcolor><label>$INFO[ListItem.Property(origin_line)]</label></control>
+                        <control type="label"><left>0</left><top>30</top><width>1240</width><height>18</height><font>font10</font><textcolor>$INFO[Window(Home).Property(nuviohub.theme.secondary)]</textcolor><shadowcolor>FF000000</shadowcolor><label>$INFO[ListItem.Property(origin_line)]</label></control>
                         <control type="label"><left>0</left><top>50</top><width>1240</width><height>18</height><font>font10</font><textcolor>FF98A1B0</textcolor><shadowcolor>FF000000</shadowcolor><label>$INFO[ListItem.Property(video_bits)]$INFO[ListItem.Property(audio_bits),  ·  ,]</label></control>
                         <control type="group">
                             <left>0</left><top>66</top><width>1240</width><height>44</height>
@@ -518,11 +518,11 @@
                 </control>
                 <control type="image">
                     <left>366</left><top>110</top><width>2</width><height>900</height>
-                    <texture colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent_dim)]">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture>
+                    <texture colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent_dim)]">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture>
                 </control>
                 <control type="image">
                     <left>28</left><top>136</top><width>8</width><height>34</height>
-                    <texture colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture>
+                    <texture colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent)]">special://home/addons/plugin.video.nuviohub/resources/media/white.png</texture>
                 </control>
                 <control type="label">
                     <left>48</left><top>134</top><width>290</width><height>38</height>
@@ -553,7 +553,7 @@
                     <focusedlayout height="64" width="320">
                         <control type="image">
                             <width>320</width><height>50</height><top>7</top>
-                            <texture colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent)]" border="22">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture>
+                            <texture colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent)]" border="22">special://home/addons/plugin.video.nuviohub/resources/media/circle.png</texture>
                         </control>
                         <control type="label">
                             <left>20</left><top>20</top><width max="280">auto</width><height>22</height>

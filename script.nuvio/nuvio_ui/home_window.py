@@ -107,7 +107,7 @@ class HomeWindow(Dialog):
         if not 0 <= index < len(self._shelves): return None
         pos = self.getControl(control_id).getSelectedPosition()
         rows = self._shelves[index]['rows']
-        if not 0 <= pos < len(rows) or not rows[pos].get('target'): return None
+        if not 0 <= pos < len(rows) or not rows[pos].get('target') or rows[pos].get('person'): return None
         return (self._generation, index, pos), dict(rows[pos])
 
     @staticmethod
@@ -141,16 +141,14 @@ class HomeWindow(Dialog):
                 self.getControl(6500 + i).setHeight(256 if landscape else 372)
                 self.getControl(ROW_BASE + i).setHeight(214 if landscape else 330)
                 self.getControl(ROW_BASE+i).controlUp(self.getControl(ROW_BASE+i-1 if i else 101))
-                self.getControl(ROW_BASE+i).controlDown(self.getControl(ROW_BASE+i+1 if i+1<len(shelves) else 101))
+                self.getControl(ROW_BASE+i).controlDown(self.getControl(ROW_BASE+i+1 if i+1<len(shelves) else ROW_BASE+i))
                 self.setProperty('nuvio.row.%d.title' % i, shelves[i]['title'])
                 self._set_rows(i, shelves[i]['rows'])
-                if shelves[i].get('continue_job'):self.getControl(ROW_BASE+i).selectItem(0)
         try:
             saved = self._focus_memory.get(self._bucket or 'home') or [0, 0]
             saved = [int(saved[0]), int(saved[1])]
         except (ValueError, TypeError, IndexError, KeyError):saved=[0,0]
         row = max(0, min(int(saved[0]), len(shelves) - 1))
-        if shelves[row].get('continue_job'):saved[1]=0
         self.setProperty('nuvio.hero_row', str(row))
         self.setProperty('nuvio.tab', self._bucket or 'home')
         self.setFocusId(ROW_BASE+row)
@@ -171,7 +169,7 @@ class HomeWindow(Dialog):
         for i in indices:
             if i>=len(self._shelves) or i in self._scheduled:continue
             shelf=self._shelves[i]
-            if shelf.get('continue_job') or ((shelf.get('job') or shelf.get('collection_job')) and not shelf.get('_loaded')):
+            if shelf.get('continue_job') or ((shelf.get('job') or shelf.get('collection_job') or shelf.get('people_job')) and not shelf.get('_loaded')):
                 self._scheduled.add(i)
                 shelf['progress_revision']=self._progress_revision
                 self._futures.append(self._pool.submit(self._load, i, dict(shelf), self._generation))
@@ -225,7 +223,6 @@ class HomeWindow(Dialog):
                 if not self._bucket and self._shelves and self._shelves[0].get('continue_job'):
                     shelf=home_data.continue_shelf();shelf['progress_revision']=revision
                     self._shelves[0]=shelf;self._set_rows(0,shelf['rows'])
-                    self.getControl(ROW_BASE).selectItem(0)
                     xbmcgui.Window(10000).setProperty('nuvio.home.progress_seen',revision)
                     if self._pool:self._futures.append(self._pool.submit(self._load,0,dict(shelf),self._generation))
         if self._previews:
@@ -257,6 +254,9 @@ class HomeWindow(Dialog):
             position = control.getSelectedPosition()
         except Exception:
             position = 0
+        try:old_identity=control.getSelectedItem().getProperty('nuvio.identity')
+        except Exception:old_identity=''
+        identities=[]
         items = []
         watched_data=simkl_watched.snapshot()
         for row in rows:
@@ -271,6 +271,8 @@ class HomeWindow(Dialog):
             li.setProperty('animation', row.get('animation') or '')
             li.setProperty('hide_title', row.get('hide_title') or '')
             target=row.get('target') or {}
+            identity=json.dumps([target.get('media_type'),target.get('canonical_id'),target.get('video_id'),row.get('collection_id'),None if target.get('canonical_id') or row.get('collection_id') else row.get('path')],ensure_ascii=False)
+            li.setProperty('nuvio.identity',identity);identities.append(identity)
             li.setProperty('watched','1' if simkl_watched.state(watched_data,target.get('media_type'),target.get('canonical_id')).get('watched') else '')
             try:
                 percent = min(100, max(0, int(float(row.get('percent_value') or 0))))
@@ -282,13 +284,14 @@ class HomeWindow(Dialog):
         control.reset()
         control.addItems(items)
         if items:
+            if old_identity and old_identity in identities:position=identities.index(old_identity)
             control.selectItem(min(max(0, position), len(items) - 1))
 
     def _touch(self):
         now = time.monotonic()
         if now - self._last_touch > 2:
             self._last_touch = now
-            xbmcgui.Window(10000).setProperty('dexhub.interactive_busy', str(time.time()))
+            xbmcgui.Window(10000).setProperty('nuviohub.interactive_busy', str(time.time()))
 
     def onFocus(self, control_id):
         self._touch()
@@ -302,21 +305,21 @@ class HomeWindow(Dialog):
             if ROW_BASE <= cid < ROW_BASE+len(self._shelves):
                 rows=self._shelves[cid-ROW_BASE]['rows'];pos=self.getControl(cid).getSelectedPosition()
                 if 0<=pos<len(rows) and rows[pos].get('target'):
-                    from .details import context_menu
+                    from .details import context_menu,open_person
                     self._suspended=True
                     if self._previews:self._previews.pause()
-                    try:outcome=self.child(context_menu,rows[pos]['target'],info=action.getId()==11,row=rows[pos])
+                    try:outcome=self.child(open_person,rows[pos]['person']) if rows[pos].get('person') else self.child(context_menu,rows[pos]['target'],info=action.getId()==11,row=rows[pos])
                     finally:self._suspended=False;self._watched_badges()
                     if outcome=='playing' or isinstance(outcome,dict):
                         self._pending=outcome;self._finish()
             return
         if action.getId() in BACK:
-            if self._bucket and self.getFocusId() not in (101,105,107):
+            if self._bucket:
                 if self._previews:self._previews.pause()
                 self._bucket = ''
                 self._paint(home_data.initial_shelves())
             else:
-                self._finish()
+                self.setFocusId(101)
 
     def onClick(self, control_id):
         self._touch()
@@ -328,13 +331,18 @@ class HomeWindow(Dialog):
         if self._previews:self._previews.pause()
         if control_id == 105:
             self._suspended=True
-            try: query=xbmcgui.Dialog().input('Search movies and series').strip()
+            try: query=xbmcgui.Dialog().input('Search movies, series, actors & more').strip()
             finally:
                 self._suspended=False
                 self._watched_badges()
             if query:
+                self._search_query=query
                 self._bucket='search'
                 self._paint(home_data.search_shelves(query))
+            return
+        elif control_id == 108:
+            self._pending='hub'
+            self._finish()
             return
         elif control_id == 107:
             self._settings()
@@ -360,11 +368,11 @@ class HomeWindow(Dialog):
             self._bucket='group:'+row['group_id']
             self._paint(home_data.initial_shelves(self._bucket));return
         if row.get('target'):
-            from .details import open_context
+            from .details import open_context,open_person
             self._suspended=True
             if self._previews: self._previews.pause()
             try:
-                outcome=self.child(open_context,row['target'],row=row)
+                outcome=self.child(open_person,row['person']) if row.get('person') else self.child(open_context,row['target'],row=row)
                 command=outcome if outcome=='playing' or isinstance(outcome,dict) else ''
             finally:
                 self._suspended=False
@@ -396,18 +404,25 @@ class HomeWindow(Dialog):
         previous_xml=home_xml()
         self._suspended=True
         if self._previews:self._previews.pause()
-        try:command=self.child(run,back_command='ActivateWindow(Home)')
+        try:command=self.child(run)
         finally:
             self._suspended=False
             from .browse_meta import clear
             clear()
             self._shelf_memory.clear()
         if command:self._pending=command;self._finish();return
-        self._bucket=''
+        from .setup_gate import ready
+        if not ready():self._pending='reload';self._finish();return
         if home_xml()!=previous_xml:
             self._pending='reload';self._finish();return
         self.setProperty('nuvio.home.error','')
-        self._paint(home_data.initial_shelves())
+        if self._bucket.startswith('collection:'):
+            from resources.lib.collections_home import collection_shelves
+            shelves=collection_shelves(self._bucket.split(':',1)[1])
+        elif self._bucket=='search':
+            shelves=home_data.search_shelves(getattr(self,'_search_query',''))
+        else:shelves=home_data.initial_shelves(self._bucket)
+        self._paint(shelves)
 
     def _finish(self):
         if self._previews:
@@ -421,23 +436,31 @@ class HomeWindow(Dialog):
 
 
 def open_home():
+    from .setup_gate import ensure_ready
+    if not ensure_ready():return
+    from .startup import prepare
+    prepare()
+    xbmcgui.Window(10000).setProperty('nuvio.progress.pull_requested', str(time.time()))
     monitor=xbmc.Monitor()
-    bucket=''
+    bucket='';search_query=''
     while not monitor.abortRequested():
         if bucket.startswith('collection:'):
             from resources.lib.collections_home import collection_shelves
             shelves=collection_shelves(bucket.split(':',1)[1])
+        elif bucket=='search':shelves=home_data.search_shelves(search_query)
         else:shelves=home_data.initial_shelves(bucket)
         window=HomeWindow(home_xml(),ADDON.getAddonInfo('path'),'Default','1080i',shelves=shelves,bucket=bucket)
+        window._search_query=search_query
         try:
             window.show_ready()
             while not window._closed and not monitor.abortRequested():
                 window.drain_updates()
                 monitor.waitForAbort(.1)
-            pending=window._pending;bucket=window._bucket
+            pending=window._pending;bucket=window._bucket;search_query=getattr(window,'_search_query','')
         finally:
             window._finish()
             if window._previews:window._previews.finish()
+        if pending=='hub':return
         if pending=='reload':continue
         if isinstance(pending,dict) and 'trailer' in pending:
             from .trailers import play_trailer

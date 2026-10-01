@@ -26,10 +26,16 @@ elif home.getProperty('nuvio.frontend.running'):
 else:
     token=uuid.uuid4().hex
     home.setProperty('nuvio.frontend.running', token)
+    session=None
     try:
         from resources.lib import settings_cache
         from nuvio_ui.system_setup import execute_command
         settings_cache.invalidate()
+        from resources.lib.presentation_settings import sync as sync_appearance
+        sync_appearance()
+        if mode not in ('settings','skinsettings'):
+            from nuvio_ui.session import open_session
+            session=open_session()
         try:
             from resources.lib.seek_profile import apply
             apply()
@@ -73,6 +79,7 @@ else:
         xbmc.log('[Nuvio] Interface failed. See component installation and provider configuration.', xbmc.LOGERROR)
         xbmcgui.Dialog().ok('Nuvio', 'Could not open the interface. Open Nuvio Hub settings to repair the bundled components or check your provider configuration.')
     finally:
+        if session:session.close()
         finish_jobs()
         if home.getProperty('nuvio.frontend.running')==token:
             home.clearProperty('nuvio.frontend.running')

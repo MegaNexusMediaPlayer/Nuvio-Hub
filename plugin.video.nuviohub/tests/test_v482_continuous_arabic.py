@@ -26,7 +26,7 @@ pl = kodi_stub.import_lib_module('plugin')
 
 SERVICE = io.open(os.path.join(ROOT, 'service.py'), encoding='utf-8').read()
 FAV = io.open(os.path.join(ROOT, 'resources', 'lib', 'favorites_store.py'), encoding='utf-8').read()
-PB = io.open(os.path.join(ROOT, 'resources', 'lib', 'dexhub', 'playback_store.py'), encoding='utf-8').read()
+PB = io.open(os.path.join(ROOT, 'resources', 'lib', 'nuviohub', 'playback_store.py'), encoding='utf-8').read()
 
 score = staticmethod(pl._search_match_score)
 
@@ -105,7 +105,7 @@ class TestContinuousSync(unittest.TestCase):
         self.assertEqual(FAV.count('_mark_sync_dirty()'), 3)       # def + add + remove
         # a row pulled FROM nuvio must not bounce straight back
         self.assertIn("if (source or 'local') != 'nuvio':", FAV)
-        self.assertIn("setProperty('dexhub.sync_dirty', '1')", PB)
+        self.assertIn("setProperty('nuviohub.sync_dirty', '1')", PB)
 
     def test_setting_declared_and_translated(self):
         import xml.etree.ElementTree as ET

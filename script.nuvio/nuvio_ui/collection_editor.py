@@ -17,19 +17,47 @@ def _image(title):
 
 
 def _catalogs(folder):
-    provider=backend_api.provider('metadata')
-    if not provider:raise ValueError('Choose metadata for all collections first.')
-    manifest=provider.get('manifest') or {}
-    catalogs=[c for c in manifest.get('catalogs') or [] if c.get('type') in ('movie','series') and c.get('id')]
-    if not catalogs:raise ValueError('The metadata provider has no movie or series catalogs.')
-    old={(s['catalogId'],s['type']):s for s in folder['sources']}
-    selected=xbmcgui.Dialog().multiselect('Catalogs for '+folder['title'],
-        [(c.get('name') or c['id'])+' ('+c['type']+')' for c in catalogs],
-        preselect=[i for i,c in enumerate(catalogs) if (c['id'],c['type']) in old])
-    if selected is None:return False
-    if not selected:raise ValueError('Choose at least one catalog. Use Hide to remove the card from Home.')
-    folder['sources']=[dict(old.get((catalogs[i]['id'],catalogs[i]['type']),{}),
-        addonId=manifest.get('id',''),catalogId=catalogs[i]['id'],type=catalogs[i]['type']) for i in selected]
+    from resources.lib import metadata_providers
+    from resources.lib.nuviohub import store
+    switches = {p['id']: on for p, on in metadata_providers.entries()}
+    options = [(p, c) for p in store.list_providers()
+               if switches.get(p['id'], True)
+               for c in (p.get('manifest') or {}).get('catalogs') or []
+               if c.get('id') and c.get('type') in ('movie', 'series')]
+    if not options:
+        raise ValueError('Add a manifest with movie or series catalogs first.')
+    old = {(s.get('addonId'), s.get('providerId'), s['catalogId'], s['type']): s
+           for s in folder.get('sources') or []}
+    def identity(p, c):
+        return ((p.get('manifest') or {}).get('id'), p['id'], c['id'], c['type'])
+    selected = xbmcgui.Dialog().multiselect('Catalogs for ' + folder['title'],
+        ['%s · %s (%s)' % (p.get('name') or p['id'], c.get('name') or c['id'], c['type']) for p, c in options],
+        preselect=[i for i, (p, c) in enumerate(options) if identity(p, c) in old])
+    if selected is None:
+        return False
+    if not selected:
+        raise ValueError('Choose at least one catalog. Use Hide to remove a card from Home.')
+    folder['sources'] = [dict(old.get(identity(*options[i]), {}),
+        addonId=(options[i][0].get('manifest') or {}).get('id', ''), providerId=options[i][0]['id'],
+        catalogId=options[i][1]['id'], type=options[i][1]['type']) for i in selected]
+    for source, index in zip(folder['sources'], selected):
+        catalog = options[index][1]
+        specs = {item['name']: item for item in catalog.get('extra') or [] if isinstance(item, dict) and item.get('name')}
+        required = set(catalog.get('extraRequired') or []) | {name for name, spec in specs.items() if spec.get('isRequired')}
+        extra = dict(source.get('extra') or {})
+        if source.get('genre') and source['genre'] != 'None':extra['genre'] = source['genre']
+        for name in sorted(required):
+            if extra.get(name) not in (None, ''):continue
+            values = specs.get(name, {}).get('options') or []
+            if values:
+                pick = xbmcgui.Dialog().select(source['catalogId'] + ' · ' + name, [str(v) for v in values])
+                if pick < 0:return False
+                extra[name] = str(values[pick])
+            else:
+                value = xbmcgui.Dialog().input(source['catalogId'] + ' · required ' + name).strip()
+                if not value:return False
+                extra[name] = value
+        source['extra'] = extra
     return True
 
 
@@ -57,6 +85,9 @@ def edit_card(groups,group,folder):
         page.item('Show card title',enabled=not folder.get('hideTitle')),page.item('Back')]
     def choose(choice):
         if choice==10:return page.DONE
+        from copy import deepcopy
+        original_folder = deepcopy(folder)
+        original_order = list(group['folders'])
         changed=True
         if choice==0:
             value=dialog.input('Collection title',defaultt=folder['title']).strip()
@@ -87,36 +118,81 @@ def edit_card(groups,group,folder):
                 extra=dict(source.get('extra') or {});extra.pop('genre',None);source['extra']=extra
             else:changed=False
         elif choice==9:folder['hideTitle']=not folder.get('hideTitle')
-        if changed:collection_profile.save(groups)
+        if changed:
+            from .settings import commit_collections
+            if not commit_collections(groups):
+                folder.clear();folder.update(original_folder)
+                group['folders'][:]=original_order
     return page.show(lambda:folder['title'],rows,choose)
+
+
+def import_json():
+    from .settings import commit_collections
+    path = xbmcgui.Dialog().browseSingle(1, 'Nuvio collections export', 'files', '.json')
+    if not path:
+        return False
+    stream = xbmcvfs.File(path)
+    try:
+        data = json.loads(stream.read())
+    finally:
+        stream.close()
+    return commit_collections(data)
+
+
+def create_collection():
+    from .settings import commit_collections
+    import uuid
+    title = xbmcgui.Dialog().input('Collection name').strip()
+    if not title:
+        return False
+    groups = collection_profile.load()
+    folder = {'id': 'custom.' + uuid.uuid4().hex, 'title': title, 'sources': []}
+    if not _catalogs(folder):
+        return False
+    custom = next((g for g in groups if g['id'] == 'custom'), None)
+    if custom is None:
+        custom = {'id': 'custom', 'title': 'My collections', 'folders': []}
+        groups.append(custom)
+    custom['folders'].append(folder)
+    return commit_collections(groups)
 
 
 def run():
     from . import settings
-    dialog=xbmcgui.Dialog()
-    previous=0
+    dialog = xbmcgui.Dialog()
+    previous = 0
     while True:
-        meta=backend_api.provider('metadata')
-        name=(meta.get('name') or meta.get('id')) if meta else 'Not connected'
-        choice=dialog.select('Skin configuration - Collections',[
-            'Metadata for ALL collections: '+name,'Edit each collection card',
-            'Optional: import layout from Nuvio account','Optional: import collections JSON',
-            'Restore original Nuvio Home layout','Check catalog mapping','Back'],preselect=previous)
-        if choice<0 or choice==6:return
-        previous=choice
-        if choice==0:settings.select_provider('metadata')
-        elif choice==1:edit_items()
-        elif choice==2:settings.import_nuvio_collections()
-        elif choice==3:
-            path=dialog.browseSingle(1,'Nuvio collections export','files','.json')
-            if path and dialog.yesno('Import collection layout','Replace the Home layout with this collection file? Sports and World stay excluded.'):
-                stream=xbmcvfs.File(path)
-                try:count=collection_profile.save(json.loads(stream.read()))
-                finally:stream.close()
-                dialog.ok('Collections','%d collections saved.'%count)
-        elif choice==4:
-            if dialog.yesno('Original Home layout','Restore the supplied collection titles, images and order? Metadata provider selection is kept.'):
-                collection_profile.save(collection_profile.defaults())
-        elif choice==5:
-            matched,missing=collection_profile.mapping_report()
-            dialog.ok('Catalog mapping','%d catalog sources matched; %d missing. Choose the metadata provider and edit unmatched cards.'%(matched,missing))
+        choice = dialog.select('Collections · verified metadata required', [
+            'Metadata add-ons', 'Edit each collection card',
+            'Import collections from Nuvio account', 'Import collections JSON (no account needed)',
+            'Check and use internal presets', 'Recheck current collections',
+            'Create a collection from installed catalogs', 'Back'], preselect=previous)
+        if choice < 0 or choice == 7:
+            return
+        previous = choice
+        try:
+            if choice == 0:
+                settings.metadata_addons()
+            elif choice == 1:
+                edit_items()
+            elif choice == 2:
+                settings.import_nuvio_collections()
+            elif choice == 3:
+                import_json()
+            elif choice == 4:
+                settings.commit_collections(collection_profile.defaults())
+            elif choice == 5:
+                from resources.lib import collection_validation
+                from .playback import job
+                groups = collection_profile.load()
+                proof = job(lambda: collection_validation.validate(groups), label='Rechecking collections')
+                if proof is not None:
+                    if proof.get('ok'):
+                        collection_profile.save(groups, validation=proof)
+                        dialog.ok('Collection checks', '%d catalog sources passed sampled metadata checks.' % proof['catalogs'])
+                    else:
+                        dialog.ok('Collection checks', collection_validation.message(proof))
+            elif choice == 6:
+                create_collection()
+        except (ValueError, OSError):
+            dialog.ok('Collections', 'The change was not saved. Check the selected catalogs, filters and file format.')

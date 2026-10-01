@@ -11,7 +11,7 @@ import kodi_stub
 import frontend_test_support
 frontend_test_support.install()
 settings=importlib.import_module('nuvio_ui.settings')
-sync=importlib.import_module('resources.lib.dexhub.nuvio_stremio_sync')
+sync=importlib.import_module('resources.lib.nuviohub.nuvio_stremio_sync')
 imp=importlib.import_module('resources.lib.nuvio_import')
 home=importlib.import_module('nuvio_ui.home_window')
 play=importlib.import_module('nuvio_ui.playback')
@@ -80,6 +80,11 @@ class AccountPersistence(unittest.TestCase):
 
 
 class ImportPersistence(unittest.TestCase):
+    def setUp(self):
+        validator=importlib.import_module('resources.lib.collection_validation')
+        patch=mock.patch.object(validator,'validate',return_value={'ok':True})
+        patch.start();self.addCleanup(patch.stop)
+
     def test_settings_read_sees_saved_write_and_external_change(self):
         cache=importlib.import_module('resources.lib.settings_cache')
         disk={'nuvio_sync_enabled':'false'}
@@ -127,13 +132,12 @@ class EmptyHome(unittest.TestCase):
     def test_default_layout_is_fixed_without_implicit_cloud_collection_fallback(self):
         with tempfile.TemporaryDirectory() as tmp,mock.patch.object(imp.collection_profile,'profile_file',return_value=Path(tmp)/'missing.json'):
             layout=imp.collection_profile.load()
-        self.assertEqual(layout,imp.collection_profile.defaults())
-        self.assertEqual(layout[0]['folders'][0]['title'],'Recommended')
-        self.assertFalse(any(g['title'].lower() in ('sports','world') for g in layout))
+        self.assertEqual(layout,[])
+        self.assertTrue(imp.collection_profile.defaults())
 
     def test_card_edits_and_explicit_layout_import_survive_reload(self):
         profile=imp.collection_profile
-        with tempfile.TemporaryDirectory() as tmp,mock.patch.object(profile,'profile_file',return_value=Path(tmp)/'layout.json'):
+        with tempfile.TemporaryDirectory() as tmp,mock.patch.object(profile,'profile_file',return_value=Path(tmp)/'layout.json'),mock.patch('resources.lib.collection_validation.validate',return_value={'ok':True}):
             layout=profile.defaults();folder=layout[0]['folders'][0]
             folder.update(title='Evening',hidden=True,cover='https://example.invalid/cover.jpg')
             profile.save(layout);saved=profile.load()[0]['folders'][0]
@@ -206,7 +210,9 @@ class EmptyHome(unittest.TestCase):
     def test_home_search_settings_navigation_has_no_my_list(self):
         root=ET.parse(ROOT/'script.nuvio/resources/skins/Default/1080i/nuvio_home.xml').getroot()
         buttons={int(c.get('id')):c for c in root.findall('./controls/control') if c.get('type')=='button'}
-        self.assertEqual(set(buttons),{101,105,107})
+        self.assertEqual(set(buttons),{101,105,107,108})
+        self.assertEqual(buttons[107].findtext('onright'),'108')
+        self.assertEqual(buttons[108].findtext('label'),'HUB')
         for c in buttons.values():
             for name in ('onleft','onright'):self.assertIn(int(c.findtext(name)),buttons)
         self.assertEqual(home.NAV,{101:''})

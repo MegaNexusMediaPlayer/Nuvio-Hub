@@ -9,7 +9,7 @@ import xbmcaddon
 from . import store
 from .client import fetch_subtitles, supports_resource, start_parallel_race
 
-# --- dexhub-401-patch ---
+# --- nuviohub-401-patch ---
 try:
     from .settings_cache import cached_addon as _dh_cached_addon
 except Exception:
@@ -75,7 +75,7 @@ def _normalize_lang(value):
     aliases = {
         'hrv':'hr','cro':'hr','croatian':'hr','hrvatski':'hr',
         'srp':'sr','ser':'sr','serbian':'sr','bos':'bs','bosnian':'bs','slv':'sl','slovenian':'sl',
-        'ara': 'ar', 'arabic': 'ar', 'عربي': 'ar', 'عربية': 'ar', 'العربية': 'ar',
+        'ara': 'ar', 'arabic': 'ar', 'Arabic': 'ar', 'Arabic': 'ar', 'Arabic': 'ar',
         'eng': 'en', 'english': 'en',
         'fre': 'fr', 'fra': 'fr', 'french': 'fr',
         'spa': 'es', 'spanish': 'es',
@@ -276,7 +276,7 @@ def _provider_order(ctx):
 
 
 def _preferred_languages():
-    raw = (ADDON.getSetting('preferred_subtitle_langs') or 'ar,en').strip()
+    raw = (ADDON.getSetting('preferred_subtitle_langs') or 'en').strip()
     if not raw:
         return ['ar', 'en']
     return [x.strip().lower() for x in raw.split(',') if x.strip()]

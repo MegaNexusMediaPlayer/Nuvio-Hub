@@ -12,11 +12,11 @@ property-vs-file difference compounds quickly.
 import json
 import os
 
-from dexhub.common import profile_path
+from nuviohub.common import profile_path
 
 SESSION_FILE = os.path.join(profile_path(), "current_session.json")
 WINDOW_ID = 10000  # Home window — survives across plugin invocations
-PROP_KEY = 'dexhub.session_v1'
+PROP_KEY = 'nuviohub.session_v1'
 
 
 def _window():
@@ -41,7 +41,7 @@ def save_session(data):
     try:
         # We're writing a JSON-shaped string; reuse the atomic primitive
         # directly so behavior matches the rest of the addon.
-        from .dexhub.safe_io import write_json as _safe_write_json
+        from .nuviohub.safe_io import write_json as _safe_write_json
         try:
             _safe_write_json(SESSION_FILE, json.loads(payload))
         except Exception:

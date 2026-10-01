@@ -18,7 +18,11 @@ catalog=importlib.import_module('nuvio_ui.catalog')
 
 class ProgressiveDetails(unittest.TestCase):
     def setUp(self):
-        meta.clear();self.addCleanup(meta.clear)
+        import tempfile
+        from resources.lib import browse_cache
+        temp=tempfile.TemporaryDirectory();self.addCleanup(temp.cleanup)
+        patch=mock.patch.object(browse_cache,'_CACHE',browse_cache.Cache(Path(temp.name)/'cache.db'));patch.start();self.addCleanup(patch.stop)
+        meta.clear(persistent=True);self.addCleanup(meta.clear)
         self.ctx={'media_type':'movie','canonical_id':'tt605'}
         self.row={'title':'Already visible','plot':'Catalog synopsis','poster':'local.jpg','fanart':'back.jpg'}
     def test_click_constructs_details_without_waiting_for_metadata(self):
@@ -48,7 +52,9 @@ class ProgressiveDetails(unittest.TestCase):
     def test_cache_bounds_titles_and_does_not_retain_a_failed_request(self):
         with mock.patch.object(meta.backend_api,'metadata',side_effect=lambda mt,mid:{'id':mid}):
             for n in range(34):meta.request(dict(self.ctx,canonical_id=str(n))).result(2)
-        self.assertEqual(len(meta._CACHE),32)
+        from resources.lib import browse_cache
+        self.assertLessEqual(browse_cache.instance().bytes,browse_cache.RAM_LIMIT)
+        self.assertIsNotNone(meta.cached(dict(self.ctx,canonical_id='33')))
         with mock.patch.object(meta.backend_api,'metadata',side_effect=ValueError('offline')):
             with self.assertRaises(ValueError):meta.request(self.ctx).result(2)
         with mock.patch.object(meta.backend_api,'metadata',return_value={'id':'retry'}):self.assertEqual(meta.request(self.ctx).result(2)['id'],'retry')
@@ -213,7 +219,7 @@ class SimklApplication(unittest.TestCase):
         self.assertNotIn('Authorization',request.headers)
 
 class PlaybackExitAndOrder(unittest.TestCase):
-    def test_local_watches_precede_newer_cloud_import_timestamps(self):
+    def test_real_watch_timestamps_order_local_and_cloud_entries(self):
         data=importlib.import_module('resources.lib.home_data');local=importlib.import_module('resources.lib.continue_local');watched=importlib.import_module('resources.lib.simkl_watched');nextup=importlib.import_module('resources.lib.watch_nextup')
         def row(title,stamp,**extra):
             return dict(media_type='movie',canonical_id=title,video_id=title,title=title,position=120,duration=1000,percent=12,updated_at=stamp,**extra)
@@ -222,7 +228,7 @@ class PlaybackExitAndOrder(unittest.TestCase):
         cloud[2]['position']=345
         with mock.patch.object(local,'recent',return_value=local_rows),mock.patch.object(local.db,'list_continue_items',return_value=cloud),mock.patch.object(watched,'snapshot',return_value={}),mock.patch.object(nextup,'augment',side_effect=lambda rows:rows):
             result=data.continue_shelf()['rows']
-        self.assertEqual([r['title'] for r in result],['Unabomber','F1','Jurassic','Garfield','ps:unknown'])
+        self.assertEqual([r['title'] for r in result],['Unabomber','Garfield','ps:unknown','F1','Jurassic'])
         self.assertEqual(result[0]['target']['resume_seconds'],345)
 
     def test_reopening_home_resets_continue_even_without_new_revision(self):

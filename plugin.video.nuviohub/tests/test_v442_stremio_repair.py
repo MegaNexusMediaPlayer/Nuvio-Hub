@@ -12,7 +12,7 @@ import unittest
 import kodi_stub
 
 ROOT = kodi_stub.ADDON_ROOT
-sync = kodi_stub.import_lib_module('dexhub.nuvio_stremio_sync')
+sync = kodi_stub.import_lib_module('nuviohub.nuvio_stremio_sync')
 
 PLUGIN = io.open(os.path.join(ROOT, 'resources', 'lib', 'plugin.py'), encoding='utf-8').read()
 
@@ -96,7 +96,7 @@ class TestRepairAndWiring(unittest.TestCase):
         self.assertEqual(put_ops[0]['changes'][0]['_ctime'], '2026-08-04T21:15:00.000Z')
 
     def test_push_path_sanitizes_every_change(self):
-        src = io.open(os.path.join(ROOT, 'resources', 'lib', 'dexhub', 'nuvio_stremio_sync.py'), encoding='utf-8').read()
+        src = io.open(os.path.join(ROOT, 'resources', 'lib', 'nuviohub', 'nuvio_stremio_sync.py'), encoding='utf-8').read()
         self.assertIn('_sanitize_stremio_item(c)[0] for c in (changes or [])', src)
 
     def test_menu_action_and_dispatcher(self):

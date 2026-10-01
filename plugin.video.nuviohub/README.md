@@ -1,16 +1,20 @@
-# Nuvio Hub 6.0.7
+# Nuvio Hub 6.0.9 — local test candidate
 
-Complete first-install and update bundle for Kodi 21. The backend is **Nuvio Hub**; the program interface, skin and screensaver are **Nuvio**. All four installed components use version **6.0.7**. This release updates 6.0.4 and also supports older Nuvio bundles.
+Based on the supplied 6.0.8 source. The backend is **Nuvio Hub**; the interface, skin and screensaver are **Nuvio**. All four components use **6.0.9**, with unchanged add-on IDs and profile locations. This is a test candidate, not a device-verified Kodi 22 RC1 release.
 
-Stop playback and close the Nuvio interface, install `Nuvio-Hub-Complete-6.0.7.zip` through Kodi's Install from zip file, open Nuvio Hub once to update the bundled components, then restart Kodi. Keep the existing installation and userdata. Manual ZIP updates preserve accounts, providers, settings, collections, IPTV configuration and stored playback positions. The About screen reads the installed interface version.
+Changes: explicit HUB button after Settings; Back stays inside frontend Home; a retained native base window avoids exposing the launcher between video and the restored page; one weather/clock preference; image/GIF or looping silent video screensaver; actor/search routing and clear provider errors; multiple independently enabled stream add-ons with per-source names; IPTV preview on first click and native fullscreen on the second click, returning to the retained guide.
+
+Actor filmographies require advertised People Search catalogs in the metadata provider, or the optional TMDb key. A video screensaver does not replace paused media: it falls back to artwork. Video playback depends on Kodi/device codec support. Additional stream add-ons are opt-in; the old single-provider selection remains the upgrade default.
+
+Stop playback and close the Nuvio interface, install `Nuvio-Hub-Complete-6.0.9.zip` through Kodi's Install from zip file, open Nuvio Hub once to update the bundled components, then restart Kodi. Keep the existing installation and userdata. Manual ZIP updates preserve accounts, providers, settings, collections, IPTV configuration and stored playback positions. The About screen reads the installed interface version.
 
 Includes text season selection with Specials last, full poster/landscape episode images, individual episode descriptions, cast and crew portraits, More like this, a full Info view and a long-press context menu with manual stream selection. Includes the sharper watched badge and repaired early Continue Watching progress tracking. Series layout is unchanged from 1.1.6 pending user feedback.
 
-For the documented full setup, a Nuvio account, AIOMetadata, a compatible stream provider and Simkl are required. AIOMetadata is mandatory for the intended metadata experience; Simkl is required for the complete Continue Watching/tracking setup. Some local functionality can operate without these connections. Metadata, streams and subtitles come from configured providers. Stream order is retained. Trailer previews do not write playback progress. Previously unrecorded playback positions cannot be reconstructed; start and stop those titles once after updating.
+Nuvio and Simkl accounts are optional. Home requires enabled metadata and stream providers plus imported or manually created, validated collections. Multiple compatible metadata addons are supported; AIOMetadata is not the only permitted choice. Internal presets are explicit candidates and must pass the same validation. Local resume works without cloud accounts. Metadata, streams and subtitles come from configured providers. Stream order is retained. Trailer previews do not write playback progress. Previously unrecorded playback positions cannot be reconstructed; start and stop those titles once after updating.
 
 All Nuvio components are included locally. Optional IPTV Simple, Open-Meteo weather and YouTube components are installed separately from the official Kodi/CoreELEC repository and retain their own names and versions.
 
-Validation for 6.0.7: targeted Continue Watching regression tests, Kodi layout checks and packaged module/asset checks. The full regression suite was not repeated for this layout update. Runtime branding is checked with Kodi 21.3 in an isolated Wine profile. CoreELEC hardware and personal watch-history synchronization still require target-device testing. The registered Nuvio Hub name was verified on the live Simkl PIN consent page.
+Validation for 6.0.9: 243 targeted automated tests with Kodi API stubs, including 51 new issue-specific tests; 24 release guard checks; Python/XML/JSON parsing; actual packaged-module and asset-reference smoke tests. Tests run on CPython 3.13.5, not inside Kodi. The existing xbmc.python 3.0.0 and xbmc.gui 5.17.0 dependency floors are unchanged. Windows/CoreELEC rendering, actual playback and Kodi 22 RC1 installation remain device checks before publication.
 
 All original copyright/license notices are preserved: MIT-licensed backend, Kodi 21.3 Estuary GPL/CC artwork foundation, official Nuvio logo attribution and supplied collection artwork. This is an unofficial build. Internal compatibility identifiers and third-party provider names are retained where required for existing profiles and integrations.
 
@@ -20,7 +24,7 @@ Earlier releases added portrait Genres/Themes, rounded title artwork, Settings >
 
 Initial setup is offered once. Back/Cancel or a partially configured existing profile opens Home on subsequent launches. A connected Nuvio account is recognized without another login prompt. Setup remains available under Maintenance; optional steps are not required.
 
-Continue Watching places the most recently stopped title first and resets the row to its first poster when progress changes. Upcoming-episode banners do not displace active resume entries. Back from fullscreen stops playback and returns to the same title; closing the OSD alone keeps playback running. The OSD Stop button is removed; native Stop actions remain supported.
+Continue Watching places the most recently stopped title first and resets the row to its first poster when progress changes. Upcoming-episode banners do not displace active resume entries. For movies/series, Back from fullscreen stops playback and returns to the same title; closing the OSD alone keeps playback running. The OSD Stop button is removed; native Stop actions remain supported.
 
 The default Simkl PIN application is registered as Nuvio Hub. Existing legacy tokens continue using their original issuing application until Accounts & tracking → Simkl → Reconnect as Nuvio Hub succeeds; cancelling the new PIN preserves the current connection. No client secret is bundled.
 
@@ -29,3 +33,6 @@ The default Simkl PIN application is registered as Nuvio Hub. Existing legacy to
 The Home Resume video button is removed. Continue Watching cards still resume stored playback.
 
 6.0.7 places the local playback journal first (newest watch first), followed by remote-only titles. Only display ordering changes; stored progress, completion and metadata merge rules stay unchanged. The launcher Resume video button, icons and handler are removed.
+
+
+6.0.10 is a test candidate. See the repository release notes and AGENTS.md for automated checks, setup and device acceptance. Unicode fonts are provided by Kodi; this bundle does not include font binaries.

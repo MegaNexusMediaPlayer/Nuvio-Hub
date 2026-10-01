@@ -16,7 +16,7 @@ from .session_store import clear_session, load_session, save_session
 from . import trakt, simkl, playback_store
 from .i18n import tr
 
-# --- dexhub-401-patch ---
+# --- nuviohub-401-patch ---
 try:
     from .settings_cache import cached_addon as _dh_cached_addon
 except Exception:
@@ -26,7 +26,7 @@ except Exception:
         _dh_cached_addon = None
 ADDON = _dh_cached_addon() if _dh_cached_addon else xbmcaddon.Addon('plugin.video.nuviohub')
 
-_SOURCE_SWITCH_HANDOFF_PROP = 'dexhub.source_switch_handoff.v2'
+_SOURCE_SWITCH_HANDOFF_PROP = 'nuviohub.source_switch_handoff.v2'
 
 # v5.4.11: files that are NEVER NuvioHub playback, no matter what a (possibly
 # stale) session file says. TMDb Helper resolves every play through a local
@@ -347,7 +347,7 @@ class EmbyReporter(BaseReporter):
             'X-Emby-Token': ctx['token'],
             'X-Emby-Authorization': (
                 'MediaBrowser Client="Kodi", Device="Kodi", DeviceId="%s", Version="1.0.0"'
-                % (ctx.get('device_id') or 'dexhub')
+                % (ctx.get('device_id') or 'nuviohub')
             ),
         }
 
@@ -365,7 +365,7 @@ class EmbyReporter(BaseReporter):
             'IsPaused': paused,
             'PlayMethod': 'DirectStream',
             'CanSeek': True,
-            'SessionId': ctx.get('session_id') or ctx.get('device_id') or 'dexhub',
+            'SessionId': ctx.get('session_id') or ctx.get('device_id') or 'nuviohub',
         }
         # v3.9.241: Emby rejected /Sessions/Playing with HTTP 400 (53x in one
         # session log) — it ties reports to the PlaybackInfo session and wants
@@ -597,7 +597,7 @@ def _save_local_progress(ctx, position_ms=0, duration_ms=0, finished=False):
 def _invalidate_nextup_cache():
     try:
         win = xbmcgui.Window(10000)
-        for key in ('dexhub.nextup_cache', 'dexhub.nextup_cache_ts'):
+        for key in ('nuviohub.nextup_cache', 'nuviohub.nextup_cache_ts'):
             try:
                 win.clearProperty(key)
             except Exception:
@@ -636,8 +636,8 @@ def _refresh_cw_containers():
     # Always set the stale flag so the next CW-screen open rebuilds.
     try:
         win = xbmcgui.Window(10000)
-        win.setProperty('dexhub.cw_dirty', '1')
-        win.setProperty('dexhub.cw_dirty_ts', str(time.time_ns()))
+        win.setProperty('nuviohub.cw_dirty', '1')
+        win.setProperty('nuviohub.cw_dirty_ts', str(time.time_ns()))
         win.setProperty('nuvio.progress.revision', str(time.time_ns()))
     except Exception:
         pass
@@ -664,7 +664,7 @@ def _clear_tmdbh_handoff_flag():
                 win = xbmcgui.Window(win_id)
             except Exception:
                 continue
-            for key in ('dexhub.invoked_by_tmdbh', 'dexhub.tmdbh_seed_ids', 'dexhub.tmdbh_seed_for', 'dexhub.tmdbh_handoff_until'):
+            for key in ('nuviohub.invoked_by_tmdbh', 'nuviohub.tmdbh_seed_ids', 'nuviohub.tmdbh_seed_for', 'nuviohub.tmdbh_handoff_until'):
                 try:
                     win.clearProperty(key)
                 except Exception:
@@ -714,13 +714,13 @@ def _publish_playback_artwork(ctx):
             except Exception:
                 continue
             for key, value in (
-                ('dexhub.source.clearlogo', logo),
-                ('dexhub.source.poster', poster),
-                ('dexhub.source.thumb', poster),
-                ('dexhub.source.fanart', fanart),
-                ('dexhub.source.title', title),
-                ('dexhub.source.plot', plot),
-                ('dexhub.source.year', year),
+                ('nuviohub.source.clearlogo', logo),
+                ('nuviohub.source.poster', poster),
+                ('nuviohub.source.thumb', poster),
+                ('nuviohub.source.fanart', fanart),
+                ('nuviohub.source.title', title),
+                ('nuviohub.source.plot', plot),
+                ('nuviohub.source.year', year),
                 ('clearlogo', logo),
                 ('logo', logo),
                 ('tvshow.clearlogo', logo),
@@ -1392,6 +1392,11 @@ class CompanionPlayer(xbmc.Player):
                 pass
 
     def onPlayBackStarted(self):
+        if xbmcgui.Window(10000).getProperty('nuvio.saver.cancelled'):
+            from .saver_state import stop_cancelled_preview
+            if stop_cancelled_preview(self):
+                self._enter_foreign_playback('cancelled-screensaver')
+                return
         # Adaptive/HLS players may emit Started more than once for the same
         # media item (manifest open, decoder re-open, quality change). Do not
         # reset the resume coordinator or spawn another heartbeat for those
@@ -1453,6 +1458,11 @@ class CompanionPlayer(xbmc.Player):
                 pass
 
     def onAVStarted(self):
+        if xbmcgui.Window(10000).getProperty('nuvio.saver.cancelled'):
+            from .saver_state import stop_cancelled_preview
+            if stop_cancelled_preview(self):
+                self._enter_foreign_playback('cancelled-screensaver')
+                return
         # Started can precede actual A/V by many seconds on remote providers.
         # Recover even when the initial probe timed out or the service attached late.
         pending = load_session() or {}
@@ -1722,13 +1732,13 @@ class CompanionPlayer(xbmc.Player):
         e = int(next_ep.get('episode') or 0)
         dlg = xbmcgui.DialogProgress()
         try:
-            dlg.create('Nuvio Hub', tr('الحلقة التالية: %s — S%02dE%02d') % (title, s, e))
+            dlg.create('Nuvio Hub', tr('Next episode: %s — S%02dE%02d') % (title, s, e))
             import time as _t
             start = _t.time()
             while not dlg.iscanceled() and (_t.time() - start) < countdown:
                 remaining = int(countdown - (_t.time() - start))
                 pct = int(max(0, min(100, ((_t.time() - start) / float(countdown)) * 100)))
-                dlg.update(pct, tr('الحلقة التالية: %s — S%02dE%02d\nالبدء خلال: %ss') % (title, s, e, remaining))
+                dlg.update(pct, tr('Next episode: %s — S%02dE%02d\nStarting in: %ss') % (title, s, e, remaining))
                 xbmc.sleep(250)
         finally:
             try:

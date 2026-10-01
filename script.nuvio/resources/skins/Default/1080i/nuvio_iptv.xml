@@ -27,6 +27,24 @@
       <textcolor>FFFFFFFF</textcolor>
       <label>Live TV</label>
     </control>
+    <control type="button" id="505">
+      <left>770</left>
+      <top>32</top>
+      <width>140</width>
+      <height>56</height>
+      <font>font13</font>
+      <label>HUB</label>
+      <align>center</align>
+      <aligny>center</aligny>
+      <textcolor>FFFFFFFF</textcolor>
+      <focusedcolor>FF090B11</focusedcolor>
+      <onleft>501</onleft>
+      <onright>501</onright>
+      <onup>505</onup>
+      <ondown>501</ondown>
+      <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturenofocus border="22" colordiffuse="FF252A38">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+    </control>
     <control type="group">
       <visible>!String.IsEmpty(Weather.Temperature)</visible>
       <control type="image">
@@ -36,6 +54,7 @@
         <height>48</height>
         <aspectratio>scale</aspectratio>
         <texture>special://home/addons/skin.nuvio/media/nuvio/weather/$INFO[Weather.FanartCode].png</texture>
+        <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
       </control>
       <control type="label">
         <left>1645</left>
@@ -45,6 +64,7 @@
         <font>font12</font>
         <textcolor>FFC2ADFF</textcolor>
         <label>$INFO[Weather.Temperature]</label>
+        <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
       </control>
     </control>
     <control type="label">
@@ -55,6 +75,7 @@
       <font>font12</font>
       <textcolor>FFCAD0DB</textcolor>
       <label>$INFO[System.Time(hh:mm)]</label>
+      <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
     </control>
     <control type="label">
       <left>50</left>
@@ -81,7 +102,7 @@
       <height>790</height>
       <onleft>503</onleft>
       <onright>500</onright>
-      <onup>501</onup>
+      <onup>505</onup>
       <ondown>501</ondown>
       <scrolltime>140</scrolltime>
       <itemlayout width="285" height="62">
@@ -335,7 +356,7 @@
       <height>45</height>
       <font>font12</font>
       <textcolor>FFACB4C4</textcolor>
-      <label>OK  Preview / Fullscreen     Back / Stop  Main screen</label>
+      <label>OK  Preview / Fullscreen     Back / Stop  Return to guide     HUB  Main menu</label>
     </control>
   </controls>
 </window>

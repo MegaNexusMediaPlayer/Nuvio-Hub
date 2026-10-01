@@ -188,7 +188,7 @@ class TestWhiteSelectionFix(unittest.TestCase):
         self.assertIn('F2151B29', focused)
         # accent outline strips driven by HOME window props (those DO resolve)
         self.assertGreaterEqual(
-            focused.count('$INFO[Window(Home).Property(dexhub.theme.accent)]'), 4)
+            focused.count('$INFO[Window(Home).Property(nuviohub.theme.accent)]'), 4)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -348,7 +348,7 @@ class TestResultsChips(unittest.TestCase):
         # applied-filter underline is per-item and focus-independent
         self.assertIn('String.IsEqual(ListItem.Property(active),1)', RESULTS_XML)
         # old window-prop strip fully gone
-        self.assertNotIn('dexhub.results.pv1_label', RESULTS_XML)
+        self.assertNotIn('nuviohub.results.pv1_label', RESULTS_XML)
 
 
 class TestFanartForwardAndLayout(unittest.TestCase):
@@ -391,11 +391,11 @@ class TestFanartForwardAndLayout(unittest.TestCase):
         chips = RESULTS_XML.split('<control type="list" id="2300">', 1)[1]
         chips = chips.split('</control>\n\n', 1)[0]
         focused = chips.split('<focusedlayout', 1)[1]
-        self.assertIn('border="19" colordiffuse="$INFO[Window(Home).Property(dexhub.theme.accent)]"',
+        self.assertIn('border="19" colordiffuse="$INFO[Window(Home).Property(nuviohub.theme.accent)]"',
                       focused)
         self.assertIn('<textcolor>FF12141C</textcolor>', focused)
         item = chips.split('<focusedlayout', 1)[0]
-        self.assertIn('dexhub.theme.accent_dim', item)
+        self.assertIn('nuviohub.theme.accent_dim', item)
 
     def test_poster_modern_card(self):
         # real rounded corners: the poster texture carries a diffuse alpha
