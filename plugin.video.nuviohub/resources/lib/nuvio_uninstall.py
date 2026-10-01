@@ -100,6 +100,23 @@ def prepare():
     return 'RunScript("%s")'%str(path).replace('\\','/')
 
 
+def seek_restore(addons_root):
+    """The seek-settings restore function, loaded BEFORE the files are moved.
+
+    This helper runs as a standalone copy in special://temp (no package), so a
+    relative import is impossible; it used to fail here after the components
+    were already disabled, and every removal was rolled back."""
+    if __package__:
+        from .seek_profile import restore
+        return restore
+    import sys
+    backend = str(Path(addons_root) / 'plugin.video.nuviohub')
+    if backend not in sys.path:
+        sys.path.insert(0, backend)
+    from resources.lib.seek_profile import restore
+    return restore
+
+
 def switch_to_estuary(monitor):
     import xbmc
     if xbmc.getSkinDir()!='skin.nuvio':return True
@@ -145,6 +162,9 @@ def run():
     if not dialog.yesno('Remove Nuvio build','Remove these components?\n'+', '.join(order)+'\n'+message+' Shared and pre-existing add-ons are kept.'):return
     home.setProperty('nuvio.uninstalling','1')
     moved=[]
+    root=Path(xbmcvfs.translatePath('special://home/addons')).resolve()
+    try:restore=seek_restore(root)
+    except Exception:restore=None  # Optional: Kodi seek steps simply stay as they are.
     try:
         if rpc('Settings.GetSettingValue',{'setting':'screensaver.mode'}).get('value')=='screensaver.nuvio':
             rpc('Settings.SetSettingValue',{'setting':'screensaver.mode','value':'screensaver.xbmc.builtin.dim'})
@@ -165,13 +185,11 @@ def run():
             if aid in installed and aid not in order:
                 outside=[key for key,row in installed.items() if key not in order and key!=aid and any(d['addonid']==aid for d in row.get('dependencies',[]))]
                 if not outside:rpc('Addons.SetAddonEnabled',{'addonid':aid,'enabled':False})
-        root=Path(xbmcvfs.translatePath('special://home/addons')).resolve()
         # Same filesystem as addons: atomic rename works on CoreELEC mount layouts too.
         stage=Path(tempfile.mkdtemp(prefix='nuvio-removed-',dir=str(root.parent))).resolve()
-        from .seek_profile import restore
         moved=stage_removal(root,order,stage)
         try:
-            restore()
+            if restore:restore()
         except Exception:xbmc.log('[Nuvio] Could not restore previous seek settings.',xbmc.LOGWARNING)
         if not keep:
             monitor.waitForAbort(1)

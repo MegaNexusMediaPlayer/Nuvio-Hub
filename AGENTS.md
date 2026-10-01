@@ -2,8 +2,8 @@
 
 This is a four-component Kodi build: `plugin.video.nuviohub` (backend/service),
 `script.nuvio` (Python/XML frontend), `skin.nuvio` (Kodi shell), and
-`screensaver.nuvio` (screensaver entrypoint). The local 6.0.15 candidate is the
-baseline for this 6.0.16 candidate. Do not publish, push, or change live user
+`screensaver.nuvio` (screensaver entrypoint). The local 6.0.16 candidate is the
+baseline for this 6.0.17 candidate. Do not publish, push, or change live user
 profiles as a side effect of reviewing code.
 
 ## Required repository skills
@@ -15,7 +15,7 @@ claims that a runtime plugin or global agent skill has been installed.
 
 ## Before modifying code
 
-Read the relevant call sites, tests, and `docs/RELEASE-6.0.16.md` (and 6.0.15 back to 6.0.10). Identify which
+Read the relevant call sites, tests, and `docs/RELEASE-6.0.17.md` (and 6.0.16 back to 6.0.10). Identify which
 Kodi process/interpreter owns the work. Keep existing public add-on IDs,
 profile paths, encrypted credentials and migration aliases. Never mass-rename
 legacy state keys or remove upstream license notices. Never replace an
@@ -66,10 +66,10 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
 ## Required checks (Python 3.9+ review environment)
 
 ```sh
-python review/check_616.py
-python review/check_608_rebrand_kodi22.py 6.0.16
-python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.16.zip
-python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.16.zip
+python review/check_617.py
+python review/check_608_rebrand_kodi22.py 6.0.17
+python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.17.zip
+python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.17.zip
 ```
 
 The first command runs the maintained unit suite, parses XML/JSON, and checks

@@ -10,7 +10,8 @@
     <setting type="action" label="Open Nuvio settings" action="RunScript(script.nuvio,settings)" option="close" />
     <setting type="action" label="Install or repair the bundled Nuvio interface and skin" action="RunPlugin(plugin://plugin.video.nuviohub/?action=nuvio_install)" option="close" />
     <setting type="lsep" label="AIOMetadata: catalogs and posters. AIOStreams: stream filtering and sorting." />
-    <setting type="lsep" label="Updates: install a new Nuvio Hub bundle ZIP manually." />
+    <setting type="lsep" label="Updates: automatic from GitHub releases (Nuvio Settings &gt; Maintenance &amp; updates)." />
+    <setting type="action" label="Remove the Nuvio build (all four components, in the right order)" action="RunPlugin(plugin://plugin.video.nuviohub/?action=nuvio_uninstall)" option="close" />
     <setting id="providers_json" type="text" default="[]" visible="false" />
     <setting id="last_account_sync_at" type="text" default="0" visible="false" />
     <setting id="catalog_state_json" type="text" default="{}" visible="false" />
