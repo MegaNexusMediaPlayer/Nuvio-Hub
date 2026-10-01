@@ -199,9 +199,10 @@ class DetailsAndBackground(unittest.TestCase):
             win._cold_warm_started = False
             win._start_cold_art_warm()
         self.assertEqual(thread.call_count, 1)
-        self.assertEqual(thread.call_args.kwargs['args'], (['a', 'b'],))
-        props.pop('nuvio.art_warm.session')
-        props['nuvio.art_cache.usage'] = '90.0 MB · 400 images'
+        self.assertEqual(thread.call_args.kwargs['args'], (['a', 'b'], 'http://127.0.0.1:1'))
+        props.pop('nuvio.art_warm.running', None)
+        props.pop('nuvio.art_warm.session', None)
+        props['nuvio.art_cache.usage'] = '150.0 MB · 900 images'  # 6.0.16: skip only when well filled
         win2 = home_window.HomeWindow()
         win2._shelves = win._shelves
         with mock.patch.object(home_window.xbmcgui, 'Window', return_value=window), \

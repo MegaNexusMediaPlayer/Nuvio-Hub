@@ -27,24 +27,6 @@
       <textcolor>FFFFFFFF</textcolor>
       <label>Live TV</label>
     </control>
-    <control type="button" id="505">
-      <left>770</left>
-      <top>32</top>
-      <width>140</width>
-      <height>56</height>
-      <font>font13</font>
-      <label>HUB</label>
-      <align>center</align>
-      <aligny>center</aligny>
-      <textcolor>FFFFFFFF</textcolor>
-      <focusedcolor>FF090B11</focusedcolor>
-      <onleft>501</onleft>
-      <onright>501</onright>
-      <onup>505</onup>
-      <ondown>501</ondown>
-      <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22" colordiffuse="FF252A38">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
-    </control>
     <control type="group">
       <visible>!String.IsEmpty(Weather.Temperature)</visible>
       <control type="image">
@@ -102,7 +84,7 @@
       <height>790</height>
       <onleft>503</onleft>
       <onright>500</onright>
-      <onup>505</onup>
+      <onup>501</onup>
       <ondown>501</ondown>
       <scrolltime>140</scrolltime>
       <itemlayout width="285" height="62">
@@ -216,6 +198,16 @@
       <top>168</top>
       <width>860</width>
       <height>484</height>
+    </control>
+    <control type="image">
+      <!-- Black frame over the small video: its edges never show (opaque at the rim). -->
+      <left>1010</left>
+      <top>168</top>
+      <width>860</width>
+      <height>484</height>
+      <aspectratio>stretch</aspectratio>
+      <texture>special://home/addons/script.nuvio/resources/media/nuvio_video_vignette.png</texture>
+      <visible>Player.HasVideo</visible>
     </control>
     <control type="label">
       <left>1010</left>

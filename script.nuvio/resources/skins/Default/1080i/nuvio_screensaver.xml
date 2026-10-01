@@ -17,6 +17,8 @@
       <height>1080</height>
       <aspectratio>scale</aspectratio>
       <texture>$INFO[Window.Property(nuvio.background)]</texture>
+      <!-- Video mode: black background only, so a loop restart never flashes the artwork. -->
+      <visible>!String.IsEqual(Window.Property(nuvio.saver.mode),video)</visible>
     </control>
     <control type="videowindow">
       <left>0</left>

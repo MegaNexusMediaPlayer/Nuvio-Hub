@@ -55,8 +55,14 @@ class BrandingTests(unittest.TestCase):
              mock.patch.object(settings,'nuvio_status',return_value='Not connected'), \
              mock.patch.object(settings.page,'show',side_effect=show):
             addon.return_value.getAddonInfo.return_value='9.8.7'
-            settings.maintenance()
-        self.assertEqual(dialog.ok.call_args.args[0],'Nuvio 9.8.7')
+            # 6.0.16: the first Maintenance row checks GitHub for updates.
+            updater=importlib.import_module('resources.lib.updater')
+            playback=importlib.import_module('nuvio_ui.playback')
+            with mock.patch.object(updater,'latest',return_value={'version':'9.8.7'}), \
+                 mock.patch.object(playback,'job',side_effect=lambda fn,*a,**k:fn()):
+                settings.maintenance()
+        self.assertEqual(dialog.ok.call_args.args[0],'Updates')
+        self.assertIn('9.8.7 is up to date',dialog.ok.call_args.args[1])
 
 
 if __name__=='__main__':unittest.main()

@@ -25,9 +25,13 @@ class IptvButtons(unittest.TestCase):
         self.assertEqual(buttons['503'].findtext('onright'), '506')
         self.assertEqual(buttons['506'].findtext('onleft'), '503')
 
-    def test_bottom_hub_button_leaves_like_the_top_one(self):
+    def test_only_the_bottom_hub_button_remains(self):
+        # 6.0.16: the top HUB button (505) was removed; the bottom one (506) stays.
         source = (ROOT / 'script.nuvio/nuvio_ui/iptv.py').read_text(encoding='utf-8')
-        self.assertIn('elif cid in (505,506):', source)
+        self.assertIn('elif cid==506:', source)
+        ids = {c.get('id') for c in ET.parse(SKIN / 'nuvio_iptv.xml').getroot().iter('control')}
+        self.assertNotIn('505', ids)
+        self.assertNotIn('505', (SKIN / 'nuvio_iptv.xml').read_text(encoding='utf-8'))
 
 
 class OneLoadingScreen(unittest.TestCase):

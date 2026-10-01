@@ -42,7 +42,7 @@ class HomeBack(unittest.TestCase):
     def test_back_from_settings_is_distinct_from_done(self):
         def show(title,rows,choose,back_result=None):
             self.assertEqual(back_result,'ActivateWindow(Home)')
-            self.assertEqual(choose(10),settings.page.DONE)
+            self.assertEqual(choose(11),settings.page.DONE)  # 6.0.16: Support · Ko-fi row added before Done
             return back_result
         with mock.patch.object(settings.page,'show',side_effect=show):
             self.assertEqual(settings.run(back_command='ActivateWindow(Home)'),'ActivateWindow(Home)')

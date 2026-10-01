@@ -24,8 +24,9 @@ LOAD_WORKERS = 4
 SEED_DISK_ROWS = 6        # shelves that may read SQLite synchronously while painting
 PREFETCH_DWELL = .25      # seconds a collection tile must stay selected before prefetch
 PREFETCH_AGAIN = 240      # seconds before the same collection is prefetched again
-PREFETCH_ART = 6          # first cards whose artwork is warmed in the image proxy
-COLD_ART_IMAGES = 50      # fewer proxy images than this = RAM was emptied (restart/suspend)
+PREFETCH_ART = 10         # first cards whose artwork is warmed in the image proxy (a screen)
+COLD_ART_IMAGES = 600     # proxy RAM already this full: skip the session warm-up
+COLD_ART_PER_SHELF = 12   # a screen of posters per collection shelf
 SHELF_MEMORY_SECONDS = 300
 
 
@@ -353,44 +354,55 @@ class HomeWindow(Dialog):
             self._warm_art(rows)
 
     def _start_cold_art_warm(self):
-        """Once per Kodi session, when the image proxy's RAM is (nearly) empty -
-        after a restart or a suspend that dropped it - fill the first posters of
-        every collection in the background. Cached catalog pages only; no
-        catalog requests. Anything opened later fills in as usual."""
+        """Once per Kodi session (and again after a suspend that emptied it),
+        fill the image proxy's RAM with a screen of posters for every collection.
+        Cached catalog pages only - no catalog requests - one image at a time,
+        pausing whenever the user is navigating, inside a collection or playing
+        video. Anything opened later fills in as usual."""
         if self._bucket or getattr(self,'_cold_warm_started',False):return
         self._cold_warm_started=True
         home=xbmcgui.Window(10000)
         base=home.getProperty('nuvio.art_cache.base')
-        if not base or home.getProperty('nuvio.art_warm.session')==base:return
+        if not base or home.getProperty('nuvio.art_warm.session')==base or home.getProperty('nuvio.art_warm.running'):return
         try:images=int((home.getProperty('nuvio.art_cache.usage') or '0 · 0').split('·')[-1].split()[0])
         except (ValueError,IndexError):images=0
         if images>=COLD_ART_IMAGES:return
-        home.setProperty('nuvio.art_warm.session',base)
+        home.setProperty('nuvio.art_warm.running',base)
         ids=[row['collection_id'] for shelf in self._shelves for row in shelf.get('rows') or [] if row.get('collection_id')]
-        threading.Thread(target=self._cold_art_warm,args=(ids,),name='NuvioArtWarm',daemon=True).start()
+        threading.Thread(target=self._cold_art_warm,args=(ids,base),name='NuvioArtWarm',daemon=True).start()
 
-    def _cold_art_warm(self, collection_ids):
+    def _cold_art_warm(self, collection_ids, base=''):
         from resources.lib.collections_home import collection_shelves
-        for collection_id in collection_ids:
-            if self._closed:return
-            try:shelves=collection_shelves(collection_id)
-            except Exception:continue
-            for shelf in shelves:
-                if self._closed:return
-                try:rows=home_data.load_catalog(shelf,cached_only=True)
-                except Exception:rows=None
-                if rows:self._warm_art(rows)
+        home=xbmcgui.Window(10000)
+        try:
+            for collection_id in collection_ids:
+                if self._closed:return  # The next Home window resumes; warmed images are instant.
+                try:shelves=collection_shelves(collection_id)
+                except Exception:continue
+                for shelf in shelves:
+                    if self._closed:return
+                    try:rows=home_data.load_catalog(shelf,cached_only=True)
+                    except Exception:rows=None
+                    if rows:self._warm_art(rows,COLD_ART_PER_SHELF,background=True)
+            home.setProperty('nuvio.art_warm.session',base)
+        finally:
+            home.clearProperty('nuvio.art_warm.running')
 
-    def _warm_art(self, rows):
+    def _user_busy(self):
+        """Moving the cursor, inside a collection/Details, or a prefetch running."""
+        return (self._suspended or bool(self._bucket) or time.monotonic()-self._hover[1]<1.0 or
+                any(not f.done() for _,f in self._prefetch_futures) or browse_cache.foreground_busy())
+
+    def _warm_art(self, rows, limit=PREFETCH_ART, background=False):
         """Pre-download the first visible cards into the bounded image proxy."""
         base=xbmcgui.Window(10000).getProperty('nuvio.art_cache.base')
         if not base.startswith('http://127.0.0.1:'):return
         from urllib.parse import quote
         from urllib.request import Request, urlopen
         landscape=getattr(self,'_card_shape','poster')=='landscape'
-        for row in [r for r in rows if r.get('target')][:PREFETCH_ART]:
-            while not self._closed and browse_cache.playback_busy():time.sleep(1)
-            if self._closed or self._suspended:return
+        for row in [r for r in rows if r.get('target')][:limit]:
+            while not self._closed and (browse_cache.playback_busy() or (background and self._user_busy())):time.sleep(.5)
+            if self._closed or (self._suspended and not background):return
             url=str((row.get('landscape') or row.get('fanart') or row.get('poster')) if landscape else row.get('poster') or '')
             if not url.startswith(('https://','http://')) or '|' in url or url in self._warmed_art:continue
             self._warmed_art.add(url)

@@ -59,6 +59,8 @@ class SaverMonitor(xbmc.Monitor):
 
 
 LOOP_RESTART_GRACE=3.0
+LOOP_SEEK_BEFORE_END=0.35  # seconds: jump back to 0 before EOF, so Kodi never reopens the file
+VIDEO_GAP_GRACE=2.0        # a brief pause in video (seek, decoder refill) is not the end
 
 
 class VideoPlayer(PreviewPlayer):
@@ -144,6 +146,7 @@ def run_video(token):
         for _ in range(100):
             if win.ready.is_set() or win.closed or monitor.waitForAbort(.01):break
         if win.closed or not win.ready.is_set() or xbmc.Player().isPlaying():return
+        win.setProperty('nuvio.saver.mode','video')
         original=(rpc('Application.GetProperties',{'properties':['muted']}) or {}).get('muted')
         if original is False:
             if rpc('Application.SetMute',{'mute':True}) is True:muted_by_us=True
@@ -151,7 +154,7 @@ def run_video(token):
         elif original is not True:
             # Unknown sound state: display artwork rather than play audio.
             path=''
-        begin=0;started=False
+        begin=0;started=False;seek_guard=0.0;gone_since=0.0
         while not win.closed and not monitor.abortRequested():
             if path and (player is None or player.ended):
                 if xbmc.Player().isPlaying():
@@ -170,12 +173,23 @@ def run_video(token):
                 begin=time.monotonic();started=False
                 player.play(path,item,windowed=True)
             if player and path:
-                if player.failed or (not started and time.monotonic()-begin>8):
-                    player.cancel();player.stop_owned();path='';win.setProperty('nuvio.saver.video','')
+                now=time.monotonic()
+                if player.failed or (not started and now-begin>8):
+                    player.cancel();player.stop_owned();path=''
+                    win.setProperty('nuvio.saver.video','');win.setProperty('nuvio.saver.mode','')
                 elif player.owns() and player.ready:
-                    started=True;win.setProperty('nuvio.saver.video','1')
-                elif started and not player.ended and not player.isPlayingVideo():break
+                    started=True;gone_since=0.0;win.setProperty('nuvio.saver.video','1')
+                    # Seamless loop: rewind just before the end instead of letting
+                    # Kodi close and reopen the file (that gap showed the artwork).
+                    try:
+                        total=player.getTotalTime();position=player.getTime()
+                        if total>2 and total-position<LOOP_SEEK_BEFORE_END and now>seek_guard:
+                            player.seekTime(0);seek_guard=now+1.5
+                    except Exception:pass  # No duration yet: Kodi's EOF path still loops.
                 elif started and player.isPlayingVideo() and not player.owns():break
+                elif started and not player.ended and not player.isPlayingVideo():
+                    if not gone_since:gone_since=now
+                    elif now-gone_since>VIDEO_GAP_GRACE:break
             monitor.waitForAbort(.05)
     finally:
         if player:

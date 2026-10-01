@@ -25,12 +25,15 @@ RAM_LIMIT = 40 * 1024 * 1024
 DISK_LIMIT = 128 * 1024 * 1024
 MAX_ENTRY = 2 * 1024 * 1024
 STALE_SECONDS = 7 * 24 * 3600
+FRESH_SECONDS = 3 * 3600  # catalog pages change slowly; fewer background refreshes
 REFRESH_QUEUE = 64
 _CACHE = None
 _INIT_LOCK = threading.Lock()
 _FLIGHT_LOCK = threading.Lock()
 _FLIGHTS = {}
 _REFRESH = None
+_FOREGROUND = [0, 0.0]  # catalog requests the user is waiting for, last finish time
+FOREGROUND_QUIET = 1.5
 _REFRESH_LOCK = threading.Lock()
 
 
@@ -239,7 +242,7 @@ def _valid(data):
 def _store(cache, identity, data, extra):
     if _valid(data):
         search = bool((extra or {}).get('search'))
-        cache.put(identity, data, ttl=120 if search else 1800, stale=0 if search else STALE_SECONDS)
+        cache.put(identity, data, ttl=120 if search else FRESH_SECONDS, stale=0 if search else STALE_SECONDS)
 
 
 def peek(provider, catalog, extra=None, memory_only=False, revalidate=True):
@@ -276,11 +279,18 @@ def playback_busy():
         return False
 
 
+def foreground_busy():
+    """A catalog the user is waiting for is loading (or just finished)."""
+    return _FOREGROUND[0] > 0 or time.monotonic() - _FOREGROUND[1] < FOREGROUND_QUIET
+
+
 def _refresh_worker(jobs):
     while True:
         provider, catalog_row, extra, timeout = jobs.get()
-        while playback_busy():
-            time.sleep(2)
+        # Background revalidation always yields: it shares each host's rate
+        # limit with the pages the user is opening.
+        while playback_busy() or foreground_busy():
+            time.sleep(.5)
         try:
             catalog(provider, catalog_row, extra, timeout, force=True)
         except Exception:
@@ -326,8 +336,15 @@ def catalog(provider, catalog, extra=None, timeout=5, force=False):
         # A previous owner might have populated the cache just before this lock.
         data = None if force else cache.get(identity)
         if data is None:
-            data = fetch_catalog(provider, catalog['type'], catalog['id'], extra=extra or {},
-                                 timeout_override=timeout, retry=False, rate_wait=.1)
+            if not force:
+                _FOREGROUND[0] += 1
+            try:
+                data = fetch_catalog(provider, catalog['type'], catalog['id'], extra=extra or {},
+                                     timeout_override=timeout, retry=False, rate_wait=.1)
+            finally:
+                if not force:
+                    _FOREGROUND[0] -= 1
+                    _FOREGROUND[1] = time.monotonic()
             _store(cache, identity, data, extra)
         pending.set_result(data)
         return data

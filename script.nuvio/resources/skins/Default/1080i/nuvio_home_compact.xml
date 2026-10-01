@@ -18,6 +18,16 @@
       <height>610</height>
       <visible>Player.HasVideo + [String.IsEqual(Window.Property(nuvio.preview.loading),1) | String.IsEqual(Window.Property(nuvio.preview),1)] + !Skin.HasSetting(nuvio.hidehero)</visible>
     </control>
+    <control type="image">
+      <!-- Black frame over the small video: its edges never show (opaque at the rim). -->
+      <left>640</left>
+      <top>0</top>
+      <width>1280</width>
+      <height>610</height>
+      <aspectratio>stretch</aspectratio>
+      <texture>special://home/addons/script.nuvio/resources/media/nuvio_video_vignette.png</texture>
+      <visible>Player.HasVideo + [String.IsEqual(Window.Property(nuvio.preview.loading),1) | String.IsEqual(Window.Property(nuvio.preview),1)] + !Skin.HasSetting(nuvio.hidehero) + String.IsEqual(Window(Home).Property(nuvio.videolayer),1)</visible>
+    </control>
     <control type="group">
       <visible>String.IsEqual(Window.Property(nuvio.hero_row),0) + !Skin.HasSetting(nuvio.hidehero)</visible>
       <control type="image">

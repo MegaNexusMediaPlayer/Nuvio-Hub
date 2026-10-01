@@ -785,10 +785,35 @@ if __name__ == '__main__':
         except Exception as exc:
             xbmc.log('[NuvioHub] bytecode warm skipped: %s' % exc, xbmc.LOGDEBUG)
 
+    def _update_loop(mon):
+        """GitHub release check every 12 h; installs when automatic updates are ON."""
+        from resources.lib import updater
+        if mon.waitForAbort(90):return
+        while not mon.abortRequested():
+            try:
+                import xbmcaddon as _xa
+                _addon = _xa.Addon('plugin.video.nuviohub')
+                if updater.due(_addon) and not _interactive_busy():
+                    status, info = updater.check_and_update(_addon)
+                    if status == 'installed':
+                        xbmcgui.Dialog().notification('Nuvio Hub', 'Updated to %s. Restart Kodi to finish.' % info['version'], time=10000)
+                    elif status == 'available':
+                        xbmcgui.Dialog().notification('Nuvio Hub', '%s is available: Settings > Maintenance.' % info['version'], time=8000)
+            except Exception as exc:
+                xbmc.log('[NuvioHub] update check skipped: %s' % exc, xbmc.LOGDEBUG)
+            if mon.waitForAbort(600):return
+
+    try:
+        import threading as _thr_upd
+        _thr_upd.Thread(target=_update_loop, args=(monitor,), name='NuvioHubUpdates', daemon=True).start()
+    except Exception as exc:
+        xbmc.log('[NuvioHub] update checks not started: %s' % exc, xbmc.LOGWARNING)
+
     try:
         import threading as _thr
         _thr.Thread(target=_background_sync_loop, args=(monitor,), name='NuvioHubCoreLoop', daemon=True).start()
         _thr.Thread(target=_cloud_sync_loop, args=(monitor,), name='NuvioHubCloudLoop', daemon=True).start()
+
         from resources.lib.progress_sync import run as _progress_sync_run
         _thr.Thread(target=_progress_sync_run, args=(monitor, _SYNC_CYCLE_LOCK), name='NuvioProgressSync', daemon=True).start()
         _thr.Thread(target=_bytecode_warm_job, name='NuvioHubBytecodeWarm', daemon=True).start()

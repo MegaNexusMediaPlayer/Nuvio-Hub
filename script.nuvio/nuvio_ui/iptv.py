@@ -265,7 +265,7 @@ class IPTV(Dialog):
                 self.child(self._fullscreen)
                 self._back_block_until=time.monotonic()+.3
             else:self._play(row)
-        elif cid in (505,506):
+        elif cid==506:
             if xbmc.getCondVisibility('Pvr.IsPlayingTV'):xbmc.Player().stop()
             self.finish()
         elif cid==501:
@@ -317,7 +317,7 @@ class IPTV(Dialog):
             self.setFocusId(500)
         else:
             # HUB is deliberate, not a side effect of Escape or Stop.
-            self.setFocusId(505 if aid!=13 else 500)
+            self.setFocusId(506 if aid!=13 else 500)
 
     def finish(self):
         if self.closed:return

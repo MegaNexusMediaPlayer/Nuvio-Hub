@@ -204,10 +204,11 @@ class NavigationAndPVR(Fixture):
     def test_back_with_no_video_only_focuses_explicit_hub_button(self):
         win=self.iptv()
         with mock.patch.object(tv.xbmc,'getCondVisibility',return_value=False):win.onAction(SimpleNamespace(getId=lambda:92))
-        self.assertFalse(win.closed);win.setFocusId.assert_called_once_with(505)
+        # 6.0.16: the HUB button is the bottom one (506).
+        self.assertFalse(win.closed);win.setFocusId.assert_called_once_with(506)
     def test_hub_button_closes_iptv_deliberately(self):
         win=self.iptv()
-        with mock.patch.object(tv.xbmc,'getCondVisibility',return_value=False):win.onClick(505);win.drain_events()
+        with mock.patch.object(tv.xbmc,'getCondVisibility',return_value=False):win.onClick(506);win.drain_events()
         self.assertTrue(win.closed);win.close.assert_called_once()
 
 

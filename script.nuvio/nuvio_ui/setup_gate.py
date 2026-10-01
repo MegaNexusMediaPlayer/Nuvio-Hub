@@ -30,21 +30,18 @@ def offer_switch_on(module, kind, dialog=None):
 
 
 def ensure_defaults(job=None):
-    """Cinemeta for metadata when no metadata add-on exists; Cinemeta
-    collections when there are none. Failures (offline) never block entry."""
-    if not metadata_providers.candidates():
-        try:
-            if job:
-                job(default_setup.install_cinemeta, label='Setting up Cinemeta')
-            else:
-                default_setup.install_cinemeta()
-        except Exception:
-            pass
-    if not collection_profile.load():
-        try:
-            collection_profile.save(default_setup.cinemeta_collections())
-        except (ValueError, OSError):
-            pass
+    """Automatic layout and Cinemeta switch (rules in default_setup). Failures
+    (offline) never block entry; the bundled Cinemeta manifest is used offline."""
+    import xbmcaddon
+    from resources.lib.nuviohub import store
+
+    def install():
+        return job(default_setup.install_cinemeta, label='Setting up Cinemeta') if job else default_setup.install_cinemeta()
+    try:
+        default_setup.apply_defaults(xbmcaddon.Addon('plugin.video.nuviohub'), store.list_providers(),
+                                     collection_profile.load(), collection_profile.save, install)
+    except (ValueError, OSError):
+        pass
 
 
 def ensure_ready():

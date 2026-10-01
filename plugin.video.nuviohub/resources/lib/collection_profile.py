@@ -49,10 +49,12 @@ def normalize(data):
         if folders:groups.append({'id':gid,'title':name,'folders':folders,'hidden':bool(g.get('hidden'))})
     return groups
 
-def save(data, validation=None):
+def save(data, validation=None, auto=False):
     """Save the Home layout. Nothing is network-checked or blocked here (6.0.15):
     an unavailable catalog just stays empty on Home. ``validation`` - a report
-    from Settings > Collections > Recheck - is stored for reference only."""
+    from Settings > Collections > Recheck - is stored for reference only.
+    Any save that is not ``auto`` makes the layout the user's own, so automatic
+    Cinemeta/catalog layouts never replace it."""
     groups = normalize(data)
     if not groups:
         raise ValueError('This export has no supported movie or series collections.')
@@ -63,6 +65,11 @@ def save(data, validation=None):
     if isinstance(validation, dict):
         write_json(str(path.with_suffix('.verified.json')), validation)
     _LOADED.clear()  # Coarse file timestamps must not hide a same-size rewrite.
+    if not auto:
+        try:
+            xbmcaddon.Addon(ADDON_ID).setSetting('nuvio_auto_layout', '')
+        except Exception:
+            pass
     return sum(len(g['folders']) for g in groups)
 
 

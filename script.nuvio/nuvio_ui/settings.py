@@ -18,17 +18,33 @@ def select_provider(role):
 
 
 def metadata_addons():
-    from resources.lib import metadata_providers
+    from resources.lib import metadata_providers, default_setup
+    def cinemeta_missing():
+        return default_setup.cinemeta_provider(store.list_providers()) is None
     def rows():
         entries = metadata_providers.entries()
-        return [page.item(p.get('name') or p['id'], 'Metadata and compatible catalogs', enabled=on)
-                for p, on in entries] + [page.item('Add metadata manifest URL'), page.item('Back')]
+        result = [page.item(p.get('name') or p['id'],
+                            'Built-in · no setup' if (p.get('manifest') or {}).get('id') == default_setup.CINEMETA_ID
+                            else 'Metadata and compatible catalogs', enabled=on)
+                  for p, on in entries]
+        if cinemeta_missing():
+            result.append(page.item('Cinemeta · built-in, no setup', 'Add'))
+        return result + [page.item('Add metadata manifest URL'), page.item('Back')]
     def choose(pick):
         entries = metadata_providers.entries()
+        extra = 1 if cinemeta_missing() else 0
         if pick < len(entries):
             provider, on = entries[pick]
             metadata_providers.set_enabled(provider['id'], not on)
-        elif pick == len(entries):
+            if (provider.get('manifest') or {}).get('id') == default_setup.CINEMETA_ID:
+                # A manual choice: never switched back automatically.
+                ADDON.setSetting(default_setup.CINEMETA_AUTO, '' if not on else 'off')
+        elif extra and pick == len(entries):
+            from .playback import job
+            try:job(default_setup.install_cinemeta, label='Adding Cinemeta')
+            except Exception:xbmcgui.Dialog().ok('Cinemeta','Cinemeta could not be added now. Check the connection and retry.')
+            ADDON.setSetting(default_setup.CINEMETA_AUTO, '')
+        elif pick == len(entries) + extra:
             before = {p['id'] for p in metadata_providers.candidates()}
             if add_manifest(xbmcgui.Dialog()):
                 for p in metadata_providers.candidates():
@@ -394,17 +410,69 @@ def tracking_accounts():
     return page.show('Accounts & tracking',rows,choose)
 
 
+KOFI_URL='https://ko-fi.com/master100janovic'
+
+
+class SupportWindow(xbmcgui.WindowXMLDialog):
+    def onInit(self):self.setFocusId(100)
+    def onClick(self,cid):self.close()
+    def onAction(self,action):
+        if action.getId() in (9,10,92,216,247,257,275,61448,61467):self.close()
+
+
+def support():
+    """Ko-fi QR code: scan with a phone to donate."""
+    win=SupportWindow('nuvio_support.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),'Default','1080i')
+    try:win.doModal()
+    finally:del win
+
+
+def check_updates():
+    """Compare with the latest GitHub release and install it on confirmation."""
+    from resources.lib import updater
+    from .playback import job
+    backend=xbmcaddon.Addon('plugin.video.nuviohub');dialog=xbmcgui.Dialog()
+    current=backend.getAddonInfo('version')
+    try:info=job(updater.latest,label='Checking GitHub for updates')
+    except Exception:
+        dialog.ok('Updates','GitHub could not be reached. Check the connection and retry.\n'+updater.RELEASES);return
+    if info is None:
+        dialog.ok('Updates','No Nuvio Hub release was found.\n'+updater.RELEASES);return
+    if not updater.newer(info['version'],current):
+        dialog.ok('Updates','Nuvio Hub %s is up to date (latest release %s).'%(current,info['version']));return
+    if not dialog.yesno('Update available','Nuvio Hub %s is available (installed %s).\nInstall it now? Kodi restarts the interface afterwards.'%(info['version'],current)):return
+    if xbmc.Player().isPlayingVideo():
+        dialog.ok('Updates','Stop playback first, then check again.');return
+    try:
+        job(lambda:updater.install(info,xbmcvfs.translatePath('special://home/addons'),
+                                   xbmcvfs.translatePath(backend.getAddonInfo('profile'))),label='Installing Nuvio Hub %s'%info['version'])
+    except Exception as exc:
+        dialog.ok('Updates','The update could not be installed; your current version was kept.\n'+(str(exc) if isinstance(exc,ValueError) else ''));return
+    xbmc.executebuiltin('UpdateLocalAddons')
+    if dialog.yesno('Updates','Nuvio Hub %s is installed. Restart Kodi now to finish?'%info['version']):
+        xbmc.executebuiltin('RestartApp')
+    else:
+        return page.DONE
+
+
 def maintenance():
-    def rows():return [page.item('About & updates',xbmcaddon.Addon('script.nuvio').getAddonInfo('version')),page.item('Run setup wizard'),page.item('Remove Nuvio build'),page.item('Back')]
+    def rows():return [page.item('Check for updates',xbmcaddon.Addon('script.nuvio').getAddonInfo('version')),
+        page.item('Automatic updates from GitHub',enabled=ADDON.getSetting('nuvio_auto_update')!='false'),
+        page.item('Support Nuvio Hub · Ko-fi','QR code'),
+        page.item('Run setup wizard'),page.item('Remove Nuvio build'),page.item('Back')]
     def choose(pick):
-        if pick==0:xbmcgui.Dialog().ok('Nuvio '+xbmcaddon.Addon('script.nuvio').getAddonInfo('version'),'Nuvio account and collections, your metadata provider and ordered stream results. Manual ZIP updates. Weather, IPTV Simple and YouTube are optional official Kodi components.')
-        elif pick==1:
+        if pick==0:
+            result=check_updates()
+            if result:return result
+        elif pick==1:ADDON.setSetting('nuvio_auto_update','false' if ADDON.getSetting('nuvio_auto_update')!='false' else 'true')
+        elif pick==2:support()
+        elif pick==3:
             from .onboarding import run as wizard
             return wizard(force=True)
-        elif pick==2:
+        elif pick==4:
             from resources.lib.nuvio_uninstall import prepare
             return prepare()
-        elif pick==3:return page.DONE
+        elif pick==5:return page.DONE
     return page.show('Maintenance',rows,choose)
 
 
@@ -414,7 +482,8 @@ def run(back_command=''):
         configure()
     actions=[('Accounts & tracking',tracking_accounts),('Add-ons',addons),('Collections',collections),
         ('IPTV',iptv_settings),('Playback',playback),('Subtitles',subtitle_settings),('Trailers',trailers),
-        ('Home & appearance',appearance),('Performance & image cache',performance),('Maintenance',maintenance)]
+        ('Home & appearance',appearance),('Performance & image cache',performance),('Maintenance & updates',maintenance),
+        ('Support Nuvio Hub · Ko-fi',support)]
     def rows():return [page.item(label) for label,_ in actions]+[page.item('Done')]
     def choose(pick):
         try:

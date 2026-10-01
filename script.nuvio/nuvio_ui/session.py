@@ -30,7 +30,23 @@ def scene(art='', title=''):
     window.setProperty('nuvio.scene.title', str(title or ''))
 
 
+def has_video_layer(os_release='/etc/os-release'):
+    """Boxes that show hardware video on a plane under Kodi's interface
+    (CoreELEC/LibreELEC/OSMC and similar, Android). PCs draw video in the GUI."""
+    if xbmc.getCondVisibility('System.Platform.Android'):
+        return True
+    try:
+        with open(os_release, encoding='utf-8', errors='replace') as stream:
+            text = stream.read().lower()
+    except OSError:
+        return False
+    return any(name in text for name in ('coreelec', 'libreelec', 'osmc', 'alexelec'))
+
+
 def open_session():
+    # Skin XML adds a black frame over small videos only where Kodi's own
+    # translucent shade over the video plane does not show.
+    xbmcgui.Window(10000).setProperty('nuvio.videolayer', '1' if has_video_layer() else '')
     scene()
     win=SessionWindow('nuvio_session.xml', xbmcaddon.Addon('script.nuvio').getAddonInfo('path'), 'Default', '1080i')
     win.show()
