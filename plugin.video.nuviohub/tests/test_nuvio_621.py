@@ -37,7 +37,7 @@ class BlueTheme(unittest.TestCase):
             for alpha, rgb in re.findall(r'\b([0-9A-Fa-f]{2})([0-9A-Fa-f]{6})\b', path.read_text(encoding='utf-8')):
                 r, g, b = (int(rgb[i:i + 2], 16) / 255 for i in (0, 2, 4))
                 h, l, s = colorsys.rgb_to_hls(r, g, b)
-                if 235 <= h * 360 <= 300 and s > 0.25 and l > 0.12:
+                if 235 <= h * 360 <= 300 and s > 0.12 and l > 0.12:
                     violet.append((path.name, alpha + rgb))
         self.assertEqual(violet, [])
 

@@ -116,7 +116,7 @@
             <top>0</top>
             <width>1280</width>
             <height>68</height>
-            <texture border="18" colordiffuse="FF332D46">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+            <texture border="18" colordiffuse="FF113762">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
           </control>
           <control type="label">
             <left>22</left>

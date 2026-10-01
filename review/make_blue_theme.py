@@ -28,7 +28,7 @@ def recolor(rgb):
     r, g, b = (int(rgb[i:i + 2], 16) / 255 for i in (0, 2, 4))
     h, l, s = colorsys.rgb_to_hls(r, g, b)
     deg = h * 360
-    if 235 <= deg <= 300 and s > 0.25 and l > 0.12:
+    if 235 <= deg <= 300 and s > 0.12 and l > 0.12:  # 6.0.25: also greyish violet (settings focus)
         if l < 0.7:
             s = max(s, 0.7)
         h = BLUE_HUE

@@ -63,7 +63,7 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
-      <texturefocus colordiffuse="FF666080">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturefocus colordiffuse="FF226BBE">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
       <texturenofocus colordiffuse="FF09234F">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
       <onleft>500</onleft>
       <onright>502</onright>
@@ -149,7 +149,7 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
-      <texturefocus colordiffuse="FF666080">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturefocus colordiffuse="FF226BBE">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
       <texturenofocus colordiffuse="FF09234F">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
       <onleft>501</onleft>
       <onright>503</onright>
@@ -225,7 +225,7 @@
       <font>font13</font>
       <align>center</align>
       <textcolor>FFFFFFFF</textcolor>
-      <texturefocus colordiffuse="FF666080">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturefocus colordiffuse="FF226BBE">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
       <texturenofocus colordiffuse="FF09234F">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
       <ondown>500</ondown>
       <onleft>500</onleft>

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addon id="plugin.video.nuviohub" name="Nuvio Hub" version="6.0.24" provider-name="Nuvio Hub community build">
+<addon id="plugin.video.nuviohub" name="Nuvio Hub" version="6.0.25" provider-name="Nuvio Hub community build">
   <requires>
     <import addon="xbmc.python" version="3.0.0" />
     <import addon="xbmc.gui" version="5.17.0" />
@@ -16,7 +16,7 @@
     <summary lang="en_GB">Nuvio backend and complete local Nuvio build installer.</summary>
     <description lang="en_GB">Backend for the independent Nuvio interface and Kodi skin. Metadata add-ons supply catalog metadata; individually enabled stream add-ons supply sources in their original order. Includes local component installation, account sync, Continue Watching and playback services. Manual bundle ZIP updates only.</description>
     <disclaimer lang="en_GB">The author of this addon does not host any of the content which is found and has no affiliation with any of the content providers. The author is in no way affiliated with Kodi, Team Kodi, or the XBMC Foundation.</disclaimer>
-    <news>Nuvio Hub 6.0.24 review candidate: after an automatic update Kodi asks "Nuvio Hub X is installed. Restart Kodi now?" once no video plays and Nuvio is closed; Later asks again at the next Nuvio entry. Includes all 6.0.18 changes. Device acceptance remains required.</news>
+    <news>Nuvio Hub 6.0.25 review candidate: after an automatic update Kodi asks "Nuvio Hub X is installed. Restart Kodi now?" once no video plays and Nuvio is closed; Later asks again at the next Nuvio entry. Includes all 6.0.18 changes. Device acceptance remains required.</news>
     <assets>
       <icon>resources/media/icon.png</icon>
       <fanart>resources/media/nuvio_banner.png</fanart>

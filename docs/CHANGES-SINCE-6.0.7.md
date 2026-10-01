@@ -1,6 +1,6 @@
 # Nuvio Hub — changes since 6.0.7
 
-Summary of 6.0.8 – 6.0.24 (details in each `docs/RELEASE-6.0.x.md`).
+Summary of 6.0.8 – 6.0.25 (details in each `docs/RELEASE-6.0.x.md`).
 6.0.19 and 6.0.23 are published GitHub releases.
 
 | Area | What changed |

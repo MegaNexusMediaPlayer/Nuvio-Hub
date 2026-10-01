@@ -179,8 +179,8 @@ class HomeWindow(Dialog):
         shelves = [dict(s, rows=s.get('rows') or [home_data.placeholder(
             'No titles yet', 'Open Settings to connect your metadata provider.')]) for s in shelves[:home_data.MAX_ROWS]]
         if not shelves:
-            shelves = [{'title':'Welcome to Nuvio', 'rows':[home_data.placeholder(
-                'Open Settings', 'Connect your Nuvio account and metadata provider to load titles.',
+            shelves = [{'title':'Welcome to MegaNexus', 'rows':[home_data.placeholder(
+                'Open Settings', 'Set up on your phone (HUB Settings › Set up on phone) or add a metadata add-on to load titles.',
                 'plugin://plugin.video.nuviohub/?action=setup_center')]}]
         self._generation += 1
         generation = self._generation

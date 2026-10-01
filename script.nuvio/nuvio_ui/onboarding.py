@@ -100,12 +100,12 @@ def run(force=False):
                     index+=1
                     ADDON.setSetting('nuvio_setup_v110_step',str(index))
             except Exception:
-                dialog.ok('Nuvio setup','This step could not finish. Check your account or connection, retry, or skip it for now.')
+                dialog.ok('MegaNexus setup','This step could not finish. Check your account or connection, retry, or skip it for now.')
             finally:settings_cache.invalidate()
             continue
         choice=pick-len(actions)
         if choice==2:_finish();return
         index=index-1 if choice==3 else index+1
         ADDON.setSetting('nuvio_setup_v110_step',str(index))
-    dialog.ok('Nuvio setup',_summary())
+    dialog.ok('MegaNexus setup',_summary())
     _finish()

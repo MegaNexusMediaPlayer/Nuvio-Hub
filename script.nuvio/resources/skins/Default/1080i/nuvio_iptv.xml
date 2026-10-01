@@ -104,7 +104,7 @@
           <top>0</top>
           <width>277</width>
           <height>56</height>
-          <texture border="18" colordiffuse="FF403452">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="18" colordiffuse="FF144072">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
           <visible>Control.HasFocus(501)</visible>
         </control>
         <control type="label">
@@ -162,7 +162,7 @@
           <top>0</top>
           <width>617</width>
           <height>78</height>
-          <texture border="18" colordiffuse="FF403452">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="18" colordiffuse="FF144072">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
           <visible>Control.HasFocus(500)</visible>
         </control>
         <control type="image">
@@ -263,7 +263,7 @@
           <top>0</top>
           <width>872</width>
           <height>72</height>
-          <texture border="18" colordiffuse="FF403452">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <texture border="18" colordiffuse="FF144072">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
           <visible>Control.HasFocus(504)</visible>
         </control>
         <control type="label">

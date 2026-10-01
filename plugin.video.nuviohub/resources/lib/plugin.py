@@ -6697,9 +6697,9 @@ def _home_impl():
     if not rows:
         # Actionable reception card: it feels like a welcome screen without a
         # blocking splash dialog every time Kodi opens the addon.
-        add_item('[COLOR yellow]%s[/COLOR]' % tr('Welcome to Nuvio Hub — start setup'),
+        add_item('[COLOR yellow]%s[/COLOR]' % tr('Welcome to MegaNexus — start setup'),
                  build_url(action='first_run_wizard'), art=root_art('add'),
-                 info={'title': tr('Welcome to Nuvio Hub — start setup'),
+                 info={'title': tr('Welcome to MegaNexus — start setup'),
                        'plot': tr('Link Stremio or Nuvio, or add your add-ons and accounts manually. Nothing is installed without your choice.')})
 
     # v3.9.91: read home-visibility toggles ONCE per render. The
