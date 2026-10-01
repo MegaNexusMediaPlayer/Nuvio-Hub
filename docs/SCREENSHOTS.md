@@ -2,9 +2,9 @@
 
 Captured from MegaNexus 6.0.23 on Kodi and an iPhone. Personal data (account
 name and email, private add-on name, local IP address, the one-time QR key)
-and third-party artwork (film posters and stills, streaming service and studio
-logos, collection artwork) are blurred. Titles shown come from the user's own
-add-ons; MegaNexus does not host or provide any media.
+and trademarked streaming-service and studio logos are blurred. Posters and
+stills come from the user's own add-ons and are shown only to illustrate the
+interface; MegaNexus does not host or provide any media.
 
 ## HUB
 
