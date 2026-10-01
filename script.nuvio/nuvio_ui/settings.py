@@ -449,10 +449,11 @@ def check_updates():
     except Exception as exc:
         dialog.ok('Updates','The update could not be installed; your current version was kept.\n'+(str(exc) if isinstance(exc,ValueError) else ''));return
     xbmc.executebuiltin('UpdateLocalAddons')
-    if dialog.yesno('Updates','Nuvio Hub %s is installed. Restart Kodi now to finish?'%info['version']):
-        xbmc.executebuiltin('RestartApp')
-    else:
-        return page.DONE
+    updater.mark_pending(backend,info['version'])
+    # Settings are part of the open Nuvio interface: the restart question waits
+    # until Nuvio is closed, then shows at the next Nuvio entry if postponed.
+    dialog.ok('Updates','Nuvio Hub %s is installed. Kodi asks to restart when you leave Nuvio.'%info['version'])
+    return page.DONE
 
 
 def maintenance():

@@ -33,6 +33,9 @@ MAX_ZIP = 200 * 1024 * 1024
 CHECK_EVERY = 12 * 3600
 AUTO_SETTING = 'nuvio_auto_update'
 CHECKED_SETTING = 'nuvio_update_checked'
+PENDING_SETTING = 'nuvio_restart_pending'   # '<version>|<Kodi session token>' until Kodi restarts
+BOOT_PROPERTY = 'nuvio.service.boot'        # Window(10000) property; gone after a Kodi restart
+PROMPTED_PROPERTY = 'nuvio.restart.prompted'
 USER_AGENT = 'NuvioHub-Updater (Kodi)'
 
 
@@ -206,6 +209,7 @@ def check_and_update(addon, interactive=False, opener=urlopen):
         xbmc.log('[NuvioHub] update to %s failed: %s' % (info['version'], exc), xbmc.LOGWARNING)
         return 'error', info
     xbmc.executebuiltin('UpdateLocalAddons')
+    mark_pending(addon, info['version'])
     return 'installed', info
 
 
@@ -247,5 +251,80 @@ def interactive_check():
         return
     busy.close()
     xbmc.executebuiltin('UpdateLocalAddons')
-    if dialog.yesno('Nuvio Hub updates', 'Nuvio Hub %s is installed. Restart Kodi now to finish?' % info['version']):
+    mark_pending(addon, info['version'])
+    prompt_restart(addon, info['version'])
+
+
+# ---- Restart prompt after an automatic update --------------------------------
+
+def boot_token():
+    """Token of the running Kodi session (set by the service at start-up)."""
+    import uuid
+    import xbmcgui
+    home = xbmcgui.Window(10000)
+    token = home.getProperty(BOOT_PROPERTY)
+    if not token:
+        token = uuid.uuid4().hex
+        home.setProperty(BOOT_PROPERTY, token)
+    return token
+
+
+def mark_pending(addon, version):
+    addon.setSetting(PENDING_SETTING, '%s|%s' % (version, boot_token()))
+
+
+def pending_version(addon):
+    """Installed version still waiting for a Kodi restart, or ''. A restart of
+    Kodi by any route (new session token) clears it."""
+    version, _, session = (addon.getSetting(PENDING_SETTING) or '').partition('|')
+    if version and session and session != boot_token():
+        addon.setSetting(PENDING_SETTING, '')
+        return ''
+    return version
+
+
+def safe_to_prompt():
+    """Never over a video or the open Nuvio interface."""
+    import xbmc
+    import xbmcgui
+    return not xbmc.Player().isPlayingVideo() and not xbmcgui.Window(10000).getProperty('nuvio.frontend.running')
+
+
+def prompt_restart(addon, version):
+    """Yes restarts Kodi now; No keeps the reminder for the next Nuvio entry."""
+    import xbmc
+    import xbmcgui
+    xbmcgui.Window(10000).setProperty(PROMPTED_PROPERTY, version)
+    if xbmcgui.Dialog().yesno('Nuvio Hub', 'Nuvio Hub %s is installed. Restart Kodi now?' % version,
+                              nolabel='Later', yeslabel='Restart'):
+        addon.setSetting(PENDING_SETTING, '')
         xbmc.executebuiltin('RestartApp')
+        return True
+    return False
+
+
+def prompt_when_safe(addon, monitor, poll=5):
+    """Service: after an automatic install, ask once this session as soon as no
+    video plays and Nuvio is closed. Returns True when Kodi is restarting."""
+    import xbmcgui
+    while not monitor.abortRequested():
+        version = pending_version(addon)
+        if not version or xbmcgui.Window(10000).getProperty(PROMPTED_PROPERTY) == version:
+            return False  # Already asked this session: the reminder waits for the next Nuvio entry.
+        if safe_to_prompt():
+            return prompt_restart(addon, version)
+        if monitor.waitForAbort(poll):
+            return False
+    return False
+
+
+def prompt_at_entry(addon=None):
+    """Nuvio entry: remind about a pending restart before the interface opens.
+    Returns True when Kodi is restarting (the interface should not open)."""
+    import xbmc
+    import xbmcaddon
+    addon = addon or xbmcaddon.Addon(BACKEND)
+    version = pending_version(addon)
+    if not version or xbmc.Player().isPlayingVideo():
+        return False
+    return prompt_restart(addon, version)

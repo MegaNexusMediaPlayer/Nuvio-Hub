@@ -801,6 +801,7 @@ if __name__ == '__main__':
     def _update_loop(mon):
         """GitHub release check every 12 h; installs when automatic updates are ON."""
         from resources.lib import updater
+        updater.boot_token()  # this Kodi session; a pending restart from an older one is cleared
         if mon.waitForAbort(90):return
         while not mon.abortRequested():
             try:
@@ -809,7 +810,9 @@ if __name__ == '__main__':
                 if updater.due(_addon) and not _interactive_busy():
                     status, info = updater.check_and_update(_addon)
                     if status == 'installed':
-                        xbmcgui.Dialog().notification('Nuvio Hub', 'Updated to %s. Restart Kodi to finish.' % info['version'], time=10000)
+                        # Ask "restart now?" only when no video plays and Nuvio is
+                        # closed; "Later" reminds again at the next Nuvio entry.
+                        if updater.prompt_when_safe(_addon, mon):return
                     elif status == 'available':
                         xbmcgui.Dialog().notification('Nuvio Hub', '%s is available: Settings > Maintenance.' % info['version'], time=8000)
             except Exception as exc:

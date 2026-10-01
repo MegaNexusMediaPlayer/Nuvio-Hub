@@ -15,15 +15,7 @@ def finish_jobs():
     module=sys.modules.get('nuvio_ui.playback')
     if module:module._JOBS.shutdown();module._BACKGROUND.shutdown();module._CATALOG.shutdown()
 
-mode = sys.argv[1] if len(sys.argv) > 1 else 'home'
-if mode=='subtitles':
-    from nuvio_ui.subtitles import run
-    try:run()
-    finally:finish_jobs()
-elif home.getProperty('nuvio.frontend.running'):
-    # One modal interface at a time, including on skin reload/activation.
-    pass
-else:
+def launch():
     token=uuid.uuid4().hex
     home.setProperty('nuvio.frontend.running', token)
     session=None
@@ -83,3 +75,24 @@ else:
         finish_jobs()
         if home.getProperty('nuvio.frontend.running')==token:
             home.clearProperty('nuvio.frontend.running')
+
+
+mode = sys.argv[1] if len(sys.argv) > 1 else 'home'
+if mode=='subtitles':
+    from nuvio_ui.subtitles import run
+    try:run()
+    finally:finish_jobs()
+elif home.getProperty('nuvio.frontend.running'):
+    # One modal interface at a time, including on skin reload/activation.
+    pass
+else:
+    restarting=False
+    try:
+        # An installed update waiting for a Kodi restart: ask before the
+        # interface opens ("Later" asks again at the next entry).
+        from resources.lib import updater
+        restarting=updater.prompt_at_entry()
+    except Exception:
+        xbmc.log('[Nuvio] Restart reminder skipped.',xbmc.LOGDEBUG)
+    if not restarting:
+        launch()

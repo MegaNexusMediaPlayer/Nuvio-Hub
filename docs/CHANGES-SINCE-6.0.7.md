@@ -1,6 +1,6 @@
 # Nuvio Hub — changes since the published 6.0.7
 
-Summary for review of the local 6.0.8 – 6.0.18 candidates (details in each
+Summary for review of the local 6.0.8 – 6.0.19 candidates (details in each
 `docs/RELEASE-6.0.x.md`). None of these is published on GitHub yet.
 
 | Area | What changed |
@@ -15,7 +15,7 @@ Summary for review of the local 6.0.8 – 6.0.18 candidates (details in each
 | Screensaver | Seamless MP4 loop (no artwork flash, no reopen). |
 | IPTV | Refresh guide / IPTV setup / HUB at the bottom; one HUB button. |
 | Details | No "Loading episodes" banner; ratings (IMDb/TMDb) under the Home title, switchable. |
-| Maintenance | Automatic updates from GitHub releases (checksum, rollback), Ko-fi QR, organised Configure page, working "Remove Nuvio build". |
+| Maintenance | Automatic updates from GitHub releases (checksum, rollback, "Restart Kodi now?" when no video plays and Nuvio is closed), Ko-fi QR, organised Configure page, working "Remove Nuvio build". |
 | Fixes | Several latent crashes (NameErrors), Continue Watching position after Details, settings dialogs no longer hidden behind pages, subtitle preferences saved. |
 
 Release naming for automatic updates: tag `v<version>`, assets
