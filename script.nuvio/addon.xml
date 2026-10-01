@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addon id="script.nuvio" name="MegaNexus" version="6.0.26" provider-name="MegaNexus">
+<addon id="script.nuvio" name="MegaNexus" version="6.0.27" provider-name="MegaNexus">
   <requires>
     <import addon="xbmc.python" version="3.0.0" />
-    <import addon="plugin.video.nuviohub" version="6.0.26" />
+    <import addon="plugin.video.nuviohub" version="6.0.27" />
   </requires>
   <extension point="xbmc.python.script" library="default.py">
     <provides>executable</provides>

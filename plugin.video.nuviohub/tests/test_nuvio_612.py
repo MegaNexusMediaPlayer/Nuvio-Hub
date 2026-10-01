@@ -168,7 +168,7 @@ class TrailerPlayback(unittest.TestCase):
         text = (ROOT / 'plugin.video.nuviohub/resources/settings.xml').read_text(encoding='utf-8')
         for key in ('nuvio_imdb_trailer_quality', 'nuvio_show_ratings', 'nuvio_stream_switch_612'):
             self.assertIn('id="%s"' % key, text)
-        self.assertIn('id="nuvio_trailer_source" type="text" default="youtube_imdb"', text)
+        self.assertIn('id="nuvio_trailer_source" type="text" default="imdb_youtube"', text)  # 6.0.27
 
 
 class DetailsAndBackground(unittest.TestCase):

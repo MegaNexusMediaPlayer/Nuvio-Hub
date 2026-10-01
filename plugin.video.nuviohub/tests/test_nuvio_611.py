@@ -879,8 +879,9 @@ class ImdbTrailers(unittest.TestCase):
         self.assertEqual(self.imdb.imdb_id({'imdb_id': '111161'}), 'tt0111161')
         self.assertEqual(self.imdb.imdb_id({'id': 'kitsu:1'}), '')
 
-    def test_source_setting_defaults_to_youtube_with_imdb_fallback(self):
-        for raw, expected in (('', 'youtube_imdb'), ('bogus', 'youtube_imdb'), ('youtube', 'youtube'),
+    def test_source_setting_defaults_to_imdb_first(self):
+        # 6.0.27: IMDb first (no add-on), then the add-on trailer; YouTube optional.
+        for raw, expected in (('', 'imdb_youtube'), ('bogus', 'imdb_youtube'), ('youtube', 'youtube'), ('youtube_imdb', 'youtube_imdb'),
                               ('imdb', 'imdb'), ('imdb_youtube', 'imdb_youtube')):
             addon = mock.Mock(getSetting=lambda key, v=raw: v)
             self.assertEqual(self.imdb.source_setting(addon), expected)

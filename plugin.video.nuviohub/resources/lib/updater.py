@@ -295,7 +295,7 @@ def prompt_restart(addon, version):
     import xbmc
     import xbmcgui
     xbmcgui.Window(10000).setProperty(PROMPTED_PROPERTY, version)
-    if xbmcgui.Dialog().yesno('Nuvio Hub', 'Nuvio Hub %s is installed. Restart Kodi now?' % version,
+    if xbmcgui.Dialog().yesno('MegaNexus', 'MegaNexus %s is installed. Restart Kodi now?' % version,
                               nolabel='Later', yeslabel='Restart'):
         addon.setSetting(PENDING_SETTING, '')
         xbmc.executebuiltin('RestartApp')

@@ -11,11 +11,11 @@ No benchmark claim without that measurement.
 
 ## Current architecture
 
-The ram200 preset budgets 160 MiB downloaded artwork bytes in the backend art
+The ram256 preset (6.0.27 default) budgets 256 MiB downloaded artwork bytes in the backend art
 service and 40 MiB serialized browse data per frontend cache instance. SQLite
 has a 128 MiB logical browse-payload budget; pages, Python objects and decoded
 Kodi/GPU textures add overhead. Separate Kodi interpreters can own separate
-cache instances. Do not advertise this as a global 200 MiB process cap.
+cache instances. Do not advertise this as a global 256 MiB process cap.
 
 Home startup checks/promotes persisted first pages with one SQLite read, warms
 misses with at most four workers and a 40-second total foreground budget, and

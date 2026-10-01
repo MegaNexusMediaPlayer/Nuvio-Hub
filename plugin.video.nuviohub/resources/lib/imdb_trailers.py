@@ -26,11 +26,11 @@ QUALITIES = {'480': ('DEF_480p', 'DEF_SD', 'DEF_720p', 'DEF_1080p'),
 QUALITY_LABELS = {'480': '480p · fastest start', '720': '720p', '1080': '1080p · most data'}
 QUALITY_SETTING = 'nuvio_imdb_trailer_quality'
 PREFERRED = QUALITIES['480']
-DEFAULT_SOURCE = 'youtube_imdb'
+DEFAULT_SOURCE = 'imdb_youtube'  # 6.0.27: IMDb first (no add-on), then the add-on's own trailer
 CDN_SUFFIX = '.media-imdb.com'
-SOURCES = ('youtube', 'imdb', 'imdb_youtube', 'youtube_imdb')
-LABELS = {'youtube': 'YouTube', 'imdb': 'IMDb', 'imdb_youtube': 'IMDb, then YouTube',
-          'youtube_imdb': 'YouTube, then IMDb'}
+SOURCES = ('imdb_youtube', 'imdb', 'youtube', 'youtube_imdb')
+LABELS = {'youtube': 'Add-on trailer / YouTube', 'imdb': 'IMDb only', 'imdb_youtube': 'IMDb, then add-on trailer / YouTube',
+          'youtube_imdb': 'Add-on trailer / YouTube, then IMDb'}
 SETTING = 'nuvio_trailer_source'
 _TTL = 1800
 _CACHE = {}
@@ -38,7 +38,9 @@ _LOCK = threading.Lock()
 
 
 def source_setting(addon=None):
-    """Chosen trailer source; unknown or unset values mean YouTube (previous behaviour)."""
+    """Chosen trailer source; unset means IMDb first (no add-on needed), then the
+    metadata add-on's own trailer - a direct file plays without any add-on,
+    a YouTube link only when the YouTube add-on is installed."""
     try:
         if addon is None:
             import xbmcaddon
@@ -47,6 +49,23 @@ def source_setting(addon=None):
     except Exception:
         value = ''
     return value if value in SOURCES else DEFAULT_SOURCE
+
+
+DEFAULTS_627 = 'nuvio_trailer_defaults_627'
+
+
+def migrate_defaults(addon):
+    """Once (6.0.27): IMDb comes first and automatic trailers are switched on,
+    where the profile still holds the previous defaults (YouTube-then-IMDb,
+    trailers off). Later choices are never changed."""
+    if addon.getSetting(DEFAULTS_627) == 'true':
+        return False
+    if (addon.getSetting(SETTING) or '').strip() in ('', 'youtube_imdb'):
+        addon.setSetting(SETTING, DEFAULT_SOURCE)
+    if (addon.getSetting('nuvio_auto_trailers') or '').strip() in ('', 'false'):
+        addon.setSetting('nuvio_auto_trailers', 'true')
+    addon.setSetting(DEFAULTS_627, 'true')
+    return True
 
 
 def quality_setting(addon=None):

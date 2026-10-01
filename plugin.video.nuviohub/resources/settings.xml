@@ -165,14 +165,15 @@
     <setting id="verbose_logging" type="bool" label="30328" default="false" visible="false" />
     <setting id="nuvio_skip_mode" type="labelenum" label="Skip intro, recap and credits" values="Button|Automatic|Off" default="Button" visible="false" />
     <setting id="nuvio_introdb_key" type="text" label="TheIntroDB API key (optional)" default="" option="hidden" visible="false" />
-    <setting id="nuvio_auto_trailers" type="bool" label="Automatic home trailers after 6 seconds" default="false" visible="false" />
+    <setting id="nuvio_auto_trailers" type="bool" label="Automatic home trailers after 6 seconds" default="true" visible="false" />
     <setting id="nuvio_metadata_provider" type="text" default="" visible="false" />
     <setting id="nuvio_streams_provider" type="text" default="" visible="false" />
     <setting id="nuvio_skin_applied" type="bool" default="false" visible="false" />
     <setting id="nuvio_autoplay" type="text" default="false" visible="false" />
     <setting id="nuvio_trailer_delay" type="text" default="6" visible="false" />
     <setting id="nuvio_trailer_duration" type="text" default="90" visible="false" />
-    <setting id="nuvio_trailer_source" type="text" default="youtube_imdb" visible="false" />
+    <setting id="nuvio_trailer_source" type="text" default="imdb_youtube" visible="false" />
+    <setting id="nuvio_trailer_defaults_627" type="text" default="" visible="false" />
     <setting id="nuvio_imdb_trailer_quality" type="text" default="480" visible="false" />
     <setting id="nuvio_show_ratings" type="bool" default="true" visible="false" />
     <setting id="nuvio_stream_switch_612" type="bool" default="false" visible="false" />
@@ -184,7 +185,7 @@
     <setting id="nuvio_update_checked" type="text" default="0" visible="false" />
     <setting id="nuvio_restart_pending" type="text" default="" visible="false" />
     <setting id="nuvio_animated_art" type="text" default="false" visible="false" />
-    <setting id="nuvio_art_cache" type="text" default="ram200" visible="false" />
+    <setting id="nuvio_art_cache" type="text" default="ram256" visible="false" />
     <setting id="nuvio_card_shape" type="text" default="poster" visible="false" />
     <setting id="nuvio_animation_map" type="text" default="{}" visible="false" />
     <setting id="nuvio_iptv_instance" type="text" default="" visible="false" />

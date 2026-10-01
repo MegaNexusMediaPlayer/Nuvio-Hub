@@ -429,8 +429,9 @@ class CachePresetUpgradeTests(unittest.TestCase):
             def __init__(self, mode): self.mode = mode
             def getSetting(self, key): return self.mode
             def setSetting(self, key, value): self.mode = value
-        for previous, expected in (('ram150','ram200'), ('ram200','ram200'),
-                                   ('disk246','disk246'), ('disk512','disk512'), ('off','off'), ('','ram200')):
+        # 6.0.27: earlier RAM presets move to ram256 (~800 posters need ~90 MiB).
+        for previous, expected in (('ram150','ram256'), ('ram200','ram256'),
+                                   ('disk246','disk246'), ('disk512','disk512'), ('off','off'), ('','ram256')):
             with self.subTest(previous=previous):
                 settings=Settings(previous)
                 self.assertEqual(selected_mode(settings), expected)

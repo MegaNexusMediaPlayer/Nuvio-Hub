@@ -577,6 +577,12 @@ def _migrate_v520_search_defaults():
 if __name__ == '__main__':
     xbmc.log('[NuvioHub] companion service started', xbmc.LOGINFO)
     _migrate_legacy_brand_settings()
+    try:
+        import xbmcaddon as _xa_trailers
+        from resources.lib.imdb_trailers import migrate_defaults as _trailer_defaults
+        _trailer_defaults(_xa_trailers.Addon('plugin.video.nuviohub'))  # 6.0.27: IMDb, trailers on
+    except Exception as exc:
+        xbmc.log('[NuvioHub] trailer default migration skipped: %s' % exc, xbmc.LOGDEBUG)
     # v3.9.71: log Kodi version on startup so platform-specific issues
     # (e.g. deprecated API native crashes on Kodi 22 alpha) are easy to
     # correlate with bug reports.

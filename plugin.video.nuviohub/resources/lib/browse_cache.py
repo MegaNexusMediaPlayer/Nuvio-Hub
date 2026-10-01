@@ -1,6 +1,6 @@
 """Bounded JSON-byte LRU with private, restart-safe disk backing.
 
-Forty MiB of serialized metadata plus 160 MiB of compressed image bytes form the
+Forty MiB of serialized metadata plus 256 MiB of compressed image bytes form the
 RAM-200 cache preset. Python objects, SQLite pages and Kodi's decoded textures
 are not included in these data budgets. Network work happens only in
 ``catalog``/``refresh`` worker calls, never in ``peek``.

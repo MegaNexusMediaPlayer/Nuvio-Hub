@@ -98,7 +98,11 @@ class NoReinstallAfterManualUninstall(unittest.TestCase):
         addon = SimpleNamespace(getSetting=lambda k: self.values.get(k, ''), setSetting=lambda k, v: self.values.__setitem__(k, v))
         monitor = mock.Mock(waitForAbort=mock.Mock(return_value=False))
         self.monitor = monitor
-        for patch in (mock.patch.object(installer, 'paths', return_value=(self.packages, self.addons)),
+        updater = importlib.import_module(installer.__package__ + '.updater')
+        self.restart = mock.Mock()
+        for patch in (mock.patch.object(updater, 'mark_pending'),
+                      mock.patch.object(updater, 'prompt_when_safe', self.restart),
+                      mock.patch.object(installer, 'paths', return_value=(self.packages, self.addons)),
                       mock.patch.object(installer, 'backend_version', side_effect=lambda p: self.version),
                       mock.patch('xbmcaddon.Addon', return_value=addon),
                       mock.patch('xbmc.Player', return_value=SimpleNamespace(isPlayingVideo=lambda: False)),
@@ -122,6 +126,7 @@ class NoReinstallAfterManualUninstall(unittest.TestCase):
         make_packages(self.packages, 'second')
         self.assertEqual(len(installer.auto_install(self.monitor, attempts=2)), 3)
         self.assertEqual((self.addons / 'skin.nuvio/revision.txt').read_text(), 'second')
+        self.restart.assert_called_once()  # 6.0.27: an update asks to restart Kodi
 
     def test_nothing_happens_during_a_removal(self):
         self.props['nuvio.uninstalling'] = '1'

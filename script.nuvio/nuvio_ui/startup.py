@@ -12,12 +12,16 @@ MAX_WORKERS = 4
 MAX_STARTUP_SECONDS = 40
 
 
-def jobs():
+def shown_groups():
+    """Only what Home shows: hidden rows and hidden cards are not prepared."""
+    return [dict(g, folders=[f for f in g.get('folders') or [] if not f.get('hidden')])
+            for g in collection_profile.load() if not g.get('hidden')]
+
+
+def jobs(groups=None):
     providers = store.list_providers()
     result, seen = [], set()
-    # Only what Home shows: hidden rows and hidden cards are not prepared.
-    shown = [dict(g, folders=[f for f in g.get('folders') or [] if not f.get('hidden')])
-             for g in collection_profile.load() if not g.get('hidden')]
+    shown = shown_groups() if groups is None else groups
     for _, source in collection_validation.sources(shown):
         match = matching_catalog(source, providers)
         if not match:
@@ -32,6 +36,7 @@ def jobs():
 
 
 POSTER_WORKERS = 6           # matches the image proxy's download workers
+FRONT_ROWS = 3               # posters loaded before Home: the first rows on screen
 POSTERS_PER_CATALOG = 10     # a screen of cards per collection catalog
 MAX_POSTER_SECONDS = 60      # the rest continues in the background on Home
 COLD_IMAGES = 600            # proxy RAM holding fewer images = filled after reboot/suspend
@@ -51,13 +56,17 @@ def art_cold():
 
 
 def poster_urls(all_jobs, per_catalog=POSTERS_PER_CATALOG):
-    """Exactly the artwork URLs Home will request for each collection catalog."""
+    """Exactly the artwork URLs Home will request for each collection catalog.
+
+    Pages are read from the disk cache too: the 40 MiB in-memory page cache
+    holds only ~75 rich catalog pages, so a RAM-only read silently skipped the
+    rest (both test boxes showed the same 738 posters for different layouts)."""
     import xbmcaddon
     from resources.lib import home_data
     landscape = xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_card_shape') == 'landscape'
     urls, seen = [], set()
     for _, provider, catalog, extra in all_jobs:
-        data = browse_cache.peek(provider, catalog, extra, memory_only=True, revalidate=False)
+        data = browse_cache.peek(provider, catalog, extra, memory_only=False, revalidate=False)
         if not data:
             continue
         try:
@@ -133,7 +142,9 @@ def _warm_posters(window, monitor, base, urls, report):
             window.setProperty('nuvio.loading', 'Loading posters into memory · %d / %d · Back to skip'
                                % (report['posters'], len(urls)))
         if not pending and report['posters'] >= len(urls):
-            xbmcgui.Window(10000).setProperty('nuvio.art_warm.session', base)
+            # Only the first rows are done: Home's background warm-up loads the
+            # rest (it pauses while the user navigates) and marks the session.
+            xbmcgui.Window(10000).setProperty('nuvio.art_warm.front', base)
     finally:
         for future in pending:
             future.cancel()
@@ -142,9 +153,9 @@ def _warm_posters(window, monitor, base, urls, report):
 
 def prepare():
     """Before Home: make sure every collection's first page is cached and - after
-    a reboot, when the image RAM is empty - load their posters into memory, so
-    every collection and catalog opens at full speed. Back skips; whatever is
-    left continues in the background."""
+    a reboot, when the image RAM is empty - load the posters of the first rows
+    on screen. Back skips. The other rows' posters are loaded by Home in the
+    background, paused while the user navigates."""
     all_jobs = jobs()
     cache = browse_cache.instance()
     # One SQLite read promotes warmed disk pages to the bounded in-process LRU.
@@ -167,7 +178,7 @@ def prepare():
         if missing:
             _warm_catalogs(window, monitor, all_jobs, missing, report)
         if base and not window.cancelled and not monitor.abortRequested():
-            urls = poster_urls(all_jobs)
+            urls = poster_urls(jobs(shown_groups()[:FRONT_ROWS]))
             if urls:
                 _warm_posters(window, monitor, base, urls, report)
         return report

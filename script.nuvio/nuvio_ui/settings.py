@@ -320,7 +320,7 @@ def trailers():
             if i>=0:ADDON.setSetting(key,labels[i])
         elif pick==3:
             keys=list(imdb_trailers.SOURCES);current=imdb_trailers.source_setting(ADDON)
-            i=dialog.select('Trailer source',[imdb_trailers.LABELS[k]+(' · no YouTube add-on needed' if k=='imdb' else '') for k in keys],
+            i=dialog.select('Trailer source',[imdb_trailers.LABELS[k]+(' · default' if k==imdb_trailers.DEFAULT_SOURCE else '') for k in keys],
                             preselect=keys.index(current))
             if i>=0:ADDON.setSetting(imdb_trailers.SETTING,keys[i])
         elif pick==4:
@@ -335,8 +335,8 @@ def trailers():
 
 def performance():
     from resources.lib.art_cache import selected_mode
-    keys=['ram200','disk246','disk512','off']
-    labels=['RAM · 200 MiB','Internal disk images · 246 MiB','Internal disk images · 512 MiB','Images off · Kodi texture cache only']
+    keys=['ram256','disk246','disk512','off']
+    labels=['RAM · 256 MiB','Internal disk images · 246 MiB','Internal disk images · 512 MiB','Images off · Kodi texture cache only']
     def rows():
         mode=selected_mode(ADDON)
         label=labels[keys.index(mode)] if mode in keys else labels[-1]

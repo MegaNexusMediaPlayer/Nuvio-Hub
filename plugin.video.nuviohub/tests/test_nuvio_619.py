@@ -47,7 +47,7 @@ class RestartPrompt(unittest.TestCase):
         self.kodi.answer = True
         self.assertTrue(updater.prompt_at_entry(self.addon))
         self.assertEqual(self.kodi.builtins, ['RestartApp'])
-        self.assertEqual(self.kodi.questions, ['Nuvio Hub 6.0.20 is installed. Restart Kodi now?'])
+        self.assertEqual(self.kodi.questions, ['MegaNexus 6.0.20 is installed. Restart Kodi now?'])
         self.assertEqual(updater.pending_version(self.addon), '')
 
     def test_later_keeps_the_reminder_for_the_next_entry(self):

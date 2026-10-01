@@ -14,7 +14,9 @@ import os
 import threading
 import time
 
-LIMITS = {'ram200':160*1024*1024, 'ram150':150*1024*1024, 'disk246':246*1024*1024, 'disk512':512*1024*1024}
+# ram256 (6.0.27 default): ~800 posters take ~90 MiB, so a full Home of ~130
+# catalogs fits. ram200/ram150 are kept only so older settings still resolve.
+LIMITS = {'ram256':256*1024*1024, 'ram200':160*1024*1024, 'ram150':150*1024*1024, 'disk246':246*1024*1024, 'disk512':512*1024*1024}
 MAX_IMAGE = 8*1024*1024
 _BASE = ('',0)
 _SERVICE = None
@@ -208,10 +210,10 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def selected_mode(addon):
-    """Upgrade the previous RAM preset, without changing disk/off preferences."""
-    mode = addon.getSetting('nuvio_art_cache') or 'ram200'
-    if mode == 'ram150':
-        mode = 'ram200'
+    """Upgrade earlier RAM presets to ram256, without changing disk/off preferences."""
+    mode = addon.getSetting('nuvio_art_cache') or 'ram256'
+    if mode in ('ram150', 'ram200'):
+        mode = 'ram256'
         addon.setSetting('nuvio_art_cache', mode)
     return mode
 

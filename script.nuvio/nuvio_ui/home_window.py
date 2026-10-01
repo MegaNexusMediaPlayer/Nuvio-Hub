@@ -366,7 +366,8 @@ class HomeWindow(Dialog):
         if not base or home.getProperty('nuvio.art_warm.session')==base or home.getProperty('nuvio.art_warm.running'):return
         try:images=int((home.getProperty('nuvio.art_cache.usage') or '0 · 0').split('·')[-1].split()[0])
         except (ValueError,IndexError):images=0
-        if images>=COLD_ART_IMAGES:return
+        # The start screen loaded only the first rows: always continue with the rest.
+        if images>=COLD_ART_IMAGES and home.getProperty('nuvio.art_warm.front')!=base:return
         home.setProperty('nuvio.art_warm.running',base)
         ids=[row['collection_id'] for shelf in self._shelves for row in shelf.get('rows') or [] if row.get('collection_id')]
         threading.Thread(target=self._cold_art_warm,args=(ids,base),name='NuvioArtWarm',daemon=True).start()

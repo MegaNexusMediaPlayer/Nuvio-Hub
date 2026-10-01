@@ -38,7 +38,7 @@ class Labels(unittest.TestCase):
         with mock.patch.object(settings.page, 'show', side_effect=show), \
                 mock.patch.object(settings.xbmcgui, 'Dialog', return_value=dialog):
             settings.performance()
-            self.assertEqual(captured['rows'][0]['value'], 'RAM · 200 MiB')
+            self.assertEqual(captured['rows'][0]['value'], 'RAM · 256 MiB')  # 6.0.27 preset
             captured['choose'](1)
         dialog.ok.assert_not_called()
         source = (ROOT / 'script.nuvio/nuvio_ui/settings.py').read_text(encoding='utf-8')

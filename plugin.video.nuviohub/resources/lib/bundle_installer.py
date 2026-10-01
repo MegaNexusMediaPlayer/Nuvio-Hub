@@ -134,10 +134,18 @@ def auto_install(monitor, busy=lambda: False, wait=10, retry=30, attempts=120):
         if not outdated(packages,addons_dir):
             addon.setSetting(VERSION_SETTING,version);return []
         if not xbmc.Player().isPlayingVideo() and not home.getProperty('nuvio.frontend.running') and not busy():
+            previous=addon.getSetting(VERSION_SETTING)
             changed=ensure_components()
             addon.setSetting(VERSION_SETTING,version)
             if changed:
                 xbmcgui.Dialog().notification('MegaNexus','Interface, skin and screensaver updated',xbmcgui.NOTIFICATION_INFO,5000)
+                if previous:
+                    # An update replaced components while Kodi was running: parts
+                    # of the old ones stay loaded (e.g. the small trailer video on
+                    # Android) until a restart. Same question as the GitHub updater.
+                    from . import updater
+                    updater.mark_pending(addon,version)
+                    updater.prompt_when_safe(addon,monitor)
             return changed
         if monitor.waitForAbort(retry):return []
     return []

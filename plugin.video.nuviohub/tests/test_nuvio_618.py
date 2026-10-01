@@ -132,7 +132,9 @@ class PosterPreload(unittest.TestCase):
         self.assertEqual(len(heads), self.startup.POSTERS_PER_CATALOG)
         self.assertTrue(all(h.startswith('http://127.0.0.1:9/image?url=') for h in heads))
         self.assertIn('Loading posters into memory', props['nuvio.loading'])
-        self.assertEqual(props.get('home:nuvio.art_warm.session'), 'http://127.0.0.1:9')
+        # 6.0.27: the start screen covers only the first rows; Home finishes the rest.
+        self.assertEqual(props.get('home:nuvio.art_warm.front'), 'http://127.0.0.1:9')
+        self.assertIsNone(props.get('home:nuvio.art_warm.session'))
 
     def test_warm_proxy_and_cached_catalogs_skip_the_loading_screen(self):
         with mock.patch.object(self.startup, 'jobs', return_value=[('k', {}, {}, {})]), \
