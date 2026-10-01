@@ -64,7 +64,7 @@ class FakeKodi:
     def modules(self):
         kodi = self
         xbmc = types.ModuleType('xbmc')
-        xbmc.LOGWARNING = 2
+        xbmc.LOGWARNING, xbmc.LOGERROR = 2, 4
         xbmc.executeJSONRPC = self.rpc
         xbmc.getSkinDir = lambda: kodi.settings['lookandfeel.skin']
         xbmc.getCondVisibility = lambda condition: False
@@ -123,7 +123,7 @@ class RemoveBuild(unittest.TestCase):
             self.assertFalse((self.home / 'addons' / aid).exists(), aid)
         self.assertTrue((self.home / 'addons' / 'skin.estuary').exists())
         self.assertIn('UpdateLocalAddons', self.kodi.builtins)
-        self.assertEqual(self.kodi.dialogs[-1][0], 'Nuvio removed')
+        self.assertEqual(self.kodi.dialogs[-1][0], 'MegaNexus removed')
 
     def test_seek_restore_needs_no_package(self):
         with mock.patch.dict(sys.modules, self.kodi.modules()):

@@ -193,6 +193,7 @@
     <setting id="nuvio_iptv_last_group" type="text" default="" visible="false" />
     <setting id="nuvio_screensaver_art" type="text" default="" visible="false" />
     <setting id="nuvio_screensaver_applied" type="text" default="false" visible="false" />
+    <setting id="nuvio_components_for" type="text" default="" visible="false" />
   </category>
   <category label="Remove">
     <setting type="lsep" label="Removes the MegaNexus interface, skin, screensaver and Nuvio Hub in the right order." />

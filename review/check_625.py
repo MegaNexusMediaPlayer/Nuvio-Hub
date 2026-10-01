@@ -12,7 +12,7 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 COMPONENTS = ('plugin.video.nuviohub', 'script.nuvio', 'skin.nuvio', 'screensaver.nuvio')
 MODULES = ('test_nuvio_601', 'test_nuvio_602', 'test_nuvio_603', 'test_nuvio_604',
-           'test_nuvio_605', 'test_nuvio_609', 'test_nuvio_610', 'test_nuvio_611', 'test_nuvio_612', 'test_nuvio_613', 'test_nuvio_614', 'test_nuvio_615', 'test_nuvio_616', 'test_nuvio_617', 'test_nuvio_618', 'test_nuvio_619', 'test_nuvio_620', 'test_nuvio_621', 'test_nuvio_622', 'test_nuvio_623', 'test_nuvio_624', 'test_nuvio_625', 'test_nuvio_home_iptv',
+           'test_nuvio_605', 'test_nuvio_609', 'test_nuvio_610', 'test_nuvio_611', 'test_nuvio_612', 'test_nuvio_613', 'test_nuvio_614', 'test_nuvio_615', 'test_nuvio_616', 'test_nuvio_617', 'test_nuvio_618', 'test_nuvio_619', 'test_nuvio_620', 'test_nuvio_621', 'test_nuvio_622', 'test_nuvio_623', 'test_nuvio_624', 'test_nuvio_625', 'test_nuvio_625_removal', 'test_nuvio_home_iptv',
            'test_nuvio_build', 'test_nuvio_extras', 'test_nuvio_reliability',
            'test_nuvio_architecture')
 

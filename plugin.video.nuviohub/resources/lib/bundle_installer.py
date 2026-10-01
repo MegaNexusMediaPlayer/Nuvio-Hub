@@ -106,18 +106,36 @@ def paths():
     return (Path(addon.getAddonInfo('path'))/'resources/packages', Path(xbmcvfs.translatePath('special://home/addons')))
 
 
+VERSION_SETTING='nuvio_components_for'  # backend version whose components were installed
+
+
+def backend_version(packages):
+    try:return ET.parse(Path(packages).parents[1]/'addon.xml').getroot().get('version','')
+    except (OSError,ET.ParseError):return ''
+
+
 def auto_install(monitor, busy=lambda: False, wait=10, retry=30, attempts=120):
-    """Service: after the backend was updated (Kodi repository, ZIP or GitHub),
-    install the bundled interface, skin and screensaver without "Install or
-    repair". Waits while video plays or the interface is open; never forced."""
+    """Service: after the backend was installed or updated (Kodi repository,
+    ZIP or GitHub), install the bundled interface, skin and screensaver without
+    "Install or repair". Once a backend version has installed them, a component
+    the user uninstalled is NOT put back (only the next update reinstalls).
+    Waits while video plays, the interface is open or a removal runs."""
     import xbmc
+    import xbmcaddon
     import xbmcgui
     if monitor.waitForAbort(wait):return []
+    addon=xbmcaddon.Addon('plugin.video.nuviohub')
     for _ in range(attempts):
         packages,addons_dir=paths()
-        if not outdated(packages,addons_dir):return []
-        if not xbmc.Player().isPlayingVideo() and not xbmcgui.Window(10000).getProperty('nuvio.frontend.running') and not busy():
+        version=backend_version(packages)
+        home=xbmcgui.Window(10000)
+        if home.getProperty('nuvio.uninstalling'):return []
+        if version and addon.getSetting(VERSION_SETTING)==version:return []
+        if not outdated(packages,addons_dir):
+            addon.setSetting(VERSION_SETTING,version);return []
+        if not xbmc.Player().isPlayingVideo() and not home.getProperty('nuvio.frontend.running') and not busy():
             changed=ensure_components()
+            addon.setSetting(VERSION_SETTING,version)
             if changed:
                 xbmcgui.Dialog().notification('MegaNexus','Interface, skin and screensaver updated',xbmcgui.NOTIFICATION_INFO,5000)
             return changed

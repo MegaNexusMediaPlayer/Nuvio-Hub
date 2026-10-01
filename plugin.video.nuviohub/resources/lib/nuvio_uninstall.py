@@ -64,7 +64,7 @@ def removal_plan(installed, ledger):
     order=[]
     while wanted:
         dependencies={d['addonid'] for aid in wanted for d in installed[aid].get('dependencies',[])}
-        leaves=sorted(wanted-dependencies)
+        leaves=sorted(wanted-dependencies,key=lambda aid:(not aid.startswith('skin.'),aid))  # skin first, as by hand
         if not leaves:raise ValueError('Circular add-on dependencies; remove these through Kodi settings.')
         order.extend(leaves);wanted.difference_update(leaves)
     return order
@@ -131,14 +131,35 @@ def switch_to_estuary(monitor):
     return False
 
 
-def purge_bundle_profiles(profile_root):
+def purge_bundle_profiles(profile_root, ids=None):
     """Only explicit Nuvio IDs; never purge shared dependency accounts/settings."""
     root=Path(profile_root).resolve();targets=[]
-    for aid in sorted(BUNDLE):
+    for aid in sorted(BUNDLE if ids is None else BUNDLE.intersection(ids)):
         target=root/aid
         if target.is_symlink() or target.resolve().parent!=root:raise ValueError('Unsafe settings path; settings were retained.')
         if target.exists():targets.append(target)
     for target in targets:shutil.rmtree(target)
+
+
+def disable(aid, monitor):
+    # Skin/services can remain in use briefly after the confirmed switch.
+    for attempt in range(20):
+        try:rpc('Addons.SetAddonEnabled',{'addonid':aid,'enabled':False});break
+        except ValueError:
+            if attempt==19:raise
+            if monitor.waitForAbort(.25):raise ValueError('Kodi is closing.')
+    details=rpc('Addons.GetAddonDetails',{'addonid':aid,'properties':['enabled']})
+    if details.get('addon',{}).get('enabled') is not False:raise ValueError('Kodi could not disable '+aid)
+
+
+def remove_one(root, aid, stage, monitor, attempts=20):
+    """Move one disabled component out of addons. Windows can keep a folder
+    locked for a moment after Kodi disables it, so the move is retried."""
+    for attempt in range(attempts):
+        try:return stage_removal(root,[aid],stage)
+        except PermissionError:
+            if attempt==attempts-1 or monitor.waitForAbort(.5):raise
+    return []
 
 
 def run():
@@ -172,29 +193,38 @@ def run():
         if 'weather.openmeteo' in order:
             current=rpc('Settings.GetSettingValue',{'setting':'weather.addon'}).get('value')
             if current=='weather.openmeteo':rpc('Settings.SetSettingValue',{'setting':'weather.addon','value':''})
+        # One component at a time, dependants first - the order of a manual
+        # removal in Kodi (skin, screensaver, program, video add-on). If one
+        # fails, everything it depends on stays; nothing already removed is put back.
+        stage=Path(tempfile.mkdtemp(prefix='nuvio-removed-',dir=str(root.parent))).resolve()
+        failed=''
         for aid in order:
-            # Skin/services can remain in use briefly after the confirmed switch.
-            for attempt in range(20):
-                try:rpc('Addons.SetAddonEnabled',{'addonid':aid,'enabled':False});break
-                except ValueError:
-                    if attempt==19:raise
-                    if monitor.waitForAbort(.25):return
-            details=rpc('Addons.GetAddonDetails',{'addonid':aid,'properties':['enabled']})
-            if details.get('addon',{}).get('enabled') is not False:raise ValueError('Kodi could not disable '+aid)
+            try:
+                disable(aid,monitor)
+                moved.extend(remove_one(root,aid,stage,monitor))
+            except Exception as exc:
+                xbmc.log('[MegaNexus] Removal stopped at %s: %r'%(aid,exc),xbmc.LOGERROR)
+                failed=aid
+                if installed[aid].get('enabled'):
+                    try:rpc('Addons.SetAddonEnabled',{'addonid':aid,'enabled':True})
+                    except Exception:pass
+                break
         for aid in ledger.get('enabled_existing',[]):
-            if aid in installed and aid not in order:
+            if not failed and aid in installed and aid not in order:
                 outside=[key for key,row in installed.items() if key not in order and key!=aid and any(d['addonid']==aid for d in row.get('dependencies',[]))]
                 if not outside:rpc('Addons.SetAddonEnabled',{'addonid':aid,'enabled':False})
-        # Same filesystem as addons: atomic rename works on CoreELEC mount layouts too.
-        stage=Path(tempfile.mkdtemp(prefix='nuvio-removed-',dir=str(root.parent))).resolve()
-        moved=stage_removal(root,order,stage)
         try:
-            if restore:restore()
-        except Exception:xbmc.log('[Nuvio] Could not restore previous seek settings.',xbmc.LOGWARNING)
-        if not keep:
+            if restore and not failed:restore()
+        except Exception:xbmc.log('[MegaNexus] Could not restore previous seek settings.',xbmc.LOGWARNING)
+        if not keep and moved:
             monitor.waitForAbort(1)
-            purge_bundle_profiles(xbmcvfs.translatePath('special://profile/addon_data'))
+            purge_bundle_profiles(xbmcvfs.translatePath('special://profile/addon_data'),moved)
         xbmc.executebuiltin('UpdateLocalAddons')
+        if failed:
+            left=[aid for aid in order if aid not in moved]
+            dialog.ok('MegaNexus removal','Removed: %s.\nNot removed: %s.\nRestart Kodi, then uninstall these in Add-ons > My add-ons in this order (details are in kodi.log).'
+                      %(', '.join(moved) or 'nothing',', '.join(left)))
+            return
         for _ in range(30):
             if not set(moved).intersection(inventory()):break
             if monitor.waitForAbort(.2):break
@@ -202,8 +232,8 @@ def run():
             dialog.ok('MegaNexus removal','Components were removed. Restart Kodi to refresh its component list. '+('Accounts and settings are kept.' if keep else 'Account data was removed.'))
             return
         if stage.parent==root.parent and stage.name.startswith('nuvio-removed-'):
-            shutil.rmtree(stage)
-        dialog.ok('Nuvio removed','Removed %d components. Restart Kodi to finish unloading services. '%len(moved)+('Your accounts, settings and history are kept.' if keep else 'Nuvio account data was removed.'))
+            shutil.rmtree(stage,ignore_errors=True)
+        dialog.ok('MegaNexus removed','Removed %d components. Restart Kodi to finish unloading services. '%len(moved)+('Your accounts, settings and history are kept.' if keep else 'Account data was removed.'))
         xbmc.executebuiltin('ActivateWindow(home)')
     except Exception:
         if not moved:
@@ -216,6 +246,9 @@ def run():
 
 
 if __name__=='__main__':
-    import xbmcgui
+    import traceback
+    import xbmc, xbmcgui
     try:run()
-    except Exception as exc:xbmcgui.Dialog().ok('MegaNexus removal',str(exc) if isinstance(exc,ValueError) else 'Removal could not finish. Restart Kodi, then retry from HUB Settings.')
+    except Exception as exc:
+        xbmc.log('[MegaNexus] Removal failed:\n'+traceback.format_exc(),xbmc.LOGERROR)
+        xbmcgui.Dialog().ok('MegaNexus removal',str(exc) if isinstance(exc,ValueError) else 'Removal could not finish (details in kodi.log). Restart Kodi, then retry from HUB Settings.')

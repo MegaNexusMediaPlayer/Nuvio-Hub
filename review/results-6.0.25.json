@@ -7,8 +7,8 @@
     "component_xml": 148,
     "component_json": 5
   },
-  "unit_tests": 552,
-  "unit_seconds": 11.569,
+  "unit_tests": 558,
+  "unit_seconds": 26.573,
   "test_modules": [
     "test_nuvio_601",
     "test_nuvio_602",
@@ -32,6 +32,7 @@
     "test_nuvio_623",
     "test_nuvio_624",
     "test_nuvio_625",
+    "test_nuvio_625_removal",
     "test_nuvio_home_iptv",
     "test_nuvio_build",
     "test_nuvio_extras",

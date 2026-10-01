@@ -34,6 +34,21 @@ Prepared 1 October 2026 from 6.0.24.
   installation*, *Remove MegaNexus build*; removal and install dialogs too.
   The video add-on itself keeps the name Nuvio Hub.
 
+## Removing MegaNexus
+
+* **Uninstalled components came back.** Since 6.0.23 the service installed
+  any missing bundled component at Kodi start, so a skin, screensaver or
+  program add-on uninstalled by hand returned while the video add-on stayed.
+  Now the service installs components only for a backend version it has not
+  installed yet (first install or an update), never during a removal.
+* **"Remove MegaNexus build"** works like a manual removal: switch to Estuary,
+  then skin, screensaver, program add-on and video add-on, one at a time.
+  A folder that Windows still keeps locked right after Kodi disables it is
+  retried for ~10 s. If a step still fails, what was removed stays removed,
+  the rest stays installed and enabled, and the dialog lists what to uninstall
+  in Add-ons > My add-ons; the exact error is written to kodi.log. (Before, any
+  failure rolled everything back with only "Removal could not finish".)
+
 ## Wording and colours
 
 * "Welcome to Nuvio" is gone: the empty Home row says **Welcome to MegaNexus**
@@ -44,7 +59,9 @@ Prepared 1 October 2026 from 6.0.24.
   and source pills) are now logo blue: `make_blue_theme.py` also converts
   low-saturation violet (above 12 %), so neutral greys stay neutral.
 
-Checks: `test_nuvio_625.py` (no "Welcome to Nuvio"/"Nuvio setup" in shipped
+Checks: `test_nuvio_625_removal.py` (removal order, retry of a locked folder,
+partial failure report, no reinstall after a manual uninstall, reinstall on
+update, nothing during a removal); `test_nuvio_625.py` (no "Welcome to Nuvio"/"Nuvio setup" in shipped
 code, settings focus colour is blue, collections pulled only when asked,
 collection metadata switched ON, layout saved and reported, own vs automatic
 layout, phone sign-in imports with/without collections, TV sign-in import), `test_nuvio_621` violet check now also
