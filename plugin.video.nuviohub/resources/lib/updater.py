@@ -291,14 +291,18 @@ def safe_to_prompt():
 
 
 def prompt_restart(addon, version):
-    """Yes restarts Kodi now; No keeps the reminder for the next Nuvio entry."""
+    """Yes restarts Kodi (or reboots / closes it, per platform) now; Later keeps
+    the reminder for the next Nuvio entry."""
     import xbmc
     import xbmcgui
+    from .kodi_restart import plan
     xbmcgui.Window(10000).setProperty(PROMPTED_PROPERTY, version)
-    if xbmcgui.Dialog().yesno('MegaNexus', 'MegaNexus %s is installed. Restart Kodi now?' % version,
-                              nolabel='Later', yeslabel='Restart'):
+    # 6.0.34: reboot on CoreELEC/LibreELEC (RestartApp froze Amlogic boxes),
+    # close Kodi on Android/Apple (RestartApp cannot reopen it there).
+    builtin, label, question = plan()
+    if xbmcgui.Dialog().yesno('MegaNexus', question % version, nolabel='Later', yeslabel=label):
         addon.setSetting(PENDING_SETTING, '')
-        xbmc.executebuiltin('RestartApp')
+        xbmc.executebuiltin(builtin)
         return True
     return False
 

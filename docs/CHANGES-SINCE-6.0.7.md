@@ -1,6 +1,6 @@
 # Nuvio Hub — changes since 6.0.7
 
-Summary of 6.0.8 – 6.0.33 (details in each `docs/RELEASE-6.0.x.md`).
+Summary of 6.0.8 – 6.0.34 (details in each `docs/RELEASE-6.0.x.md`).
 6.0.19 and 6.0.23 are published GitHub releases.
 
 | Area | What changed |
@@ -23,7 +23,7 @@ Summary of 6.0.8 – 6.0.33 (details in each `docs/RELEASE-6.0.x.md`).
 | Distribution | `repository.meganexus` Kodi repository on GitHub Pages (File manager source `https://meganexusmediaplayer.github.io/Nuvio-Hub/`); interface/skin/screensaver install themselves after every update. |
 | IPTV | Refresh guide / IPTV setup / HUB at the bottom; one HUB button. |
 | Details | No "Loading episodes" banner; ratings (IMDb/TMDb) under the Home title, switchable. |
-| Maintenance | Automatic updates from GitHub releases (checksum, rollback, "Restart Kodi now?" when no video plays and Nuvio is closed), Ko-fi QR, organised Configure page, working "Remove Nuvio build". |
+| Maintenance | Automatic updates from GitHub releases (checksum, rollback, a restart question when no video plays and Nuvio is closed: Reboot on CoreELEC/LibreELEC, Close Kodi on Android and Apple, Restart elsewhere (6.0.34)), Ko-fi QR, organised Configure page, working "Remove Nuvio build". |
 | Fixes | Several latent crashes (NameErrors), Continue Watching position after Details, settings dialogs no longer hidden behind pages, subtitle preferences saved. |
 
 Release naming for automatic updates: tag `v<version>`, assets

@@ -3,7 +3,7 @@
 This is a four-component Kodi build: `plugin.video.nuviohub` (backend/service),
 `script.nuvio` (Python/XML frontend), `skin.nuvio` (Kodi shell), and
 `screensaver.nuvio` (screensaver entrypoint). The 6.0.27 release is the
-baseline for this 6.0.33 release. Do not publish, push, or change live user
+baseline for this 6.0.34 release. Do not publish, push, or change live user
 profiles as a side effect of reviewing code.
 
 ## Required repository skills
@@ -15,7 +15,7 @@ claims that a runtime plugin or global agent skill has been installed.
 
 ## Before modifying code
 
-Read the relevant call sites, tests, and `docs/RELEASE-6.0.33.md` (and 6.0.32 back to 6.0.10). Identify which
+Read the relevant call sites, tests, and `docs/RELEASE-6.0.34.md` (and 6.0.33 back to 6.0.10). Identify which
 Kodi process/interpreter owns the work. Keep existing public add-on IDs,
 profile paths, encrypted credentials and migration aliases. Never mass-rename
 legacy state keys or remove upstream license notices. Since 6.0.24 the
@@ -99,6 +99,10 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
   saves), re-check at every MegaNexus entry and at Kodi start, report the
   reason of a failed switch. The installer waits for Kodi to report the new
   component versions, else asks for a restart.
+* Restart after updates (6.0.34, `resources/lib/kodi_restart.py`): Reboot on
+  CoreELEC/LibreELEC (RestartApp froze Amlogic boxes), Quit on Android and
+  Apple (RestartApp cannot reopen Kodi there), RestartApp elsewhere. Android
+  reports System.Platform.Linux too: test it first.
 * RAM (6.0.32): catalog pages 96 MiB with ram256 (`browse_cache.page_ram`),
   details in their own pool (`browse_meta`, `remember=False` on the shared
   cache), cursor-rest details prefetch (latest wins, yields to foreground and
@@ -112,10 +116,10 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
 ## Required checks (Python 3.9+ review environment)
 
 ```sh
-python review/check_633.py
-python review/check_608_rebrand_kodi22.py 6.0.33
-python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.33.zip
-python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.33.zip
+python review/check_634.py
+python review/check_608_rebrand_kodi22.py 6.0.34
+python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.34.zip
+python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.34.zip
 ```
 
 The first command runs the maintained unit suite, parses XML/JSON, and checks
