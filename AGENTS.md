@@ -2,8 +2,8 @@
 
 This is a four-component Kodi build: `plugin.video.nuviohub` (backend/service),
 `script.nuvio` (Python/XML frontend), `skin.nuvio` (Kodi shell), and
-`screensaver.nuvio` (screensaver entrypoint). The 6.0.26 release is the
-baseline for this 6.0.27 release. Do not publish, push, or change live user
+`screensaver.nuvio` (screensaver entrypoint). The 6.0.27 release is the
+baseline for this 6.0.28 release. Do not publish, push, or change live user
 profiles as a side effect of reviewing code.
 
 ## Required repository skills
@@ -15,7 +15,7 @@ claims that a runtime plugin or global agent skill has been installed.
 
 ## Before modifying code
 
-Read the relevant call sites, tests, and `docs/RELEASE-6.0.27.md` (and 6.0.26 back to 6.0.10). Identify which
+Read the relevant call sites, tests, and `docs/RELEASE-6.0.28.md` (and 6.0.27 back to 6.0.10). Identify which
 Kodi process/interpreter owns the work. Keep existing public add-on IDs,
 profile paths, encrypted credentials and migration aliases. Never mass-rename
 legacy state keys or remove upstream license notices. Since 6.0.24 the
@@ -74,7 +74,11 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
   Retain Kodi Python 3 / GUI 5.17 compatibility gates; no removed-stdlib APIs.
   `repository.meganexus` (Kodi repository for GitHub Pages, built by
   `review/build_repo_site.py`) has its own version and is never in the bundle.
-* Theme colours are the MegaNexus logo blues (`review/make_blue_theme.py`);
+* Themes (6.0.28): Light = `skins/Default` (MegaNexus blues, `review/make_blue_theme.py`);
+  Dark and Dim are GENERATED from it by `review/make_theme_variants.py` (also
+  skin.nuvio/colors dark.xml/dim.xml) - edit Default, then regenerate. Windows
+  open with `resources.lib.theme.folder()`. Catalog card boxes (tile/poster
+  masks) keep their original FF202532 in every theme.
   logo/banner/screensaver layers come from `review/make_meganexus_brand.py`.
 * Phone setup (`resources/lib/phone_setup.py`) listens only while its TV QR
   window is open; every API call needs the QR key; manifest URLs and tokens
@@ -84,10 +88,10 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
 ## Required checks (Python 3.9+ review environment)
 
 ```sh
-python review/check_627.py
-python review/check_608_rebrand_kodi22.py 6.0.27
-python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.27.zip
-python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.27.zip
+python review/check_628.py
+python review/check_608_rebrand_kodi22.py 6.0.28
+python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.28.zip
+python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.28.zip
 ```
 
 The first command runs the maintained unit suite, parses XML/JSON, and checks

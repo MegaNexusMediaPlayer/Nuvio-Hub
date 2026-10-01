@@ -1,0 +1,372 @@
+<?xml version='1.0' encoding='utf-8'?>
+<window>
+  <defaultcontrol always="true">500</defaultcontrol>
+  <controls>
+    <control type="image">
+      <left>0</left>
+      <top>0</top>
+      <width>1920</width>
+      <height>1080</height>
+      <aspectratio>scale</aspectratio>
+      <texture colordiffuse="FF000000">special://home/addons/script.nuvio/resources/media/white.png</texture>
+    </control>
+    <control type="image">
+      <left>70</left>
+      <top>25</top>
+      <width>225</width>
+      <height>72</height>
+      <aspectratio>scale</aspectratio>
+      <texture>special://home/addons/script.nuvio/resources/media/nuvio_wordmark.png</texture>
+    </control>
+    <control type="label">
+      <left>320</left>
+      <top>37</top>
+      <width>400</width>
+      <height>45</height>
+      <font>font14</font>
+      <textcolor>FFFFFFFF</textcolor>
+      <label>Live TV</label>
+    </control>
+    <control type="group">
+      <visible>!String.IsEmpty(Weather.Temperature)</visible>
+      <control type="image">
+        <left>1590</left>
+        <top>35</top>
+        <width>48</width>
+        <height>48</height>
+        <aspectratio>scale</aspectratio>
+        <texture>special://home/addons/skin.nuvio/media/nuvio/weather/$INFO[Weather.FanartCode].png</texture>
+        <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
+      </control>
+      <control type="label">
+        <left>1645</left>
+        <top>39</top>
+        <width>110</width>
+        <height>40</height>
+        <font>font12</font>
+        <textcolor>FFADD3FF</textcolor>
+        <label>$INFO[Weather.Temperature]</label>
+        <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
+      </control>
+    </control>
+    <control type="label">
+      <left>1750</left>
+      <top>39</top>
+      <width>130</width>
+      <height>40</height>
+      <font>font12</font>
+      <textcolor>FFCAD0DB</textcolor>
+      <label>$INFO[System.Time(hh:mm)]</label>
+      <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
+    </control>
+    <control type="label">
+      <left>50</left>
+      <top>115</top>
+      <width>275</width>
+      <height>40</height>
+      <font>font14</font>
+      <textcolor>FFFFFFFF</textcolor>
+      <label>Categories</label>
+    </control>
+    <control type="label">
+      <left>355</left>
+      <top>115</top>
+      <width>610</width>
+      <height>40</height>
+      <font>font14</font>
+      <textcolor>FFFFFFFF</textcolor>
+      <label>$INFO[Window.Property(nuvio.group)]</label>
+    </control>
+    <control type="list" id="501">
+      <left>45</left>
+      <top>168</top>
+      <width>285</width>
+      <height>790</height>
+      <onleft>503</onleft>
+      <onright>500</onright>
+      <onup>501</onup>
+      <ondown>501</ondown>
+      <scrolltime>140</scrolltime>
+      <itemlayout width="285" height="62">
+        <control type="label">
+          <left>14</left>
+          <top>6</top>
+          <width>249</width>
+          <height>44</height>
+          <font>font13</font>
+          <textcolor>FFFFFFFF</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+        </control>
+      </itemlayout>
+      <focusedlayout width="285" height="62">
+        <control type="image">
+          <left>0</left>
+          <top>0</top>
+          <width>277</width>
+          <height>56</height>
+          <texture border="18" colordiffuse="FF363636">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <visible>Control.HasFocus(501)</visible>
+        </control>
+        <control type="label">
+          <left>14</left>
+          <top>6</top>
+          <width>249</width>
+          <height>44</height>
+          <font>font13</font>
+          <textcolor>FFFFFFFF</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+        </control>
+      </focusedlayout>
+    </control>
+    <control type="list" id="500">
+      <left>350</left>
+      <top>168</top>
+      <width>625</width>
+      <height>790</height>
+      <onleft>501</onleft>
+      <onright>504</onright>
+      <onup>500</onup>
+      <ondown>500</ondown>
+      <scrolltime>140</scrolltime>
+      <itemlayout width="625" height="84">
+        <control type="image">
+          <left>10</left>
+          <top>12</top>
+          <width>52</width>
+          <height>52</height>
+          <aspectratio>keep</aspectratio>
+          <texture>$INFO[ListItem.Art(icon)]</texture>
+        </control>
+        <control type="label">
+          <left>76</left>
+          <top>3</top>
+          <width>529</width>
+          <height>38</height>
+          <font>font13</font>
+          <textcolor>FFFFFFFF</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+        </control>
+        <control type="label">
+          <left>76</left>
+          <top>41</top>
+          <width>529</width>
+          <height>30</height>
+          <font>font12</font>
+          <textcolor>FFACB4C4</textcolor>
+          <label>$INFO[ListItem.Label2]</label>
+        </control>
+      </itemlayout>
+      <focusedlayout width="625" height="84">
+        <control type="image">
+          <left>0</left>
+          <top>0</top>
+          <width>617</width>
+          <height>78</height>
+          <texture border="18" colordiffuse="FF363636">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <visible>Control.HasFocus(500)</visible>
+        </control>
+        <control type="image">
+          <left>10</left>
+          <top>12</top>
+          <width>52</width>
+          <height>52</height>
+          <aspectratio>keep</aspectratio>
+          <texture>$INFO[ListItem.Art(icon)]</texture>
+        </control>
+        <control type="label">
+          <left>76</left>
+          <top>3</top>
+          <width>529</width>
+          <height>38</height>
+          <font>font13</font>
+          <textcolor>FFFFFFFF</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+        </control>
+        <control type="label">
+          <left>76</left>
+          <top>41</top>
+          <width>529</width>
+          <height>30</height>
+          <font>font12</font>
+          <textcolor>FFACB4C4</textcolor>
+          <label>$INFO[ListItem.Label2]</label>
+        </control>
+      </focusedlayout>
+    </control>
+    <control type="videowindow">
+      <left>1010</left>
+      <top>168</top>
+      <width>860</width>
+      <height>484</height>
+    </control>
+    <control type="image">
+      <!-- Black frame over the small video: its edges never show (opaque at the rim). -->
+      <left>1010</left>
+      <top>168</top>
+      <width>860</width>
+      <height>484</height>
+      <aspectratio>stretch</aspectratio>
+      <texture>special://home/addons/script.nuvio/resources/media/nuvio_video_vignette.png</texture>
+      <visible>Player.HasVideo</visible>
+    </control>
+    <control type="label">
+      <left>1010</left>
+      <top>117</top>
+      <width>860</width>
+      <height>36</height>
+      <font>font13</font>
+      <textcolor>FFA5CDFA</textcolor>
+      <label>$INFO[Window.Property(nuvio.playing)]</label>
+    </control>
+    <control type="label">
+      <left>1010</left>
+      <top>661</top>
+      <width>855</width>
+      <height>44</height>
+      <font>font14</font>
+      <textcolor>FFFFFFFF</textcolor>
+      <label>$INFO[Window.Property(nuvio.epg.channel),Schedule - ]</label>
+    </control>
+    <control type="list" id="504">
+      <left>1000</left>
+      <top>710</top>
+      <width>880</width>
+      <height>242</height>
+      <onleft>500</onleft>
+      <onright>502</onright>
+      <onup>504</onup>
+      <ondown>504</ondown>
+      <scrolltime>140</scrolltime>
+      <itemlayout width="880" height="78">
+        <control type="label">
+          <left>14</left>
+          <top>3</top>
+          <width>845</width>
+          <height>30</height>
+          <font>font12</font>
+          <textcolor>FFA5CDFA</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+        </control>
+        <control type="label">
+          <left>14</left>
+          <top>31</top>
+          <width>845</width>
+          <height>38</height>
+          <font>font13</font>
+          <textcolor>FFFFFFFF</textcolor>
+          <label>$INFO[ListItem.Label2]</label>
+        </control>
+      </itemlayout>
+      <focusedlayout width="880" height="78">
+        <control type="image">
+          <left>0</left>
+          <top>0</top>
+          <width>872</width>
+          <height>72</height>
+          <texture border="18" colordiffuse="FF363636">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+          <visible>Control.HasFocus(504)</visible>
+        </control>
+        <control type="label">
+          <left>14</left>
+          <top>3</top>
+          <width>845</width>
+          <height>30</height>
+          <font>font12</font>
+          <textcolor>FFA5CDFA</textcolor>
+          <label>$INFO[ListItem.Label]</label>
+        </control>
+        <control type="label">
+          <left>14</left>
+          <top>31</top>
+          <width>845</width>
+          <height>38</height>
+          <font>font13</font>
+          <textcolor>FFFFFFFF</textcolor>
+          <label>$INFO[ListItem.Label2]</label>
+        </control>
+      </focusedlayout>
+    </control>
+    <control type="label">
+      <left>1010</left>
+      <top>720</top>
+      <width>850</width>
+      <height>50</height>
+      <font>font12</font>
+      <textcolor>FFACB4C4</textcolor>
+      <label>$INFO[Window.Property(nuvio.epg.empty)]</label>
+      <visible>String.IsEmpty(Container(504).NumItems) | Integer.IsEqual(Container(504).NumItems,0)</visible>
+    </control>
+    <control type="label">
+      <left>355</left>
+      <top>958</top>
+      <width>630</width>
+      <height>32</height>
+      <font>font12</font>
+      <textcolor>FFA5CDFA</textcolor>
+      <label>$INFO[Window.Property(nuvio.iptv.status)]</label>
+    </control>
+    <control type="button" id="502">
+      <left>1010</left>
+      <top>984</top>
+      <width>265</width>
+      <height>58</height>
+      <font>font13</font>
+      <label>Refresh guide</label>
+      <align>center</align>
+      <aligny>center</aligny>
+      <textcolor>FFFFFFFF</textcolor>
+      <focusedcolor>FF000000</focusedcolor>
+      <onleft>504</onleft>
+      <onright>503</onright>
+      <onup>504</onup>
+      <ondown>501</ondown>
+      <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturenofocus border="22" colordiffuse="FF252525">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+    </control>
+    <control type="button" id="503">
+      <left>1300</left>
+      <top>984</top>
+      <width>265</width>
+      <height>58</height>
+      <font>font13</font>
+      <label>IPTV setup</label>
+      <align>center</align>
+      <aligny>center</aligny>
+      <textcolor>FFFFFFFF</textcolor>
+      <focusedcolor>FF000000</focusedcolor>
+      <onleft>502</onleft>
+      <onright>506</onright>
+      <onup>504</onup>
+      <ondown>501</ondown>
+      <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturenofocus border="22" colordiffuse="FF252525">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+    </control>
+    <control type="button" id="506">
+      <left>1590</left>
+      <top>984</top>
+      <width>265</width>
+      <height>58</height>
+      <font>font13</font>
+      <label>HUB</label>
+      <align>center</align>
+      <aligny>center</aligny>
+      <textcolor>FFFFFFFF</textcolor>
+      <focusedcolor>FF000000</focusedcolor>
+      <onleft>503</onleft>
+      <onright>501</onright>
+      <onup>504</onup>
+      <ondown>501</ondown>
+      <texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus>
+      <texturenofocus border="22" colordiffuse="FF252525">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus>
+    </control>
+    <control type="label">
+      <left>55</left>
+      <top>994</top>
+      <width>920</width>
+      <height>45</height>
+      <font>font12</font>
+      <textcolor>FFACB4C4</textcolor>
+      <label>OK  Preview / Fullscreen     Back / Stop  Return to guide     HUB  Main menu</label>
+    </control>
+  </controls>
+</window>

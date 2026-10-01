@@ -21,6 +21,23 @@
       <width>1920</width>
       <height>1080</height>
       <texture>nuvio/nuvio_banner.png</texture>
+      <visible>!String.IsEqual(Skin.String(nuvio.theme),dark) + !String.IsEqual(Skin.String(nuvio.theme),dim)</visible>
+    </control>
+    <control type="image">
+      <left>0</left>
+      <top>0</top>
+      <width>1920</width>
+      <height>1080</height>
+      <texture>nuvio/nuvio_banner_dark.png</texture>
+      <visible>String.IsEqual(Skin.String(nuvio.theme),dark)</visible>
+    </control>
+    <control type="image">
+      <left>0</left>
+      <top>0</top>
+      <width>1920</width>
+      <height>1080</height>
+      <texture>nuvio/nuvio_banner_dim.png</texture>
+      <visible>String.IsEqual(Skin.String(nuvio.theme),dim)</visible>
     </control>
     <control type="button" id="100">
       <left>110</left>
@@ -32,9 +49,9 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
-      <focusedcolor>FF040F22</focusedcolor>
+      <focusedcolor>nuvio_bg</focusedcolor>
       <texturefocus border="22">nuvio/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22" colordiffuse="FF092554">nuvio/nuvio_pill.png</texturenofocus>
+      <texturenofocus border="22" colordiffuse="nuvio_pill">nuvio/nuvio_pill.png</texturenofocus>
       <onclick>RunScript(script.nuvio)</onclick>
       <onleft>104</onleft>
       <onright>101</onright>
@@ -50,9 +67,9 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
-      <focusedcolor>FF040F22</focusedcolor>
+      <focusedcolor>nuvio_bg</focusedcolor>
       <texturefocus border="22">nuvio/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22" colordiffuse="FF092554">nuvio/nuvio_pill.png</texturenofocus>
+      <texturenofocus border="22" colordiffuse="nuvio_pill">nuvio/nuvio_pill.png</texturenofocus>
       <onclick>RunScript(script.nuvio,iptv)</onclick>
       <onleft>100</onleft>
       <onright>102</onright>
@@ -68,9 +85,9 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
-      <focusedcolor>FF040F22</focusedcolor>
+      <focusedcolor>nuvio_bg</focusedcolor>
       <texturefocus border="22">nuvio/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22" colordiffuse="FF092554">nuvio/nuvio_pill.png</texturenofocus>
+      <texturenofocus border="22" colordiffuse="nuvio_pill">nuvio/nuvio_pill.png</texturenofocus>
       <onclick>RunScript(script.nuvio,settings)</onclick>
       <onleft>101</onleft>
       <onright>103</onright>
@@ -86,9 +103,9 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
-      <focusedcolor>FF040F22</focusedcolor>
+      <focusedcolor>nuvio_bg</focusedcolor>
       <texturefocus border="22">nuvio/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22" colordiffuse="FF092554">nuvio/nuvio_pill.png</texturenofocus>
+      <texturenofocus border="22" colordiffuse="nuvio_pill">nuvio/nuvio_pill.png</texturenofocus>
       <onclick>ActivateWindow(settings)</onclick>
       <onleft>102</onleft>
       <onright>104</onright>
@@ -104,9 +121,9 @@
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFFFFFFF</textcolor>
-      <focusedcolor>FF040F22</focusedcolor>
+      <focusedcolor>nuvio_bg</focusedcolor>
       <texturefocus border="22">nuvio/nuvio_pill.png</texturefocus>
-      <texturenofocus border="22" colordiffuse="FF092554">nuvio/nuvio_pill.png</texturenofocus>
+      <texturenofocus border="22" colordiffuse="nuvio_pill">nuvio/nuvio_pill.png</texturenofocus>
       <onclick>ActivateWindow(shutdownmenu)</onclick>
       <onleft>103</onleft>
       <onright>100</onright>

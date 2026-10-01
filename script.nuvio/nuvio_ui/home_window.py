@@ -15,6 +15,7 @@ from resources.lib import browse_cache
 from resources.lib import home_data
 from resources.lib import simkl_watched
 from .dialog import Dialog
+from resources.lib.theme import folder as theme_folder
 
 ADDON = xbmcaddon.Addon('script.nuvio')
 BACK = {9, 10, 92, 216, 247, 257, 275, 61448, 61467}
@@ -566,7 +567,7 @@ class HomeWindow(Dialog):
 
     def _settings(self):
         from .settings import run
-        previous_xml=home_xml()
+        previous_xml=home_xml();previous_theme=theme_folder()
         self._suspended=True
         if self._previews:self._previews.pause()
         try:command=self.child(run)
@@ -578,7 +579,7 @@ class HomeWindow(Dialog):
         if command:self._pending=command;self._finish();return
         from .setup_gate import ready
         if not ready():self._pending='reload';self._finish();return
-        if home_xml()!=previous_xml:
+        if home_xml()!=previous_xml or theme_folder()!=previous_theme:
             self._pending='reload';self._finish();return
         self.setProperty('nuvio.home.error','')
         if self._bucket.startswith('collection:'):
@@ -621,7 +622,7 @@ def open_home():
             revision=xbmcgui.Window(10000).getProperty('nuvio.progress.revision')
             shelves=home_data.initial_shelves(bucket)
             extra={'progress_revision':revision}
-        window=HomeWindow(home_xml(),ADDON.getAddonInfo('path'),'Default','1080i',shelves=shelves,bucket=bucket,**extra)
+        window=HomeWindow(home_xml(),ADDON.getAddonInfo('path'),theme_folder(),'1080i',shelves=shelves,bucket=bucket,**extra)
         window._search_query=search_query
         try:
             window.show_ready()

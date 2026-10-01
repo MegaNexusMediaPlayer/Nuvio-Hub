@@ -25,6 +25,10 @@ def launch():
         settings_cache.invalidate()
         from resources.lib.presentation_settings import sync as sync_appearance
         sync_appearance()
+        try:
+            from resources.lib import theme
+            theme.sync()  # MegaNexus skin follows the chosen theme (6.0.28)
+        except Exception:xbmc.log('[MegaNexus] Theme sync skipped.',xbmc.LOGWARNING)
         if mode not in ('settings','skinsettings'):
             from nuvio_ui.session import open_session
             session=open_session()

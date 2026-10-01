@@ -7,6 +7,7 @@ from resources.lib import browse_cache, collection_profile, collection_validatio
 from resources.lib.collections_home import matching_catalog
 from resources.lib.nuviohub import store
 from .playback import Loading, ROOT
+from resources.lib.theme import folder as theme_folder
 
 MAX_WORKERS = 4
 MAX_STARTUP_SECONDS = 40
@@ -170,7 +171,7 @@ def prepare():
     base = art_cold()
     if not missing and not base:
         return report
-    window = Loading('nuvio_loading.xml', ROOT, 'Default', '1080i',
+    window = Loading('nuvio_loading.xml', ROOT, theme_folder(),'1080i',
                      label='Preparing your collections', full=True)
     monitor = xbmc.Monitor()
     window.show()

@@ -18,4 +18,6 @@
 	<color name="disabled">40FFFFFF</color>
 	<color name="selected">FFADD3FF</color>
 	<color name="invalid">FFFF0000</color>
+	<color name="nuvio_pill">FF092554</color>
+	<color name="nuvio_bg">FF040F22</color>
 </colors>

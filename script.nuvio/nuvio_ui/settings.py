@@ -9,6 +9,7 @@ from resources.lib.nuviohub import store
 from resources.lib.setup_wizard import add_manifest, resources
 from .system_setup import rpc,ensure_addon
 from . import settings_page as page
+from resources.lib.theme import folder as theme_folder
 
 ADDON=settings_cache.cached_addon()
 
@@ -403,7 +404,9 @@ def appearance():
     presentation_settings.sync()
     def rows():
         saver=(rpc('Settings.GetSettingValue',{'setting':'screensaver.mode'}) or {}).get('value','')
+        from resources.lib import theme
         return [page.item('Use MegaNexus skin','Active' if xbmc.getSkinDir()=='skin.nuvio' else 'Activate'),
+            page.item('Theme',theme.LABELS[theme.current(ADDON)]),
             page.item('Home hero and description',enabled=not xbmc.getCondVisibility('Skin.HasSetting(nuvio.hidehero)')),
             page.item('Card titles',enabled=not xbmc.getCondVisibility('Skin.HasSetting(nuvio.hidetitles)')),
             page.item('Weather and clock · all Nuvio screens',enabled=not presentation_settings.hidden()),
@@ -417,6 +420,8 @@ def appearance():
             page.item('Ratings under the title (when the metadata add-on supplies them)',enabled=ADDON.getSetting('nuvio_show_ratings')!='false'),
             page.item('Back')]
     def choose(pick):
+        if pick==1:return choose_theme()
+        if pick>1:pick-=1  # rows after Theme keep their earlier numbers
         if pick==13:return page.DONE
         if pick==12:
             ADDON.setSetting('nuvio_show_ratings','false' if ADDON.getSetting('nuvio_show_ratings')!='false' else 'true')
@@ -439,6 +444,17 @@ def appearance():
             pick=dialog.select('Movie and series cards',['Portrait posters','Landscape'],preselect=1 if ADDON.getSetting('nuvio_card_shape')=='landscape' else 0)
             if pick>=0:ADDON.setSetting('nuvio_card_shape',('poster','landscape')[pick])
     return page.show('Skin configuration',rows,choose)
+
+def choose_theme():
+    """Light (MegaNexus blue), Dark (OLED) or Semi-dark: interface, HUB skin and screensaver."""
+    from resources.lib import theme
+    keys=list(theme.THEMES);current=theme.current(ADDON)
+    pick=xbmcgui.Dialog().select('Theme',[theme.LABELS[k] for k in keys],preselect=keys.index(current))
+    if pick>=0 and keys[pick]!=current:
+        theme.apply(keys[pick],ADDON)
+        xbmcgui.Dialog().notification('MegaNexus','Theme: '+theme.LABELS[keys[pick]].split(' · ')[0],xbmcgui.NOTIFICATION_INFO,2500)
+    return None
+
 
 def tracking_accounts():
     def rows():return [page.item('Nuvio account',nuvio_status()),page.item('Simkl account & tracking'),page.item('Back')]
@@ -463,7 +479,7 @@ class SupportWindow(xbmcgui.WindowXMLDialog):
 
 def support():
     """Ko-fi QR code: scan with a phone to donate."""
-    win=SupportWindow('nuvio_support.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),'Default','1080i')
+    win=SupportWindow('nuvio_support.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),theme_folder(),'1080i')
     try:win.doModal()
     finally:del win
 

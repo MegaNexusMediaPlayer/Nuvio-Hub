@@ -17,6 +17,7 @@ import xbmcvfs
 from resources.lib import presentation_settings, saver_state
 from .home_trailers import PreviewPlayer
 from .system_setup import rpc
+from resources.lib.theme import folder as theme_folder
 
 DEFAULT_ART='special://home/addons/script.nuvio/resources/media/nuvio_banner.png'
 VIDEO_EXTENSIONS=('.mp4','.m4v','.mkv','.webm','.mov','.avi','.ts','.m2ts')
@@ -46,7 +47,8 @@ class SaverWindow(xbmcgui.WindowXMLDialog):
         self.closed=False;self.ready=threading.Event();self.opened=time.monotonic()
     def onInit(self):
         addon=xbmcaddon.Addon('plugin.video.nuviohub')
-        self.setProperty('nuvio.background',addon.getSetting('nuvio_screensaver_art') or DEFAULT_ART)
+        from resources.lib import theme
+        self.setProperty('nuvio.background',addon.getSetting('nuvio_screensaver_art') or theme.banner(addon))
         if saver_mode(addon)==ANIMATED:self.setProperty('nuvio.saver.mode',ANIMATED)
         presentation_settings.sync()
         self.ready.set()
@@ -89,7 +91,7 @@ class VideoPlayer(PreviewPlayer):
 
 
 def window():
-    return SaverWindow('nuvio_screensaver.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),'Default','1080i')
+    return SaverWindow('nuvio_screensaver.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),theme_folder(),'1080i')
 
 
 def run_image():

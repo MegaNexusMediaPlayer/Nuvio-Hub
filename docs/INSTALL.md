@@ -1,4 +1,4 @@
-# Install and configure MegaNexus (Nuvio Hub) 6.0.27
+# Install and configure MegaNexus (Nuvio Hub) 6.0.28
 
 The supported code/API target is Kodi 21 and Kodi 22.
 
@@ -18,8 +18,8 @@ MegaNexus and choose **Set up on your phone** to configure it with a QR code.
 ## Manual ZIP
 
 Back up your Kodi profile first. Stop playback and close the Nuvio frontend.
-Install `Nuvio-Hub-Complete-6.0.27.zip` via Add-ons → Install from zip file.
-All four components must report 6.0.27. Keep userdata; do not uninstall or
+Install `Nuvio-Hub-Complete-6.0.28.zip` via Add-ons → Install from zip file.
+All four components must report 6.0.28. Keep userdata; do not uninstall or
 delete credentials/settings to update. The source archive is for development
 and is not installable through Kodi's ZIP installer.
 
@@ -72,7 +72,7 @@ refreshed in the background, so the next visit shows the new titles. Keeping a
 collection tile selected briefly prefetches it (and its neighbours) together
 with its first posters.
 
-Performance & image cache offers **RAM 256 MiB** (default since 6.0.27): 256 MiB compressed artwork
+Performance & image cache offers **RAM 256 MiB** (default since 6.0.28): 256 MiB compressed artwork
 payload plus 40 MiB serialized browse payload, with a 128 MiB logical browse
 cache on disk. Earlier RAM 150/200 presets upgrade to RAM 256. Existing disk
 or OFF choices are retained. This is not a global process-RAM limit: decoded

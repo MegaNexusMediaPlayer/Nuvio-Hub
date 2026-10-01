@@ -5,6 +5,7 @@ import xbmcgui
 from resources.lib import catalog_pages
 from resources.lib import simkl_watched
 from .playback import _CATALOG
+from resources.lib.theme import folder as theme_folder
 
 class Catalog(Dialog):
     def __init__(self,*args,**kwargs):
@@ -89,7 +90,7 @@ class Catalog(Dialog):
 
 def open_catalog(params):
     wide=xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_card_shape')=='landscape'
-    win=Catalog('nuvio_catalog_landscape.xml' if wide else 'nuvio_catalog.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),'Default','1080i',params=params)
+    win=Catalog('nuvio_catalog_landscape.xml' if wide else 'nuvio_catalog.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),theme_folder(),'1080i',params=params)
     try:win.doModal();return win.outcome
     except ValueError as exc:xbmcgui.Dialog().ok('Collections',str(exc));return ''
     finally:win.close()

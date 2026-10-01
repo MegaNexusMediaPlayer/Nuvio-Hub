@@ -272,6 +272,8 @@ function renderDisplay(){
   const saver = [['image', 'MegaNexus image'], ['animated', 'MegaNexus animated']];
   if (d.screensaver === 'custom') saver.push(['custom', 'Keep my own']);
   box.append(el('h2', {text: 'Display'}), el('div', {class: 'card'},
+    el('label', {class: 'f', text: 'Theme'}),
+    segment([['light', 'Light'], ['dark', 'Dark (OLED)'], ['dim', 'Semi-dark']], d.theme, v => { d.theme = v; }),
     el('label', {class: 'f', text: 'Movie and series cards'}),
     segment([['poster', 'Portrait posters'], ['landscape', 'Landscape']], d.card_shape, v => { d.card_shape = v; }),
     el('div', {class: 'row', style: 'margin-top:10px'}, el('div', {class: 'grow', text: 'Ratings under the title'}), toggle(d.show_ratings, on => { d.show_ratings = on; })),

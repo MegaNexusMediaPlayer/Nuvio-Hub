@@ -80,8 +80,16 @@ def lockup(tmp, mark, height, tagline, name, text_ratio=0.30):
     return out
 
 
-def background(out, w=1920, h=1080):
-    magick('-size', '%dx%d' % (w, h), 'radial-gradient:%s-%s' % (BG_CENTER, BG_EDGE), '-depth', '8', out)
+def background(out, w=1920, h=1080, theme='light'):
+    """light: MegaNexus blue; dark: black for OLED; dim: black top, dark blue bottom."""
+    if theme == 'dark':
+        magick('-size', '%dx%d' % (w, h), 'radial-gradient:#0b1220-#000000', '-depth', '8', out)
+    elif theme == 'dim':
+        magick('-size', '%dx%d' % (w, h), 'gradient:#000000-#0a2350', '(', '-size', '%dx%d' % (w, h),
+               'radial-gradient:#123a7a-#000000', '-evaluate', 'multiply', '0.35', ')',
+               '-compose', 'screen', '-composite', '-depth', '8', out)
+    else:
+        magick('-size', '%dx%d' % (w, h), 'radial-gradient:%s-%s' % (BG_CENTER, BG_EDGE), '-depth', '8', out)
 
 
 def main():
@@ -102,6 +110,12 @@ def main():
         big = lockup(tmp, args.mark, 330, True, 'big')
         magick(tmp / 'bg.png', big, '-gravity', 'center', '-geometry', '+0-70', '-composite',
                '-depth', '8', '-strip', out / 'banner.png')
+        # Dark (OLED) and semi-dark themes: banner and screensaver background.
+        for theme in ('dark', 'dim'):
+            background(tmp / ('bg_%s.png' % theme), theme=theme)
+            magick(tmp / ('bg_%s.png' % theme), big, '-gravity', 'center', '-geometry', '+0-70', '-composite',
+                   '-depth', '8', '-strip', out / ('banner_%s.png' % theme))
+            magick(tmp / ('bg_%s.png' % theme), '-depth', '8', '-strip', out / ('saver_bg_%s.png' % theme))
         # Screensaver layers (skin-animated): background, logo, glow, spark.
         magick('-size', '1920x1080', 'radial-gradient:%s-%s' % ('#0f3170', BG_EDGE), '-depth', '8', '-strip', out / 'saver_bg.png')
         magick('-size', '1920x1080', 'xc:none', big, '-gravity', 'center', '-geometry', '+0-70', '-composite',

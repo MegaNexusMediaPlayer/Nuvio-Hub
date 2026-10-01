@@ -10,6 +10,7 @@ import xbmcaddon
 import xbmcgui
 from resources.lib import backend_api, simkl
 from resources.lib import simkl_watched, title_details
+from resources.lib.theme import folder as theme_folder
 
 
 class Details(Dialog):
@@ -357,7 +358,7 @@ class Info(Dialog):
 
 
 def show_info(meta,episode=None):
-    win=Info('nuvio_info.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),'Default','1080i',meta=meta,episode=episode)
+    win=Info('nuvio_info.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),theme_folder(),'1080i',meta=meta,episode=episode)
     try:win.doModal()
     finally:win.close()
 
@@ -376,7 +377,7 @@ class ContextMenu(xbmcgui.WindowXMLDialog):
 
 
 def context_choice():
-    win=ContextMenu('nuvio_context.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),'Default','1080i')
+    win=ContextMenu('nuvio_context.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),theme_folder(),'1080i')
     try:win.doModal();return win.choice
     finally:win.close()
 
@@ -442,7 +443,7 @@ def open_context(context,row=None):
                 context.update(resume_seconds=saved.get('position') or 0,resume_percent=saved.get('percent') or 0)
             context['nuvio_refresh_local_resume']=True
             playing=False
-        window=Details(filename,addon.getAddonInfo('path'),'Default','1080i',meta=meta,context=context,metadata_pending=metadata_pending,related=related)
+        window=Details(filename,addon.getAddonInfo('path'),theme_folder(),'1080i',meta=meta,context=context,metadata_pending=metadata_pending,related=related)
         try:
             window.doModal();action=window.action;context=dict(window.context)
             meta=window.meta;metadata_pending=window._metadata_pending

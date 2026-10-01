@@ -36,6 +36,7 @@ from resources.lib import backend_api
 ROOT=xbmcaddon.Addon('script.nuvio').getAddonInfo('path')
 
 from .source_text import plain as plain_label, normalized as normalized_source
+from resources.lib.theme import folder as theme_folder
 
 class Loading(xbmcgui.WindowXMLDialog):
     def __init__(self,*args,**kwargs):
@@ -57,7 +58,7 @@ def job(fn,meta=None,full=False,label='Loading sources',cancel=None,window=None)
     """Run fn off the GUI thread behind a loading screen. An already open
     ``window`` is reused and left open, so consecutive steps show one screen."""
     own=window is None
-    win=window or Loading('nuvio_loading.xml',ROOT,'Default','1080i',meta=meta,full=full,label=label)
+    win=window or Loading('nuvio_loading.xml',ROOT,theme_folder(),'1080i',meta=meta,full=full,label=label)
     if not own:win.setProperty('nuvio.loading',label)
     results=queue.Queue()
     def work():
@@ -106,7 +107,7 @@ class Sources(xbmcgui.WindowXMLDialog):
         if action.getId() in (9,10,92,216):self.close()
 
 def select_source(rows):
-    win=Sources('nuvio_sources.xml',ROOT,'Default','1080i',rows=rows)
+    win=Sources('nuvio_sources.xml',ROOT,theme_folder(),'1080i',rows=rows)
     try:
         win.show();monitor=xbmc.Monitor();focused=False
         while not win.closed and not monitor.abortRequested():
@@ -141,7 +142,7 @@ def play(meta,context):
     loading_label='Loading video…' if auto else 'Loading sources'
     # Autoplay keeps ONE loading screen from the source search until the video
     # starts; closing and reopening it flashed the page underneath.
-    shared=Loading('nuvio_loading.xml',ROOT,'Default','1080i',meta=meta,full=True,label=loading_label) if auto else None
+    shared=Loading('nuvio_loading.xml',ROOT,theme_folder(),'1080i',meta=meta,full=True,label=loading_label) if auto else None
     if shared:shared.show()
     try:return _play(meta,context,auto,loading_label,shared)
     finally:
@@ -166,7 +167,7 @@ def _play(meta,context,auto,loading_label,shared):
     home=xbmcgui.Window(10000);home.clearProperty('nuvio.preview.active')
     home.clearProperty('nuvio.preview.silent')
     listener=StartListener(token)
-    win=shared or Loading('nuvio_loading.xml',ROOT,'Default','1080i',meta=meta,full=True,label='Starting playback')
+    win=shared or Loading('nuvio_loading.xml',ROOT,theme_folder(),'1080i',meta=meta,full=True,label='Starting playback')
     if shared is None:win.show()
     try:
         xbmc.executebuiltin('RunPlugin("%s")'%backend_api.queue_playback(ctx))

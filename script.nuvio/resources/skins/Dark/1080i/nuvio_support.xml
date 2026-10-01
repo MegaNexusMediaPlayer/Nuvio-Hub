@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<window>
+  <defaultcontrol always="true">100</defaultcontrol>
+  <controls>
+    <control type="image"><left>0</left><top>0</top><width>1920</width><height>1080</height><texture colordiffuse="E6000000">special://home/addons/script.nuvio/resources/media/white.png</texture></control>
+    <control type="image"><left>560</left><top>150</top><width>800</width><height>760</height><texture colordiffuse="FF171717" border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture></control>
+    <control type="label"><left>600</left><top>185</top><width>720</width><height>60</height><font>font20</font><align>center</align><textcolor>FFFFFFFF</textcolor><label>Support MegaNexus</label></control>
+    <control type="label"><left>600</left><top>250</top><width>720</width><height>40</height><font>font13</font><align>center</align><textcolor>FFBCC3D1</textcolor><label>If you enjoy this work, a coffee on Ko-fi helps a lot.</label></control>
+    <control type="image"><left>745</left><top>310</top><width>430</width><height>430</height><aspectratio>keep</aspectratio><texture>special://home/addons/script.nuvio/resources/media/kofi_qr.png</texture></control>
+    <control type="label"><left>600</left><top>755</top><width>720</width><height>40</height><font>font13</font><align>center</align><textcolor>FFADD3FF</textcolor><label>Scan with your phone · ko-fi.com/master100janovic</label></control>
+    <control type="button" id="100"><left>810</left><top>820</top><width>300</width><height>62</height><font>font13</font><label>Thank you · Back</label><align>center</align><aligny>center</aligny><textcolor>FF111111</textcolor><focusedcolor>FF111111</focusedcolor><texturefocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturefocus><texturenofocus border="22">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texturenofocus><onup>100</onup><ondown>100</ondown><onleft>100</onleft><onright>100</onright></control>
+  </controls>
+</window>

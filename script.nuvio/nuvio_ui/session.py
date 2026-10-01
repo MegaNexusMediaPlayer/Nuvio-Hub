@@ -9,6 +9,7 @@ import threading
 import xbmc
 import xbmcaddon
 import xbmcgui
+from resources.lib.theme import folder as theme_folder
 
 
 class SessionWindow(xbmcgui.WindowXML):
@@ -48,7 +49,7 @@ def open_session():
     # translucent shade over the video plane does not show.
     xbmcgui.Window(10000).setProperty('nuvio.videolayer', '1' if has_video_layer() else '')
     scene()
-    win=SessionWindow('nuvio_session.xml', xbmcaddon.Addon('script.nuvio').getAddonInfo('path'), 'Default', '1080i')
+    win=SessionWindow('nuvio_session.xml', xbmcaddon.Addon('script.nuvio').getAddonInfo('path'), theme_folder(),'1080i')
     win.show()
     monitor=xbmc.Monitor()
     for _ in range(100):

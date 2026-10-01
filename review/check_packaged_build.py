@@ -55,6 +55,10 @@ assert not list(OUT.rglob('*.mp4'))
 # 6.0.24: own components carry the MegaNexus License; bundled python-qrcode keeps BSD.
 for component in ('plugin.video.nuviohub','script.nuvio','screensaver.nuvio'):assert (OUT/component/'LICENSE.txt').read_text(encoding='utf-8').startswith('MegaNexus License'),component
 assert (OUT/'plugin.video.nuviohub/resources/lib/qrcode/LICENSE').is_file()
+# 6.0.28: Light / Dark / Semi-dark themes ship complete.
+for folder in ('Default','Dark','Dim'):
+    assert len(list((OUT/'script.nuvio/resources/skins'/folder/'1080i').glob('*.xml')))==len(list((OUT/'script.nuvio/resources/skins/Default/1080i').glob('*.xml'))),folder
+for name in ('defaults.xml','dark.xml','dim.xml'):assert (OUT/'skin.nuvio/colors'/name).is_file(),name
 for group in json.loads((BACK/'resources/collections.json').read_text(encoding='utf-8')):
     assert group['id'] not in ('collections.world','collections.sports')
     for folder in group['folders']:

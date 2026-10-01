@@ -4,6 +4,7 @@ import xbmcgui
 from resources.lib.trailer_support import trailer_url
 import time
 import threading
+from resources.lib.theme import folder as theme_folder
 
 _PLAYER=None
 
@@ -74,7 +75,7 @@ def show_trailer(meta):
         # A resolution failure never reaches Kodi's playback queue.
         return False
     player=PreviewPlayer();player.token=uuid.uuid4().hex
-    win=TrailerWindow('nuvio_trailer.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),'Default','1080i',meta=meta)
+    win=TrailerWindow('nuvio_trailer.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),theme_folder(),'1080i',meta=meta)
     monitor=xbmc.Monitor();home=xbmcgui.Window(10000)
     item=xbmcgui.ListItem(label='Trailer: '+str(meta.get('name') or meta.get('title') or ''))
     item.setProperty('nuvio.preview',player.token);item.setProperty('IsPlayable','true')

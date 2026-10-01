@@ -14,6 +14,7 @@ import xbmcvfs
 from .system_setup import rpc,ensure_addon
 from .playback import plain_label,job
 from resources.lib.iptv_config import xtream_urls,write_instance
+from resources.lib.theme import folder as theme_folder
 
 ADDON=xbmcaddon.Addon('plugin.video.nuviohub')
 _CHANNEL_CACHE=OrderedDict()
@@ -348,7 +349,7 @@ def open_iptv():
         if not rows:
             xbmcgui.Dialog().ok('IPTV','No channels are available yet. Check the playlist in IPTV Simple settings, or restart Kodi after installing the PVR client.');return
         if group=='alltv':category_rows=groups()
-        win=IPTV('nuvio_iptv.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),'Default','1080i',rows=rows,groups=category_rows,group=group)
+        win=IPTV('nuvio_iptv.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),theme_folder(),'1080i',rows=rows,groups=category_rows,group=group)
         monitor=xbmc.Monitor()
         try:
             win.show_ready()

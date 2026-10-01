@@ -3,6 +3,7 @@ from .dialog import Dialog
 import xbmcaddon
 import xbmcgui
 from resources.lib import settings_cache
+from resources.lib.theme import folder as theme_folder
 
 DONE='nuvio:settings_done'
 _STACK=[]
@@ -70,7 +71,7 @@ class SettingsPage(Dialog):
 
 def show(title,rows,choose,back_result=None):
     window=SettingsPage('nuvio_settings.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),
-        'Default','1080i',title=title,rows=rows,choose=choose,back_result=back_result)
+        theme_folder(),'1080i',title=title,rows=rows,choose=choose,back_result=back_result)
     parent=_STACK[-1] if _STACK else None
     _STACK.append(window)
     try:

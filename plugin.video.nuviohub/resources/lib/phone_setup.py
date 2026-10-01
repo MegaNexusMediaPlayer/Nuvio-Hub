@@ -88,6 +88,8 @@ def state():
         else:
             display[field] = _bool(addon, key, kind == 'bool_default_on')
     kind = addon.getSetting('nuvio_screensaver_type') or 'image'
+    from . import theme
+    display['theme'] = theme.current(addon)
     display['screensaver'] = 'animated' if kind == 'animated' else ('custom' if kind == 'video' or addon.getSetting('nuvio_screensaver_art') else 'image')
     return {
         'nuvio': {'linked': bool(token.get('access_token')), 'profile': token.get('profile_name') or '',
@@ -291,6 +293,9 @@ def _apply_display(values):
                 addon.setSetting(key, value)
         else:
             addon.setSetting(key, 'true' if value else 'false')
+    from . import theme
+    if values.get('theme') in theme.THEMES and values['theme'] != theme.current(addon):
+        theme.apply(values['theme'], addon)
     saver = values.get('screensaver')
     if saver in ('image', 'animated'):
         addon.setSetting('nuvio_screensaver_type', saver)

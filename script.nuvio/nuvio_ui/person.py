@@ -4,6 +4,7 @@ import xbmcgui
 from .dialog import Dialog
 from resources.lib import art_cache
 from resources.lib.display_text import clean
+from resources.lib.theme import folder as theme_folder
 
 
 class Person(Dialog):
@@ -63,7 +64,7 @@ class Person(Dialog):
 
 def open_page(page):
     win = Person('nuvio_person.xml', xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),
-                 'Default', '1080i', page=page)
+                 theme_folder(),'1080i', page=page)
     try:
         win.doModal()
         return win.outcome

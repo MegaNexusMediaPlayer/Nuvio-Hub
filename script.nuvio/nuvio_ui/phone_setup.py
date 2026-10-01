@@ -9,6 +9,7 @@ import xbmc
 import xbmcaddon
 import xbmcgui
 from resources.lib import settings_cache
+from resources.lib.theme import folder as theme_folder
 
 POLL = .25
 
@@ -60,7 +61,7 @@ def run():
     try:
         qr = qr_png(service.url, box_size=10, border=2) or ''
         window = PhoneWindow('nuvio_phone_setup.xml', xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),
-                             'Default', '1080i', qr=qr, url=service.url)
+                             theme_folder(),'1080i', qr=qr, url=service.url)
         window.show()
         monitor = xbmc.Monitor()
         connected = False

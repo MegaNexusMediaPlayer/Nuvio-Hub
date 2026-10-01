@@ -40,6 +40,9 @@ def recolor(rgb):
     return '%02X%02X%02X' % (round(r * 255), round(g * 255), round(b * 255))
 
 
+KEEP_ORIGINAL = re.compile(r'nuvio_(?:tile|poster)_mask')  # catalog card boxes keep their original colour (6.0.28)
+
+
 def fix_text(path):
     text = path.read_text(encoding='utf-8')
     changed = 0
@@ -50,7 +53,8 @@ def fix_text(path):
             return m.group(0)
         changed += 1
         return m.group(1).upper() + new
-    out = HEX.sub(sub, text)
+    out = ''.join(line if KEEP_ORIGINAL.search(line) else HEX.sub(sub, line)
+                  for line in text.splitlines(keepends=True))
     if out != text:
         path.write_text(out, encoding='utf-8')
     return changed

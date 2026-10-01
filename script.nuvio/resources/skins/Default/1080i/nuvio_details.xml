@@ -28,7 +28,7 @@
         <width>1320</width>
         <height>550</height>
         <aspectratio>stretch</aspectratio>
-        <texture background="true">special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
+        <texture background="true" colordiffuse="FF040F22">special://home/addons/script.nuvio/resources/media/nuvio_hero_fade.png</texture>
       </control>
       <control type="image">
         <left>75</left>
