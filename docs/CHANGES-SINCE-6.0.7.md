@@ -1,7 +1,7 @@
-# Nuvio Hub — changes since the published 6.0.7
+# Nuvio Hub — changes since 6.0.7
 
-Summary for review of the local 6.0.8 – 6.0.22 candidates (details in each
-`docs/RELEASE-6.0.x.md`). None of these is published on GitHub yet.
+Summary of 6.0.8 – 6.0.23 (details in each `docs/RELEASE-6.0.x.md`).
+6.0.19 and 6.0.23 are published GitHub releases.
 
 | Area | What changed |
 |---|---|
@@ -13,9 +13,10 @@ Summary for review of the local 6.0.8 – 6.0.22 candidates (details in each
 | Trailers | IMDb trailers (stream directly, quality setting) besides YouTube with automatic fallback; Kodi never asks to install YouTube for its own trailer button. |
 | CoreELEC | Small video (Home preview, IPTV preview, trailer window, video screensaver) now shows its picture (hardware video layer driven through the active window); Nuvio's preview video stops before sleep. |
 | Screensaver | Seamless MP4 loop (no artwork flash, no reopen); MegaNexus standard image (default) or built-in MegaNexus animation drawn by the skin (no player, no mute). |
+| Cinemeta | Always installed; ON only while nothing else supplies metadata; Cinemeta collections when there is no other layout. |
 | Branding | MegaNexus logo, banner and icons; blue theme from the logo; HUB buttons "MegaNexus", "IPTV Channels", "HUB Settings"; "Support MegaNexus · Ko-fi". Nuvio accounts and settings unchanged. |
 | Phone setup | QR code → local page served by Kodi: Nuvio sign-in/import, add-ons, collections, display; Save starts MegaNexus and stops the service. |
-| Distribution | `repository.meganexus` Kodi repository + static GitHub Pages site (File manager source). |
+| Distribution | `repository.meganexus` Kodi repository on GitHub Pages (File manager source `https://meganexusmediaplayer.github.io/Nuvio-Hub/`); interface/skin/screensaver install themselves after every update. |
 | IPTV | Refresh guide / IPTV setup / HUB at the bottom; one HUB button. |
 | Details | No "Loading episodes" banner; ratings (IMDb/TMDb) under the Home title, switchable. |
 | Maintenance | Automatic updates from GitHub releases (checksum, rollback, "Restart Kodi now?" when no video plays and Nuvio is closed), Ko-fi QR, organised Configure page, working "Remove Nuvio build". |

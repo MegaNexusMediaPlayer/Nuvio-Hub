@@ -2,8 +2,8 @@
 
 This is a four-component Kodi build: `plugin.video.nuviohub` (backend/service),
 `script.nuvio` (Python/XML frontend), `skin.nuvio` (Kodi shell), and
-`screensaver.nuvio` (screensaver entrypoint). The local 6.0.21 candidate is the
-baseline for this 6.0.22 candidate. Do not publish, push, or change live user
+`screensaver.nuvio` (screensaver entrypoint). The 6.0.22 candidate is the
+baseline for this 6.0.23 release. Do not publish, push, or change live user
 profiles as a side effect of reviewing code.
 
 ## Required repository skills
@@ -15,7 +15,7 @@ claims that a runtime plugin or global agent skill has been installed.
 
 ## Before modifying code
 
-Read the relevant call sites, tests, and `docs/RELEASE-6.0.22.md` (and 6.0.21 back to 6.0.10). Identify which
+Read the relevant call sites, tests, and `docs/RELEASE-6.0.23.md` (and 6.0.22 back to 6.0.10). Identify which
 Kodi process/interpreter owns the work. Keep existing public add-on IDs,
 profile paths, encrypted credentials and migration aliases. Never mass-rename
 legacy state keys or remove upstream license notices. Never replace an
@@ -30,7 +30,9 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
 ## Invariants
 
 * Accounts are optional and nothing blocks entry into Nuvio (6.0.15): with no
-  configuration Cinemeta supplies metadata and default collections; collection
+  configuration Cinemeta supplies metadata and default collections. Cinemeta
+  is always installed (6.0.23), OFF once the user has own metadata add-ons, and
+  a hand-made Cinemeta switch is never changed automatically; collection
   checks are reports only. The numb3rs presets are an explicit choice. Match exact manifest/catalog/type identities and
   filters; never silently reinterpret a catalog as belonging to another addon.
 * OFF providers stay OFF. Respect per-resource `types` and `idPrefixes`,
@@ -62,6 +64,9 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
 * Releases are published on GitHub as tag `v<version>` with asset
   `Nuvio-Hub-Complete-<version>.zip` (+ `.sha256`); `resources/lib/updater.py`
   reads exactly that naming for automatic updates.
+* The service installs the bundled interface/skin/screensaver by itself after
+  any backend update (`bundle_installer.auto_install`), never while video
+  plays or the interface is open.
 * Keep all four manifests and internal dependencies at one release version.
   Retain Kodi Python 3 / GUI 5.17 compatibility gates; no removed-stdlib APIs.
   `repository.meganexus` (Kodi repository for GitHub Pages, built by
@@ -76,10 +81,10 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
 ## Required checks (Python 3.9+ review environment)
 
 ```sh
-python review/check_622.py
-python review/check_608_rebrand_kodi22.py 6.0.22
-python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.22.zip
-python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.22.zip
+python review/check_623.py
+python review/check_608_rebrand_kodi22.py 6.0.23
+python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.23.zip
+python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.23.zip
 ```
 
 The first command runs the maintained unit suite, parses XML/JSON, and checks

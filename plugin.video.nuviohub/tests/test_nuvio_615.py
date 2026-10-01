@@ -130,7 +130,8 @@ class NeverBlocked(TempProfile):
         with mock.patch.object(self.gate.metadata_providers, 'candidates', return_value=[{'id': 'aio'}]), \
                 mock.patch.object(self.gate.default_setup, 'install_cinemeta') as install:
             self.gate.ensure_defaults()
-        install.assert_not_called()
+        # 6.0.23: Cinemeta is always installed, but never switched ON here.
+        install.assert_called_once_with(enable=False)
         self.assertEqual(profiles.load()[0]['title'], 'Mine')
 
     def test_ensure_ready_always_enters(self):

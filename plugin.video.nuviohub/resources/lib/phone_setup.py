@@ -212,12 +212,22 @@ def nuvio_import(collections):
             'errors': list(dict.fromkeys(report['errors']))[:3]}
 
 
-def _apply_switches(module, rows):
-    current = {p['id']: on for p, on in module.entries()}
+def _apply_switches(module, rows, on_change=None):
+    current = {p['id']: (p, on) for p, on in module.entries()}
     for row in rows or []:
         pid = row.get('id') if isinstance(row, dict) else None
-        if pid in current and bool(row.get('enabled')) != current[pid]:
+        if pid in current and bool(row.get('enabled')) != current[pid][1]:
             module.set_enabled(pid, bool(row.get('enabled')))
+            if on_change:
+                on_change(current[pid][0], bool(row.get('enabled')))
+
+
+def _manual_cinemeta(provider, on):
+    """Same rule as the TV Metadata page: a hand-made Cinemeta choice is kept
+    (never switched back automatically)."""
+    from . import default_setup
+    if (provider.get('manifest') or {}).get('id') == default_setup.CINEMETA_ID:
+        _addon().setSetting(default_setup.CINEMETA_AUTO, '' if on else 'off')
 
 
 def _apply_groups(rows):
@@ -285,7 +295,7 @@ def save(payload):
     if not isinstance(payload, dict):
         raise ValueError('Nothing to save.')
     from . import metadata_providers, stream_providers
-    _apply_switches(metadata_providers, payload.get('metadata'))
+    _apply_switches(metadata_providers, payload.get('metadata'), _manual_cinemeta)
     _apply_switches(stream_providers, payload.get('streams'))
     _apply_groups(payload.get('groups'))
     _apply_display(payload.get('display'))

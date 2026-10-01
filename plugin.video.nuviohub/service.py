@@ -819,8 +819,17 @@ if __name__ == '__main__':
                 xbmc.log('[NuvioHub] update check skipped: %s' % exc, xbmc.LOGDEBUG)
             if mon.waitForAbort(600):return
 
+    def _component_sync(mon):
+        # 6.0.23: no manual "Install or repair" after an update.
+        try:
+            from resources.lib.bundle_installer import auto_install
+            auto_install(mon, busy=_interactive_busy)
+        except Exception as exc:
+            xbmc.log('[NuvioHub] automatic component install skipped: %s' % exc, xbmc.LOGWARNING)
+
     try:
         import threading as _thr_upd
+        _thr_upd.Thread(target=_component_sync, args=(monitor,), name='NuvioHubComponents', daemon=True).start()
         _thr_upd.Thread(target=_update_loop, args=(monitor,), name='NuvioHubUpdates', daemon=True).start()
     except Exception as exc:
         xbmc.log('[NuvioHub] update checks not started: %s' % exc, xbmc.LOGWARNING)

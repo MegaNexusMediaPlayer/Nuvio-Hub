@@ -6,10 +6,11 @@ Nuvio never blocks on setup. Rules (checked on every Nuvio entry, cheap):
   mode cleared by any non-automatic save).
 * Otherwise, when an added add-on offers movie/series catalogs, Home is laid
   out from those catalogs; when none does, from Cinemeta.
-* Cinemeta is switched ON for metadata only while the user has no other
-  metadata add-on. If Cinemeta was switched on automatically, adding another
-  metadata add-on switches it OFF again. Cinemeta always stays in the Metadata
-  add-ons list to be switched on or off by hand.
+* Cinemeta is always installed (6.0.23). It is switched ON for metadata only
+  while the user has no other metadata add-on. If Cinemeta was switched on
+  automatically, adding another metadata add-on switches it OFF again. When
+  the user already has their own add-ons, Cinemeta is added OFF. It always
+  stays in the Metadata add-ons list to be switched on or off by hand.
 
 The numb3rs collection set (resources/collections.json) is an optional choice;
 it needs AIOMetadata configured as described at NUMB3RS_URL.
@@ -91,7 +92,8 @@ def install_cinemeta(timeout=8, enable=True):
     from .nuviohub import store, client
     from . import metadata_providers
     provider = cinemeta_provider(store.list_providers())
-    if provider is None:
+    added = provider is None
+    if added:
         try:
             manifest = client.get_json(CINEMETA_URL, ttl_seconds=3600, timeout_override=timeout,
                                        retry=False, rate_wait=.25)
@@ -102,6 +104,9 @@ def install_cinemeta(timeout=8, enable=True):
         provider = store.add_provider('Cinemeta', CINEMETA_URL, manifest)
     if enable and not any(p['id'] == provider['id'] for p in metadata_providers.enabled()):
         metadata_providers.set_enabled(provider['id'], True)
+    elif not enable and added:
+        # Installed for later use: an untouched switch list would show it ON.
+        metadata_providers.set_enabled(provider['id'], False)
     return provider
 
 
@@ -160,7 +165,11 @@ def providers_key(providers):
     return hashlib.sha256(json.dumps(value, sort_keys=True).encode('utf-8')).hexdigest()[:16]
 
 
-def apply_defaults(addon, providers, groups, save, install=install_cinemeta):
+def add_cinemeta_off():
+    return install_cinemeta(enable=False)
+
+
+def apply_defaults(addon, providers, groups, save, install=install_cinemeta, add=add_cinemeta_off):
     """Decide the automatic layout and Cinemeta switch. Returns what changed."""
     from . import metadata_providers
     changed = []
@@ -180,7 +189,14 @@ def apply_defaults(addon, providers, groups, save, install=install_cinemeta):
                     changed.append('cinemeta-on')
                 except Exception:
                     pass
-    elif cinemeta is not None and addon.getSetting(CINEMETA_AUTO) == 'true':
+    elif cinemeta is None:
+        # Own metadata add-ons exist: Cinemeta is still installed, but OFF.
+        try:
+            add()
+            changed.append('cinemeta-added-off')
+        except Exception:
+            pass
+    elif addon.getSetting(CINEMETA_AUTO) == 'true':
         try:
             metadata_providers.set_enabled(cinemeta['id'], False)
         except ValueError:

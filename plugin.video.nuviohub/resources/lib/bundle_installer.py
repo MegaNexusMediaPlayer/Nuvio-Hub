@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import shutil
 import tempfile
+import threading
 import time
 import xml.etree.ElementTree as ET
 import zipfile
@@ -12,6 +13,8 @@ import zipfile
 from .legacy_names import OLD_ADDON_ID
 
 ALLOWED = {'script.nuvio', 'skin.nuvio', 'screensaver.nuvio'}
+# The service's automatic install and the GitHub updater share one process.
+_INSTALL_LOCK = threading.Lock()
 
 
 def validate_archive(path, addon_id, version, sha256):
@@ -45,6 +48,19 @@ def installed_matches(directory,row):
 
 def install_components(packages, addons_dir, backup_dir, force=False):
     """Filesystem-only seam. Existing user profiles are never touched."""
+    with _INSTALL_LOCK:
+        return _install_components(packages, addons_dir, backup_dir, force)
+
+
+def outdated(packages, addons_dir):
+    """Bundled components whose installed copy differs from this backend's packages."""
+    try:desired=json.loads((Path(packages)/'bundle.json').read_text(encoding='utf-8'))
+    except (OSError,ValueError):return []
+    return [r['id'] for r in desired if isinstance(r,dict) and r.get('id') in ALLOWED
+            and not installed_matches(Path(addons_dir)/r['id'],r)]
+
+
+def _install_components(packages, addons_dir, backup_dir, force=False):
     packages,addons_dir,backup_dir=Path(packages),Path(addons_dir),Path(backup_dir)
     manifest=json.loads((packages/'bundle.json').read_text(encoding='utf-8'))
     if not isinstance(manifest,list) or {r.get('id') for r in manifest}!=ALLOWED or len(manifest)!=len(ALLOWED):
@@ -81,6 +97,32 @@ def install_components(packages, addons_dir, backup_dir, force=False):
     finally:
         if stage.parent.resolve()==addons_dir.resolve() and stage.name.startswith('.nuvio-stage-'):
             shutil.rmtree(stage)
+
+
+def paths():
+    import xbmcaddon
+    import xbmcvfs
+    addon=xbmcaddon.Addon('plugin.video.nuviohub')
+    return (Path(addon.getAddonInfo('path'))/'resources/packages', Path(xbmcvfs.translatePath('special://home/addons')))
+
+
+def auto_install(monitor, busy=lambda: False, wait=10, retry=30, attempts=120):
+    """Service: after the backend was updated (Kodi repository, ZIP or GitHub),
+    install the bundled interface, skin and screensaver without "Install or
+    repair". Waits while video plays or the interface is open; never forced."""
+    import xbmc
+    import xbmcgui
+    if monitor.waitForAbort(wait):return []
+    for _ in range(attempts):
+        packages,addons_dir=paths()
+        if not outdated(packages,addons_dir):return []
+        if not xbmc.Player().isPlayingVideo() and not xbmcgui.Window(10000).getProperty('nuvio.frontend.running') and not busy():
+            changed=ensure_components()
+            if changed:
+                xbmcgui.Dialog().notification('MegaNexus','Interface, skin and screensaver updated',xbmcgui.NOTIFICATION_INFO,5000)
+            return changed
+        if monitor.waitForAbort(retry):return []
+    return []
 
 
 def ensure_components(force=False):

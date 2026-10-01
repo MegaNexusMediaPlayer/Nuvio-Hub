@@ -208,8 +208,11 @@ class CinemetaRules(unittest.TestCase):
 
     def test_user_owned_collections_are_never_replaced(self):
         own = self.provider('aio', 'aio-metadata')
-        setup.apply_defaults(self.addon, [own], [{'id': 'mine'}], self.save, install=lambda: None)
+        added = []
+        setup.apply_defaults(self.addon, [own], [{'id': 'mine'}], self.save, install=lambda: None,
+                             add=lambda: added.append(1))
         self.assertEqual(self.saved, [])
+        self.assertEqual(added, [1], '6.0.23: Cinemeta is still installed, OFF')
 
     def test_manual_cinemeta_choice_is_kept(self):
         cinemeta = self.provider('cm', setup.CINEMETA_ID)
@@ -225,7 +228,8 @@ class CinemetaRules(unittest.TestCase):
     def test_6015_cinemeta_layout_is_recognised(self):
         groups = setup.cinemeta_collections()
         self.assertTrue(setup.is_cinemeta_layout(groups))
-        setup.apply_defaults(self.addon, [self.provider('aio', 'aio-metadata')], groups, self.save, install=lambda: None)
+        setup.apply_defaults(self.addon, [self.provider('aio', 'aio-metadata')], groups, self.save, install=lambda: None,
+                             add=lambda: None)
         self.assertEqual(self.values[setup.AUTO_LAYOUT], 'catalogs')
 
     def test_bundled_manifest_works_offline(self):

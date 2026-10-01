@@ -37,9 +37,12 @@ def ensure_defaults(job=None):
 
     def install():
         return job(default_setup.install_cinemeta, label='Setting up Cinemeta') if job else default_setup.install_cinemeta()
+
+    def add():
+        return job(default_setup.add_cinemeta_off, label='Adding Cinemeta') if job else default_setup.add_cinemeta_off()
     try:
         default_setup.apply_defaults(xbmcaddon.Addon('plugin.video.nuviohub'), store.list_providers(),
-                                     collection_profile.load(), collection_profile.save, install)
+                                     collection_profile.load(), collection_profile.save, install, add)
     except (ValueError, OSError):
         pass
 
