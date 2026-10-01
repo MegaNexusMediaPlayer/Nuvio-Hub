@@ -156,16 +156,41 @@ def sign_in_nuvio():
     ADDON.setSetting('nuvio_sync_enabled','true')
     settings_cache.invalidate()
     if not choose_nuvio_profile():return False
-    dialog.ok('Nuvio account',nuvio_status()+'. Account saved. Next: import your add-ons and collections.')
+    import_from_nuvio()  # 6.0.25: connecting imports everything; no extra steps
     return True
+
+
+def import_from_nuvio():
+    """Connected account: add-ons, progress and the profile's collections, with
+    the metadata add-ons those collections use switched ON, so Home loads at once.
+    A Home layout the user made is replaced only after a yes."""
+    from resources.lib import nuvio_import
+    from .playback import job
+    dialog=xbmcgui.Dialog()
+    collections=True
+    if nuvio_import.layout_is_users_own():
+        collections=dialog.yesno('Nuvio account','Replace your current Home layout with the collections of your Nuvio profile?')
+    result=job(lambda:nuvio_import.fetch(collections=collections),label='Importing your Nuvio add-ons and collections')
+    if result is None:return False
+    report=nuvio_import.apply(result)
+    settings_cache.invalidate()
+    try:
+        from .browse_meta import clear
+        clear()
+    except Exception:pass
+    lines=['%d add-ons imported.'%report['providers']]
+    if report.get('collections'):lines.append('%d collections are on Home.'%report['collections'])
+    if report.get('metadata_on'):lines.append('Metadata switched ON: '+', '.join(report['metadata_on'])+'.')
+    if report['errors']:lines.append('\n'.join(dict.fromkeys(report['errors'])))
+    dialog.ok('Nuvio account - '+nuvio_status(),'\n'.join(lines))
+    return bool(report['providers'] or report.get('collections')) and not report['errors']
 
 
 def accounts():
     from resources.lib.nuviohub import nuvio_stremio_sync as sync
     def rows():return [page.item('Sign in',nuvio_status()),page.item('Sign in with phone · QR code'),page.item('Sync add-ons and progress','Keep Home layout'),page.item('Sign out'),page.item('Choose Nuvio profile',sync.Nuvio.token().get('profile_name') or ''),page.item('Continue Watching sync', (ADDON.getSetting('nuvio_progress_interval') or '60')+' seconds'),page.item('Back')]
     def choose(pick):
-        if pick==0:
-            if sign_in_nuvio():sync_nuvio()
+        if pick==0:sign_in_nuvio()
         elif pick==1:phone_setup()
         elif pick==2:sync_nuvio()
         elif pick==3:sync.Nuvio.clear();ADDON.setSetting('nuvio_sync_enabled','false')

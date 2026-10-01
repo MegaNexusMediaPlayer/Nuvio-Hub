@@ -81,6 +81,28 @@ footer .btn{width:100%;max-width:720px;display:flex;margin:0 auto;font-size:17px
 "use strict";
 const KEY = new URLSearchParams(location.search).get('k') || '';
 let S = null;   // state from the TV; edited locally until Save
+let PROFILES = null;  // shown right after sign-in when the account has several
+
+function importSummary(r){
+  if (!r) return '';
+  const parts = [r.providers + ' add-ons'];
+  if (r.collections) parts.push(r.collections + ' collections');
+  let text = 'Imported from Nuvio: ' + parts.join(', ') + '.';
+  if (r.metadata_on && r.metadata_on.length) text += ' Metadata ON: ' + r.metadata_on.join(', ') + '.';
+  if (r.errors && r.errors.length) text += ' ' + r.errors.join(' ');
+  return text;
+}
+function profileButtons(list, box){
+  box.replaceChildren(...(list || []).map(p => {
+    const b = el('button', {class: 'btn ghost small', text: p.name, style: 'margin:6px 6px 0 0'});
+    b.addEventListener('click', () => busy(b, async () => {
+      const d = await api('/api/nuvio/profile', {index: p.index});
+      PROFILES = null; await reload();
+      say(importSummary(d.imported) || 'Profile selected.', !(d.imported && d.imported.errors && d.imported.errors.length));
+    }));
+    return b;
+  }));
+}
 
 function el(tag, attrs, ...kids){
   const n = document.createElement(tag);
@@ -130,14 +152,17 @@ function renderAccount(){
     const pass = el('input', {type: 'password', autocomplete: 'current-password'});
     const go = el('button', {class: 'btn wide', text: 'Sign in'});
     go.addEventListener('click', () => busy(go, async () => {
+      go.textContent = 'Signing in and importing…';
       const d = await api('/api/nuvio/login', {email: email.value, password: pass.value});
       pass.value = '';
-      say('Signed in to Nuvio.', true);
+      if ((d.profiles || []).length > 1) PROFILES = d.profiles;
       await reload();
-      if ((d.profiles || []).length > 1) document.getElementById('profiles')?.scrollIntoView();
+      if (d.imported) say(importSummary(d.imported), !(d.imported.errors && d.imported.errors.length));
+      else if (PROFILES) say('Signed in. Choose your Nuvio profile: its add-ons and collections are imported automatically.', true);
+      else say('Signed in to Nuvio.', true);
     }));
     box.append(el('div', {class: 'card'},
-      el('p', {class: 'note', text: 'Optional. Your email and password go straight to your TV over your home network.'}),
+      el('p', {class: 'note', text: 'Optional. Signing in imports your Nuvio add-ons, collections and progress automatically. Your email and password go straight to your TV over your home network.'}),
       el('label', {class: 'f', text: 'Email'}), email, el('label', {class: 'f', text: 'Password'}), pass, go));
   } else {
     const card = el('div', {class: 'card'},
@@ -147,19 +172,14 @@ function renderAccount(){
     const load = el('button', {class: 'btn ghost small', text: 'Choose profile'});
     load.addEventListener('click', () => busy(load, async () => {
       const d = await api('/api/nuvio/profiles', {});
-      profiles.replaceChildren(...(d.profiles || []).map(p => {
-        const b = el('button', {class: 'btn ghost small', text: p.name, style: 'margin:6px 6px 0 0'});
-        b.addEventListener('click', () => busy(b, async () => {
-          await api('/api/nuvio/profile', {index: p.index}); say('Profile selected.', true); await reload(); }));
-        return b;
-      }));
+      profileButtons(d.profiles, profiles);
     }));
+    if (PROFILES) profileButtons(PROFILES, profiles);
     const withCollections = el('input', {type: 'checkbox'}); withCollections.checked = true;
     const imp = el('button', {class: 'btn wide', text: 'Import my add-ons from Nuvio'});
     imp.addEventListener('click', () => busy(imp, async () => {
       const d = await api('/api/nuvio/import', {collections: withCollections.checked});
-      say(d.providers + ' add-ons imported' + (d.collections ? ', ' + d.collections + ' collections' : '') +
-          (d.errors && d.errors.length ? ' · ' + d.errors.join(' · ') : '') + '.', !(d.errors && d.errors.length));
+      say(importSummary(d), !(d.errors && d.errors.length));
       await reload();
     }));
     const out = el('button', {class: 'btn ghost wide', text: 'Sign out'});

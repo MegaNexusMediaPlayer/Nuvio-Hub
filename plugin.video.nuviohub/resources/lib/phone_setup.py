@@ -163,7 +163,11 @@ def nuvio_sign_in(email, password):
         raise ValueError('Sign-in failed. Check the email and password.')
     sync.Nuvio.save_token(token)
     _addon().setSetting('nuvio_sync_enabled', 'true')
-    return nuvio_profiles()
+    result = nuvio_profiles()
+    if len(result['profiles']) == 1:
+        # One profile: connect = import add-ons, collections and progress now.
+        result['imported'] = first_import()
+    return result
 
 
 def nuvio_profiles():
@@ -184,7 +188,14 @@ def nuvio_select_profile(index):
     if not match:
         raise ValueError('That Nuvio profile was not found.')
     sync.Nuvio.select_profile(match)
-    return {}
+    return {'imported': first_import()}
+
+
+def first_import():
+    """After connecting: add-ons, progress and - unless Home already shows the
+    user's own layout - the profile's collections with their metadata ON."""
+    from . import nuvio_import as importer
+    return nuvio_import(collections=not importer.layout_is_users_own())
 
 
 def nuvio_sign_out():
@@ -200,15 +211,12 @@ def nuvio_import(collections):
     from . import nuvio_import as importer, collection_profile, settings_cache
     if not sync.Nuvio.is_linked():
         raise ValueError('Sign in to Nuvio first.')
-    result = importer.fetch()
+    result = importer.fetch(collections=collections)
     report = importer.apply(result)
-    layout = 0
-    if collections:
-        data = sync.Nuvio.sync_collections([], direction='pull')
-        if data:
-            layout = collection_profile.save(data)
+    layout = report.get('collections') or 0
     settings_cache.invalidate()
     return {'providers': report['providers'], 'collections': layout,
+            'metadata_on': report.get('metadata_on') or [],
             'errors': list(dict.fromkeys(report['errors']))[:3]}
 
 

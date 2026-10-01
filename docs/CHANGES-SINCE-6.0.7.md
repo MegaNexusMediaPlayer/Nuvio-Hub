@@ -15,6 +15,7 @@ Summary of 6.0.8 – 6.0.25 (details in each `docs/RELEASE-6.0.x.md`).
 | Screensaver | Seamless MP4 loop (no artwork flash, no reopen); MegaNexus standard image (default) or built-in MegaNexus animation drawn by the skin (no player, no mute). |
 | Cinemeta | Always installed; ON only while nothing else supplies metadata; Cinemeta collections when there is no other layout. |
 | Branding | MegaNexus logo, banner and icons; blue theme from the logo; HUB buttons "MegaNexus", "IPTV Channels", "HUB Settings"; "Support MegaNexus · Ko-fi". Nuvio accounts and settings unchanged. |
+| Nuvio connect | Signing in imports add-ons, progress and collections and switches ON the metadata add-ons the collections use (6.0.25). |
 | Phone setup | QR code → local page served by Kodi: Nuvio sign-in/import, add-ons, collections, display; Save starts MegaNexus and stops the service. |
 | License | From 6.0.24 the MegaNexus License (all rights reserved; personal use free). Skin stays GPL-2.0 (Estuary). |
 | Distribution | `repository.meganexus` Kodi repository on GitHub Pages (File manager source `https://meganexusmediaplayer.github.io/Nuvio-Hub/`); interface/skin/screensaver install themselves after every update. |

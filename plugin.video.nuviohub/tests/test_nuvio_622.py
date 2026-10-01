@@ -126,7 +126,13 @@ class SaveCollections(unittest.TestCase):
     def setUp(self):
         temp = tempfile.TemporaryDirectory();self.addCleanup(temp.cleanup)
         path = Path(temp.name) / 'nuvio_collections.json'
-        for module in {profiles, importlib.import_module('nuviolib.collection_profile')}:
+        import os
+        env = mock.patch.dict(os.environ, {'NUVIO_TEST_PROFILE': temp.name});env.start();self.addCleanup(env.stop)
+        import sys
+        # The harness loads this module under several names; patch every copy.
+        copies = {profiles, importlib.import_module('nuviolib.collection_profile')}
+        copies.update(m for n, m in list(sys.modules.items()) if m and n.endswith('.collection_profile'))
+        for module in copies:
             module._LOADED.clear()
             patch = mock.patch.object(module, 'profile_file', return_value=path);patch.start()
             self.addCleanup(patch.stop);self.addCleanup(module._LOADED.clear)

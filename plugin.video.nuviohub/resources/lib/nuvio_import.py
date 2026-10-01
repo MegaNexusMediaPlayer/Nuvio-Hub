@@ -26,7 +26,41 @@ def enable_imported(provider_ids):
                 pass
 
 
-def fetch():
+def enable_collection_metadata(groups):
+    """Switch ON the metadata add-ons whose catalogs the collections use, so the
+    first Home screen loads. Add-ons that are not used are left as they are."""
+    from . import metadata_providers, collection_validation
+    from .collections_home import matching_catalog
+    providers = store.list_providers()
+    switches = {p['id']: on for p, on in metadata_providers.entries(providers)}
+    turned = []
+    for _, source in collection_validation.sources(groups or []):
+        match = matching_catalog(source, providers)
+        pid = match[0]['id'] if match else None
+        if pid and switches.get(pid) is False:
+            try:
+                metadata_providers.set_enabled(pid, True)
+            except ValueError:
+                continue
+            switches[pid] = True
+            turned.append(match[0].get('name') or pid)
+    return turned
+
+
+def layout_is_users_own():
+    """True when Home shows a layout the user chose or edited (not automatic)."""
+    import xbmcaddon
+    from . import default_setup
+    groups = collection_profile.load()
+    if not groups:
+        return False
+    mode = xbmcaddon.Addon('plugin.video.nuviohub').getSetting(default_setup.AUTO_LAYOUT)
+    return not mode and not default_setup.is_cinemeta_layout(groups)
+
+
+def fetch(collections=False):
+    """``collections``: also pull the profile's Home collections (6.0.25: done
+    automatically when an account is connected and Home is still automatic)."""
     result = {'providers': [], 'collections': None, 'progress': None, 'errors': []}
     # This is deliberately independent of the optional background-sync toggles.
     try:
@@ -49,8 +83,13 @@ def fetch():
                 result['errors'].append('An add-on manifest could not load. Retry the import.')
     except Exception:
         result['errors'].append('Add-ons could not be fetched from the selected profile.')
-    # Layout import is a separate, explicit Skin configuration action. Ordinary
-    # account/add-on sync must never replace the user's fixed Home design.
+    # Ordinary account/add-on sync never replaces the Home design; only an
+    # explicit import or the first connection (caller decides) pulls collections.
+    if collections:
+        try:
+            result['collections'] = sync.Nuvio.sync_collections([], direction='pull') or []
+        except Exception:
+            result['errors'].append('Collections could not be fetched. Existing collections were kept.')
     try:
         result['progress'] = sync.Nuvio.sync_progress([], direction='pull')
     except Exception:
@@ -72,8 +111,11 @@ def apply(result):
         except Exception:
             report['errors'].append('An add-on could not be saved. Check Kodi storage space.')
     enable_imported(added)
+    report['metadata_on'] = []
     if result['collections']:
-        try:report['collections'] = collection_profile.save(result['collections'])
+        try:
+            report['collections'] = collection_profile.save(result['collections'])
+            report['metadata_on'] = enable_collection_metadata(collection_profile.load())
         except Exception:report['errors'].append('Collections could not be saved or have an unsupported format.')
     elif result['collections'] is not None:
         report['errors'].append('This profile has no collections. Existing collections were kept.')
@@ -85,6 +127,14 @@ def apply(result):
     # Auto-select only an unambiguous provider. Never replace a valid user choice.
     import xbmcaddon
     addon = xbmcaddon.Addon('plugin.video.nuviohub')
+    # Own metadata now exists: an automatically switched-on Cinemeta goes OFF
+    # (same rule as every Home entry); a user-owned layout is never touched.
+    try:
+        from . import default_setup
+        default_setup.apply_defaults(addon, store.list_providers(), collection_profile.load(),
+                                     collection_profile.save, install=lambda: None, add=lambda: None)
+    except Exception:
+        pass
     for role in ('metadata', 'streams'):
         if not addon.getSetting('nuvio_' + role + '_provider'):
             selected = backend_api.provider(role)
