@@ -8530,10 +8530,13 @@ def emby_play(item_id):
         'provider_name': 'Emby Native • %s' % (server.get('name') or 'Server'),
         'server_type': 'emby',
         'server_url': server.get('url') or '',
+        'server_flavor': emby_client.flavor_of(server),
         'token': server.get('token') or '',
         'item_id': str(item_id),
         'device_id': emby_client._device_id(),
         'session_id': resolved.get('play_session_id') or '',
+        'play_session_id': resolved.get('play_session_id') or '',
+        'media_source_id': source_id or '',
         'native_playback_resolved': True,
         'poster': emby_client.artwork_url(server, item.get('thumb') or ''),
         'background': emby_client.artwork_url(server, item.get('art') or item.get('thumb') or '', kind='Backdrop'),
@@ -13606,7 +13609,8 @@ def _companion_context_from_playback(ctx):
             'token': ctx.get('token'),
             'duration_ms': int(ctx.get('duration_ms') or 0),
         }
-        for key in ('rating_key', 'client_id', 'device_name', 'product', 'product_version', 'item_id', 'device_id', 'session_id'):
+        for key in ('rating_key', 'client_id', 'device_name', 'product', 'product_version', 'item_id', 'device_id', 'session_id',
+                    'server_flavor', 'media_source_id', 'play_session_id'):
             if ctx.get(key):
                 direct[key] = ctx.get(key)
         return direct
@@ -13632,7 +13636,7 @@ _SESSION_CTX_COPY_KEYS = (
     # Watching row was permanently blank.  (Plex only looked fine because the
     # Plex apps write their own progress.)
     'server_type', 'server_url', 'token', 'item_id', 'rating_key',
-    'media_source_id', 'play_session_id', 'device_id', 'session_id',
+    'media_source_id', 'play_session_id', 'device_id', 'session_id', 'server_flavor',
 )
 
 

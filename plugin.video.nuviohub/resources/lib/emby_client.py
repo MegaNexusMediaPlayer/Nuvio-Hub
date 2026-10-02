@@ -106,26 +106,84 @@ def _device_id():
     return value
 
 
-def _headers(token=''):
-    auth = ('MediaBrowser Client="Nuvio Hub", Device="Kodi", DeviceId="%s", '
-            'Version="1.0.0"' % _device_id())
+# 6.0.39: Jellyfin 12 (September 2026) removed the legacy Emby ways to sign
+# requests (X-Emby-Authorization / X-Emby-Token / X-MediaBrowser-Token headers,
+# the api_key query parameter) and the /emby route prefix. Jellyfin servers get
+# the standard `Authorization: MediaBrowser ..., Token="..."` header, the
+# ApiKey query parameter and root paths (all valid since Jellyfin 10.x);
+# Emby servers keep their own scheme. The flavor comes from
+# /System/Info/Public and is stored with the sign-in.
+JELLYFIN, EMBY = 'jellyfin', 'emby'
+
+
+def _version():
+    try:
+        return _addon().getAddonInfo('version') or '6'
+    except Exception:
+        return '6'
+
+
+def _auth_value(token=''):
+    value = ('MediaBrowser Client="MegaNexus", Device="Kodi", DeviceId="%s", Version="%s"'
+             % (_device_id(), _version()))
+    if token:
+        value += ', Token="%s"' % token
+    return value
+
+
+def _headers(token='', flavor=JELLYFIN):
     headers = {
         'Accept': 'application/json',
         'Accept-Charset': 'UTF-8,*',
         'Content-Type': 'application/json',
-        'X-Emby-Authorization': auth,
     }
-    if token:
-        headers['X-MediaBrowser-Token'] = token
-        headers['X-Emby-Token'] = token
+    if flavor == EMBY:
+        headers['X-Emby-Authorization'] = _auth_value()
+        if token:
+            headers['X-Emby-Token'] = token
+    else:
+        headers['Authorization'] = _auth_value(token)
     return headers
 
 
-def _request(url, method='GET', token='', data=None, timeout=None):
+def flavor_of(server):
+    return EMBY if str((server or {}).get('flavor') or '').lower() == EMBY else JELLYFIN
+
+
+def token_param(server):
+    """Query parameter that carries the token in stream/image URLs."""
+    return 'api_key' if flavor_of(server) == EMBY else 'ApiKey'
+
+
+def _prefix(server):
+    return '/emby' if flavor_of(server) == EMBY else ''
+
+
+def detect(url, timeout=8):
+    """{'flavor', 'name', 'version'} from the server's public info (no sign-in)."""
+    base = _base({'url': url})
+    if not base:
+        raise EmbyError('Enter the server address')
+    info = {}
+    for path in ('/System/Info/Public', '/emby/System/Info/Public'):
+        try:
+            info = _json(_request(base + path, timeout=timeout))
+            break
+        except EmbyError:
+            continue
+    product = str(info.get('ProductName') or '')
+    if not info:
+        raise EmbyError('No Jellyfin or Emby server answered at this address')
+    flavor = EMBY if 'emby' in product.lower() and 'jellyfin' not in product.lower() else JELLYFIN
+    return {'flavor': flavor, 'name': str(info.get('ServerName') or product or 'Server'),
+            'version': str(info.get('Version') or ''), 'url': base}
+
+
+def _request(url, method='GET', token='', data=None, timeout=None, flavor=JELLYFIN):
     body = None
     if data is not None:
         body = json.dumps(data).encode('utf-8')
-    req = Request(url, data=body, headers=_headers(token), method=method)
+    req = Request(url, data=body, headers=_headers(token, flavor), method=method)
     try:
         with urlopen(req, timeout=(timeout or _timeout())) as response:
             return response.read()
@@ -150,16 +208,33 @@ def _base(server):
 def _api(server, path, params=None, token='', method='GET', data=None):
     pairs = [(str(k), str(v)) for k, v in (params or {}).items() if v not in (None, '')]
     query = urlencode(pairs)
-    url = '%s/emby%s' % (_base(server), '/' + str(path or '').lstrip('/'))
+    url = '%s%s%s' % (_base(server), _prefix(server), '/' + str(path or '').lstrip('/'))
     if query:
         url += '?' + query
-    return _json(_request(url, method=method, token=token or server.get('token') or '', data=data))
+    raw = _request(url, method=method, token=token or server.get('token') or '', data=data, flavor=flavor_of(server))
+    return _json(raw) if raw else {}
 
 
 # ─────────────────────────── auth ───────────────────────────
 
+_DETECT_RETRY = {'at': 0.0}
+
+
 def account():
-    return _parse_json_setting('emby_auth_json', {}) or {}
+    auth = _parse_json_setting('emby_auth_json', {}) or {}
+    if auth.get('token') and auth.get('url') and not auth.get('flavor'):
+        # Signed in before 6.0.39: learn the server flavor once (an offline
+        # server is asked again at most every 10 minutes).
+        if time.time() - _DETECT_RETRY['at'] > 600:
+            _DETECT_RETRY['at'] = time.time()
+            try:
+                auth.update(flavor=detect(auth['url'], timeout=4)['flavor'])
+                _save_json_setting('emby_auth_json', auth)
+                return auth
+            except Exception:
+                pass
+        auth = dict(auth, flavor=EMBY)   # old sign-ins were made the Emby way
+    return auth
 
 
 def is_signed_in():
@@ -176,31 +251,62 @@ def sign_out():
     _VIEWS_MEM.clear()
 
 
-def sign_in(url, username, password=''):
-    """AuthenticateByName, exactly like EmbyCon."""
-    server = {'url': url}
-    base = _base(server)
-    if not base:
-        raise EmbyError('Enter the Emby server address')
-    raw = _request('%s/emby/Users/AuthenticateByName?format=json' % base,
-                   method='POST',
-                   data={'Username': str(username or ''), 'Pw': str(password or '')})
-    value = _json(raw)
+def _save_sign_in(server, value, username=''):
     token = value.get('AccessToken') or ''
     user = value.get('User') or {}
     if not token or not user.get('Id'):
-        raise EmbyError('Emby login failed')
+        raise EmbyError('Sign-in failed')
     auth = {
-        'url': base,
+        'url': server['url'],
+        'flavor': server['flavor'],
         'token': str(token),
         'user_id': str(user.get('Id')),
         'username': user.get('Name') or username or '',
-        'server_name': value.get('ServerName') or 'Emby',
+        'server_name': value.get('ServerName') or server.get('name') or ('Emby' if server['flavor'] == EMBY else 'Jellyfin'),
+        'server_version': server.get('version') or '',
         'signed_in_at': int(time.time()),
     }
     _save_json_setting('emby_auth_json', auth)
     _VIEWS_MEM.clear()
     return auth
+
+
+def sign_in(url, username, password=''):
+    """AuthenticateByName (Jellyfin and Emby)."""
+    server = detect(url)
+    raw = _request('%s%s/Users/AuthenticateByName' % (server['url'], _prefix(server)),
+                   method='POST', flavor=server['flavor'],
+                   data={'Username': str(username or ''), 'Pw': str(password or '')})
+    return _save_sign_in(server, _json(raw), username)
+
+
+def quick_connect_start(url):
+    """Jellyfin Quick Connect: a 6-digit code the user approves in another
+    signed-in Jellyfin app (Settings > Quick Connect). Returns the state to poll."""
+    server = detect(url)
+    if server['flavor'] != JELLYFIN:
+        raise EmbyError('Quick Connect is a Jellyfin feature. Use the username and password for Emby.')
+    try:
+        enabled = _json(_request(server['url'] + '/QuickConnect/Enabled'))
+    except EmbyError:
+        enabled = False
+    if enabled is not True:
+        raise EmbyError('Quick Connect is turned off on this server. Use the username and password.')
+    value = _json(_request(server['url'] + '/QuickConnect/Initiate', method='POST'))
+    if not value.get('Secret') or not value.get('Code'):
+        raise EmbyError('The server did not start Quick Connect')
+    return {'server': server, 'secret': str(value['Secret']), 'code': str(value['Code'])}
+
+
+def quick_connect_poll(state):
+    """None while waiting; the saved sign-in once the user approved the code."""
+    server = state['server']
+    value = _json(_request('%s/QuickConnect/Connect?%s' % (server['url'], urlencode({'Secret': state['secret']}))))
+    if not value.get('Authenticated'):
+        return None
+    raw = _request(server['url'] + '/Users/AuthenticateWithQuickConnect', method='POST',
+                   data={'Secret': state['secret']})
+    return _save_sign_in(server, _json(raw))
 
 
 def servers():
@@ -215,6 +321,7 @@ def servers():
         'token': auth.get('token') or '',
         'user_id': auth.get('user_id') or '',
         'backend': 'emby',
+        'flavor': flavor_of(auth),
     }]
 
 
@@ -264,19 +371,20 @@ def _subtitle_ext(codec):
     }.get(value, value or 'srt')
 
 
-def _with_emby_token(url, token):
+def _with_emby_token(url, token, server=None):
     if not url or not token:
         return url
+    name = token_param(server or account())
     try:
         parts = urlsplit(url)
         pairs = parse_qsl(parts.query, keep_blank_values=True)
         lowered = {str(k).lower() for k, _v in pairs}
-        if 'api_key' not in lowered and 'x-emby-token' not in lowered:
-            pairs.append(('api_key', str(token)))
+        if not lowered & {'api_key', 'apikey', 'x-emby-token'}:
+            pairs.append((name, str(token)))
         return urlunsplit((parts.scheme, parts.netloc, parts.path,
                            urlencode(pairs), parts.fragment))
     except Exception:
-        return url + ('&' if '?' in url else '?') + urlencode({'api_key': token})
+        return url + ('&' if '?' in url else '?') + urlencode({name: token})
 
 
 def _external_subtitles(item_id, source, server):
@@ -304,12 +412,12 @@ def _external_subtitles(item_id, source, server):
             except Exception:
                 continue
             ext = _subtitle_ext(codec)
-            url = '%s/emby/Videos/%s/%s/Subtitles/%s/Stream.%s' % (
-                base.rstrip('/'), quote(str(item_id), safe=''),
+            url = '%s%s/Videos/%s/%s/Subtitles/%s/Stream.%s' % (
+                base.rstrip('/'), _prefix(server), quote(str(item_id), safe=''),
                 quote(source_id, safe=''), index, ext)
         else:
             continue
-        url = _with_emby_token(url, token)
+        url = _with_emby_token(url, token, server)
         lang = str(stream.get('Language') or 'und')
         rows.append({
             'id': str(stream.get('Index') if stream.get('Index') is not None else len(rows) + 1),
@@ -446,23 +554,25 @@ def logo_url(server, item_id):
     return artwork_url(server, item_id, kind='Logo') if item_id else ''
 
 
-def artwork_url(server, item_id, kind='Primary'):
+def artwork_url(server, item_id, kind='Primary', width=0):
+    """Server-side resized image (posters 500 px, backdrops 1280 px by default):
+    the server already has the artwork, so MegaNexus downloads no other copy."""
     if not item_id:
         return ''
-    return '%s/emby/Items/%s/Images/%s?%s' % (
-        _base(server), quote(str(item_id), safe=''), quote(str(kind), safe=''),
-        urlencode({'maxWidth': 800, 'quality': 90,
-                   'api_key': server.get('token') or ''}))
+    width = width or (1280 if kind in ('Backdrop', 'Thumb') else 500)
+    return '%s%s/Items/%s/Images/%s?%s' % (
+        _base(server), _prefix(server), quote(str(item_id), safe=''), quote(str(kind), safe=''),
+        urlencode({'maxWidth': width, 'quality': 90, token_param(server): server.get('token') or ''}))
 
 
 def playback_url(server, item_id, media_source_id=''):
     params = {
         'static': 'true',
-        'api_key': server.get('token') or '',
+        token_param(server): server.get('token') or '',
     }
     if media_source_id:
         params['MediaSourceId'] = media_source_id
-    return '%s/emby/Videos/%s/stream?%s' % (_base(server), item_id, urlencode(params))
+    return '%s%s/Videos/%s/stream?%s' % (_base(server), _prefix(server), item_id, urlencode(params))
 
 
 def playback_info(server, item_id):
@@ -505,11 +615,11 @@ def resolve_playback(server, item_id, media_source_id=''):
     if candidate:
         if not str(candidate).startswith(('http://', 'https://')):
             candidate = _base(server).rstrip('/') + '/' + str(candidate).lstrip('/')
-        url = _with_emby_token(str(candidate), str(server.get('token') or ''))
+        url = _with_emby_token(str(candidate), str(server.get('token') or ''), server)
     else:
         params = {
             'static': 'true',
-            'api_key': server.get('token') or '',
+            token_param(server): server.get('token') or '',
         }
         if source_id:
             params['MediaSourceId'] = source_id
@@ -517,8 +627,8 @@ def resolve_playback(server, item_id, media_source_id=''):
             params['PlaySessionId'] = play_session_id
         container = str(source.get('Container') or '').strip().lower()
         suffix = ('.' + container) if container and container.isalnum() else ''
-        url = '%s/emby/Videos/%s/stream%s?%s' % (
-            _base(server), quote(str(item_id), safe=''), suffix, urlencode(params))
+        url = '%s%s/Videos/%s/stream%s?%s' % (
+            _base(server), _prefix(server), quote(str(item_id), safe=''), suffix, urlencode(params))
     version = (_media_versions({'Id': item_id, 'MediaSources': [source]}, server) or [{}])[0]
     return {
         'url': url,

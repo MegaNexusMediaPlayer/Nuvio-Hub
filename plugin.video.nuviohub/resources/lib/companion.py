@@ -341,18 +341,20 @@ class PlexReporter(BaseReporter):
 
 
 class EmbyReporter(BaseReporter):
+    """Jellyfin / Emby playback reports. 6.0.39: Jellyfin 12 accepts only the
+    standard Authorization header (emby_client builds it per server flavor)."""
+    def _flavor(self, ctx):
+        from . import emby_client
+        return ctx.get('server_flavor') or emby_client.flavor_of(emby_client.account())
+
     def _headers(self, ctx):
-        return {
-            'Content-Type': 'application/json',
-            'X-Emby-Token': ctx['token'],
-            'X-Emby-Authorization': (
-                'MediaBrowser Client="Kodi", Device="Kodi", DeviceId="%s", Version="1.0.0"'
-                % (ctx.get('device_id') or 'nuviohub')
-            ),
-        }
+        from . import emby_client
+        return emby_client._headers(ctx['token'], self._flavor(ctx))
 
     def _post(self, ctx, path, payload):
-        url = ctx['server_url'].rstrip('/') + path
+        from . import emby_client
+        prefix = '/emby' if self._flavor(ctx) == emby_client.EMBY else ''
+        url = ctx['server_url'].rstrip('/') + prefix + path
         data = json.dumps(payload).encode('utf-8')
         req = urllib.request.Request(url, data=data, headers=self._headers(ctx), method='POST')
         with urllib.request.urlopen(req, timeout=_timeout()) as resp:

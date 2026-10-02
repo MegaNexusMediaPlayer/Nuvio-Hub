@@ -184,7 +184,7 @@ def _headers(token='', accept='application/xml'):
         addon_version = '3.9.212'
     headers = {
         'Accept': accept,
-        'X-Plex-Product': 'Nuvio Hub',
+        'X-Plex-Product': 'MegaNexus',
         'X-Plex-Version': addon_version,
         'X-Plex-Client-Identifier': client_identifier(),
         'X-Plex-Platform': 'Kodi',
@@ -527,6 +527,34 @@ def _cache_servers(servers):
     plex_state.save_server_cache(servers or [], payload['fetched_at'])
 
 
+RESOURCES_V2 = 'https://clients.plex.tv/api/v2/resources?includeHttps=1&includeRelay=1&includeIPv6=1'
+
+
+def _flag(value):
+    return value is True or str(value or '').strip().lower() in ('1', 'true')
+
+
+def _resource_devices(token):
+    """Plex devices as plain dicts (6.0.39): the current JSON endpoint that the
+    Plex apps use, the older XML /api/resources only as a fallback."""
+    try:
+        raw = _request(RESOURCES_V2, token=token, timeout=min(8, _timeout()),
+                       headers={'Accept': 'application/json'})
+        rows = json.loads((raw or b'').decode('utf-8', 'ignore'))
+        if isinstance(rows, list):
+            return rows
+    except (PlexError, ValueError) as exc:
+        xbmc.log('[NuvioHub] Plex v2 resources unavailable (%s); trying the older endpoint' % exc, xbmc.LOGINFO)
+    root = _xml(_request(PLEX_BASE + '/api/resources?includeHttps=1&includeRelay=1',
+                         token=token, timeout=min(8, _timeout())))
+    devices = []
+    for device in root.findall('.//Device'):
+        row = dict(device.attrib)
+        row['connections'] = [dict(c.attrib) for c in device.findall('./Connection')]
+        devices.append(row)
+    return devices
+
+
 def servers(force=False):
     """Discover every server accessible to the authenticated Plex account."""
     auth = account()
@@ -551,8 +579,7 @@ def servers(force=False):
         return stale_servers
 
     try:
-        root = _xml(_request(PLEX_BASE + '/api/resources?includeHttps=1&includeRelay=1',
-                             token=token, timeout=min(8, _timeout())))
+        devices = _resource_devices(token)
     except PlexError as exc:
         # A temporary plex.tv outage must never look like account deletion.
         # Use the last known resources and let the user refresh later.
@@ -562,23 +589,23 @@ def servers(force=False):
             return stale_servers
         raise
     found = []
-    for device in root.findall('.//Device'):
-        provides = (device.attrib.get('provides') or '').lower()
+    for device in devices:
+        provides = (device.get('provides') or '').lower()
         if 'server' not in provides:
             continue
-        server_token = device.attrib.get('accessToken') or token
-        https_required = str(device.attrib.get('httpsRequired') or '') == '1'
+        server_token = device.get('accessToken') or token
+        https_required = _flag(device.get('httpsRequired'))
         connections = []
         connection_uris = set()
-        for connection in device.findall('./Connection'):
-            uri = _normalise_uri(connection.attrib.get('uri'))
+        for connection in device.get('connections') or []:
+            uri = _normalise_uri(connection.get('uri'))
             if not uri:
                 continue
-            local = str(connection.attrib.get('local') or '') == '1'
-            relay = str(connection.attrib.get('relay') or '') == '1'
-            address = str(connection.attrib.get('address') or '').strip()
-            port = str(connection.attrib.get('port') or '').strip()
-            protocol = str(connection.attrib.get('protocol') or urlsplit(uri).scheme or '').lower()
+            local = _flag(connection.get('local'))
+            relay = _flag(connection.get('relay'))
+            address = str(connection.get('address') or '').strip()
+            port = str(connection.get('port') or '').strip()
+            protocol = str(connection.get('protocol') or urlsplit(uri).scheme or '').lower()
             connections.append({
                 'uri': uri,
                 'local': local,
@@ -612,15 +639,15 @@ def servers(force=False):
         connections.sort(key=lambda c: (not c['local'], c['relay'], not c['uri'].startswith('https://')))
         if not connections:
             continue
-        identity = device.attrib.get('clientIdentifier') or device.attrib.get('machineIdentifier') or device.attrib.get('name')
+        identity = device.get('clientIdentifier') or device.get('machineIdentifier') or device.get('name')
         if not identity:
             continue
         found.append({
             'id': str(identity),
-            'name': device.attrib.get('name') or 'Plex Server',
-            'product': device.attrib.get('product') or 'Plex Media Server',
-            'platform': device.attrib.get('platform') or '',
-            'owned': str(device.attrib.get('owned') or '') == '1',
+            'name': device.get('name') or 'Plex Server',
+            'product': device.get('product') or 'Plex Media Server',
+            'platform': device.get('platform') or '',
+            'owned': _flag(device.get('owned')),
             'https_required': https_required,
             'token': str(server_token),
             'connections': connections,

@@ -97,7 +97,7 @@ class TestAuthDeepLink(unittest.TestCase):
                     'context[device][platform]', 'context[device][platformVersion]',
                     'context[device][device]', 'context[device][deviceName]'):
             self.assertIn(key, params, key)
-        self.assertEqual(params['context[device][product]'], 'Nuvio Hub')
+        self.assertEqual(params['context[device][product]'], 'MegaNexus')   # 6.0.39: our name on plex.tv
 
     def test_client_id_matches_pin_creation_headers(self):
         # the SAME identifier must sign the pin request and the auth URL,
