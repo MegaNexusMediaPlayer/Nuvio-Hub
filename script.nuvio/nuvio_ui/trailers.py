@@ -81,7 +81,9 @@ def show_trailer(meta):
     item.setProperty('nuvio.preview',player.token);item.setProperty('IsPlayable','true')
     home.setProperty('nuvio.preview.active',player.token)
     started=False
+    from resources.lib import refresh_guard
     try:
+        refresh_guard.suspend()  # 6.0.35: no TV mode switch for a trailer (issue #4)
         win.show();player.path=url;player.play(url,item,windowed=True);begin=time.monotonic()
         while not win.closed and not monitor.abortRequested():
             if player.owns() and (player.ready or player.getTime()>.15):
@@ -92,4 +94,5 @@ def show_trailer(meta):
             monitor.waitForAbort(.1)
     finally:
         player.cancel();player.stop_owned();player._ended();win.close()
+        refresh_guard.restore()
     return started

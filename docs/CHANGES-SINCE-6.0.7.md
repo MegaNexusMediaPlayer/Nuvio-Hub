@@ -1,6 +1,6 @@
 # Nuvio Hub — changes since 6.0.7
 
-Summary of 6.0.8 – 6.0.34 (details in each `docs/RELEASE-6.0.x.md`).
+Summary of 6.0.8 – 6.0.35 (details in each `docs/RELEASE-6.0.x.md`).
 6.0.19 and 6.0.23 are published GitHub releases.
 
 | Area | What changed |
@@ -25,6 +25,7 @@ Summary of 6.0.8 – 6.0.34 (details in each `docs/RELEASE-6.0.x.md`).
 | Details | No "Loading episodes" banner; ratings (IMDb/TMDb) under the Home title, switchable. |
 | Maintenance | Automatic updates from GitHub releases (checksum, rollback, a restart question when no video plays and Nuvio is closed: Reboot on CoreELEC/LibreELEC, Close Kodi on Android and Apple, Restart elsewhere (6.0.34)), Ko-fi QR, organised Configure page, working "Remove Nuvio build". |
 | Fixes | Several latent crashes (NameErrors), Continue Watching position after Details, settings dialogs no longer hidden behind pages, subtitle preferences saved. |
+| Latest (6.0.35) | GitHub issues #3–#9: phone add-on choices kept, no TV mode switch for previews, Continue Watching Remove / Play from start / 90 % / 60 days, Sport screen for sports add-ons, Catalog rows Home layout; Title options over the screen, Library (Local / Tracking Services), Trakt in settings and on the phone, Skip on the loading screen. |
 
 Release naming for automatic updates: tag `v<version>`, assets
 `Nuvio-Hub-Complete-<version>.zip` and `Nuvio-Hub-Complete-<version>.zip.sha256`.

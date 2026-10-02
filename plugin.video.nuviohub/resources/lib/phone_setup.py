@@ -34,6 +34,7 @@ DISPLAY_KEYS = {
     'show_ratings': ('nuvio_show_ratings', 'bool_default_on'),
     'auto_trailers': ('nuvio_auto_trailers', 'bool'),
     'continue_row': ('nuvio_home_continue', 'bool_default_on'),
+    'home_layout': ('nuvio_home_layout', ('collections', 'rows')),   # 6.0.35
 }
 
 

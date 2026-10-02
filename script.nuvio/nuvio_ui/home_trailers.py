@@ -74,6 +74,8 @@ class Controller:
         self.resolve_cancel.set();self.player.cancel();self.player.stop_owned();self._clear()
         self.previous=None;self.changed=time.monotonic();self.attempted=False
     def _clear(self):
+        from resources.lib import refresh_guard
+        refresh_guard.restore()
         self.window.setProperty('nuvio.preview','')
         self.window.setProperty('nuvio.preview.loading','')
         home=xbmcgui.Window(10000)
@@ -132,6 +134,8 @@ class Controller:
             item.setProperty('nuvio.preview',token);item.setProperty('IsPlayable','true')
             home.setProperty('nuvio.preview.active',token);home.setProperty('nuvio.preview.silent',token)
             self.window.setProperty('nuvio.preview.loading','1')
+            from resources.lib import refresh_guard
+            refresh_guard.suspend()  # 6.0.35: no TV mode switch for previews (issue #4)
             self.play_started=now;self.player.path=url;self.player.play(url,item,windowed=True)
         if self.play_started and self.player.ready and not self.player.isPlayingVideo():
             self._clear();self.play_started=0

@@ -148,10 +148,14 @@ class SportsWindow(Dialog):
         self.player.path = stream['url']
         self.playing_index = index
         self.fullscreen_when_ready = fullscreen
+        from resources.lib import refresh_guard
+        refresh_guard.suspend()   # small video: no TV mode switch (issue #4)
         self.player.play(stream['url'], item, windowed=True)
         self._show_streams(self.streams)
 
     def _stop_preview(self):
+        from resources.lib import refresh_guard
+        refresh_guard.restore()
         self.player.cancel()
         self.player.stop_owned()
         self.player._ended()

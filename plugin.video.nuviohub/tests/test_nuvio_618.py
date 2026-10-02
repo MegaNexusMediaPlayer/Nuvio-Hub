@@ -117,7 +117,12 @@ class PosterPreload(unittest.TestCase):
 
             def read(self, n):
                 return b''
+        import time as _time
+        # A real Monitor: waitForAbort waits and returns False (6.0.35: the
+        # loops wait in Kodi so Back can skip; the stub always says "abort").
+        monitor = SimpleNamespace(abortRequested=lambda: False, waitForAbort=lambda s: _time.sleep(min(s, .01)) or False)
         with mock.patch.object(self.startup, 'jobs', return_value=[job]), \
+                mock.patch.object(self.startup.xbmc, 'Monitor', return_value=monitor), \
                 mock.patch.object(self.startup.browse_cache, 'instance', return_value=cache), \
                 mock.patch.object(self.startup.browse_cache, 'peek', return_value=data), \
                 mock.patch.object(self.startup, 'art_cold', return_value='http://127.0.0.1:9'), \

@@ -425,6 +425,7 @@ def appearance():
         return [page.item('Use MegaNexus skin','Active' if xbmc.getSkinDir()=='skin.nuvio' else 'Activate'),
             page.item('Theme',theme.LABELS[theme.current(ADDON)]),
             page.item('Poster and catalog transparency',theme.OPACITY_LABELS[theme.card_opacity(ADDON)]),
+            page.item('Home layout',home_layout_label()),
             page.item('Home hero and description',enabled=not xbmc.getCondVisibility('Skin.HasSetting(nuvio.hidehero)')),
             page.item('Card titles',enabled=not xbmc.getCondVisibility('Skin.HasSetting(nuvio.hidetitles)')),
             page.item('Weather and clock · all Nuvio screens',enabled=not presentation_settings.hidden()),
@@ -440,7 +441,8 @@ def appearance():
     def choose(pick):
         if pick==1:return choose_theme()
         if pick==2:return choose_card_opacity()
-        if pick>2:pick-=2  # rows after Theme and transparency keep their earlier numbers
+        if pick==3:return choose_home_layout()
+        if pick>3:pick-=3  # rows after Theme, transparency and layout keep their earlier numbers
         if pick==13:return page.DONE
         if pick==12:
             ADDON.setSetting('nuvio_show_ratings','false' if ADDON.getSetting('nuvio_show_ratings')!='false' else 'true')
@@ -463,6 +465,21 @@ def appearance():
             pick=dialog.select('Movie and series cards',['Portrait posters','Landscape'],preselect=1 if ADDON.getSetting('nuvio_card_shape')=='landscape' else 0)
             if pick>=0:ADDON.setSetting('nuvio_card_shape',('poster','landscape')[pick])
     return page.show('Skin configuration',rows,choose)
+
+def home_layout_label():
+    from resources.lib import collections_home as ch
+    return 'Catalog rows' if ch.layout(ADDON)=='rows' else 'MegaNexus collections'
+
+
+def choose_home_layout():
+    """MegaNexus collections (default) or Nuvio-style catalog rows (6.0.35, issue #9)."""
+    from resources.lib import collections_home as ch
+    keys=list(ch.LAYOUTS);current=ch.layout(ADDON)
+    pick=xbmcgui.Dialog().select('Home layout',[ch.LAYOUT_LABELS[k] for k in keys],preselect=keys.index(current))
+    if pick>=0 and keys[pick]!=current:
+        ADDON.setSetting(ch.LAYOUT_SETTING,keys[pick]);settings_cache.invalidate()
+    return None  # Home repaints with the new layout when Settings closes
+
 
 def choose_theme():
     """Light (MegaNexus blue), Dark (OLED) or Semi-dark: interface, HUB skin and screensaver."""

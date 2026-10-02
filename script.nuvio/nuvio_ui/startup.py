@@ -1,5 +1,5 @@
 """Cancellable first-page warm-up; bounded workers, no invisible infinite crawl."""
-from concurrent.futures import ThreadPoolExecutor, wait, FIRST_COMPLETED
+from concurrent.futures import ThreadPoolExecutor
 import time
 import xbmc
 import xbmcgui
@@ -97,7 +97,12 @@ def _warm_catalogs(window, monitor, all_jobs, missing, report):
         for _ in range(min(MAX_WORKERS, len(missing))):
             submit()
         while pending and not window.cancelled and not monitor.abortRequested() and time.monotonic() < deadline:
-            done, _ = wait(pending, timeout=.05, return_when=FIRST_COMPLETED)
+            # Kodi delivers the window's onAction (Back = skip) only while the
+            # script waits in Kodi (waitForAbort), never during a plain
+            # concurrent.futures wait - Back did nothing here (6.0.35).
+            if monitor.waitForAbort(.05):
+                break
+            done = [future for future in pending if future.done()]
             for future in done:
                 pending.remove(future)
                 try:
@@ -135,7 +140,9 @@ def _warm_posters(window, monitor, base, urls, report):
         for _ in range(min(POSTER_WORKERS, len(urls))):
             submit()
         while pending and not window.cancelled and not monitor.abortRequested() and time.monotonic() < deadline:
-            done, _ = wait(pending, timeout=.05, return_when=FIRST_COMPLETED)
+            if monitor.waitForAbort(.05):  # lets Back (skip) reach the window
+                break
+            done = [future for future in pending if future.done()]
             for future in done:
                 pending.remove(future)
                 report['posters'] += 1

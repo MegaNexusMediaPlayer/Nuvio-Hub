@@ -832,6 +832,12 @@ if __name__ == '__main__':
             auto_install(mon, busy=_interactive_busy)
         except Exception as exc:
             xbmc.log('[NuvioHub] automatic component install skipped: %s' % exc, xbmc.LOGWARNING)
+        # 6.0.35: a preview's refresh-rate pause left behind by a crash.
+        try:
+            from resources.lib.refresh_guard import restore
+            restore(force=True)
+        except Exception as exc:
+            xbmc.log('[NuvioHub] refresh-rate restore skipped: %s' % exc, xbmc.LOGWARNING)
         # 6.0.33: Kodi started without the MegaNexus skin the user chose.
         try:
             from resources.lib.skin_activation import restore_on_start

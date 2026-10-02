@@ -3,7 +3,7 @@
 This is a four-component Kodi build: `plugin.video.nuviohub` (backend/service),
 `script.nuvio` (Python/XML frontend), `skin.nuvio` (Kodi shell), and
 `screensaver.nuvio` (screensaver entrypoint). The 6.0.27 release is the
-baseline for this 6.0.34 release. Do not publish, push, or change live user
+baseline for this 6.0.35 candidate (not released). Do not publish, push, or change live user
 profiles as a side effect of reviewing code.
 
 ## Required repository skills
@@ -15,7 +15,7 @@ claims that a runtime plugin or global agent skill has been installed.
 
 ## Before modifying code
 
-Read the relevant call sites, tests, and `docs/RELEASE-6.0.34.md` (and 6.0.33 back to 6.0.10). Identify which
+Read the relevant call sites, tests, and `docs/RELEASE-6.0.35.md` (and 6.0.34 back to 6.0.10). Identify which
 Kodi process/interpreter owns the work. Keep existing public add-on IDs,
 profile paths, encrypted credentials and migration aliases. Never mass-rename
 legacy state keys or remove upstream license notices. Since 6.0.24 the
@@ -103,6 +103,18 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
   CoreELEC/LibreELEC (RestartApp froze Amlogic boxes), Quit on Android and
   Apple (RestartApp cannot reopen Kodi there), RestartApp elsewhere. Android
   reports System.Platform.Linux too: test it first.
+* 6.0.35: sports add-ons (`resources/lib/sports.py`) never enter Home,
+  Search, Continue Watching or tracking - only the Sport screen
+  (`nuvio_ui/sports.py`, previews = untracked). Title options are a list built
+  by `details.title_options`; show it over the caller, hide only for screen
+  choices. Continue Watching rules (`continue_rules.py`): remove = hide until
+  played again, 60-day period, unaired toggle; watched at 90 % (Simkl 80 %,
+  `nuviohub.common`). Library = `library.py` (local + Trakt/Simkl mirror).
+  Phone tracking links: `tracking_link.py`. `refresh_guard.py` pauses Kodi's
+  refresh-rate switching only while small previews play. Loading loops must
+  wait with `monitor.waitForAbort` or Back (skip) never arrives.
+  Pipeline after XML edits: make_glass_ui.py --windows, make_crisp_shapes.py,
+  make_theme_variants.py.
 * RAM (6.0.32): catalog pages 96 MiB with ram256 (`browse_cache.page_ram`),
   details in their own pool (`browse_meta`, `remember=False` on the shared
   cache), cursor-rest details prefetch (latest wins, yields to foreground and
@@ -116,10 +128,10 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
 ## Required checks (Python 3.9+ review environment)
 
 ```sh
-python review/check_634.py
-python review/check_608_rebrand_kodi22.py 6.0.34
-python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.34.zip
-python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.34.zip
+python review/check_635.py
+python review/check_608_rebrand_kodi22.py 6.0.35
+python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.35.zip
+python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.35.zip
 ```
 
 The first command runs the maintained unit suite, parses XML/JSON, and checks

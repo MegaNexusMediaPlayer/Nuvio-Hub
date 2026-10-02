@@ -166,6 +166,40 @@ def home_rows():
     return [row for row in rows if row['rows']]
 
 
+LAYOUT_SETTING = 'nuvio_home_layout'
+LAYOUTS = ('collections', 'rows')
+LAYOUT_LABELS = {'collections': 'MegaNexus collections · cards that open catalogs',
+                 'rows': 'Catalog rows · posters right on Home (like the Nuvio apps)'}
+
+
+def layout(addon=None):
+    """Home layout (6.0.35, GitHub issue #9). MegaNexus collections stay the default."""
+    try:
+        if addon is None:
+            from .settings_cache import cached_addon
+            addon = cached_addon()
+        value = addon.getSetting(LAYOUT_SETTING)
+    except Exception:
+        value = ''
+    return value if value in LAYOUTS else 'collections'
+
+
+def catalog_rows(limit):
+    """Nuvio-style Home: every visible catalog is a poster row; the rest stay
+    reachable through a last row of collection cards."""
+    from .nuviohub import store
+    providers = store.list_providers()
+    folders = [f for g in groups() for f in g['folders'] if not f.get('hidden')]
+    if limit <= 0:
+        return []
+    overflow = folders[limit - 1:] if len(folders) > limit else []
+    shown = folders[:limit - 1] if overflow else folders
+    shelves = [dict(folder_shelf(f, providers, None, f['title']), catalog_row=True) for f in shown]
+    if overflow:
+        shelves.append(tiles({'id': 'more', 'title': 'More catalogs', 'folders': overflow}))
+    return shelves
+
+
 def collection_shelves(collection_id):
     from .nuviohub import store
     from .home_data import placeholder, _api

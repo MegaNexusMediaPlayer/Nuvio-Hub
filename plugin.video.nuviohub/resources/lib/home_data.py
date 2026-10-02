@@ -100,7 +100,13 @@ def initial_shelves(bucket=''):
             show_continue = True
         if show_continue:
             shelves.append(continue_shelf())
-        from .collections_home import home_rows
+        from .collections_home import home_rows,layout,catalog_rows
+        if layout()=='rows':
+            try:shelves.extend(catalog_rows(MAX_ROWS-len(shelves)))
+            except Exception:
+                shelves.append({'title':'Collections','rows':[placeholder('Open Settings',
+                    'Your catalogs could not load. Import them again from Nuvio.',p.build_url(action='setup_center'))]})
+            return shelves[:MAX_ROWS]
         try:shelves.extend(home_rows())
         except Exception:
             shelves.append({'title':'Collections','rows':[placeholder('Open Settings',

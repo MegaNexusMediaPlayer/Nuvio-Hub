@@ -179,7 +179,7 @@ def patch():
             changed.append(path.name)
     # Textures for every size still referenced (also when already converted).
     sizes = set()
-    for path in sorted(DEFAULT.glob('*.xml')) + list(SKIN_XML):
+    for path in sorted(DEFAULT.glob('*.xml')) + sorted(ROOT.glob('skin.nuvio/xml/*.xml')):
         sizes.update((int(a), int(b), int(c)) for a, b, c in re.findall(r'nuvio_pill_(\d+)x(\d+)_r(\d+)\.png', path.read_text(encoding='utf-8')))
     for w, h, r in sorted(sizes):
         for folder in (MEDIA, SKIN_MEDIA):
@@ -188,6 +188,12 @@ def patch():
                 rounded(target, w, h, r)
     for w, h in sorted(marks):
         wordmark(MEDIA / wordmark_name(w, h), w, h)
+    # Sizes no window uses any more are removed (they would only be packaged).
+    used = {pill_name(w, h, r) for w, h, r in sizes}
+    for folder in (MEDIA, SKIN_MEDIA):
+        for path in folder.glob('nuvio_pill_*x*_r*.png'):
+            if path.name not in used:
+                path.unlink()
     return changed, sorted(sizes), sorted(marks)
 
 
