@@ -147,7 +147,8 @@ class EmptyHome(unittest.TestCase):
             imported=[{'id':'mine','title':'Other Home','folders':[{'title':'New card','sources':[source]},
                 {'title':'Sports','sources':[source]},{'title':'World','sources':[source]}]}]
             profile.save(imported)
-            self.assertEqual([f['title'] for f in profile.load()[0]['folders']],['New card'])
+            # 6.0.35: World is an ordinary collection; only Sports stays out.
+            self.assertEqual([f['title'] for f in profile.load()[0]['folders']],['New card','World'])
 
     def window(self):
         win=home.HomeWindow();controls={}

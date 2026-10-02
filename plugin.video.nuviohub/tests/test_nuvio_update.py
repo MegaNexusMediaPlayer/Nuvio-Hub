@@ -29,7 +29,7 @@ class UpdateTests(unittest.TestCase):
               {'id':'collections.world','title':'World','folders':[{'sources':[source]}]},
               {'id':'sports','title':'Sports','folders':[{'sources':[source]}]}]
         result=profile.normalize(data)
-        self.assertEqual([g['id'] for g in result],['mine'])
+        self.assertEqual([g['id'] for g in result],['mine','collections.world'])  # 6.0.35: World kept, Sports out
         self.assertEqual(result[0]['folders'][0]['sources'][0]['genre'],'Drama')
         self.assertEqual(result[0]['folders'][0]['animation'],'https://example.test/a.gif')
 

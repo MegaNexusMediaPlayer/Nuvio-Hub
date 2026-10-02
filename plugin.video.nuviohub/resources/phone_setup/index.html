@@ -53,7 +53,7 @@ footer .btn{width:100%;max-width:720px;display:flex;margin:0 auto;font-size:17px
 #done{display:none;text-align:center;padding:60px 24px}
 #done h1{font-size:24px}#done p{color:var(--muted)}
 .empty{color:var(--dim);font-size:14px;padding:6px 0}
-.code{font:700 26px/1.2 ui-monospace,monospace;letter-spacing:4px;margin-top:4px}
+.code{font:700 26px/1.2 ui-monospace,monospace;letter-spacing:4px;margin-top:4px;user-select:all;-webkit-user-select:all}
 </style></head>
 <body>
 <header>
@@ -195,6 +195,22 @@ function renderAccount(){
 }
 
 /* ---------- Tracking services (6.0.35) ---------- */
+// navigator.clipboard exists only on https pages; this page is plain http on
+// the home network, so fall back to a selected textarea + execCommand.
+function legacyCopy(text){
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.setAttribute('readonly', '');
+  ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, text.length);
+  let ok = false; try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  ta.remove(); return ok;
+}
+async function copyText(text){
+  if (navigator.clipboard && window.isSecureContext){
+    try { await navigator.clipboard.writeText(text); return true; } catch (e) { /* fall back */ }
+  }
+  return legacyCopy(text);
+}
 const TRACKERS = [['trakt', 'Trakt'], ['simkl', 'Simkl']];
 let TRACK_POLL = null;
 function renderTracking(box){
@@ -233,7 +249,10 @@ function renderTracking(box){
       waiting = true;
       const code = el('div', {class: 'code', text: t.code});
       const copy = el('button', {class: 'btn ghost small', text: 'Copy code'});
-      copy.addEventListener('click', () => { if (navigator.clipboard) navigator.clipboard.writeText(t.code); say('Code copied.', true); });
+      copy.addEventListener('click', async () => {
+        const ok = await copyText(t.code);
+        say(ok ? 'Code copied.' : 'Copy is blocked here: tap and hold the code to copy it.', ok);
+      });
       card.append(el('div', {class: 'row'}, el('div', {class: 'grow'}, el('div', {class: 'sub', text: 'Code for ' + name}), code), copy));
     }
   }

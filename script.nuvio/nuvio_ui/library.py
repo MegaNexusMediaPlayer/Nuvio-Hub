@@ -1,8 +1,10 @@
-"""MegaNexus Library screen (6.0.35): Local / Tracking services, Movies and Series.
+"""MegaNexus Library screen (6.0.35).
 
-Opens on Tracking services when Trakt or Simkl is connected, else on Local.
-The tracking tab shows the stored watchlist mirror at once and refreshes it
-in the background.
+Tabs: Local, the connected tracking services (named: "Trakt · Simkl"...) and
+Calendar (everything by the month it was added; month and year only). Each
+card has a small badge with its source (Local / Trakt / Simkl...). Opens on
+the tracking tab when a service is connected, else on Local. The tracking
+watchlists are refreshed in the background.
 """
 import xbmcaddon
 import xbmcgui
@@ -10,52 +12,62 @@ from resources.lib import art_cache, library
 from resources.lib.theme import folder as theme_folder
 from .dialog import Dialog, BACK
 
-TABS = {201: 'local', 202: 'tracking'}
-LISTS = (500, 501)
+TABS = {201: 'local', 202: 'tracking', 203: 'calendar'}
+ROW_BASE = 500
+MAX_ROWS = 14
 
 
 class LibraryWindow(Dialog):
     def __init__(self, *args, **kwargs):
         super().__init__(*args)
         self.tab = 'tracking' if library.tracking_connected() else 'local'
-        self.rows = {500: [], 501: []}
+        self.rows = []          # [(title, cards)]
         self.outcome = ''
         self._refresh = None
         self._refreshed = False
 
     def onInit(self):
         self._show()
-        if not self.rows[500] and not self.rows[501]:
-            self.setFocusId(201 if self.tab == 'local' else 202)
-        else:
+        if self.rows:
             self.restore_focus()
+        else:
+            self.setFocusId({v: k for k, v in TABS.items()}[self.tab])
+
+    def _rows_for(self, tab):
+        if tab == 'calendar':
+            return library.calendar(MAX_ROWS)
+        movies, series = library.rows(library.LOCAL if tab == 'local' else library.TRACKING)
+        return [(title, cards) for title, cards in (('Movies', movies), ('Series', series)) if cards]
 
     def _show(self):
         self.setProperty('nuvio.library.tab', self.tab)
-        source = library.LOCAL if self.tab == 'local' else library.TRACKING
-        movies, series = library.rows(source)
-        self.rows = {500: movies, 501: series}
-        for cid, rows in self.rows.items():
-            control = self.getControl(cid)
+        self.setProperty('nuvio.library.tracking_label', library.tracking_label())
+        self.rows = self._rows_for(self.tab)[:MAX_ROWS]
+        for i in range(MAX_ROWS):
+            control = self.getControl(ROW_BASE + i)
             control.reset()
-            items = []
-            for row in rows:
-                item = xbmcgui.ListItem(label=row['title'])
-                item.setArt(art_cache.art({'poster': row.get('poster') or ''}))
-                items.append(item)
-            control.addItems(items)
-        local = self.tab == 'local'
-        self.setProperty('nuvio.library.movies_empty', '' if movies else (
-            'No movies yet. Use Title options or Details > Add to Library.' if local else 'No movies on your watchlists.'))
-        self.setProperty('nuvio.library.series_empty', '' if series else (
-            'No series yet.' if local else 'No series on your watchlists.'))
-        if not local and not library.tracking_connected():
-            self.setProperty('nuvio.library.status', 'Connect Trakt or Simkl: HUB Settings > Accounts & tracking services')
-        elif not local and not self._refreshed:
-            self.setProperty('nuvio.library.status', 'Updating from Trakt / Simkl…')
+            self.setProperty('nuvio.library.row.%d' % i, self.rows[i][0] if i < len(self.rows) else '')
+            if i < len(self.rows):
+                items = []
+                for card in self.rows[i][1]:
+                    item = xbmcgui.ListItem(label=card['title'])
+                    item.setArt(art_cache.art({'poster': card.get('poster') or ''}))
+                    item.setProperty('badge', card.get('badge') or '')
+                    items.append(item)
+                control.addItems(items)
+        for i in range(len(self.rows)):
+            control = self.getControl(ROW_BASE + i)
+            control.controlUp(self.getControl(ROW_BASE + i - 1) if i else self.getControl(201))
+            control.controlDown(self.getControl(ROW_BASE + min(i + 1, len(self.rows) - 1)))
+        status = ''
+        if self.tab == 'tracking' and not library.tracking_connected():
+            status = 'Connect Trakt or Simkl: HUB Settings > Accounts & tracking services'
+        elif self.tab in ('tracking', 'calendar') and library.tracking_connected() and not self._refreshed:
+            status = 'Updating from %s…' % library.tracking_label()
             self._start_refresh()
-        else:
-            self.setProperty('nuvio.library.status', '')
+        elif not self.rows:
+            status = 'Nothing here yet. Use Title options or Details > Add to Library.'
+        self.setProperty('nuvio.library.status', status)
 
     def _start_refresh(self):
         if self._refresh is not None:
@@ -72,13 +84,16 @@ class LibraryWindow(Dialog):
             future.result()
         except Exception:
             pass
-        if self.tab == 'tracking':
+        if self.tab in ('tracking', 'calendar'):
             self._show()
 
     def _row(self, cid):
-        rows = self.rows.get(cid) or []
+        index = cid - ROW_BASE
+        if not 0 <= index < len(self.rows):
+            return None
+        cards = self.rows[index][1]
         pos = self.getControl(cid).getSelectedPosition()
-        return rows[pos] if 0 <= pos < len(rows) else None
+        return cards[pos] if 0 <= pos < len(cards) else None
 
     def onClick(self, cid):
         if cid in TABS:
@@ -86,37 +101,34 @@ class LibraryWindow(Dialog):
                 self.tab = TABS[cid]
                 self._show()
             return
-        if cid in LISTS:
-            row = self._row(cid)
-            if not row:
-                return
-            from .details import open_context
-            self.outcome = self.child(open_context, row['target'], row=row)
-            if self.outcome == 'playing' or isinstance(self.outcome, dict):
-                self.close()
-            else:
-                self._show()
+        row = self._row(cid)
+        if not row:
+            return
+        from .details import open_context
+        self.outcome = self.child(open_context, row['target'], row=row)
+        if self.outcome == 'playing' or isinstance(self.outcome, dict):
+            self.close()
+        else:
+            self._show()
 
     def onAction(self, action):
         aid = action.getId()
         if aid in BACK:
             self.close()
             return
-        cid = self.getFocusId()
-        if cid in LISTS and aid in (117, 101, 1009, 11):
-            row = self._row(cid)
-            if not row:
-                return
-            from .details import context_choice, quick_choice, run_choice
-            choice = 'info' if aid == 11 else context_choice(row['target'], row)
-            if not choice:
-                return
-            if quick_choice(choice, row['target'], row):
-                self._show()
-                return
-            self.outcome = self.child(run_choice, row['target'], choice, row)
-            if self.outcome == 'playing' or isinstance(self.outcome, dict):
-                self.close()
+        row = self._row(self.getFocusId())
+        if not row or aid not in (117, 101, 1009, 11):
+            return
+        from .details import context_choice, quick_choice, run_choice
+        choice = 'info' if aid == 11 else context_choice(row['target'], row)
+        if not choice:
+            return
+        if quick_choice(choice, row['target'], row):
+            self._show()
+            return
+        self.outcome = self.child(run_choice, row['target'], choice, row)
+        if self.outcome == 'playing' or isinstance(self.outcome, dict):
+            self.close()
 
 
 def open_library():

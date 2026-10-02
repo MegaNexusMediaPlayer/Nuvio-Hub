@@ -49,6 +49,29 @@ def is_sports_provider(provider):
     return bool(_WORDS.search(text))
 
 
+def ensure_enabled(all_providers=None):
+    """Every sports add-on serves its own metadata and streams: both switches
+    ON (user request, 6.0.35). Returns the add-ons that were switched."""
+    from . import metadata_providers, stream_providers
+    switched = []
+    sports_ids = {p['id'] for p in providers(all_providers)}
+    if not sports_ids:
+        return switched
+    for module in (metadata_providers, stream_providers):
+        try:
+            rows = module.entries()
+        except Exception:
+            continue
+        for provider, on in rows:
+            if provider['id'] in sports_ids and not on:
+                try:
+                    module.set_enabled(provider['id'], True)
+                    switched.append(provider['id'])
+                except ValueError:
+                    pass
+    return switched
+
+
 def is_sports_type(media_type):
     return str(media_type or '').lower() in SPORT_TYPES
 

@@ -65,7 +65,30 @@ Prepared 2 October 2026 from 6.0.34 (test build, not released).
   while the script waits in Kodi (`Monitor.waitForAbort`). They now do.
 * HUB buttons are a little narrower to fit six (Sport added).
 
-Checks: `test_nuvio_635.py` (31 tests) plus updated 601, 602, 605, 612, 615,
+## After the first test build
+
+* Sport: only **LIVE** events look for streams, and only after the cursor
+  rests **5 seconds**; upcoming events never do (OK says "Not live yet").
+  OK / Enter on the playing stream (or event) goes full screen: the player is
+  now recognised by its item token - live HLS streams report another file
+  path, so the old path check restarted the stream instead.
+* Every sports add-on gets its metadata and stream switches ON (each serves
+  its own metadata).
+* Catalog rows: Movies and Series are two rows, one under the other.
+* Library: row titles bold like everywhere else; the second tab is named after
+  the connected services ("Trakt · Simkl"; `library.TRACKERS` is the one list
+  to extend); new **Calendar** tab - everything in the Library by the month
+  it was added (month and year only); a small badge on each card shows where
+  it comes from (Local / Trakt / Simkl / MDBList). Watchlist titles keep the
+  date they were first seen when the service sends none (Simkl's
+  `added_to_watchlist_at` is used).
+* Phone setup: "Copy code" works - `navigator.clipboard` exists only on https
+  pages and this page is plain http on the home network; it falls back to a
+  selected text area, and the code can be selected with one tap.
+* Nuvio collections named **World** are imported again (only Sports stays out
+  of the MegaNexus Home).
+
+Checks: `test_nuvio_635.py` (37 tests) plus updated 601, 602, 605, 612, 615,
 618, 628, 631, home_iptv and reliability expectations. `python
 review/check_635.py`, release guard, builder, packaged smoke test. The Sports
 backend was also run against https://sports.highfly.dev/manifest.json

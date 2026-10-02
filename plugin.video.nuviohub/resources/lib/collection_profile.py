@@ -10,6 +10,9 @@ def profile_file():
     import xbmcvfs
     return Path(xbmcvfs.translatePath(xbmcaddon.Addon(ADDON_ID).getAddonInfo('profile')))/'nuvio_collections.json'
 
+def _sports_name(identifier,name):
+    return identifier.rsplit('.',1)[-1].lower()=='sports' or name.strip().lower()=='sports'
+
 def normalize(data):
     if isinstance(data,dict): data=data.get('collections') or data.get('groups') or data.get('data') or []
     if not isinstance(data,list): raise ValueError('Choose a Nuvio collections JSON export.')
@@ -18,13 +21,15 @@ def normalize(data):
         if not isinstance(g,dict):continue
         gid=str(g.get('id') or g.get('title') or g.get('name') or '')
         name=str(g.get('title') or g.get('name') or 'Collections')
-        if gid.rsplit('.',1)[-1].lower() in ('world','sports') or name.strip().lower() in ('world','sports','world & sports'):continue
+        # Sports stay out of the MegaNexus Home (their own Sport screen, 6.0.35);
+        # World collections are ordinary movie/series catalogs and are kept.
+        if _sports_name(gid,name):continue
         folders=[]
         for f in g.get('folders') or g.get('entries') or []:
             if not isinstance(f,dict):continue
             fid=str(f.get('id') or '')
             fname=str(f.get('title') or f.get('name') or '')
-            if fid.rsplit('.',1)[-1].lower() in ('world','sports') or fname.strip().lower() in ('world','sports','world & sports'):continue
+            if _sports_name(fid,fname):continue
             payload=f.get('payload') or (f.get('dataSource') or {}).get('payload') or {}
             sources=f.get('catalogSources') or f.get('sources') or payload.get('sources') or ([payload] if payload.get('catalogId') else [])
             clean=[]

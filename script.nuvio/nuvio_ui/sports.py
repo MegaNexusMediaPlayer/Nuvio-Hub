@@ -7,6 +7,9 @@ chosen in the box; OK on the event (or a stream) goes full screen and Back
 returns here. Playback is a preview to the playback service, so sports never
 reach Continue Watching or Trakt/Simkl. Header: Home (top of Sports),
 Settings, HUB (leave).
+
+Only LIVE events look for streams, after the cursor rests DWELL seconds;
+upcoming events never do (not even on OK).
 """
 import queue
 import threading
@@ -25,7 +28,7 @@ from .home_trailers import PreviewPlayer
 ROW_BASE = 1000
 MAX_ROWS = 20
 STREAM_LIST = 700
-DWELL = 1.0                  # seconds on an event before its streams load
+DWELL = 5.0                  # seconds on a LIVE event before its streams load and play
 AUTOPLAY_SETTING = 'nuvio_sport_autoplay'
 LOAD_WORKERS = 4
 LOAD_SECONDS = 15
@@ -36,12 +39,36 @@ def autoplay_enabled():
     return cached_addon().getSetting(AUTOPLAY_SETTING) != 'false'
 
 
+class SportsPlayer(PreviewPlayer):
+    """Ownership by the ListItem token: live HLS streams report another file
+    path than the URL that was played, so the path check of the trailer player
+    failed and OK restarted the stream instead of going full screen."""
+    def owns(self):
+        try:
+            if not self.token or not self.isPlayingVideo():
+                return False
+            if xbmcgui.Window(10000).getProperty('nuvio.preview.active') != self.token:
+                return False
+            return self.getPlayingItem().getProperty('nuvio.preview') == self.token
+        except Exception:
+            return False
+
+    def onAVStarted(self):
+        self.ready = self.owns()
+        if self.cancelled:
+            self.stop_owned()
+
+
+def _fullscreen():
+    xbmc.executebuiltin('ActivateWindow(fullscreenvideo)')
+
+
 class SportsWindow(Dialog):
     def __init__(self, *args, **kwargs):
         super().__init__(*args)
         self.rows = list(kwargs.get('rows') or [])       # [(title, provider, catalog, items)]
         self.outcome = ''
-        self.player = PreviewPlayer()
+        self.player = SportsPlayer()
         self.streams = []
         self.selection = None          # (row, pos) under the cursor
         self.changed = time.monotonic()
@@ -135,7 +162,7 @@ class SportsWindow(Dialog):
         self._stop_preview()
         stream = self.streams[index]
         token = uuid.uuid4().hex
-        self.player = PreviewPlayer()
+        self.player = SportsPlayer()
         self.player.token = token
         item = xbmcgui.ListItem(label=self.getProperty('nuvio.sport.title') or 'Sports')
         item.setProperty('nuvio.preview', token)
@@ -175,11 +202,17 @@ class SportsWindow(Dialog):
             self.setProperty('nuvio.sport.title', event['title'])
             self.setProperty('nuvio.sport.info', ' · '.join(x for x in (event.get('info'), self.rows[selection[0]][0]) if x))
             self.setProperty('nuvio.sport.bg', art_cache.url(event.get('background') or event.get('art') or ''))
+            if not event.get('live'):
+                self.setProperty('nuvio.sport.streams_status', 'Not live yet. Streams appear when the event starts.')
+            elif (selection, event['id']) != self.stream_key:
+                self.setProperty('nuvio.sport.streams_status', 'Live · streams load in a moment…')
         if self.selection is not None and self.getFocusId() != STREAM_LIST:
-            key = (self.selection, self._event(self.selection)['id'])
-            if key != self.stream_key and now - self.changed >= DWELL:
+            event = self._event(self.selection)
+            key = (self.selection, event['id'])
+            # Only live events, and only after the cursor rested DWELL seconds.
+            if event.get('live') and key != self.stream_key and now - self.changed >= DWELL:
                 self._stop_preview()
-                self._request_streams(key, self._event(self.selection))
+                self._request_streams(key, event)
         while not self.results.empty():
             key, found = self.results.get_nowait()
             if key != self.stream_key:
@@ -199,7 +232,7 @@ class SportsWindow(Dialog):
                 self.setProperty('nuvio.sport.video_status', '')
                 if self.fullscreen_when_ready:
                     self.fullscreen_when_ready = False
-                    xbmc.executebuiltin('ActivateWindow(fullscreenvideo)')
+                    _fullscreen()
             elif self.getProperty('nuvio.preview') == '1' and not self.player.isPlayingVideo():
                 self.setProperty('nuvio.preview', '')
 
@@ -220,21 +253,29 @@ class SportsWindow(Dialog):
         elif cid == STREAM_LIST:
             index = self.getControl(STREAM_LIST).getSelectedPosition()
             if index == self.playing_index and self.player.owns():
-                xbmc.executebuiltin('ActivateWindow(fullscreenvideo)')
+                _fullscreen()          # OK on the stream that plays: full screen
+            elif index == self.playing_index and self.player.token and not self.player.failed:
+                self.fullscreen_when_ready = True   # still starting: full screen when it shows
             else:
                 self._play(index)
         elif ROW_BASE <= cid < ROW_BASE + len(self.rows):
             selection = self._selected()
             if selection is None:
                 return
-            key = (selection, self._event(selection)['id'])
+            event = self._event(selection)
+            if not event.get('live'):
+                xbmcgui.Dialog().notification('Sports', 'Not live yet. Streams appear when the event starts.', time=3000)
+                return
+            key = (selection, event['id'])
             if key == self.stream_key and self.player.owns():
-                xbmc.executebuiltin('ActivateWindow(fullscreenvideo)')
+                _fullscreen()
+            elif key == self.stream_key and self.player.token and not self.player.failed:
+                self.fullscreen_when_ready = True
             elif key == self.stream_key and self.streams:
                 self._play(max(0, self.playing_index), fullscreen=True)
             else:
                 self.selection = selection
-                self._request_streams(key, self._event(selection))
+                self._request_streams(key, event)
                 self.fullscreen_when_ready = True
 
     def onAction(self, action):
@@ -322,6 +363,10 @@ def _warm(window, monitor, base, urls):
 
 def open_sports():
     from .playback import Loading, ROOT
+    try:
+        sports.ensure_enabled()
+    except Exception:
+        xbmc.log('[MegaNexus] Sports add-on switches not checked.', xbmc.LOGWARNING)
     monitor = xbmc.Monitor()
     loading = Loading('nuvio_loading.xml', ROOT, theme_folder(), '1080i', label='Preparing sports', full=True)
     loading.show()

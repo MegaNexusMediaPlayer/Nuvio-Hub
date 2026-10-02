@@ -9,6 +9,7 @@ import xbmc
 from .nuviohub.common import profile_path
 
 DB_PATH = os.path.join(profile_path(), 'favorites.db')
+ORIGINS_PATH = os.path.join(profile_path(), 'library_origins.json')   # mirror row -> service (6.0.35)
 _DB_READY = False
 _DB_LOCK = threading.Lock()
 
@@ -341,34 +342,46 @@ def refresh_external_mirror(include_trakt=True):
         except Exception:
             return default == 'true'
 
-    combined, seen = [], set()
+    combined, seen, origins = [], set(), {}
+    # 6.0.35 (Library): a title keeps the date it was first seen when the
+    # service sends none, and the service it came from is remembered for the
+    # Library badges.
+    known = {(r['media_type'], r['canonical_id']): int(r.get('added_at') or 0) for r in list_favorites(limit=5000, source='trakt')}
 
-    def _extend(rows):
+    def _extend(rows, origin):
         for row in rows or []:
             key = (row.get('media_type'), row.get('canonical_id'))
             if not key[1] or key in seen:
                 continue
             seen.add(key)
+            row = dict(row)
+            row['added_at'] = int(row.get('added_at') or 0) or known.get(key) or int(time.time())
+            origins['%s|%s' % ('movie' if key[0] == 'movie' else 'series', key[1])] = origin
             combined.append(row)
 
     if include_trakt:
         try:
             from . import trakt as _trakt
             if _trakt.enabled():
-                _extend(_trakt.fetch_watchlist(limit=200) or [])
+                _extend(_trakt.fetch_watchlist(limit=200) or [], 'trakt')
         except Exception as exc:
             xbmc.log('[NuvioHub] watchlist mirror (trakt) failed: %s' % exc, xbmc.LOGDEBUG)
     try:
         from . import simkl as _simkl
         if _simkl.enabled() and _simkl.authorized() and _flag('watchlist_merge_simkl'):
-            _extend(_simkl.watchlist_mirror_rows(limit=200))
+            _extend(_simkl.watchlist_mirror_rows(limit=200), 'simkl')
     except Exception as exc:
         xbmc.log('[NuvioHub] watchlist mirror (simkl) failed: %s' % exc, xbmc.LOGDEBUG)
     try:
         from . import mdblist as _mdblist
         if _mdblist.configured() and _flag('watchlist_merge_mdblist'):
-            _extend(_mdblist.watchlist_mirror_rows(limit=200))
+            _extend(_mdblist.watchlist_mirror_rows(limit=200), 'mdblist')
     except Exception as exc:
         xbmc.log('[NuvioHub] watchlist mirror (mdblist) failed: %s' % exc, xbmc.LOGDEBUG)
     replace_trakt_mirror(combined)
+    try:
+        from .nuviohub.safe_io import write_json
+        write_json(ORIGINS_PATH, origins)
+    except Exception:
+        pass
     return len(combined)

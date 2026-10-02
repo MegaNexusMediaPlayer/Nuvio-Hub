@@ -185,18 +185,33 @@ def layout(addon=None):
 
 
 def catalog_rows(limit):
-    """Nuvio-style Home: every visible catalog is a poster row; the rest stay
-    reachable through a last row of collection cards."""
+    """Nuvio-style Home: every visible catalog is a poster row - Movies and
+    Series as two rows, one under the other; the rest stay reachable through a
+    last row of collection cards."""
     from .nuviohub import store
     providers = store.list_providers()
-    folders = [f for g in groups() for f in g['folders'] if not f.get('hidden')]
     if limit <= 0:
         return []
-    overflow = folders[limit - 1:] if len(folders) > limit else []
-    shown = folders[:limit - 1] if overflow else folders
-    shelves = [dict(folder_shelf(f, providers, None, f['title']), catalog_row=True) for f in shown]
+    wanted = []   # (folder, media_type, title)
+    for group in groups():
+        for folder in group['folders']:
+            if folder.get('hidden'):
+                continue
+            types = [mt for mt in ('movie', 'series') if any(s.get('type') == mt for s in active_sources(folder))]
+            if len(types) == 2:
+                wanted += [(folder, 'movie', folder['title'] + ' · Movies'), (folder, 'series', folder['title'] + ' · Series')]
+            else:
+                wanted.append((folder, types[0] if types else None, folder['title']))
+    overflow = wanted[limit - 1:] if len(wanted) > limit else []
+    shown = wanted[:limit - 1] if overflow else wanted
+    shelves = [dict(folder_shelf(f, providers, mt, title), catalog_row=True) for f, mt, title in shown]
     if overflow:
-        shelves.append(tiles({'id': 'more', 'title': 'More catalogs', 'folders': overflow}))
+        rest, seen = [], set()
+        for folder, _, _ in overflow:
+            if folder['id'] not in seen:
+                seen.add(folder['id'])
+                rest.append(folder)
+        shelves.append(tiles({'id': 'more', 'title': 'More catalogs', 'folders': rest}))
     return shelves
 
 

@@ -475,6 +475,7 @@ def normalize_all_items(data, kind):
             'watched_episodes_count': int(row.get('watched_episodes_count') or 0),
             'total_episodes_count': int(row.get('total_episodes_count') or 0),
             'last_watched_at': str(row.get('last_watched_at') or ''),
+            'added_to_watchlist_at': str(row.get('added_to_watchlist_at') or ''),
         })
     return rows
 
@@ -631,8 +632,17 @@ def watchlist_mirror_rows(limit=200):
                 'clearlogo': '',
                 'year': row.get('year') or 0,
                 'plot': row.get('overview') or '',
+                'added_at': _epoch(row.get('added_to_watchlist_at')),   # Library calendar (6.0.35)
             })
     return out
+
+
+def _epoch(value):
+    from datetime import datetime
+    try:
+        return int(datetime.fromisoformat(str(value).replace('Z', '+00:00')).timestamp()) if value else 0
+    except (ValueError, TypeError, OverflowError):
+        return 0
 
 # True playback progress (Simkl Scrobble API). All HTTP runs on the service
 # reporter/idle worker; the durable, account-scoped queue survives restarts.

@@ -228,7 +228,7 @@ def import_nuvio_collections():
     dialog=xbmcgui.Dialog()
     if not sync.Nuvio.is_linked():dialog.ok('Collections','Connect a Nuvio account first.');return False
     if not sync.Nuvio.token().get('profile_index') and not choose_nuvio_profile():return False
-    if not dialog.yesno('Import collection layout','Replace Home collection titles, pictures and order with the selected Nuvio profile? Sports and World stay excluded.'):return False
+    if not dialog.yesno('Import collection layout','Replace Home collection titles, pictures and order with the selected Nuvio profile? Sports stay in the Sport screen.'):return False
     data=job(lambda:sync.Nuvio.sync_collections([],direction='pull'),label='Importing collection layout')
     if data is None:return False
     return commit_collections(data)

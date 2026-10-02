@@ -157,9 +157,32 @@ class Library(unittest.TestCase):
     def test_library_window(self):
         root = ET.parse(SKINS / 'Default/1080i/nuvio_library.xml').getroot()
         ids = {c.get('id') for c in root.iter('control')}
-        self.assertTrue({'201', '202', '500', '501'} <= ids)
+        self.assertTrue({'201', '202', '203'} | {str(500 + i) for i in range(14)} <= ids)
         labels = [c.findtext('label') for c in root.iter('control') if c.get('type') == 'button']
-        self.assertEqual(labels, ['Local', 'Tracking Services'])
+        self.assertEqual(labels, ['Local', '$INFO[Window.Property(nuvio.library.tracking_label)]', 'Calendar'])
+        rows = [c.findtext('label') for c in root.iter('control') if c.get('type') == 'label' and 'nuvio.library.row' in (c.findtext('label') or '')]
+        self.assertTrue(rows and all(r.startswith('[B]') for r in rows), 'row titles bold like Home')
+
+    def test_tracking_tab_is_named_after_the_connected_services(self):
+        fake = (('trakt', 'Trakt', lambda: True, list), ('simkl', 'Simkl', lambda: True, list), ('x', 'Other', lambda: False, list))
+        with mock.patch.object(library, 'TRACKERS', fake):
+            self.assertEqual(library.tracking_label(), 'Trakt · Simkl')
+        with mock.patch.object(library, 'TRACKERS', fake[2:]):
+            self.assertEqual(library.tracking_label(), 'Tracking')
+            self.assertFalse(library.tracking_connected())
+
+    def test_calendar_by_month_with_source_badges(self):
+        oct1 = time.mktime((2026, 10, 1, 12, 0, 0, 0, 0, -1))
+        sep = time.mktime((2026, 9, 3, 12, 0, 0, 0, 0, -1))
+        local = [{'media_type': 'movie', 'canonical_id': 'tt1', 'title': 'A', 'added_at': oct1}]
+        tracked = [{'media_type': 'movie', 'canonical_id': 'tt1', 'title': 'A', 'added_at': oct1},
+                   {'media_type': 'series', 'canonical_id': 'tt2', 'title': 'B', 'added_at': sep}]
+        with mock.patch.object(library, '_items', side_effect=lambda source: local if source == 'local' else tracked), \
+                mock.patch.object(library, '_origins', return_value={'movie|tt1': 'trakt', 'series|tt2': 'simkl'}):
+            months = library.calendar()
+        self.assertEqual([m for m, _ in months], ['October 2026', 'September 2026'])
+        self.assertEqual(months[0][1][0]['badge'], 'Local · Trakt')
+        self.assertEqual(months[1][1][0]['badge'], 'Simkl')
 
 
 class TrackingOnPhone(unittest.TestCase):
@@ -240,6 +263,41 @@ class Sports(unittest.TestCase):
         self.assertIn("self._enter_foreign_playback('home-preview')", companion)
 
 
+class SportsPlayback(unittest.TestCase):
+    def test_only_live_events_after_five_seconds(self):
+        ui = importlib.import_module('nuvio_ui.sports')
+        self.assertEqual(ui.DWELL, 5.0)
+        source = (ROOT / 'script.nuvio/nuvio_ui/sports.py').read_text(encoding='utf-8')
+        self.assertIn("if event.get('live') and key != self.stream_key and now - self.changed >= DWELL:", source)
+        self.assertIn("Not live yet", source)
+
+    def test_ownership_by_item_token_so_ok_goes_full_screen(self):
+        ui = importlib.import_module('nuvio_ui.sports')
+        player = ui.SportsPlayer();player.token = 'tok'
+        item = SimpleNamespace(getProperty=lambda k: 'tok')
+        with mock.patch.object(player, 'isPlayingVideo', return_value=True, create=True), \
+                mock.patch.object(player, 'getPlayingItem', return_value=item, create=True), \
+                mock.patch.object(ui.xbmcgui, 'Window', return_value=SimpleNamespace(getProperty=lambda k: 'tok')):
+            self.assertTrue(player.owns())   # whatever file path Kodi reports for the HLS stream
+
+    def test_sports_addons_get_metadata_and_streams_on(self):
+        metadata = importlib.import_module('resources.lib.metadata_providers')
+        streams = importlib.import_module('resources.lib.stream_providers')
+        with mock.patch.object(metadata, 'entries', return_value=[(SPORT, False), (MOVIES, False)]), \
+                mock.patch.object(streams, 'entries', return_value=[(SPORT, False)]), \
+                mock.patch.object(metadata, 'set_enabled') as meta_on, mock.patch.object(streams, 'set_enabled') as stream_on:
+            sports.ensure_enabled([SPORT, MOVIES])
+        meta_on.assert_called_once_with('sp', True)
+        stream_on.assert_called_once_with('sp', True)
+
+
+class PhoneCopy(unittest.TestCase):
+    def test_copy_works_on_the_plain_http_page(self):
+        page = (ROOT / 'plugin.video.nuviohub/resources/phone_setup/index.html').read_text(encoding='utf-8')
+        self.assertIn("document.execCommand('copy')", page)
+        self.assertIn('window.isSecureContext', page)
+
+
 class RefreshGuard(unittest.TestCase):
     def run_guard(self, value):
         calls, props, addon = [], {}, Settings()
@@ -280,16 +338,18 @@ class HomeLayout(unittest.TestCase):
         onboarding = (ROOT / 'script.nuvio/nuvio_ui/onboarding.py').read_text(encoding='utf-8')
         self.assertNotIn('home_layout', onboarding, 'an option, not a setup question')
 
-    def test_catalog_rows_with_overflow(self):
-        folders = [{'id': 'f%d' % i, 'title': 'Cat %d' % i, 'sources': []} for i in range(5)]
+    def test_catalog_rows_movies_and_series_under_each_other(self):
+        both = [{'type': 'movie'}, {'type': 'series'}]
+        folders = [{'id': 'f%d' % i, 'title': 'Cat %d' % i, 'sources': both if i == 0 else [{'type': 'movie'}]} for i in range(4)]
         store = importlib.import_module('resources.lib.nuviohub.store')
         with mock.patch.object(ch, 'groups', return_value=[{'id': 'g', 'title': 'G', 'folders': folders}]), \
                 mock.patch.object(store, 'list_providers', return_value=[]), \
-                mock.patch.object(ch, 'folder_shelf', side_effect=lambda f, p, mt, title: {'title': title, 'rows': []}), \
+                mock.patch.object(ch, 'folder_shelf', side_effect=lambda f, p, mt, title: {'title': title, 'type': mt, 'rows': []}), \
                 mock.patch.object(ch, 'tiles', side_effect=lambda g: {'title': g['title'], 'rows': g['folders']}):
-            shelves = ch.catalog_rows(3)
-        self.assertEqual([s['title'] for s in shelves], ['Cat 0', 'Cat 1', 'More catalogs'])
-        self.assertEqual(len(shelves[-1]['rows']), 3)
+            shelves = ch.catalog_rows(4)
+        self.assertEqual([s['title'] for s in shelves], ['Cat 0 · Movies', 'Cat 0 · Series', 'Cat 1', 'More catalogs'])
+        self.assertEqual([s.get('type') for s in shelves[:2]], ['movie', 'series'])
+        self.assertEqual([f['id'] for f in shelves[-1]['rows']], ['f2', 'f3'])
 
 
 class StreamSwitches(unittest.TestCase):

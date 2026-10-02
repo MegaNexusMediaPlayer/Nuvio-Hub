@@ -51,6 +51,11 @@ def ensure_ready():
     # 6.0.35: the one-time 6.0.12 "keep one stream add-on" repair is gone. On a
     # fresh install it ran after the phone setup and switched off add-ons the
     # user had just chosen (GitHub issue #3).
+    try:
+        from resources.lib import sports
+        sports.ensure_enabled()   # sports add-ons: metadata and streams ON
+    except Exception:
+        pass
     from .playback import job
     ensure_defaults(job)
     offer_switch_on(metadata_providers, 'metadata')
