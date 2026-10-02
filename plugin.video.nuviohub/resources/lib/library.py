@@ -161,11 +161,20 @@ def remove(media_type, canonical_id):
     favorites_store.remove(_kind(media_type), canonical_id, source=LOCAL)
 
 
-def _card(item, badge):
+def _poster(item):
+    """Trakt sends no artwork: IMDb titles use the standard Stremio poster."""
+    poster = item.get('poster') or ''
+    cid = str(item.get('canonical_id') or '')
+    if not poster and cid.startswith('tt'):
+        poster = 'https://images.metahub.space/poster/medium/%s/img' % cid.split(':')[0]
+    return poster
+
+
+def _card(item, badges):
     kind = _kind(item.get('media_type'))
-    return {'title': item.get('title') or item.get('canonical_id'), 'poster': item.get('poster') or '',
+    return {'title': item.get('title') or item.get('canonical_id'), 'poster': _poster(item),
             'fanart': item.get('background') or '', 'landscape': item.get('background') or '',
-            'clearlogo': item.get('clearlogo') or '', 'plot': item.get('plot') or '', 'badge': badge,
+            'clearlogo': item.get('clearlogo') or '', 'plot': item.get('plot') or '', 'badges': list(badges),
             'added_at': int(item.get('added_at') or 0),
             'target': {'media_type': kind, 'canonical_id': item.get('canonical_id')}}
 
@@ -178,12 +187,16 @@ def _items(source):
         return []
 
 
-def _badge(item, source, origins):
+def _badges(item, source, origins):
+    """Where a title comes from: ['Local'] or the services that list it."""
     if source == LOCAL:
-        return 'Local'
+        return ['Local']
     key = '%s|%s' % (_kind(item.get('media_type')), item.get('canonical_id'))
     names = dict((tid, name) for tid, name, _, _ in TRACKERS)
-    return names.get(origins.get(key), '') or tracking_label()
+    found = origins.get(key) or []
+    if isinstance(found, str):
+        found = [found]          # library_origins.json of the first 6.0.35 build
+    return [names[t] for t in found if t in names] or [tracking_label()]
 
 
 def rows(source):
@@ -191,7 +204,7 @@ def rows(source):
     origins = _origins() if source == TRACKING else {}
     movies, series = [], []
     for item in _items(source):
-        card = _card(item, _badge(item, source, origins))
+        card = _card(item, _badges(item, source, origins))
         (movies if card['target']['media_type'] == 'movie' else series).append(card)
     return movies, series
 
@@ -210,14 +223,13 @@ def calendar(limit=14):
     for source in (LOCAL, TRACKING):
         for item in _items(source):
             key = (_kind(item.get('media_type')), item.get('canonical_id'))
-            badge = _badge(item, source, origins)
+            badges = _badges(item, source, origins)
             if key in merged:
                 old = merged[key]
-                if badge not in old['badge'].split(' · '):
-                    old['badge'] += ' · ' + badge
+                old['badges'] += [b for b in badges if b not in old['badges']]
                 old['added_at'] = max(old['added_at'], int(item.get('added_at') or 0))
             else:
-                merged[key] = _card(item, badge)
+                merged[key] = _card(item, badges)
     months = {}
     for card in sorted(merged.values(), key=lambda c: c['added_at'], reverse=True):
         stamp = _time.localtime(card['added_at'] or _time.time())

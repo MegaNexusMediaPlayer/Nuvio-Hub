@@ -1,7 +1,7 @@
 {
   "extracted_to": "(temporary folder)",
   "imported_packaged_modules": 53,
-  "validated_xml_asset_refs": 5255,
+  "validated_xml_asset_refs": 5429,
   "unified_version": "6.0.35",
   "components": [
     "script.nuvio",

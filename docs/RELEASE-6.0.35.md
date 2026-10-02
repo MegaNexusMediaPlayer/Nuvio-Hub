@@ -72,14 +72,21 @@ Prepared 2 October 2026 from 6.0.34 (test build, not released).
   OK / Enter on the playing stream (or event) goes full screen: the player is
   now recognised by its item token - live HLS streams report another file
   path, so the old path check restarted the stream instead.
+* Sport full screen is the same player enlarged inside the Sport screen with a
+  short zoom (Kodi's full-screen window opened *under* the Sport dialog, so
+  nothing seemed to happen). No new playback and no display mode switch; OK
+  or Back returns to the small video.
 * Every sports add-on gets its metadata and stream switches ON (each serves
   its own metadata).
 * Catalog rows: Movies and Series are two rows, one under the other.
 * Library: row titles bold like everywhere else; the second tab is named after
   the connected services ("Trakt · Simkl"; `library.TRACKERS` is the one list
   to extend); new **Calendar** tab - everything in the Library by the month
-  it was added (month and year only); a small badge on each card shows where
-  it comes from (Local / Trakt / Simkl / MDBList). Watchlist titles keep the
+  it was added (month and year only); small badges on each card, one under
+  the other, show where it comes from (Local / Trakt / Simkl / MDBList). A
+  title on several services is one card with one badge per service. Trakt
+  sends no artwork: IMDb titles use the standard Stremio poster
+  (images.metahub.space). Watchlist titles keep the
   date they were first seen when the service sends none (Simkl's
   `added_to_watchlist_at` is used).
 * Phone setup: "Copy code" works - `navigator.clipboard` exists only on https
@@ -88,7 +95,7 @@ Prepared 2 October 2026 from 6.0.34 (test build, not released).
 * Nuvio collections named **World** are imported again (only Sports stays out
   of the MegaNexus Home).
 
-Checks: `test_nuvio_635.py` (37 tests) plus updated 601, 602, 605, 612, 615,
+Checks: `test_nuvio_635.py` (41 tests) plus updated 601, 602, 605, 612, 615,
 618, 628, 631, home_iptv and reliability expectations. `python
 review/check_635.py`, release guard, builder, packaged smoke test. The Sports
 backend was also run against https://sports.highfly.dev/manifest.json

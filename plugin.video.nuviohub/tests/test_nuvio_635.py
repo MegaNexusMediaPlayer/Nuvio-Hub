@@ -178,11 +178,39 @@ class Library(unittest.TestCase):
         tracked = [{'media_type': 'movie', 'canonical_id': 'tt1', 'title': 'A', 'added_at': oct1},
                    {'media_type': 'series', 'canonical_id': 'tt2', 'title': 'B', 'added_at': sep}]
         with mock.patch.object(library, '_items', side_effect=lambda source: local if source == 'local' else tracked), \
-                mock.patch.object(library, '_origins', return_value={'movie|tt1': 'trakt', 'series|tt2': 'simkl'}):
+                mock.patch.object(library, '_origins', return_value={'movie|tt1': ['trakt'], 'series|tt2': 'simkl'}):
             months = library.calendar()
         self.assertEqual([m for m, _ in months], ['October 2026', 'September 2026'])
-        self.assertEqual(months[0][1][0]['badge'], 'Local · Trakt')
-        self.assertEqual(months[1][1][0]['badge'], 'Simkl')
+        self.assertEqual(months[0][1][0]['badges'], ['Local', 'Trakt'])
+        self.assertEqual(months[1][1][0]['badges'], ['Simkl'])   # first-build origins format still read
+
+    def test_one_card_per_title_with_every_service_badge(self):
+        tracked = [{'media_type': 'movie', 'canonical_id': 'tt9', 'title': 'Both', 'poster': ''}]
+        with mock.patch.object(library, '_items', return_value=tracked), \
+                mock.patch.object(library, '_origins', return_value={'movie|tt9': ['trakt', 'simkl']}):
+            movies, series = library.rows(library.TRACKING)
+        self.assertEqual(len(movies), 1)
+        self.assertEqual(movies[0]['badges'], ['Trakt', 'Simkl'])
+        self.assertEqual(movies[0]['poster'], 'https://images.metahub.space/poster/medium/tt9/img')  # Trakt sends no art
+        xml = (SKINS / 'Default/1080i/nuvio_library.xml').read_text(encoding='utf-8')
+        self.assertIn('ListItem.Property(badge.1)', xml)
+
+    def test_mirror_lists_every_service_of_a_title(self):
+        favorites = importlib.import_module('resources.lib.favorites_store')
+        trakt = importlib.import_module('resources.lib.trakt')
+        simkl = importlib.import_module('resources.lib.simkl')
+        row = {'media_type': 'movie', 'canonical_id': 'tt9', 'title': 'Both'}
+        written = {}
+        with mock.patch.object(favorites, 'list_favorites', return_value=[]), \
+                mock.patch.object(favorites, 'replace_trakt_mirror') as mirror, \
+                mock.patch.object(trakt, 'enabled', return_value=True), mock.patch.object(trakt, 'fetch_watchlist', return_value=[row]), \
+                mock.patch.object(simkl, 'enabled', return_value=True), mock.patch.object(simkl, 'authorized', return_value=True), \
+                mock.patch.object(simkl, 'watchlist_mirror_rows', return_value=[dict(row)]), \
+                mock.patch('resources.lib.nuviohub.safe_io.write_json', side_effect=lambda path, data: written.update(data)), \
+                mock.patch('resources.lib.mdblist.configured', return_value=False):
+            favorites.refresh_external_mirror()
+        self.assertEqual(len(mirror.call_args.args[0]), 1)
+        self.assertEqual(written['movie|tt9'], ['trakt', 'simkl'])
 
 
 class TrackingOnPhone(unittest.TestCase):
@@ -289,6 +317,34 @@ class SportsPlayback(unittest.TestCase):
             sports.ensure_enabled([SPORT, MOVIES])
         meta_on.assert_called_once_with('sp', True)
         stream_on.assert_called_once_with('sp', True)
+
+
+class SportsFullScreen(unittest.TestCase):
+    def test_same_player_enlarged_in_the_window(self):
+        root = ET.parse(SKINS / 'Default/1080i/nuvio_sports.xml').getroot()
+        full = next(c for c in root.iter('control') if c.get('id') == '950')
+        self.assertIsNotNone(full.find('texturenofocus'))   # explicit empty: no skin default box
+        videos = [c for c in root.iter('control') if c.get('type') == 'videowindow']
+        self.assertEqual([(v.findtext('width'), v.findtext('height')) for v in videos], [('1280', '610'), ('1920', '1080')])
+        self.assertIn('!String.IsEqual(Window.Property(nuvio.sport.full),1)', videos[0].findtext('visible'))
+        source = (ROOT / 'script.nuvio/nuvio_ui/sports.py').read_text(encoding='utf-8')
+        self.assertNotIn('ActivateWindow(fullscreenvideo)', source)
+
+    def test_ok_and_back_return_to_the_small_video(self):
+        ui = importlib.import_module('nuvio_ui.sports')
+        props, focus = {}, []
+        win = ui.SportsWindow.__new__(ui.SportsWindow)
+        win.getProperty = lambda k: props.get(k, '')
+        win.setProperty = props.__setitem__
+        win.setFocusId = focus.append
+        win.getFocusId = lambda: 1003
+        win._fullscreen()
+        self.assertEqual((props['nuvio.sport.full'], focus[-1]), ('1', ui.FULL_BUTTON))
+        win.close = mock.Mock()
+        ui.SportsWindow.onAction.__wrapped__(win, SimpleNamespace(getId=lambda: 92)) if hasattr(ui.SportsWindow.onAction, '__wrapped__') else win._small()
+        self.assertEqual(props['nuvio.sport.full'], '')
+        self.assertEqual(focus[-1], 1003)
+        win.close.assert_not_called()
 
 
 class PhoneCopy(unittest.TestCase):

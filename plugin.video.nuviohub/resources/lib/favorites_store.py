@@ -351,12 +351,17 @@ def refresh_external_mirror(include_trakt=True):
     def _extend(rows, origin):
         for row in rows or []:
             key = (row.get('media_type'), row.get('canonical_id'))
-            if not key[1] or key in seen:
+            if not key[1]:
+                continue
+            # One card per title; every service that has it is listed.
+            tags = origins.setdefault('%s|%s' % ('movie' if key[0] == 'movie' else 'series', key[1]), [])
+            if origin not in tags:
+                tags.append(origin)
+            if key in seen:
                 continue
             seen.add(key)
             row = dict(row)
             row['added_at'] = int(row.get('added_at') or 0) or known.get(key) or int(time.time())
-            origins['%s|%s' % ('movie' if key[0] == 'movie' else 'series', key[1])] = origin
             combined.append(row)
 
     if include_trakt:

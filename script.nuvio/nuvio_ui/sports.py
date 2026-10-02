@@ -59,8 +59,7 @@ class SportsPlayer(PreviewPlayer):
             self.stop_owned()
 
 
-def _fullscreen():
-    xbmc.executebuiltin('ActivateWindow(fullscreenvideo)')
+FULL_BUTTON = 950   # covers the enlarged video; OK / Back return to the small one
 
 
 class SportsWindow(Dialog):
@@ -181,6 +180,7 @@ class SportsWindow(Dialog):
         self._show_streams(self.streams)
 
     def _stop_preview(self):
+        self._small()
         from resources.lib import refresh_guard
         refresh_guard.restore()
         self.player.cancel()
@@ -232,12 +232,36 @@ class SportsWindow(Dialog):
                 self.setProperty('nuvio.sport.video_status', '')
                 if self.fullscreen_when_ready:
                     self.fullscreen_when_ready = False
-                    _fullscreen()
+                    self._fullscreen()
             elif self.getProperty('nuvio.preview') == '1' and not self.player.isPlayingVideo():
                 self.setProperty('nuvio.preview', '')
+                self._small()
+
+    # ---- full screen -----------------------------------------------------
+    def _fullscreen(self):
+        """The same player, enlarged inside this window: seamless, no new
+        playback and no TV mode switch (Kodi's full-screen window would open
+        under this dialog)."""
+        if self.getProperty('nuvio.sport.full') == '1':
+            return
+        self._return_focus = self.getFocusId()
+        self.setProperty('nuvio.sport.full', '1')
+        self.setFocusId(FULL_BUTTON)
+
+    def _small(self):
+        if self.getProperty('nuvio.sport.full') != '1':
+            return
+        self.setProperty('nuvio.sport.full', '')
+        try:
+            self.setFocusId(getattr(self, '_return_focus', 0) or ROW_BASE)
+        except Exception:
+            self.setFocusId(ROW_BASE)
 
     # ---- input -----------------------------------------------------------
     def onClick(self, cid):
+        if cid == FULL_BUTTON:
+            self._small()
+            return
         if cid == 108:
             self.outcome = 'hub'
             self.close()
@@ -253,7 +277,7 @@ class SportsWindow(Dialog):
         elif cid == STREAM_LIST:
             index = self.getControl(STREAM_LIST).getSelectedPosition()
             if index == self.playing_index and self.player.owns():
-                _fullscreen()          # OK on the stream that plays: full screen
+                self._fullscreen()     # OK on the stream that plays: full screen
             elif index == self.playing_index and self.player.token and not self.player.failed:
                 self.fullscreen_when_ready = True   # still starting: full screen when it shows
             else:
@@ -268,7 +292,7 @@ class SportsWindow(Dialog):
                 return
             key = (selection, event['id'])
             if key == self.stream_key and self.player.owns():
-                _fullscreen()
+                self._fullscreen()
             elif key == self.stream_key and self.player.token and not self.player.failed:
                 self.fullscreen_when_ready = True
             elif key == self.stream_key and self.streams:
@@ -280,7 +304,10 @@ class SportsWindow(Dialog):
 
     def onAction(self, action):
         if action.getId() in BACK:
-            self.close()
+            if self.getProperty('nuvio.sport.full') == '1':
+                self._small()
+            else:
+                self.close()
 
     def close(self):
         self._stop_preview()

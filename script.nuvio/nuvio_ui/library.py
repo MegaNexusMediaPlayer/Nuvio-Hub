@@ -52,7 +52,9 @@ class LibraryWindow(Dialog):
                 for card in self.rows[i][1]:
                     item = xbmcgui.ListItem(label=card['title'])
                     item.setArt(art_cache.art({'poster': card.get('poster') or ''}))
-                    item.setProperty('badge', card.get('badge') or '')
+                    badges = card.get('badges') or []
+                    for n in range(3):   # small pills, one under the other
+                        item.setProperty('badge.%d' % n, badges[n] if n < len(badges) else '')
                     items.append(item)
                 control.addItems(items)
         for i in range(len(self.rows)):

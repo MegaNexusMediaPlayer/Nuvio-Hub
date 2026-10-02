@@ -198,24 +198,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="label">
@@ -252,24 +294,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="image">
@@ -338,24 +422,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="label">
@@ -392,24 +518,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="image">
@@ -478,24 +646,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="label">
@@ -532,24 +742,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="image">
@@ -618,24 +870,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="label">
@@ -672,24 +966,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="image">
@@ -758,24 +1094,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="label">
@@ -812,24 +1190,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="image">
@@ -898,24 +1318,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="label">
@@ -952,24 +1414,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="image">
@@ -1038,24 +1542,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="label">
@@ -1092,24 +1638,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="image">
@@ -1178,24 +1766,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="label">
@@ -1232,24 +1862,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="image">
@@ -1318,24 +1990,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="label">
@@ -1372,24 +2086,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="image">
@@ -1458,24 +2214,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="label">
@@ -1512,24 +2310,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="image">
@@ -1598,24 +2438,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="label">
@@ -1652,24 +2534,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="image">
@@ -1738,24 +2662,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="label">
@@ -1792,24 +2758,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="image">
@@ -1878,24 +2886,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="label">
@@ -1932,24 +2982,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="image">
@@ -2018,24 +3110,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="label">
@@ -2072,24 +3206,66 @@
             <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
           </control>
           <control type="group">
-            <visible>!String.IsEmpty(ListItem.Property(badge))</visible>
+            <visible>!String.IsEmpty(ListItem.Property(badge.0))</visible>
             <control type="image">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
-              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_164x28_r14.png</texture>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
             </control>
             <control type="label">
               <left>16</left>
               <top>12</top>
-              <width>164</width>
+              <width>110</width>
               <height>28</height>
               <font>font10</font>
               <align>center</align>
               <aligny>center</aligny>
               <textcolor>FFDBECFF</textcolor>
-              <label>$INFO[ListItem.Property(badge)]</label>
+              <label>$INFO[ListItem.Property(badge.0)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.1))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>44</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.1)]</label>
+            </control>
+          </control>
+          <control type="group">
+            <visible>!String.IsEmpty(ListItem.Property(badge.2))</visible>
+            <control type="image">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <texture colordiffuse="CC061838">special://home/addons/script.nuvio/resources/media/nuvio_pill_110x28_r14.png</texture>
+            </control>
+            <control type="label">
+              <left>16</left>
+              <top>76</top>
+              <width>110</width>
+              <height>28</height>
+              <font>font10</font>
+              <align>center</align>
+              <aligny>center</aligny>
+              <textcolor>FFDBECFF</textcolor>
+              <label>$INFO[ListItem.Property(badge.2)]</label>
             </control>
           </control>
           <control type="image">

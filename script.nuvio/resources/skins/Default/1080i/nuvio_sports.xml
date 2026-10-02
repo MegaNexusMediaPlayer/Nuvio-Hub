@@ -28,7 +28,7 @@
       <top>0</top>
       <width>1280</width>
       <height>610</height>
-      <visible>Player.HasVideo + [String.IsEqual(Window.Property(nuvio.preview.loading),1) | String.IsEqual(Window.Property(nuvio.preview),1)]</visible>
+      <visible>Player.HasVideo + [String.IsEqual(Window.Property(nuvio.preview.loading),1) | String.IsEqual(Window.Property(nuvio.preview),1)] + !String.IsEqual(Window.Property(nuvio.sport.full),1)</visible>
     </control>
     <control type="image">
       <left>640</left>
@@ -3109,6 +3109,63 @@
       <textcolor>FFCAD0DB</textcolor>
       <label>$INFO[System.Time(hh:mm)]</label>
       <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
+    </control>
+    <control type="group">
+      <!-- Full screen = the same player, enlarged here (no new playback, no
+           display mode switch). OK or Back returns to the small video. -->
+      <visible>String.IsEqual(Window.Property(nuvio.sport.full),1)</visible>
+      <animation effect="fade" start="0" end="100" time="180">Visible</animation>
+      <animation effect="fade" start="100" end="0" time="140">Hidden</animation>
+      <control type="image">
+        <left>0</left>
+        <top>0</top>
+        <width>1920</width>
+        <height>1080</height>
+        <aspectratio>stretch</aspectratio>
+        <texture colordiffuse="FF000000">special://home/addons/script.nuvio/resources/media/black.png</texture>
+      </control>
+      <control type="videowindow">
+        <left>0</left>
+        <top>0</top>
+        <width>1920</width>
+        <height>1080</height>
+        <animation effect="zoom" start="66" end="100" center="1280,305" time="220" tween="cubic" easing="out">Visible</animation>
+        <visible>Player.HasVideo</visible>
+      </control>
+      <control type="button" id="950">
+        <left>0</left>
+        <top>0</top>
+        <width>1920</width>
+        <height>1080</height>
+        <texturefocus />
+        <texturenofocus />
+        <label></label>
+        <onleft>950</onleft>
+        <onright>950</onright>
+        <onup>950</onup>
+        <ondown>950</ondown>
+      </control>
+      <control type="group">
+        <animation effect="fade" start="100" end="0" time="400" delay="3000">Visible</animation>
+        <control type="image">
+          <left>760</left>
+          <top>980</top>
+          <width>400</width>
+          <height>52</height>
+          <texture colordiffuse="B3000000">special://home/addons/script.nuvio/resources/media/nuvio_pill_400x52_r22.png</texture>
+        </control>
+        <control type="label">
+          <left>760</left>
+          <top>980</top>
+          <width>400</width>
+          <height>52</height>
+          <font>font12</font>
+          <align>center</align>
+          <aligny>center</aligny>
+          <textcolor>FFFFFFFF</textcolor>
+          <label>[B]OK[/B] or [B]Back[/B]  ·  small video</label>
+        </control>
+      </control>
     </control>
   </controls>
 </window>
