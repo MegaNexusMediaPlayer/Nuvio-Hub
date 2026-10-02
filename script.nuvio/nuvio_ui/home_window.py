@@ -52,6 +52,7 @@ def launch_command(row):
 
 
 class HomeWindow(Dialog):
+    TOUCH_ROWS = True   # vertical drags over poster rows move between rows (touch only)
     def __init__(self, *args, **kwargs):
         super().__init__(*args)
         self._shelves = kwargs.get('shelves') or []
@@ -274,6 +275,9 @@ class HomeWindow(Dialog):
     def drain_updates(self):
         self.drain_events()
         if self._closed:return
+        # While a finger drags a row, nothing repaints rows or starts previews:
+        # a row reset mid-drag felt like the posters got stuck (6.0.37).
+        if self.touching():return
         self._queue_visible()
         now=time.monotonic()
         if now-self._last_progress_check>=.5:

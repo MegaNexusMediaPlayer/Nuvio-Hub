@@ -1,0 +1,17 @@
+................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................./home/mladen1988/Projects/NuvioKodiProject/work/Nuvio-Hub/plugin.video.nuviohub/tests/test_nuvio_636.py:108: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/mladen1988/Projects/NuvioKodiProject/work/Nuvio-Hub/plugin.video.nuviohub/resources/lib/nuvio_import.py' mode='r' encoding='utf-8'>
+  source = open(kodi_stub.ADDON_ROOT + '/resources/lib/nuvio_import.py', encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+./home/mladen1988/Projects/NuvioKodiProject/work/Nuvio-Hub/plugin.video.nuviohub/tests/test_nuvio_636.py:113: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/mladen1988/Projects/NuvioKodiProject/work/Nuvio-Hub/plugin.video.nuviohub/service.py' mode='r' encoding='utf-8'>
+  self.assertIn('NuvioHubManifests', open(root + '/service.py', encoding='utf-8').read())
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/home/mladen1988/Projects/NuvioKodiProject/work/Nuvio-Hub/plugin.video.nuviohub/tests/test_nuvio_636.py:114: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/mladen1988/Projects/NuvioKodiProject/work/Nuvio-Hub/plugin.video.nuviohub/../script.nuvio/nuvio_ui/settings.py' mode='r' encoding='utf-8'>
+  settings_source = open(root + '/../script.nuvio/nuvio_ui/settings.py', encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+....../home/mladen1988/Projects/NuvioKodiProject/work/Nuvio-Hub/plugin.video.nuviohub/tests/test_nuvio_637.py:18: ResourceWarning: unclosed file <_io.TextIOWrapper name='/home/mladen1988/Projects/NuvioKodiProject/work/Nuvio-Hub/plugin.video.nuviohub/../script.nuvio/nuvio_ui/dialog.py' mode='r' encoding='utf-8'>
+  text = open(kodi_stub.ADDON_ROOT + '/../script.nuvio/nuvio_ui/dialog.py', encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+...............................................................................................
+----------------------------------------------------------------------
+Ran 711 tests in 34.367s
+
+OK

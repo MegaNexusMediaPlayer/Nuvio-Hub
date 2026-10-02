@@ -85,7 +85,9 @@ def launch():
             from nuvio_ui.home_window import open_home
             if not xbmc.getCondVisibility('Window.IsVisible(yesnodialog)'):open_home()
     except Exception:
-        xbmc.log('[Nuvio] Interface failed. See component installation and provider configuration.', xbmc.LOGERROR)
+        import traceback
+        # The cause belongs in kodi.log (6.0.37): the message alone hid it.
+        xbmc.log('[Nuvio] Interface failed: ' + traceback.format_exc(), xbmc.LOGERROR)
         xbmcgui.Dialog().ok('Nuvio', 'Could not open the interface. Open Nuvio Hub settings to repair the bundled components or check your provider configuration.')
     finally:
         if session:session.close()

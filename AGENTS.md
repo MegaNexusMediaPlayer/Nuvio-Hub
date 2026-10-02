@@ -3,7 +3,7 @@
 This is a four-component Kodi build: `plugin.video.nuviohub` (backend/service),
 `script.nuvio` (Python/XML frontend), `skin.nuvio` (Kodi shell), and
 `screensaver.nuvio` (screensaver entrypoint). The 6.0.27 release is the
-baseline for this 6.0.36 release. Do not publish, push, or change live user
+baseline for this 6.0.37 candidate. Do not publish, push, or change live user
 profiles as a side effect of reviewing code.
 
 ## Required repository skills
@@ -15,7 +15,7 @@ claims that a runtime plugin or global agent skill has been installed.
 
 ## Before modifying code
 
-Read the relevant call sites, tests, and `docs/RELEASE-6.0.36.md` (and 6.0.35 back to 6.0.10). Identify which
+Read the relevant call sites, tests, and `docs/RELEASE-6.0.37.md` (and 6.0.36 back to 6.0.10). Identify which
 Kodi process/interpreter owns the work. Keep existing public add-on IDs,
 profile paths, encrypted credentials and migration aliases. Never mass-rename
 legacy state keys or remove upstream license notices. Since 6.0.24 the
@@ -45,6 +45,11 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
   (`manifest_refresh.py`); a Nuvio import always reads the current manifest.
 * OFF providers stay OFF. Respect per-resource `types` and `idPrefixes`,
   configuration/profile cache boundaries and a bounded request budget.
+* Never change a Kodi window class after creation (no class-level setattr,
+  no __init_subclass__ wrapping): Kodi 22 RC1's SWIG 4.5 bindings make those
+  attributes read-only. Wrap callbacks per instance (`nuvio_ui/dialog.py`).
+  Touch gestures (IDs 501-599) are handled in Dialog; remote/mouse/keyboard
+  paths stay untouched.
 * Settings pages run any row that can open a Kodi dialog with the page hidden
   (Dialog.child); a dialog left behind a page looks like a frozen screen.
 * Kodi GUI callbacks do not perform HTTP, long SQLite scans, sleeps or joins.
@@ -135,10 +140,10 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
 ## Required checks (Python 3.9+ review environment)
 
 ```sh
-python review/check_636.py
-python review/check_608_rebrand_kodi22.py 6.0.36
-python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.36.zip
-python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.36.zip
+python review/check_637.py
+python review/check_608_rebrand_kodi22.py 6.0.37
+python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.37.zip
+python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.37.zip
 ```
 
 The first command runs the maintained unit suite, parses XML/JSON, and checks
