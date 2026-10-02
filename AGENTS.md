@@ -3,7 +3,7 @@
 This is a four-component Kodi build: `plugin.video.nuviohub` (backend/service),
 `script.nuvio` (Python/XML frontend), `skin.nuvio` (Kodi shell), and
 `screensaver.nuvio` (screensaver entrypoint). The 6.0.27 release is the
-baseline for this 6.0.35 candidate (not released). Do not publish, push, or change live user
+baseline for this 6.0.35 release. Do not publish, push, or change live user
 profiles as a side effect of reviewing code.
 
 ## Required repository skills

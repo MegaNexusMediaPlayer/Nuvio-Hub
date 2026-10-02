@@ -293,10 +293,14 @@ class SportsWindow(Dialog):
             self.changed = now
             event = self._event(selection)
             self._describe(selection)
-            if not event.get('live'):
-                self.setProperty('nuvio.sport.streams_status', 'Not live yet. Streams appear when the event starts.')
-            elif (selection, event['id']) != self.stream_key:
-                self.setProperty('nuvio.sport.streams_status', 'Live · streams load in a moment…')
+            # The box shows only the streams of the event under the cursor:
+            # another event's stream names stayed and overlapped the status.
+            if (selection, event['id']) == self.stream_key:
+                self._show_streams(self.streams, '' if self.streams else 'Loading streams…')
+            elif not event.get('live'):
+                self._show_streams([], 'Not live yet. Streams appear when the event starts.')
+            else:
+                self._show_streams([], 'Live · streams load in a moment…')
         if self.selection is not None and self.getFocusId() != STREAM_LIST and self.getProperty('nuvio.sport.full') != '1':
             event = self._event(self.selection)
             key = (self.selection, event['id'])

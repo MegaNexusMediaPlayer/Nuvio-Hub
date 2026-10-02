@@ -1,6 +1,6 @@
 # Nuvio Hub 6.0.35 — GitHub issues #3–#9, Library, Sports, Title options
 
-Prepared 2 October 2026 from 6.0.34 (test build, not released).
+Released 2 October 2026 (after four test builds).
 
 ## GitHub issues
 
@@ -93,6 +93,8 @@ Prepared 2 October 2026 from 6.0.34 (test build, not released).
 * Library: Trakt's watchlist now uses IMDb IDs first, like Simkl - the same
   title on both services is one card with two badges, and Trakt titles get
   posters.
+* Sport: moving to another event clears the stream names in the box (they
+  overlapped the status text); back on the playing event its streams return.
 * Glass card boxes have smooth corners: they were the card mask shrunk by a
   4 px erosion, which left stepped corners (visible on landscape cards whose
   art does not cover the box). Card shapes drawn at other sizes (landscape
@@ -118,7 +120,7 @@ Prepared 2 October 2026 from 6.0.34 (test build, not released).
 * Nuvio collections named **World** are imported again (only Sports stays out
   of the MegaNexus Home).
 
-Checks: `test_nuvio_635.py` (49 tests) plus updated 601, 602, 605, 612, 615,
+Checks: `test_nuvio_635.py` (50 tests) plus updated 601, 602, 605, 612, 615,
 618, 628, 631, home_iptv and reliability expectations. `python
 review/check_635.py`, release guard, builder, packaged smoke test. The Sports
 backend was also run against https://sports.highfly.dev/manifest.json

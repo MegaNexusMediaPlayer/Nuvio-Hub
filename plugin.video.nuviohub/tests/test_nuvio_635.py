@@ -382,6 +382,29 @@ class SportsFullScreen(unittest.TestCase):
         self.assertEqual((props['nuvio.sport.channels'], props['nuvio.sport.full']), ('', ''))
         self.assertEqual(focus[-1], 108)   # the HUB button is the way out
 
+    def test_moving_to_another_event_clears_the_stream_names(self):
+        ui, win, props, focus = self.window()
+        live = {'id': 'a', 'title': 'Live A', 'live': True, 'info': 'LIVE'}
+        later = {'id': 'b', 'title': 'Later', 'live': False}
+        win.rows = [('Football', None, None, [live, later])]
+        win.streams = [{'label': 'S1', 'detail': ''}]
+        win.stream_key = ((0, 0), 'a')
+        win.playing_index = 0
+        win.selection = (0, 0)
+        win.changed = 0
+        win.results = ui.queue.Queue()
+        win.player = SimpleNamespace(token='')
+        shown = []
+        win._show_streams = lambda rows, status='': shown.append((len(rows), status))
+        win._describe = lambda selection: None
+        win._selected = lambda: (0, 1)
+        win.getFocusId = lambda: ui.STREAM_LIST   # no new stream request in this tick
+        win.tick()
+        self.assertEqual(shown[-1], (0, 'Not live yet. Streams appear when the event starts.'))
+        win._selected = lambda: (0, 0)
+        win.tick()
+        self.assertEqual(shown[-1], (1, ''))      # back on the playing event: its streams again
+
     def test_hold_ok_and_big_player_use_kodis_player(self):
         ui, win, props, focus = self.window()
         self.assertEqual(ui.player_mode(), 'small')
