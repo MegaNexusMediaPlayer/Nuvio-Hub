@@ -325,5 +325,25 @@ class LocalStorage(unittest.TestCase):
         play.assert_called_once_with('movie', 7, True)
 
 
+class PhoneSetupPort(unittest.TestCase):
+    def test_fixed_port_with_fallback(self):
+        # ufw default-deny dropped the phone on a random port; one fixed port can be allowed.
+        phone = importlib.import_module('resources.lib.phone_setup')
+        with mock.patch.object(phone, 'PORT', 0):
+            first = phone.SetupService(host='127.0.0.1')
+        try:
+            with mock.patch.object(phone, 'PORT', first.port):
+                second = phone.SetupService(host='127.0.0.1')   # busy -> any free port
+            try:
+                self.assertNotEqual(second.port, first.port)
+            finally:
+                second.server.server_close()
+        finally:
+            first.server.server_close()
+        self.assertEqual(phone.PORT, 8765)
+        tv = open(kodi_stub.ADDON_ROOT + '/../script.nuvio/nuvio_ui/phone_setup.py', encoding='utf-8').read()
+        self.assertIn('allow TCP port', tv)
+
+
 if __name__ == '__main__':
     unittest.main()

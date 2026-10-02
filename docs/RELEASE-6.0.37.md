@@ -56,5 +56,11 @@ Prepared 2 October 2026 (test build, not released).
   go to stream add-ons. Read through Kodi JSON-RPC (VideoLibrary.*), no
   network.
 
+* **Set up on phone behind a firewall:** the phone page used a random port,
+  so a device firewall with default-deny (ufw on a Linux PC) dropped the phone
+  every time. It now uses port **8765** (any free port only when 8765 is
+  busy), which can be allowed once, e.g. `sudo ufw allow from 192.168.0.0/16
+  to any port 8765 proto tcp`. After 30 s without the phone the TV says so.
+
 Checks: `test_nuvio_637.py`; `python review/check_637.py`, release guard,
 builder, packaged smoke test.

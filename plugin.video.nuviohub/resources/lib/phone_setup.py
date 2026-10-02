@@ -27,6 +27,10 @@ import xbmcaddon
 ADDON_ID = 'plugin.video.nuviohub'
 IDLE_TIMEOUT = 15 * 60          # seconds without a phone request
 MAX_BODY = 64 * 1024
+# 6.0.37: one fixed port, so a firewall on the device (Linux PCs with ufw
+# default-deny, for example) can allow it once; a random port was blocked on
+# every attempt. Falls back to any free port when something else uses it.
+PORT = 8765
 PAGE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'phone_setup', 'index.html')
 DISPLAY_KEYS = {
     # page field: (setting id, kind)
@@ -356,7 +360,7 @@ def save(payload):
 class SetupService:
     """Local HTTP service. ``events`` are read by the TV window."""
 
-    def __init__(self, host=None, port=0):
+    def __init__(self, host=None, port=None):
         self.key = secrets.token_urlsafe(18)
         self.host = host or lan_ip()
         self.lock = threading.Lock()
@@ -442,7 +446,12 @@ class SetupService:
                 if done and parts.path == '/api/save':
                     service.finish()
 
-        self.server = ThreadingHTTPServer((self.host, port), Handler)
+        try:
+            self.server = ThreadingHTTPServer((self.host, PORT if port is None else port), Handler)
+        except OSError:
+            if port is not None:
+                raise
+            self.server = ThreadingHTTPServer((self.host, 0), Handler)   # fixed port busy
         self.server.daemon_threads = True
         self.port = self.server.server_address[1]
         self.thread = threading.Thread(target=self.server.serve_forever, name='MegaNexusPhoneSetup', daemon=True)
