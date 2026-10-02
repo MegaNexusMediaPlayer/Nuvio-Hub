@@ -595,7 +595,7 @@ class HomeWindow(Dialog):
         previous_xml=home_xml();previous_theme=theme_folder()
         self._suspended=True
         if self._previews:self._previews.pause()
-        try:command=self.child(run)
+        try:command=self.over(run)   # 6.0.35: Home stays visible behind the glass settings
         finally:
             self._suspended=False
             from .browse_meta import clear

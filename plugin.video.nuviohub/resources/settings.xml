@@ -184,6 +184,7 @@
     <setting id="nuvio_update_checked" type="text" default="0" visible="false" />
     <setting id="nuvio_restart_pending" type="text" default="" visible="false" />
     <setting id="nuvio_animated_art" type="text" default="false" visible="false" />
+    <setting id="nuvio_sport_player" type="text" default="small" visible="false" />
     <setting id="nuvio_sport_autoplay" type="bool" default="true" visible="false" />
     <setting id="nuvio_refresh_restore" type="text" default="" visible="false" />
     <setting id="nuvio_home_layout" type="text" default="" visible="false" />

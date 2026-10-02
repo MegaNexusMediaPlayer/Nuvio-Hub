@@ -195,6 +195,17 @@ class Library(unittest.TestCase):
         xml = (SKINS / 'Default/1080i/nuvio_library.xml').read_text(encoding='utf-8')
         self.assertIn('ListItem.Property(badge.1)', xml)
 
+    def test_trakt_watchlist_uses_imdb_ids_like_simkl(self):
+        # Same title on Trakt and Simkl = one card; IMDb IDs also give posters.
+        trakt = importlib.import_module('resources.lib.trakt')
+        movie = {'movie': {'title': 'M', 'year': 2020, 'ids': {'tmdb': 77, 'imdb': 'tt0077', 'trakt': 5}}, 'listed_at': '2026-09-01T10:00:00.000Z'}
+        only_tmdb = {'show': {'title': 'S', 'year': 2021, 'ids': {'tmdb': 88}}, 'listed_at': '2026-09-02T10:00:00.000Z'}
+        with mock.patch.object(trakt, 'enabled', return_value=True), mock.patch.object(trakt, '_ensure_auth'), \
+                mock.patch.object(trakt, '_request', side_effect=lambda path, **k: [movie] if 'movies' in path else [only_tmdb]), \
+                mock.patch.object(trakt, '_art_bundle_for_ids', return_value={'poster': '', 'fanart': '', 'clearlogo': ''}):
+            rows = trakt.fetch_watchlist()
+        self.assertEqual([r['canonical_id'] for r in rows], ['tt0077', 'tmdb:88'])
+
     def test_mirror_lists_every_service_of_a_title(self):
         favorites = importlib.import_module('resources.lib.favorites_store')
         trakt = importlib.import_module('resources.lib.trakt')
@@ -320,6 +331,19 @@ class SportsPlayback(unittest.TestCase):
 
 
 class SportsFullScreen(unittest.TestCase):
+    def window(self, full=False, channels=False):
+        ui = importlib.import_module('nuvio_ui.sports')
+        props = {'nuvio.sport.full': '1' if full else '', 'nuvio.sport.channels': '1' if channels else ''}
+        focus = []
+        win = ui.SportsWindow.__new__(ui.SportsWindow)
+        win.getProperty = lambda k: props.get(k, '')
+        win.setProperty = props.__setitem__
+        win.setFocusId = focus.append
+        win.getFocusId = lambda: 1003
+        win.close = mock.Mock()
+        win._child_active = win._dialog_closed = win._dispatching = False
+        return ui, win, props, focus
+
     def test_same_player_enlarged_in_the_window(self):
         root = ET.parse(SKINS / 'Default/1080i/nuvio_sports.xml').getroot()
         full = next(c for c in root.iter('control') if c.get('id') == '950')
@@ -327,24 +351,83 @@ class SportsFullScreen(unittest.TestCase):
         videos = [c for c in root.iter('control') if c.get('type') == 'videowindow']
         self.assertEqual([(v.findtext('width'), v.findtext('height')) for v in videos], [('1280', '610'), ('1920', '1080')])
         self.assertIn('!String.IsEqual(Window.Property(nuvio.sport.full),1)', videos[0].findtext('visible'))
+        xml = (SKINS / 'Default/1080i/nuvio_sports.xml').read_text(encoding='utf-8')
+        self.assertNotIn('small video</label>', xml, 'no OK / Back notice on the big player')
+        self.assertIn('<control type="list" id="960">', xml)
         source = (ROOT / 'script.nuvio/nuvio_ui/sports.py').read_text(encoding='utf-8')
-        self.assertNotIn('ActivateWindow(fullscreenvideo)', source)
+        self.assertEqual(source.count("ActivateWindow(fullscreenvideo)"), 1, "Kodi's player only from _native")
 
-    def test_ok_and_back_return_to_the_small_video(self):
-        ui = importlib.import_module('nuvio_ui.sports')
-        props, focus = {}, []
-        win = ui.SportsWindow.__new__(ui.SportsWindow)
-        win.getProperty = lambda k: props.get(k, '')
-        win.setProperty = props.__setitem__
-        win.setFocusId = focus.append
-        win.getFocusId = lambda: 1003
-        win._fullscreen()
-        self.assertEqual((props['nuvio.sport.full'], focus[-1]), ('1', ui.FULL_BUTTON))
-        win.close = mock.Mock()
-        ui.SportsWindow.onAction.__wrapped__(win, SimpleNamespace(getId=lambda: 92)) if hasattr(ui.SportsWindow.onAction, '__wrapped__') else win._small()
-        self.assertEqual(props['nuvio.sport.full'], '')
-        self.assertEqual(focus[-1], 1003)
+    def test_ok_on_the_enlarged_video_opens_live_channels(self):
+        ui, win, props, focus = self.window(full=True)
+        live = {'id': 'a', 'title': 'Live A', 'live': True}
+        later = {'id': 'b', 'title': 'Later', 'live': False}
+        win.rows = [('Football', None, None, [live, later]), ('Today', None, None, [dict(live)])]
+        win.selection = (0, 0)
+        control = mock.Mock()
+        win.getControl = lambda cid: control
+        with mock.patch.object(ui.xbmcgui, 'ListItem', mock.Mock()):
+            win._show_channels()
+        self.assertEqual([c[1]['title'] for c in win.channels], ['Live A'])   # live only, no duplicates
+        self.assertEqual((props['nuvio.sport.channels'], focus[-1]), ('1', ui.CHANNEL_LIST))
+
+    def test_back_never_leaves_sports(self):
+        ui, win, props, focus = self.window(full=True, channels=True)
+        back = SimpleNamespace(getId=lambda: 92)
+        original = ui.SportsWindow.__dict__['onAction']
+        handler = getattr(original, '__wrapped__', None)
+        # The Dialog wrapper runs Back at once; call the window's own handler.
+        for _ in range(3):
+            ui.SportsWindow.onAction(win, back) if handler is None else handler(win, back)
         win.close.assert_not_called()
+        self.assertEqual((props['nuvio.sport.channels'], props['nuvio.sport.full']), ('', ''))
+        self.assertEqual(focus[-1], 108)   # the HUB button is the way out
+
+    def test_hold_ok_and_big_player_use_kodis_player(self):
+        ui, win, props, focus = self.window()
+        self.assertEqual(ui.player_mode(), 'small')
+        with mock.patch.object(ui, 'cached_addon', return_value=Settings(nuvio_sport_player='big')):
+            self.assertEqual(ui.player_mode(), 'big')
+        source = (ROOT / 'script.nuvio/nuvio_ui/sports.py').read_text(encoding='utf-8')
+        self.assertIn("'native' if player_mode() == 'big' else ''", source)
+        self.assertIn('if aid in CONTEXT:', source)
+
+    def test_a_dropped_stream_reconnects(self):
+        ui, win, props, focus = self.window()
+        win.playing_index, win.attempts, win.reconnect_at, win.use_ia, win.started_at = 0, 0, 0.0, True, 5.0
+        win.player = SimpleNamespace(failed=False, token='t')
+        win.after_ready = ''
+        with mock.patch.object(win, '_play', create=True) as play:
+            win._reconnect(100.0)
+            self.assertEqual(props['nuvio.sport.video_status'], 'Reconnecting…')
+            play.assert_not_called()
+            win._reconnect(100.0 + ui.RECONNECT_DELAYS[0])
+        play.assert_called_once()
+        self.assertTrue(play.call_args.kwargs['reconnect'])
+        win.attempts = len(ui.RECONNECT_DELAYS)
+        win._reconnect(500.0)
+        self.assertIn('stopped', props['nuvio.sport.video_status'])
+
+    def test_live_hls_uses_inputstream_adaptive_when_installed(self):
+        ui = importlib.import_module('nuvio_ui.sports')
+        item = mock.Mock()
+        with mock.patch.object(ui.xbmc, 'getCondVisibility', return_value=True), \
+                mock.patch.object(ui.xbmc, 'getInfoLabel', return_value='21.2 (21.2.0) Git'):
+            url = ui._hls_item(item, 'https://h/live.m3u8|Referer=x')
+        self.assertEqual(url, 'https://h/live.m3u8')
+        item.setProperty.assert_any_call('inputstream', 'inputstream.adaptive')
+        item.setProperty.assert_any_call('inputstream.adaptive.stream_headers', 'Referer=x')
+
+
+class GlassSettings(unittest.TestCase):
+    def test_hub_settings_are_translucent_over_the_screen_behind(self):
+        for folder in ('Default', 'Dark', 'Dim'):
+            root = ET.parse(SKINS / folder / '1080i/nuvio_settings.xml').getroot()
+            textures = [c.find('texture') for c in root.iter('control') if c.findtext('texture')]
+            self.assertFalse(any('white.png' in (tex.text or '') for tex in textures), folder)  # no full-screen backdrop
+            alphas = {tex.get('colordiffuse', '')[:2] for tex in textures if 'nuvio_pill.png' in (tex.text or '') and tex.get('border') == '18'}
+            self.assertEqual(alphas, {'C4', '1A'}, folder)
+        dialog = (ROOT / 'script.nuvio/nuvio_ui/dialog.py').read_text(encoding='utf-8')
+        self.assertIn('def over(self, fn', dialog)
 
 
 class PhoneCopy(unittest.TestCase):

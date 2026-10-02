@@ -144,9 +144,10 @@ class NavigationAndPVR(Fixture):
         win=home.HomeWindow();win._touch=mock.Mock();win._finish=mock.Mock()
         win.onClick(108);win.drain_events();self.assertEqual(win._pending,'hub');win._finish.assert_called_once()
     def test_home_settings_back_does_not_request_kodi_home(self):
-        win=home.HomeWindow();win.child=mock.Mock(return_value=None);win._paint=mock.Mock();win.setProperty=mock.Mock()
+        # 6.0.35: HUB Settings float over a visible Home (translucent), so over() not child().
+        win=home.HomeWindow();win.over=mock.Mock(return_value=None);win._paint=mock.Mock();win.setProperty=mock.Mock()
         with mock.patch('nuvio_ui.setup_gate.ready',return_value=True),mock.patch.object(home,'home_xml',return_value='same.xml'),mock.patch.object(home.home_data,'initial_shelves',return_value=[]):win._settings()
-        win.child.assert_called_once_with(settings.run)
+        win.over.assert_called_once_with(settings.run)
     def test_hub_nav_order_in_both_home_layouts(self):
         for file in ('nuvio_home.xml','nuvio_home_compact.xml'):
             root=ET.parse(ROOT/'script.nuvio/resources/skins/Default/1080i'/file).getroot()

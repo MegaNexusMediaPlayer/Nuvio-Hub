@@ -614,7 +614,11 @@ def fetch_watchlist(limit=100):
                 ids = node.get('ids') or {}
                 title = node.get('title') or ''
                 year = int(node.get('year') or 0)
-                canonical = _canonical_from_ids(ids, title)
+                # 6.0.35: IMDb first, like Simkl and the Stremio add-ons - with
+                # TMDb first the same title got two Library cards (Trakt +
+                # Simkl) and no poster (posters are found by IMDb ID).
+                imdb = str(ids.get('imdb') or '').strip()
+                canonical = (imdb if imdb.startswith('tt') else 'tt' + imdb) if imdb else _canonical_from_ids(ids, title)
                 art = _art_bundle_for_ids(ids, media_type, title=title) if (_setting('trakt_fetch_art', 'true') == 'true') else {'poster':'', 'fanart':'', 'clearlogo':''}
                 out.append({
                     'media_type': media_type,

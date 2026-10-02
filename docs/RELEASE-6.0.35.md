@@ -76,6 +76,23 @@ Prepared 2 October 2026 from 6.0.34 (test build, not released).
   short zoom (Kodi's full-screen window opened *under* the Sport dialog, so
   nothing seemed to happen). No new playback and no display mode switch; OK
   or Back returns to the small video.
+* Sport, third test build: no OK / Back notice on the enlarged video; OK there
+  opens a translucent **Live channels** panel on the left to switch channel
+  (Back closes it, Back again returns to the small video). **Hold OK** opens
+  Kodi's own full-screen player for the same stream (the Sport screen steps
+  aside and comes back when the player is left). HUB Settings > **Sport** >
+  Player: *Small player* (default, as above) or *Big player* (Kodi's
+  full-screen player opens by itself after 5 seconds on a live event). A
+  stream that cuts out while buffering **reconnects** (up to 6 tries with
+  growing pauses, "Reconnecting…") instead of stopping with an error; live
+  HLS plays through inputstream.adaptive when it is installed (it rides out
+  stalls; a stream that fails with it is retried without). **Back / Esc never
+  leave Sports** - only the HUB button does.
+* **HUB Settings are translucent glass** like Title options and float over the
+  screen they were opened from (Home, Sport or the HUB stay visible).
+* Library: Trakt's watchlist now uses IMDb IDs first, like Simkl - the same
+  title on both services is one card with two badges, and Trakt titles get
+  posters.
 * Every sports add-on gets its metadata and stream switches ON (each serves
   its own metadata).
 * Catalog rows: Movies and Series are two rows, one under the other.
@@ -95,7 +112,7 @@ Prepared 2 October 2026 from 6.0.34 (test build, not released).
 * Nuvio collections named **World** are imported again (only Sports stays out
   of the MegaNexus Home).
 
-Checks: `test_nuvio_635.py` (41 tests) plus updated 601, 602, 605, 612, 615,
+Checks: `test_nuvio_635.py` (47 tests) plus updated 601, 602, 605, 612, 615,
 618, 628, 631, home_iptv and reliability expectations. `python
 review/check_635.py`, release guard, builder, packaged smoke test. The Sports
 backend was also run against https://sports.highfly.dev/manifest.json

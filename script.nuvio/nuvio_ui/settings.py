@@ -288,8 +288,7 @@ def playback():
     dialog=xbmcgui.Dialog()
     def rows():return [page.item('Autoplay first provider result',enabled=ADDON.getSetting('nuvio_autoplay')=='true'),
         page.item('Intro / credits',ADDON.getSetting('nuvio_skip_mode') or 'Button'),
-        page.item('TheIntroDB API key (optional)','Configured' if ADDON.getSetting('nuvio_introdb_key') else 'Not set'),
-        page.item('Sport · play the selected event in the small video',enabled=ADDON.getSetting('nuvio_sport_autoplay')!='false'),page.item('Back')]
+        page.item('TheIntroDB API key (optional)','Configured' if ADDON.getSetting('nuvio_introdb_key') else 'Not set'),page.item('Back')]
     def choose(pick):
         if pick==0:toggle('nuvio_autoplay')
         elif pick==1:
@@ -299,9 +298,25 @@ def playback():
         elif pick==2:
             key=dialog.input('TheIntroDB API key',option=xbmcgui.ALPHANUM_HIDE_INPUT)
             if key:ADDON.setSetting('nuvio_introdb_key',key.strip())
-        elif pick==3:ADDON.setSetting('nuvio_sport_autoplay','false' if ADDON.getSetting('nuvio_sport_autoplay')!='false' else 'true')
-        elif pick==4:return page.DONE
+        elif pick==3:return page.DONE
     return page.show('Playback · Kodi controls',rows,choose)
+
+
+def sport_settings():
+    """Sport screen (6.0.35): which player live events use."""
+    from . import sports
+    def rows():return [page.item('Player',sports.PLAYER_LABELS[sports.player_mode()]),
+        page.item('Play live events after resting 5 seconds',enabled=sports.autoplay_enabled()),
+        page.item('Back')]
+    def choose(pick):
+        if pick==0:
+            keys=['small','big'];current=sports.player_mode()
+            i=xbmcgui.Dialog().select('Sport player',[sports.PLAYER_LABELS[k] for k in keys],preselect=keys.index(current))
+            if i>=0:ADDON.setSetting(sports.PLAYER_SETTING,keys[i])
+        elif pick==1:ADDON.setSetting(sports.AUTOPLAY_SETTING,'false' if sports.autoplay_enabled() else 'true')
+        elif pick==2:return page.DONE
+        settings_cache.invalidate()
+    return page.show('Sport',rows,choose)
 
 
 def trailers():
@@ -616,7 +631,7 @@ def run(back_command=''):
         from .iptv import configure
         configure()
     actions=[('Set up on phone · QR code',phone_setup),('Accounts & tracking services',tracking_accounts),('Continue Watching',continue_watching),('Add-ons',addons),('Collections',collections),
-        ('IPTV',iptv_settings),('Playback',playback),('Subtitles',subtitle_settings),('Trailers',trailers),
+        ('IPTV',iptv_settings),('Sport',sport_settings),('Playback',playback),('Subtitles',subtitle_settings),('Trailers',trailers),
         ('Home & appearance',appearance),('Performance & image cache',performance),('Maintenance & updates',maintenance),
         ('Support MegaNexus · Ko-fi',support)]
     def rows():return [page.item(label) for label,_ in actions]+[page.item('Done')]

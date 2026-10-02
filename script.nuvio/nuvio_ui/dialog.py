@@ -71,6 +71,15 @@ class Dialog(xbmcgui.WindowXMLDialog):
                 self.show_ready()
             self._child_active = False
 
+    def over(self, fn, *args, **kwargs):
+        """Run a window on top of this one while it stays visible (translucent
+        HUB Settings, 6.0.35). Its own input is paused meanwhile."""
+        self._child_active = True
+        try:
+            return fn(*args, **kwargs)
+        finally:
+            self._child_active = False
+
     def restore_focus(self):
         focus, self._restore_focus = self._restore_focus, None
         if focus is not None:
