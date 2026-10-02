@@ -1,4 +1,4 @@
-# Nuvio Hub 6.0.37 — Kodi 22 RC1, touch screens
+# Nuvio Hub 6.0.37 — Kodi 22 RC1, touch screens, Trakt/TMDB collections, security notice
 
 Prepared 2 October 2026 (test build, not released).
 
@@ -20,6 +20,28 @@ Prepared 2 October 2026 (test build, not released).
   not repaint rows or start previews (a row reset mid-drag felt like the
   posters got stuck). Only Kodi's touch gesture actions are used: remote,
   mouse and keyboard behave exactly as before, and nothing changes in size.
+
+* **Trakt lists in collections**, like the Nuvio apps. A collection source
+  `{"provider": "trakt", "traktListId": ..., "mediaType": "MOVIE"|"TV",
+  "sortBy", "sortHow"}` from a Nuvio export becomes a row loaded like an
+  add-on catalog (same cache, paged by 50). Public lists need no sign-in;
+  with Trakt connected the request is signed, so private lists work too.
+* **TMDB sources in collections** with the user's own TMDb API key (v3 key
+  or v4 token): LIST, COLLECTION, COMPANY, NETWORK, PERSON, DIRECTOR and
+  DISCOVER with Nuvio's filters and sort. Without a key the row says
+  "Add your TMDb API key". The key is set in HUB Settings > Add-ons >
+  TMDb API key or on the phone setup page (Add-ons tab); the phone never
+  gets the key back, only whether one is set.
+* **Security notice:** all-in-one add-ons with background services
+  (Umbrella, Fen, Fen Light, POV, Seren, The Crew, Shadow, Otaku, Scrubs v2,
+  Asgard, Homelander, Coalition, Ezra, The Magic Dragon, Red Light, The
+  Chains), Open Wizard and - when MegaNexus' own Trakt is connected - the
+  Trakt add-on (every title logged twice) overload Kodi. When one of them is
+  enabled, MegaNexus shows a notice with a shield, the add-ons it found and
+  two choices: a clean Kodi install is recommended for best performance, or
+  **Turn them off** (one click, nothing deleted, reversible in Add-ons).
+  **Skip** is remembered until another such add-on appears. Maintenance >
+  System check shows it again at any time.
 
 Checks: `test_nuvio_637.py`; `python review/check_637.py`, release guard,
 builder, packaged smoke test.

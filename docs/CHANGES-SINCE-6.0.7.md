@@ -27,7 +27,7 @@ Summary of 6.0.8 – 6.0.37 (details in each `docs/RELEASE-6.0.x.md`).
 | Fixes | Several latent crashes (NameErrors), Continue Watching position after Details, settings dialogs no longer hidden behind pages, subtitle preferences saved. |
 | 6.0.35 | GitHub issues #3–#9: phone add-on choices kept, no TV mode switch for previews, Continue Watching Remove / Play from start / 90 % / 60 days, Sport screen for sports add-ons, Catalog rows Home layout; Title options over the screen, Library (Local / Tracking Services), Trakt in settings and on the phone, Skip on the loading screen. |
 | 6.0.36 | Collections connect to catalogs added later in an add-on's configuration (manifests re-read, Nuvio import reads the current one) and to other people's instances of an add-on (same catalog); Check for updates covers the interface, skin and screensaver, not only the backend, and offers the platform restart; the automatic component install waits up to 24 h and retries. |
-| Latest (6.0.37) | Works on Kodi 22 RC1 (window callbacks wrapped per instance; SWIG 4.5 classes are read-only); full traceback in kodi.log on failures; touch: vertical drags over poster rows move between rows, no repaint mid-drag. |
+| Latest (6.0.37) | Works on Kodi 22 RC1 (window callbacks wrapped per instance; SWIG 4.5 classes are read-only); full traceback in kodi.log on failures; touch: vertical drags over poster rows move between rows, no repaint mid-drag; Trakt list and TMDB (own API key) collection sources; security notice for add-ons that overload Kodi (clean install / turn off / skip). |
 
 Release naming for automatic updates: tag `v<version>`, assets
 `Nuvio-Hub-Complete-<version>.zip` and `Nuvio-Hub-Complete-<version>.zip.sha256`.
