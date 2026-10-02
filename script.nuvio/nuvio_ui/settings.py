@@ -363,17 +363,21 @@ def trailers():
 
 def performance():
     from resources.lib.art_cache import selected_mode
-    keys=['ram256','disk246','disk512','off']
-    labels=['RAM · 256 MiB','Internal disk images · 246 MiB','Internal disk images · 512 MiB','Images off · Kodi texture cache only']
+    from resources.lib import ram_profile
+    keys=['auto','ram96','ram160','ram256','disk246','disk512','off']
+    labels=['Automatic · %s for this device'%ram_profile.LABELS[ram_profile.for_device()],
+            'RAM · 96 MiB (1-2 GB devices)','RAM · 160 MiB','RAM · 256 MiB (4 GB+ devices)',
+            'Internal disk images · 246 MiB','Internal disk images · 512 MiB','Images off · Kodi texture cache only']
     def rows():
-        mode=selected_mode(ADDON)
+        selected_mode(ADDON)   # applies the one-time move to automatic
+        mode=ram_profile.chosen(ADDON)
         label=labels[keys.index(mode)] if mode in keys else labels[-1]
         return [page.item('Metadata image cache',label),
             page.item('Cache usage',xbmcgui.Window(10000).getProperty('nuvio.art_cache.usage') or 'Starting'),
             page.item('Clear Nuvio images and metadata cache'),page.item('Back')]
     def choose(pick):
         if pick==0:
-            mode=selected_mode(ADDON)
+            mode=ram_profile.chosen(ADDON)
             index=xbmcgui.Dialog().select('Cache limit · downloaded images',labels,preselect=keys.index(mode) if mode in keys else 0)
             if index>=0:
                 ADDON.setSetting('nuvio_art_cache',keys[index]);xbmc.executebuiltin('NotifyAll(nuvio,artcache.configure)')

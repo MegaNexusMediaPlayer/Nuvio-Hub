@@ -54,14 +54,16 @@ class PosterPreload(unittest.TestCase):
 class ImageRam(unittest.TestCase):
     def test_256_mib_is_the_default_and_older_ram_presets_move_up(self):
         self.assertEqual(art_cache.LIMITS['ram256'], 256 * 1024 * 1024)
+        from resources.lib import ram_profile
         for previous in ('', 'ram150', 'ram200'):
             settings = Settings(nuvio_art_cache=previous)
-            self.assertEqual(art_cache.selected_mode(settings), 'ram256')
+            with mock.patch.object(ram_profile, 'device_mb', return_value=8192):   # 6.0.39: 'auto' on a 4 GB+ device
+                self.assertEqual(art_cache.selected_mode(settings), 'ram256')
         for kept in ('disk246', 'disk512', 'off'):
             self.assertEqual(art_cache.selected_mode(Settings(nuvio_art_cache=kept)), kept)
         text = (ROOT / 'plugin.video.nuviohub/resources/settings.xml').read_text(encoding='utf-8')
-        self.assertIn('id="nuvio_art_cache" type="text" default="ram256"', text)
-        self.assertIn("'RAM · 256 MiB'", (ROOT / 'script.nuvio/nuvio_ui/settings.py').read_text(encoding='utf-8'))
+        self.assertIn('id="nuvio_art_cache" type="text" default="auto"', text)   # 6.0.39
+        self.assertIn("'RAM · 256 MiB (4 GB+ devices)'", (ROOT / 'script.nuvio/nuvio_ui/settings.py').read_text(encoding='utf-8'))
 
 
 class Trailers(unittest.TestCase):

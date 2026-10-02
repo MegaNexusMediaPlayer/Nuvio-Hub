@@ -106,10 +106,13 @@ def save_token(data):
 
 
 def clear_token():
-    try:
-        os.remove(TOKEN_PATH)
-    except FileNotFoundError:
-        pass
+    # 6.0.39: the account's watched marks and unsent watches go with it.
+    for path in (TOKEN_PATH, os.path.join(os.path.dirname(TOKEN_PATH), 'trakt_watched.json'),
+                 os.path.join(os.path.dirname(TOKEN_PATH), 'trakt_outbox.json')):
+        try:
+            os.remove(path)
+        except FileNotFoundError:
+            pass
 
 
 def authorized():
@@ -135,7 +138,11 @@ def _headers(auth=False):
     return headers
 
 
-def _request(path, payload=None, method='GET', auth=False, timeout=20):
+RATE_WAIT_MAX = 10      # s a 429 may hold one request before it gives up
+_REFRESH_LOCK = __import__('threading').Lock()
+
+
+def _send(path, payload, method, auth, timeout):
     url = API + path
     data = None
     if payload is not None:
@@ -146,7 +153,34 @@ def _request(path, payload=None, method='GET', auth=False, timeout=20):
         return json.loads(body) if body else {}
 
 
+def _retry_after(exc):
+    try:
+        return max(1.0, float((exc.headers or {}).get('Retry-After') or 1))
+    except (TypeError, ValueError, AttributeError):
+        return 1.0
+
+
+def _request(path, payload=None, method='GET', auth=False, timeout=20):
+    """One Trakt call (6.0.39): a 401 refreshes the sign-in once and retries;
+    a 429 waits as long as Trakt asks (up to RATE_WAIT_MAX) and retries once."""
+    try:
+        return _send(path, payload, method, auth, timeout)
+    except urllib.error.HTTPError as exc:
+        if exc.code == 401 and auth and token_data().get('refresh_token'):
+            _refresh_token_if_needed(force=True)
+        elif exc.code == 429 and _retry_after(exc) <= RATE_WAIT_MAX:
+            time.sleep(_retry_after(exc))
+        else:
+            raise
+    return _send(path, payload, method, auth, timeout)
+
+
 def _refresh_token_if_needed(force=False):
+    with _REFRESH_LOCK:   # one refresh at a time: Trakt revokes a used refresh token
+        return _refresh_locked(force)
+
+
+def _refresh_locked(force=False):
     data = token_data()
     if not data.get('refresh_token'):
         return data
@@ -162,7 +196,7 @@ def _refresh_token_if_needed(force=False):
         'grant_type': 'refresh_token',
     }
     try:
-        refreshed = _request('/oauth/token', payload=payload, method='POST', auth=False)
+        refreshed = _send('/oauth/token', payload, 'POST', False, 20)
     except Exception:
         refreshed = None
     if isinstance(refreshed, dict) and refreshed.get('access_token'):
@@ -248,11 +282,11 @@ def device_auth():
             # Kodi 20+ DialogProgress: update(percent, message).
             dlg.update(pct, tr(_build_pin_message(verify, user_code, remaining=remaining)))
             try:
-                token = _request('/oauth/device/token', payload={
+                token = _send('/oauth/device/token', {   # its own 400/429 polling rules
                     'code': device_code,
                     'client_id': client_id(),
                     'client_secret': client_secret(),
-                }, method='POST', auth=False)
+                }, 'POST', False, 20)
                 if isinstance(token, dict) and token.get('access_token'):
                     token['created_at'] = int(time.time())
                     save_token(token)
@@ -406,10 +440,73 @@ def scrobble(action, ctx, position_ms=0):
         ids = ((payload.get('movie') or payload.get('show') or {}).get('ids') or {})
         if not ids:
             return None
-        return _request('/scrobble/%s' % action, payload=payload, method='POST', auth=True)
+        try:
+            return _request('/scrobble/%s' % action, payload=payload, method='POST', auth=True)
+        except urllib.error.HTTPError as exc:
+            if exc.code == 409:   # already scrobbled
+                return None
+            if exc.code < 500 and exc.code != 429:
+                raise
+            if str(action).lower() == 'stop':
+                _queue_scrobble(payload)
+            raise
+        except (urllib.error.URLError, OSError):
+            if str(action).lower() == 'stop':
+                _queue_scrobble(payload)   # offline: the watch reaches Trakt later
+            raise
     except Exception as exc:
         xbmc.log('[NuvioHub] trakt scrobble failed: %s' % exc, xbmc.LOGWARNING)
         return None
+
+
+OUTBOX_PATH = os.path.join(profile_path(), 'trakt_outbox.json')
+OUTBOX_MAX = 50
+_OUTBOX_LOCK = __import__('threading').Lock()
+
+
+def _queue_scrobble(payload):
+    """A finished watch that could not reach Trakt (offline, Trakt down)."""
+    with _OUTBOX_LOCK:
+        rows = _read_json(OUTBOX_PATH, [])
+        rows = (rows if isinstance(rows, list) else [])[-(OUTBOX_MAX - 1):]
+        rows.append({'at': int(time.time()), 'payload': payload})
+        _write_json(OUTBOX_PATH, rows)
+
+
+def flush_outbox(limit=5):
+    """Send queued finished watches as history (with their real watch time).
+
+    /sync/history instead of a late /scrobble/stop: Trakt would otherwise log
+    them at the moment of sending."""
+    if not authorized():
+        return 0
+    with _OUTBOX_LOCK:
+        rows = _read_json(OUTBOX_PATH, [])
+        if not isinstance(rows, list) or not rows:
+            return 0
+        sent = 0
+        for row in list(rows[:limit]):
+            payload = row.get('payload') or {}
+            when = datetime.datetime.utcfromtimestamp(int(row.get('at') or time.time())).strftime('%Y-%m-%dT%H:%M:%S.000Z')
+            if payload.get('movie'):
+                body = {'movies': [dict(payload['movie'], watched_at=when)]}
+            elif payload.get('show') and payload.get('episode'):
+                body = {'shows': [dict(payload['show'], seasons=[{'number': payload['episode']['season'],
+                        'episodes': [{'number': payload['episode']['number'], 'watched_at': when}]}])]}
+            else:
+                body = None
+            if body:
+                try:
+                    _request('/sync/history', payload=body, method='POST', auth=True, timeout=10)
+                except urllib.error.HTTPError as exc:
+                    if exc.code >= 500 or exc.code in (401, 429):
+                        break   # keep it for the next round
+                except Exception:
+                    break
+            rows.remove(row)
+            sent += 1
+        _write_json(OUTBOX_PATH, rows)
+        return sent
 
 
 def _canonical_from_ids(ids, fallback_title=''):

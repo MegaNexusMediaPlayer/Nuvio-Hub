@@ -228,10 +228,11 @@ def instance():
 def page_ram():
     try:
         import xbmcaddon
-        mode = xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_art_cache') or 'ram256'
+        mode = xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_art_cache') or 'auto'
     except Exception:
         mode = ''
-    return PAGE_RAM.get(mode, RAM_LIMIT)
+    from . import ram_profile   # 6.0.39: by device memory
+    return ram_profile.pages(mode, RAM_LIMIT) if mode in ('', 'auto') or mode.startswith('ram') else RAM_LIMIT
 
 
 def key(*parts):

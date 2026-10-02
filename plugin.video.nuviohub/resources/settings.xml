@@ -193,7 +193,8 @@
     <setting id="nuvio_home_local" type="bool" default="false" visible="false" />
     <setting id="nuvio_cw_days" type="text" default="60" visible="false" />
     <setting id="nuvio_cw_unaired" type="bool" default="true" visible="false" />
-    <setting id="nuvio_art_cache" type="text" default="ram256" visible="false" />
+    <setting id="nuvio_art_cache" type="text" default="auto" visible="false" />
+    <setting id="nuvio_ram_auto_639" type="bool" default="false" visible="false" />
     <setting id="nuvio_card_shape" type="text" default="poster" visible="false" />
     <setting id="nuvio_animation_map" type="text" default="{}" visible="false" />
     <setting id="nuvio_iptv_instance" type="text" default="" visible="false" />

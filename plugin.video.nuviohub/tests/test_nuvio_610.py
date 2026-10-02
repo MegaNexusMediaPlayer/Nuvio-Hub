@@ -429,9 +429,11 @@ class CachePresetUpgradeTests(unittest.TestCase):
             def __init__(self, mode): self.mode = mode
             def getSetting(self, key): return self.mode
             def setSetting(self, key, value): self.mode = value
-        # 6.0.27: earlier RAM presets move to ram256 (~800 posters need ~90 MiB).
+        # 6.0.27: earlier RAM presets move to ram256 (~800 posters need ~90 MiB);
+        # 6.0.39: they move to 'auto', which is ram256 on a 4 GB+ device.
+        from resources.lib import ram_profile
         for previous, expected in (('ram150','ram256'), ('ram200','ram256'),
                                    ('disk246','disk246'), ('disk512','disk512'), ('off','off'), ('','ram256')):
-            with self.subTest(previous=previous):
+            with self.subTest(previous=previous), mock.patch.object(ram_profile, 'device_mb', return_value=8192):
                 settings=Settings(previous)
                 self.assertEqual(selected_mode(settings), expected)

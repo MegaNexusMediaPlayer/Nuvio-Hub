@@ -174,9 +174,11 @@ class SaverUsesTheLoop(unittest.TestCase):
 
 class CatalogRam(unittest.TestCase):
     def test_pages_get_96_mib_with_the_default_preset(self):
-        for mode, limit in (('ram256', 96), ('', 96), ('ram150', 40), ('disk512', 40)):
+        from resources.lib import ram_profile
+        # 6.0.39: '' = automatic; on a 4 GB+ device that is the 96 MiB preset.
+        for mode, limit in (('ram256', 96), ('', 96), ('ram150', 96), ('ram96', 32), ('disk512', 40)):
             addon = mock.Mock(getSetting=lambda key, m=mode: m)
-            with mock.patch('xbmcaddon.Addon', return_value=addon):
+            with mock.patch('xbmcaddon.Addon', return_value=addon), mock.patch.object(ram_profile, 'device_mb', return_value=8192):
                 self.assertEqual(browse_cache.page_ram(), limit * 1024 * 1024, mode)
 
     def test_details_do_not_enter_the_page_ram(self):

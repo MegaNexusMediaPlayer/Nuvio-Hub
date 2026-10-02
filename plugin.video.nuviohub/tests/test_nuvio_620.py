@@ -35,10 +35,13 @@ class Labels(unittest.TestCase):
         def show(title, rows, choose, **kwargs):
             captured['rows'] = rows();captured['choose'] = choose
         dialog = mock.Mock()
+        from resources.lib import ram_profile
         with mock.patch.object(settings.page, 'show', side_effect=show), \
+                mock.patch.object(ram_profile, 'device_mb', return_value=8192), \
                 mock.patch.object(settings.xbmcgui, 'Dialog', return_value=dialog):
             settings.performance()
-            self.assertEqual(captured['rows'][0]['value'], 'RAM · 256 MiB')  # 6.0.27 preset
+            # 6.0.39: automatic by device memory (a 4 GB+ device keeps the 6.0.27 preset)
+            self.assertEqual(captured['rows'][0]['value'], 'Automatic · RAM · 256 MiB for this device')
             captured['choose'](1)
         dialog.ok.assert_not_called()
         source = (ROOT / 'script.nuvio/nuvio_ui/settings.py').read_text(encoding='utf-8')

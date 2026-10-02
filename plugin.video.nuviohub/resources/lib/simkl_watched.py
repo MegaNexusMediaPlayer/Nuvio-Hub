@@ -33,6 +33,22 @@ def _remote_snapshot():
     return _MEM['data']
 
 _MERGED={}
+_TRAKT_MEM={}
+_NO_TRAKT={}   # shared and never mutated: keeps the merged view cached
+
+
+def _trakt_items():
+    """Trakt watched items, re-read only when trakt_watched.json changes."""
+    try:
+        # Deleted on Trakt sign-out, so its presence is the sign-in check (no token read per paint).
+        from .nuviohub.common import profile_path
+        path=os.path.join(profile_path(),'trakt_watched.json')
+        stamp=os.stat(path).st_mtime_ns
+    except Exception:return _NO_TRAKT
+    if _TRAKT_MEM.get('stamp')!=(path,stamp):
+        from . import trakt_watched
+        _TRAKT_MEM.update(stamp=(path,stamp),items=trakt_watched.snapshot().get('items') or {})
+    return _TRAKT_MEM['items']
 
 
 def snapshot():
@@ -46,14 +62,21 @@ def snapshot():
         from . import playback_store
         watched=playback_store.watched_snapshot()
     except Exception:watched=None
-    if _MERGED.get('remote') is remote and _MERGED.get('watched') is watched and 'data' in _MERGED:
+    trakt_items=_trakt_items()
+    if _MERGED.get('remote') is remote and _MERGED.get('watched') is watched and _MERGED.get('trakt') is trakt_items and 'data' in _MERGED:
         return _MERGED['data']
     local=copy.deepcopy(remote)
+    for identity,entry in trakt_items.items():   # 6.0.39: Trakt watched marks too
+        target=local.setdefault('items',{}).get(identity)
+        if target is None:local['items'][identity]=copy.deepcopy(entry);continue
+        target['watched']=bool(target.get('watched') or entry.get('watched'))
+        target['episodes']=sorted(set(target.get('episodes',[]))|set(entry.get('episodes',[])))
+        target['seasons']=sorted(set(target.get('seasons',[]))|set(entry.get('seasons',[])))
     for identity,entry in (watched or {}).items():
         target=local.setdefault('items',{}).setdefault(identity,{'watched':False,'seasons':[],'episodes':[]})
         target['watched']=bool(target.get('watched') or entry.get('watched'))
         target['episodes']=sorted(set(target.get('episodes',[]))|set(entry.get('episodes',[])))
-    _MERGED.clear();_MERGED.update(remote=remote,watched=watched,data=local)
+    _MERGED.clear();_MERGED.update(remote=remote,watched=watched,trakt=trakt_items,data=local)
     return local
 
 
@@ -93,22 +116,59 @@ def parse(data,kind):
         for mid in aliases(node.get('ids') or {}):result[key(media,mid)]=entry
     return result
 
+KINDS={'movies':'movies','shows':'tv_shows','anime':'anime'}   # all-items kind -> /sync/activities section
+GROUPS=(('movie|',('movies',)),('series|',('shows','anime')))   # kinds that share watched keys
+
+
+def _stamp(activities,section,field='all'):
+    return str(((activities or {}).get(section) or {}).get(field) or '')
+
+
+def _fetch(kind,since=''):
+    path='/sync/all-items/%s/?extended=full'%kind+('&date_from='+since if since else '')
+    data=simkl._request(path,auth=True,timeout=8)
+    if since and not data:return {}   # nothing changed since the last sync
+    if not isinstance(data,dict) or (not since and kind not in data):
+        raise ValueError('Simkl did not return a complete watched list.')
+    return parse(data,kind)
+
+
 def refresh(force=False, max_age=900):
-    old=snapshot();account=old.get('account')
-    if not account:return old
+    """Simkl watched lists, the way Simkl asks apps to sync (6.0.39).
+
+    /sync/activities first (one tiny request); a list is downloaded only when
+    its timestamp moved, and then only the titles changed since the last sync
+    (date_from). The first sync or a removal from a list reads that group in
+    full. Before 6.0.39 all three full lists were downloaded every two
+    minutes, even during playback."""
+    old=_remote_snapshot();account=old.get('account')   # Simkl only, without local plays
+    if not account:return snapshot()
     start=time.time()
-    if not force and start-float(old.get('updated') or 0)<max_age:return old
-    items={}
-    for kind in ('movies','shows','anime'):
-        data=simkl._request('/sync/all-items/%s/?extended=full'%kind,auth=True,timeout=8)
-        if not isinstance(data,dict) or kind not in data:raise ValueError('Simkl did not return a complete watched list.')
-        items.update(parse(data,kind))
+    if not force and start-float(old.get('updated') or 0)<max_age:return snapshot()
+    activities=simkl._request('/sync/activities',auth=True,timeout=8)
+    if not isinstance(activities,dict) or not activities.get('all'):
+        raise ValueError('Simkl did not return its activity times.')
+    previous=old.get('activities') or {}
+    items=dict(old.get('items') or {}) if previous else {}
+    changed=False
+    for prefix,kinds in GROUPS:
+        moved=[k for k in kinds if not previous or _stamp(activities,KINDS[k])!=_stamp(previous,KINDS[k])]
+        if not moved:continue
+        changed=True
+        full=not previous or any(_stamp(activities,KINDS[k],'removed_from_list')!=_stamp(previous,KINDS[k],'removed_from_list') for k in kinds)
+        if full:
+            fresh={}
+            for kind in kinds:fresh.update(_fetch(kind))
+            items={k:v for k,v in items.items() if not k.startswith(prefix)}
+            items.update(fresh)
+        else:
+            for kind in moved:items.update(_fetch(kind,_stamp(previous,KINDS[kind])))
     # A manual mark or account change during the fetch takes precedence.
-    latest=snapshot()
-    if _account()!=account or float(latest.get('updated') or 0)>start:return latest
-    result={'account':account,'updated':time.time(),'items':items}
+    latest=_remote_snapshot()
+    if _account()!=account or float(latest.get('updated') or 0)>start:return snapshot()
+    result={'account':account,'updated':time.time(),'items':items,'activities':activities}
     simkl._write_json(_path(),result)
-    _invalidate_view()
+    if changed:_invalidate_view()
     return result
 
 def mark(ctx,scope='title',season=None,episode=None):

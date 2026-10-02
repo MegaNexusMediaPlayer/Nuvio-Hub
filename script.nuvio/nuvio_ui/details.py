@@ -216,8 +216,13 @@ class Details(Dialog):
 
     def _mark_watched(self):
         from .playback import job
-        from .simkl_account import link
-        if not simkl.authorized() and not link():return
+        from resources.lib import trakt
+        # 6.0.39: Simkl and/or Trakt, whichever is connected (Trakt-only users too).
+        services=[name for name,on in (('Simkl',simkl.authorized()),('Trakt',trakt.authorized())) if on]
+        if not services:
+            from .simkl_account import link
+            if not link():return
+            services=['Simkl']
         m=self.meta;scope='title';season=episode=None
         if m.get('type')=='series':
             if self.seasons:self._episodes(self.getControl(501).getSelectedPosition())
@@ -228,17 +233,20 @@ class Details(Dialog):
             if self.episodes:
                 e=self.episodes[max(0,self.getControl(502).getSelectedPosition())]
                 choices.append('Episode S%s E%s - %s'%(e.get('season',1),e['episode'],e.get('title') or e.get('name') or 'Episode'))
-            pick=xbmcgui.Dialog().select('Mark watched on Simkl',choices)
+            pick=xbmcgui.Dialog().select('Mark watched on '+' and '.join(services),choices)
             if pick<0:return
             scope=('title','season','episode')[pick]
             if scope=='episode':season=e.get('season',1);episode=e['episode']
         from resources.lib.plugin import extract_ids
         ctx=dict(extract_ids(m),media_type=m.get('type') or 'movie',canonical_id=m.get('id') or '',title=m.get('name') or m.get('title') or '')
-        try:
-            if job(lambda:simkl_watched.mark(ctx,scope,season,episode),label='Saving watched status to Simkl'):
-                self._watch_badges()
-        except Exception as exc:
-            xbmcgui.Dialog().ok('Simkl',str(exc) if isinstance(exc,ValueError) else 'Could not save watched status. Please retry.')
+        from resources.lib import trakt_watched
+        marks={'Simkl':simkl_watched.mark,'Trakt':trakt_watched.mark}
+        failed=[]
+        for name in services:
+            try:job(lambda fn=marks[name]:fn(ctx,scope,season,episode),label='Saving watched status to '+name)
+            except Exception as exc:failed.append('%s: %s'%(name,str(exc) if isinstance(exc,ValueError) else 'could not save. Please retry.'))
+        self._watch_badges()
+        if failed:xbmcgui.Dialog().ok('Mark watched','[CR]'.join(failed))
 
     def _play(self,manual=False):
         if self._metadata_pending or self._metadata_error:

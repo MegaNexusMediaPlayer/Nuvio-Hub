@@ -16,7 +16,7 @@ import time
 
 # ram256 (6.0.27 default): ~800 posters take ~90 MiB, so a full Home of ~130
 # catalogs fits. ram200/ram150 are kept only so older settings still resolve.
-LIMITS = {'ram256':256*1024*1024, 'ram200':160*1024*1024, 'ram150':150*1024*1024, 'disk246':246*1024*1024, 'disk512':512*1024*1024}
+LIMITS = {'ram256':256*1024*1024, 'ram160':160*1024*1024, 'ram96':96*1024*1024, 'ram200':160*1024*1024, 'ram150':150*1024*1024, 'disk246':246*1024*1024, 'disk512':512*1024*1024}
 MAX_IMAGE = 8*1024*1024
 _BASE = ('',0)
 _SERVICE = None
@@ -209,13 +209,22 @@ class Handler(BaseHTTPRequestHandler):
             except Exception:pass
 
 
+AUTO_MIGRATED = 'nuvio_ram_auto_639'
+
+
 def selected_mode(addon):
-    """Upgrade earlier RAM presets to ram256, without changing disk/off preferences."""
-    mode = addon.getSetting('nuvio_art_cache') or 'ram256'
-    if mode in ('ram150', 'ram200'):
-        mode = 'ram256'
+    """The preset in use: 'auto' (6.0.39 default) resolves by device memory.
+
+    Earlier RAM presets (ram150/ram200 and the old ram256 default) move to
+    'auto' once; disk/off choices are kept."""
+    from . import ram_profile
+    mode = addon.getSetting('nuvio_art_cache') or ram_profile.AUTO
+    if mode in ('ram150', 'ram200') or (mode == 'ram256' and addon.getSetting(AUTO_MIGRATED) != 'true'):
+        mode = ram_profile.AUTO
         addon.setSetting('nuvio_art_cache', mode)
-    return mode
+    if addon.getSetting(AUTO_MIGRATED) != 'true':
+        addon.setSetting(AUTO_MIGRATED, 'true')
+    return ram_profile.effective(mode)
 
 
 class Service:

@@ -10,11 +10,20 @@ def retry_delay(error, failures):
     return min(3600, max(delay, min(900, 30 * (2 ** min(failures, 5)))))
 
 
+def playing_video():
+    try:
+        import xbmc
+        return bool(xbmc.Player().isPlayingVideo())
+    except Exception:
+        return False
+
+
 class Scheduler:
-    def __init__(self, window, clock=time.monotonic):
-        self.window, self.clock = window, clock
+    def __init__(self, window, clock=time.monotonic, playing=playing_video):
+        self.window, self.clock, self.playing = window, clock, playing
         self.next_nuvio = self.next_simkl = self.next_flush = 0.0
-        self.nuvio_failures = self.simkl_failures = 0
+        self.next_trakt = self.next_trakt_flush = 0.0
+        self.nuvio_failures = self.simkl_failures = self.trakt_failures = 0
         self.dirty_since = None
         self.last_request = ''
         self.account = ''
@@ -76,7 +85,10 @@ class Scheduler:
                 except Exception as error:
                     self.nuvio_failures += 1
                     self.next_nuvio = self.clock() + retry_delay(error, self.nuvio_failures-1)
-            if simkl.enabled() and simkl.authorized() and now >= self.next_simkl:
+            # 6.0.39: watched lists are not downloaded while a video plays
+            # (small boxes stuttered); they catch up right after.
+            busy = self.playing()
+            if not busy and simkl.enabled() and simkl.authorized() and now >= self.next_simkl:
                 try:
                     simkl.sync_playback_progress()
                     from . import simkl_watched
@@ -86,8 +98,33 @@ class Scheduler:
                 except Exception as error:
                     self.simkl_failures += 1
                     self.next_simkl = self.clock() + retry_delay(error, self.simkl_failures-1)
+            self._trakt(busy, interval)
         finally:
             cycle_lock.release()
+
+
+    def _trakt(self, busy, interval):
+        """Trakt: queued watches go out, watched marks come in (6.0.39)."""
+        from . import trakt
+        if not trakt.authorized():
+            return
+        now = self.clock()
+        if now >= self.next_trakt_flush:
+            try:
+                trakt.flush_outbox()
+            except Exception:
+                pass   # the outbox keeps them
+            self.next_trakt_flush = self.clock() + 60
+        if busy or now < self.next_trakt:
+            return
+        try:
+            from . import trakt_watched
+            trakt_watched.refresh(max_age=max(120, interval))
+            self.trakt_failures = 0
+            self.next_trakt = self.clock() + max(120, interval)
+        except Exception as error:
+            self.trakt_failures += 1
+            self.next_trakt = self.clock() + retry_delay(error, self.trakt_failures-1)
 
 
 def run(monitor, cycle_lock):

@@ -39,9 +39,10 @@ def seed(context,row=None):
 
 
 def _ram_limit():
-    try:mode=settings_cache.cached_addon().getSetting('nuvio_art_cache') or 'ram256'
+    try:mode=settings_cache.cached_addon().getSetting('nuvio_art_cache') or 'auto'
     except Exception:mode=''
-    return META_RAM.get(mode,META_RAM_SMALL)
+    from resources.lib import ram_profile   # 6.0.39: by device memory
+    return ram_profile.details(mode,META_RAM_SMALL) if mode in ('','auto') or mode.startswith('ram') else META_RAM_SMALL
 
 
 def _remember(key,meta):
