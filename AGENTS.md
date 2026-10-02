@@ -49,7 +49,31 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
   no __init_subclass__ wrapping): Kodi 22 RC1's SWIG 4.5 bindings make those
   attributes read-only. Wrap callbacks per instance (`nuvio_ui/dialog.py`).
   Touch gestures (IDs 501-599) are handled in Dialog; remote/mouse/keyboard
-  paths stay untouched.
+  paths stay untouched. Touch state lives in `_touch_state`/`_touch_fling`
+  (6.0.37 stored it as `_touch` and replaced HomeWindow._touch(): the next
+  click crashed the interface on Android). Never give Dialog state an
+  attribute name a window class uses. A failing deferred click/key is logged
+  and shown as a notification by `Dialog.drain_events`; it never closes
+  MegaNexus.
+* 6.0.39: Local storage, Plex and Jellyfin/Emby are beta and OFF by default
+  (`nuvio_home_local`, `nuvio_plex_enabled`, `nuvio_jellyfin_enabled`,
+  `nuvio_home_plex`, `nuvio_home_jellyfin`); nothing imports a server client
+  or makes a request before sign-in + switch (`resources/lib/media_servers.py`).
+  Own server copies are listed before add-on streams. Server posters come
+  from the server (resized there); MegaNexus metadata only opens the title
+  page of an identified title. Jellyfin 12 removed X-Emby-* headers,
+  `api_key` and `/emby` paths: Jellyfin servers use `Authorization:
+  MediaBrowser ... Token=`, `ApiKey` and root paths; Emby keeps its scheme
+  (flavor from /System/Info/Public, `emby_client.flavor_of`). Plex servers
+  come from clients.plex.tv/api/v2/resources (XML /api/resources fallback).
+* 6.0.39 sync: Simkl watched lists via /sync/activities + date_from (full
+  read only on first sync or a list removal), Trakt watched via
+  /sync/last_activities (`trakt_watched.py`, merged into the watched view);
+  no watched downloads while video plays; Trakt 401 = one refresh + retry,
+  429 = wait Retry-After (max 10 s); finished watches that could not reach
+  Trakt go to `trakt_outbox.json` and are sent as /sync/history with their
+  real time. RAM preset `auto` (default) picks budgets by device memory
+  (`ram_profile.py`); old ram256 defaults move to auto once.
 * Settings pages run any row that can open a Kodi dialog with the page hidden
   (Dialog.child); a dialog left behind a page looks like a frozen screen.
 * Kodi GUI callbacks do not perform HTTP, long SQLite scans, sleeps or joins.
@@ -140,7 +164,7 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
 ## Required checks (Python 3.9+ review environment)
 
 ```sh
-python review/check_637.py
+python review/check_639.py
 python review/check_608_rebrand_kodi22.py 6.0.39
 python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.39.zip
 python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.39.zip

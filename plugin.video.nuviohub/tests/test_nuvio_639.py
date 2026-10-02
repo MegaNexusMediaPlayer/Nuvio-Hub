@@ -361,6 +361,26 @@ class JellyfinTwelve(unittest.TestCase):
         self.assertIn(('POST', '/Users/AuthenticateWithQuickConnect', {'Secret': 'S'}), calls)
         save.assert_called_once()
 
+    def test_jellyfin_matches_by_id_index_not_by_ignored_filter(self):
+        # Checked on demo.jellyfin.org (12.1 and 13.0): AnyProviderIdEquals is
+        # ignored and the first library items came back as "matches".
+        self.emby._INDEX.clear()
+        nodes = {'Items': [{'Id': 'a', 'Type': 'Movie', 'ProviderIds': {'Imdb': 'tt1'}},
+                           {'Id': 'b', 'Type': 'Movie', 'ProviderIds': {'Imdb': 'tt2', 'Tmdb': '5'}},
+                           {'Id': 'c', 'Type': 'Series', 'ProviderIds': {'Imdb': 'tt3'}}]}
+        server = {'url': 'http://nas:8096', 'user_id': 'u', 'token': 'T', 'flavor': 'jellyfin'}
+        def metadata(srv, item_id):
+            node = next(n for n in nodes['Items'] if n['Id'] == item_id)
+            return {'rating_key': item_id, 'ids': self.emby._ids(node), 'title': item_id}
+        with mock.patch.object(self.emby, '_api', return_value=nodes) as api, \
+                mock.patch.object(self.emby, 'metadata', side_effect=metadata):
+            self.assertEqual([r['rating_key'] for r in self.emby.find_all_by_ids(server, {'tmdb_id': '5'})], ['b'])
+            self.assertEqual(self.emby.find_all_by_ids(server, {'imdb_id': 'tt9'}), [])
+            self.assertEqual([r['rating_key'] for r in self.emby.find_all_by_ids(server, {'imdb_id': 'tt3'}, 'series')], ['c'])
+        self.assertEqual(api.call_count, 1)   # the index is read once
+        self.assertEqual(api.call_args[0][2]['Fields'], 'ProviderIds')
+        self.emby._INDEX.clear()
+
     def test_reporter_follows_the_server(self):
         companion = importlib.import_module('resources.lib.companion')
         sent = []

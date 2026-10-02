@@ -798,7 +798,72 @@ def metadata(server, item_id):
     return item_from_node(data, server)
 
 
+INDEX_SECONDS = 15 * 60
+INDEX_MAX = 50000
+_INDEX = {}
+
+
+def _id_keys(ids):
+    keys = []
+    for name in ('imdb_id', 'tmdb_id', 'tvdb_id'):
+        value = str((ids or {}).get(name) or '').strip().lower()
+        if value:
+            keys.append('%s:%s' % (name[:4], value))
+    return keys
+
+
+def same_title(row, ids):
+    """True only when the item carries one of the wanted IDs."""
+    have = set(_id_keys(row.get('ids') or {}))
+    return bool(have & set(_id_keys(ids)))
+
+
+def id_index(server, force=False):
+    """{'Movie'|'Series': {'imdb:tt1': [item ids]}} for the whole server (6.0.39).
+
+    Jellyfin has no filter by provider ID (it ignores Emby's
+    AnyProviderIdEquals and returns the first items of the library, checked on
+    Jellyfin 12.1 and 13.0), so the IDs of all movies and series are read once
+    - IDs only, no images or user data - and kept for 15 minutes."""
+    key = (server.get('url'), server.get('user_id'))
+    hit = _INDEX.get(key)
+    if hit and not force and time.time() - hit[0] < INDEX_SECONDS:
+        return hit[1]
+    data = _api(server, '/Users/%s/Items' % server.get('user_id'), {
+        'IncludeItemTypes': 'Movie,Series', 'Recursive': 'true', 'Fields': 'ProviderIds',
+        'EnableImages': 'false', 'EnableUserData': 'false', 'Limit': INDEX_MAX})
+    index = {'Movie': {}, 'Series': {}}
+    for node in (data.get('Items') or []):
+        kind = str(node.get('Type') or '')
+        if kind not in index or not node.get('Id'):
+            continue
+        for id_key in _id_keys(_ids(node)):
+            index[kind].setdefault(id_key, []).append(str(node['Id']))
+    _INDEX[key] = (time.time(), index)
+    return index
+
+
 def find_all_by_ids(server, ids, media_type='movie', title='', limit=10):
+    if flavor_of(server) == JELLYFIN:
+        want = 'Series' if str(media_type).lower() in ('series', 'show', 'episode') else 'Movie'
+        index = id_index(server).get(want) or {}
+        found = []
+        for id_key in _id_keys(ids):
+            for item_id in index.get(id_key) or []:
+                if item_id not in found:
+                    found.append(item_id)
+        rows = []
+        for item_id in found[:int(limit)]:
+            try:
+                rows.append(metadata(server, item_id))
+            except EmbyError:
+                continue
+        return [r for r in rows if same_title(r, ids)]
+    return [r for r in _find_all_by_ids_emby(server, ids, media_type, title, limit)
+            if same_title(r, ids) or (title and not _id_keys(r.get('ids') or {}))]
+
+
+def _find_all_by_ids_emby(server, ids, media_type='movie', title='', limit=10):
     """EVERY library item that matches — not just the first one.
 
     v3.9.209: find_by_ids() returned inside its own loop, so only the FIRST hit
