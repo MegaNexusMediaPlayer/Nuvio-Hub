@@ -114,17 +114,41 @@ def backend_version(packages):
     except (OSError,ET.ParseError):return ''
 
 
-def auto_install(monitor, busy=lambda: False, wait=10, retry=30, attempts=120):
+def component_report(packages=None, addons_dir=None):
+    """Per bundled component: the version this backend brings ('wanted'), the
+    one on disk ('files') and the one Kodi has loaded ('kodi'). 6.0.36: the
+    update check compared only the backend, so a device with an updated
+    backend but an old interface said "up to date"."""
+    import xbmcaddon
+    if packages is None or addons_dir is None:
+        packages, addons_dir = paths()
+    try:desired=json.loads((Path(packages)/'bundle.json').read_text(encoding='utf-8'))
+    except (OSError,ValueError):return []
+    report=[]
+    for row in desired:
+        if not isinstance(row,dict) or row.get('id') not in ALLOWED:continue
+        try:kodi=xbmcaddon.Addon(row['id']).getAddonInfo('version')
+        except Exception:kodi=''
+        report.append({'id':row['id'],'wanted':row.get('version',''),
+                       'files':installed_version(Path(addons_dir)/row['id']),'kodi':kodi,
+                       'current':installed_matches(Path(addons_dir)/row['id'],row)})
+    return report
+
+
+def auto_install(monitor, busy=lambda: False, wait=10, retry=30, attempts=2880, failures_allowed=5):
     """Service: after the backend was installed or updated (Kodi repository,
     ZIP or GitHub), install the bundled interface, skin and screensaver without
     "Install or repair". Once a backend version has installed them, a component
     the user uninstalled is NOT put back (only the next update reinstalls).
-    Waits while video plays, the interface is open or a removal runs."""
+    Waits while video plays, the interface is open or a removal runs - up to
+    ``attempts`` rounds of ``retry`` seconds (24 h; it was 1 h, 6.0.36) - and a
+    failed install is retried (``failures_allowed``) instead of ending the run."""
     import xbmc
     import xbmcaddon
     import xbmcgui
     if monitor.waitForAbort(wait):return []
     addon=xbmcaddon.Addon('plugin.video.nuviohub')
+    failures=0
     for _ in range(attempts):
         packages,addons_dir=paths()
         version=backend_version(packages)
@@ -135,7 +159,12 @@ def auto_install(monitor, busy=lambda: False, wait=10, retry=30, attempts=120):
             addon.setSetting(VERSION_SETTING,version);return []
         if not xbmc.Player().isPlayingVideo() and not home.getProperty('nuvio.frontend.running') and not busy():
             previous=addon.getSetting(VERSION_SETTING)
-            changed=ensure_components()
+            try:changed=ensure_components()
+            except Exception as exc:
+                failures+=1
+                xbmc.log('[MegaNexus] Component install attempt %d failed: %s'%(failures,exc),xbmc.LOGWARNING)
+                if failures>=failures_allowed or monitor.waitForAbort(retry):return []
+                continue
             addon.setSetting(VERSION_SETTING,version)
             if changed:
                 xbmcgui.Dialog().notification('MegaNexus','Interface, skin and screensaver updated',xbmcgui.NOTIFICATION_INFO,5000)

@@ -571,6 +571,31 @@ def support():
     finally:del win
 
 
+def components_up_to_date(current,dialog,latest=''):
+    """The backend is current; are the interface, skin and screensaver too?
+    (6.0.36: an updated backend with an old interface said "up to date".)"""
+    from resources.lib import bundle_installer,updater
+    try:report=bundle_installer.component_report()
+    except Exception:report=[]
+    names={'script.nuvio':'interface','skin.nuvio':'skin','screensaver.nuvio':'screensaver'}
+    missing=[r for r in report if not r['current']]
+    stale=[r for r in report if r['current'] and r['kodi'] and r['kodi']!=r['wanted']]
+    if not missing and not stale:
+        dialog.ok('Updates','MegaNexus %s is up to date (latest release %s).'%(current,latest or current));return
+    if missing:
+        parts=', '.join('%s %s'%(names.get(r['id'],r['id']),r['files'] or 'missing') for r in missing)
+        # Installed by the service once MegaNexus is closed; a restart does it at once.
+        ADDON.setSetting(bundle_installer.VERSION_SETTING,'')
+        text='Nuvio Hub %s is installed, but not yet: %s.\nThey are installed when MegaNexus is closed - or restart now to finish.'%(current,parts)
+    else:
+        parts=', '.join('%s %s'%(names.get(r['id'],r['id']),r['kodi']) for r in stale)
+        text='MegaNexus %s is installed; Kodi still uses %s until it restarts.'%(current,parts)
+    from resources.lib.kodi_restart import plan
+    builtin,label,_=plan()
+    if dialog.yesno('Updates',text,nolabel='Later',yeslabel=label):
+        xbmc.executebuiltin(builtin)
+
+
 def check_updates():
     """Compare with the latest GitHub release and install it on confirmation."""
     from resources.lib import updater
@@ -583,7 +608,7 @@ def check_updates():
     if info is None:
         dialog.ok('Updates','No Nuvio Hub release was found.\n'+updater.RELEASES);return
     if not updater.newer(info['version'],current):
-        dialog.ok('Updates','Nuvio Hub %s is up to date (latest release %s).'%(current,info['version']));return
+        components_up_to_date(current,dialog,info['version']);return
     if not dialog.yesno('Update available','Nuvio Hub %s is available (installed %s).\nInstall it now? Kodi restarts the interface afterwards.'%(info['version'],current)):return
     if xbmc.Player().isPlayingVideo():
         dialog.ok('Updates','Stop playback first, then check again.');return
@@ -600,8 +625,15 @@ def check_updates():
     return page.DONE
 
 
+def version_label():
+    """Backend version, plus the interface's when Kodi runs another one."""
+    backend=xbmcaddon.Addon('plugin.video.nuviohub').getAddonInfo('version')
+    ui=xbmcaddon.Addon('script.nuvio').getAddonInfo('version')
+    return backend if ui==backend else '%s · interface %s'%(backend,ui)
+
+
 def maintenance():
-    def rows():return [page.item('Check for updates',xbmcaddon.Addon('script.nuvio').getAddonInfo('version')),
+    def rows():return [page.item('Check for updates',version_label()),
         page.item('Automatic updates from GitHub',enabled=ADDON.getSetting('nuvio_auto_update')!='false'),
         page.item('Support MegaNexus · Ko-fi','QR code'),
         page.item('Run setup wizard'),page.item('Remove MegaNexus build'),page.item('Back')]
