@@ -12,7 +12,6 @@ from resources.lib import settings_cache
 from resources.lib.theme import folder as theme_folder
 
 POLL = .25
-HINT_AFTER = 30   # seconds without the phone -> say what usually blocks it
 
 
 class PhoneWindow(xbmcgui.WindowXMLDialog):
@@ -66,11 +65,7 @@ def run():
         window.show()
         monitor = xbmc.Monitor()
         connected = False
-        waited = 0.0
         while not window.cancelled and not monitor.abortRequested():
-            waited += POLL
-            if not connected and abs(waited - HINT_AFTER) < POLL / 2:
-                window.setProperty('nuvio.phone.status', 'No phone yet? Use the same Wi-Fi. A firewall here must allow TCP port %d.' % service.port)
             if service.saved:
                 saved = True
                 break

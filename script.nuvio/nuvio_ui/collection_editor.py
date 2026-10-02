@@ -26,10 +26,8 @@ def _catalogs(folder):
                if c.get('id') and c.get('type') in ('movie', 'series')]
     if not options:
         raise ValueError('Add a manifest with movie or series catalogs first.')
-    # Trakt / TMDB sources (6.0.37) are not add-on catalogs: kept as they are.
-    kept = [s for s in folder.get('sources') or [] if s.get('provider') in ('trakt', 'tmdb')]
     old = {(s.get('addonId'), s.get('providerId'), s['catalogId'], s['type']): s
-           for s in folder.get('sources') or [] if s.get('catalogId')}
+           for s in folder.get('sources') or []}
     def identity(p, c):
         return ((p.get('manifest') or {}).get('id'), p['id'], c['id'], c['type'])
     selected = xbmcgui.Dialog().multiselect('Catalogs for ' + folder['title'],
@@ -37,11 +35,11 @@ def _catalogs(folder):
         preselect=[i for i, (p, c) in enumerate(options) if identity(p, c) in old])
     if selected is None:
         return False
-    if not selected and not kept:
+    if not selected:
         raise ValueError('Choose at least one catalog. Use Hide to remove a card from Home.')
     folder['sources'] = [dict(old.get(identity(*options[i]), {}),
         addonId=(options[i][0].get('manifest') or {}).get('id', ''), providerId=options[i][0]['id'],
-        catalogId=options[i][1]['id'], type=options[i][1]['type']) for i in selected] + kept
+        catalogId=options[i][1]['id'], type=options[i][1]['type']) for i in selected]
     for source, index in zip(folder['sources'], selected):
         catalog = options[index][1]
         specs = {item['name']: item for item in catalog.get('extra') or [] if isinstance(item, dict) and item.get('name')}
@@ -66,9 +64,6 @@ def _catalogs(folder):
 def _source_label(source, providers):
     from resources.lib.collections_home import matching_catalog
     kind = 'Series' if source.get('type') == 'series' else 'Movies'
-    from resources.lib.collection_sources import is_virtual, label
-    if is_virtual(source):
-        return label(source), True
     match = matching_catalog(source, providers)
     if not match:
         return '%s (%s)' % (source.get('catalogId'), kind), False
@@ -253,14 +248,12 @@ def default_collections():
 
 
 def home_rows():
-    """Show or hide whole Home rows: Continue Watching, Local (6.0.37) and each collection group."""
+    """Show or hide whole Home rows: Continue Watching and each collection group."""
     from . import settings_page as page
     from . import settings
-    from resources.lib import local_media
     def rows():
         groups = collection_profile.load()
-        return ([page.item('Continue Watching', enabled=settings.ADDON.getSetting('nuvio_home_continue') != 'false'),
-                 page.item('Local · movies and series on this device', enabled=local_media.enabled(settings.ADDON))] +
+        return ([page.item('Continue Watching', enabled=settings.ADDON.getSetting('nuvio_home_continue') != 'false')] +
                 [page.item(g['title'], '%d collections' % len(g['folders']) if not g.get('hidden') else '', enabled=not g.get('hidden'))
                  for g in groups] + [page.item('Back')])
     def choose(pick):
@@ -268,12 +261,9 @@ def home_rows():
         if pick == 0:
             settings.ADDON.setSetting('nuvio_home_continue', 'true' if settings.ADDON.getSetting('nuvio_home_continue') == 'false' else 'false')
             return None
-        if pick == 1:
-            settings.ADDON.setSetting(local_media.HOME_SETTING, 'false' if local_media.enabled(settings.ADDON) else 'true')
-            return None
-        if pick > len(groups) + 1:
+        if pick > len(groups):
             return page.DONE
-        group = groups[pick - 2]
+        group = groups[pick - 1]
         group['hidden'] = not group.get('hidden')
         collection_profile.save(groups)
         return None

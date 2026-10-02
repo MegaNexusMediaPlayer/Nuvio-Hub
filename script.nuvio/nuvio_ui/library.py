@@ -18,7 +18,6 @@ MAX_ROWS = 14
 
 
 class LibraryWindow(Dialog):
-    TOUCH_ROWS = True   # vertical drags over poster rows move between rows (touch only)
     def __init__(self, *args, **kwargs):
         super().__init__(*args)
         self.tab = 'tracking' if library.tracking_connected() else 'local'

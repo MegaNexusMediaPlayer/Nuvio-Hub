@@ -79,20 +79,13 @@ def launch():
                 xbmc.executebuiltin('ActivateWindow(fullscreenvideo)')
             elif command: xbmc.executebuiltin(command)
         else:
-            try:
-                # 6.0.37: add-ons that overload Kodi - clean install, turn off or Skip.
-                from nuvio_ui.system_check import run as system_check
-                system_check()
-            except Exception:xbmc.log('[MegaNexus] System check skipped.',xbmc.LOGWARNING)
             from nuvio_ui.onboarding import run as setup
             command=setup()
             if command:execute_command(command)
             from nuvio_ui.home_window import open_home
             if not xbmc.getCondVisibility('Window.IsVisible(yesnodialog)'):open_home()
     except Exception:
-        import traceback
-        # The cause belongs in kodi.log (6.0.37): the message alone hid it.
-        xbmc.log('[Nuvio] Interface failed: ' + traceback.format_exc(), xbmc.LOGERROR)
+        xbmc.log('[Nuvio] Interface failed. See component installation and provider configuration.', xbmc.LOGERROR)
         xbmcgui.Dialog().ok('Nuvio', 'Could not open the interface. Open Nuvio Hub settings to repair the bundled components or check your provider configuration.')
     finally:
         if session:session.close()

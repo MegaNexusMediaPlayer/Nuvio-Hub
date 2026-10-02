@@ -159,16 +159,12 @@ def _request(path, params=None, timeout=None):
     if not api_key:
         return {}
     query = dict(params or {})
-    headers = {
+    query['api_key'] = api_key
+    url = API_BASE + path + ('?' + urllib.parse.urlencode(query) if query else '')
+    req = urllib.request.Request(url, headers={
         'Accept': 'application/json',
         'User-Agent': 'NuvioHub/%s (Kodi)' % (ADDON.getAddonInfo('version') or '3.8.9'),
-    }
-    if api_key.startswith('eyJ') and len(api_key) > 60:
-        headers['Authorization'] = 'Bearer ' + api_key   # v4 read access token (6.0.37)
-    else:
-        query['api_key'] = api_key
-    url = API_BASE + path + ('?' + urllib.parse.urlencode(query) if query else '')
-    req = urllib.request.Request(url, headers=headers)
+    })
     request_timeout = _timeout() if timeout is None else max(1.0, float(timeout))
     with urllib.request.urlopen(req, timeout=request_timeout) as resp:
         body = resp.read().decode('utf-8', 'ignore')

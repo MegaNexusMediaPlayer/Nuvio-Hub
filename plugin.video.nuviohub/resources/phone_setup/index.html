@@ -291,15 +291,6 @@ function renderAddons(){
     installed.append(el('div', {class: 'row'}, el('div', {class: 'grow name', text: p.name}), del));
   }
   box.append(el('h2', {text: 'Installed add-ons'}), installed);
-  // 6.0.37: TMDB collection sources use the user's own TMDb key (never sent back here).
-  const key = el('input', {type: 'password', placeholder: S.tmdb_key ? 'Saved · enter a new key to replace it' : 'TMDb API key or read access token', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false'});
-  const saveKey = el('button', {class: 'btn wide', text: 'Save TMDb key'});
-  saveKey.addEventListener('click', () => busy(saveKey, async () => {
-    await api('/api/tmdb/key', {key: key.value}); key.value = '';
-    say('TMDb key saved. TMDB collections load now.', true); await reload(); }));
-  box.append(el('h2', {text: 'TMDb API key'}), el('div', {class: 'card'},
-    el('p', {class: 'note', text: 'Needed only for Nuvio collections built on TMDB (networks like Netflix, companies, TMDB lists, discover). Free at themoviedb.org > Settings > API.'}),
-    el('div', {class: 'sub', text: S.tmdb_key ? 'Status: saved' : 'Status: not set'}), key, saveKey));
 }
 
 /* ---------- Collections ---------- */

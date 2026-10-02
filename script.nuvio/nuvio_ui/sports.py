@@ -117,7 +117,6 @@ class SportsPlayer(PreviewPlayer):
 
 
 class SportsWindow(Dialog):
-    TOUCH_ROWS = True   # vertical drags over poster rows move between rows (touch only)
     def __init__(self, *args, **kwargs):
         super().__init__(*args)
         self.rows = list(kwargs.get('rows') or [])       # [(title, provider, catalog, items)]

@@ -52,7 +52,6 @@ def launch_command(row):
 
 
 class HomeWindow(Dialog):
-    TOUCH_ROWS = True   # vertical drags over poster rows move between rows (touch only)
     def __init__(self, *args, **kwargs):
         super().__init__(*args)
         self._shelves = kwargs.get('shelves') or []
@@ -231,7 +230,7 @@ class HomeWindow(Dialog):
         for i in indices:
             if i>=len(self._shelves) or i in self._scheduled:continue
             shelf=self._shelves[i]
-            if shelf.get('continue_job') or ((shelf.get('job') or shelf.get('collection_job') or shelf.get('people_job') or shelf.get('local_job')) and not shelf.get('_loaded')):
+            if shelf.get('continue_job') or ((shelf.get('job') or shelf.get('collection_job') or shelf.get('people_job')) and not shelf.get('_loaded')):
                 self._scheduled.add(i)
                 shelf['progress_revision']=self._progress_revision
                 self._futures.append(self._pool.submit(self._load, i, dict(shelf), self._generation))
@@ -247,7 +246,7 @@ class HomeWindow(Dialog):
             control=self.getControl(ROW_BASE+i)
             for pos,row in enumerate(shelf['rows']):
                 target=row.get('target') or {}
-                watched=row.get('watched') or simkl_watched.state(data,target.get('media_type'),target.get('canonical_id')).get('watched')
+                watched=simkl_watched.state(data,target.get('media_type'),target.get('canonical_id')).get('watched')
                 control.getListItem(pos).setProperty('watched','1' if watched else '')
 
     def _load(self, index, shelf, generation):
@@ -275,9 +274,6 @@ class HomeWindow(Dialog):
     def drain_updates(self):
         self.drain_events()
         if self._closed:return
-        # While a finger drags a row, nothing repaints rows or starts previews:
-        # a row reset mid-drag felt like the posters got stuck (6.0.37).
-        if self.touching():return
         self._queue_visible()
         now=time.monotonic()
         if now-self._last_progress_check>=.5:
@@ -437,7 +433,7 @@ class HomeWindow(Dialog):
         for row in rows:
             li = xbmcgui.ListItem(label=str(row.get('title') or 'Untitled'), label2=str(row.get('subtitle') or ''))
             art={key: str(row.get(key) or '') for key in ('poster', 'fanart', 'clearlogo')}
-            if getattr(self,'_card_shape','poster')=='landscape' and (row.get('target') or row.get('local')):
+            if getattr(self,'_card_shape','poster')=='landscape' and row.get('target'):
                 art['poster']=row.get('landscape') or row.get('fanart') or row.get('poster') or ''
             li.setArt(art_cache.art(art))
             for key in ('title', 'plot', 'meta_line', 'subtitle', 'resume_label', 'airing_banner','tomorrow'):
@@ -446,9 +442,9 @@ class HomeWindow(Dialog):
             li.setProperty('animation', row.get('animation') or '')
             li.setProperty('hide_title', row.get('hide_title') or '')
             target=row.get('target') or {}
-            identity=json.dumps([target.get('media_type'),target.get('canonical_id'),target.get('video_id'),row.get('collection_id'),None if target.get('canonical_id') or row.get('collection_id') else row.get('path') or row.get('local')],ensure_ascii=False)
+            identity=json.dumps([target.get('media_type'),target.get('canonical_id'),target.get('video_id'),row.get('collection_id'),None if target.get('canonical_id') or row.get('collection_id') else row.get('path')],ensure_ascii=False)
             li.setProperty('nuvio.identity',identity);identities.append(identity)
-            li.setProperty('watched','1' if row.get('watched') or simkl_watched.state(watched_data,target.get('media_type'),target.get('canonical_id')).get('watched') else '')
+            li.setProperty('watched','1' if simkl_watched.state(watched_data,target.get('media_type'),target.get('canonical_id')).get('watched') else '')
             try:
                 percent = min(100, max(0, int(float(row.get('percent_value') or 0))))
             except (ValueError, TypeError, OverflowError):
@@ -562,15 +558,7 @@ class HomeWindow(Dialog):
         if row.get('group_id'):
             self._bucket='group:'+row['group_id']
             self._paint(home_data.initial_shelves(self._bucket));return
-        if row.get('local'):
-            # 6.0.37: a movie / series from the device's own storage (Kodi library).
-            from .local_storage import open_item
-            self._suspended=True
-            if self._previews:self._previews.pause()
-            try:command=self.child(open_item,row['local'])   # 'playing', a Kodi window or ''
-            finally:
-                self._suspended=False
-        elif row.get('target'):
+        if row.get('target'):
             from .details import open_context,open_person
             self._suspended=True
             if self._previews: self._previews.pause()

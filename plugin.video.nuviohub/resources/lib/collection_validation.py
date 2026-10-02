@@ -114,11 +114,6 @@ def validate(groups, providers=None, stopped=None):
         seen.add(encoded)
         total += 1
         label = _label(folder, source)
-        from .collection_sources import is_virtual, usable
-        if is_virtual(source):
-            if not usable(source):
-                skipped.append(label + ': TMDB source - enter your TMDb API key in Settings > Add-ons.')
-            continue   # Trakt / TMDB: read from the service, nothing to install
         match = matching_catalog(source, providers)
         if not match:
             skipped.append(label + ': catalog "%s" is not installed from add-on "%s".'

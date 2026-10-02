@@ -354,12 +354,8 @@ def catalog(provider, catalog, extra=None, timeout=5, force=False):
             if not force:
                 _FOREGROUND[0] += 1
             try:
-                if provider.get('kind') in ('trakt', 'tmdb'):
-                    from .collection_sources import fetch as source_fetch   # Trakt / TMDB source (6.0.37)
-                    data = source_fetch(provider, catalog, extra or {}, timeout)
-                else:
-                    data = fetch_catalog(provider, catalog['type'], catalog['id'], extra=extra or {},
-                                         timeout_override=timeout, retry=False, rate_wait=.1)
+                data = fetch_catalog(provider, catalog['type'], catalog['id'], extra=extra or {},
+                                     timeout_override=timeout, retry=False, rate_wait=.1)
             finally:
                 if not force:
                     _FOREGROUND[0] -= 1

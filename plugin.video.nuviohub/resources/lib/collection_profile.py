@@ -35,12 +35,6 @@ def normalize(data):
             clean=[]
             for s in sources:
                 if not isinstance(s,dict):continue
-                if str(s.get('provider') or '').lower() in ('trakt','tmdb'):
-                    # 6.0.37: Nuvio collections with Trakt lists and TMDB sources.
-                    from .collection_sources import normalize as external_source
-                    listed=external_source(s)
-                    if listed:clean.append(listed)
-                    continue
                 extra=s.get('extra') or {}
                 if not isinstance(extra,dict) or any(not isinstance(k,str) or isinstance(v,(dict,list)) for k,v in extra.items()):
                     raise ValueError('Collection filters must be an object of text values.')

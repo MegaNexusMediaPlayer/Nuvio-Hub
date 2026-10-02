@@ -138,16 +138,8 @@ def folder_shelf(folder, providers, media_type=None, title=None):
     switches={p['id']:on for p,on in entries(providers)}
     providers=[p for p in providers if switches.get(p['id'],True)]
     selected=xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_metadata_provider')
-    from . import collection_sources
-    needs_key = False
     for source in active_sources(folder):
         if media_type and kind(source['type']) != media_type:
-            continue
-        if collection_sources.is_virtual(source):
-            if collection_sources.usable(source):
-                jobs.append(collection_sources.job(source))
-            else:
-                needs_key = True
             continue
         match = matching_catalog(source, providers, selected)
         if match:
@@ -158,10 +150,6 @@ def folder_shelf(folder, providers, media_type=None, title=None):
             if genre and genre != 'None':extra['genre']=genre
             jobs.append((provider, catalog, extra))
     path = p.build_url(action='nuvio_collection', collection_id=folder['id'])
-    if not jobs and needs_key:
-        return {'title': title or folder['title'], 'rows': [hd.placeholder(
-            'Add your TMDb API key', 'This collection reads TMDB. Enter your free TMDb API key in HUB Settings > Add-ons.',
-            p.build_url(action='setup_center'), folder=False)]}
     if not jobs:
         return {'title': title or folder['title'], 'rows': [hd.placeholder(
             'Connect collection catalogs', 'Validate this collection against your configured add-ons in Settings > Collections.',
