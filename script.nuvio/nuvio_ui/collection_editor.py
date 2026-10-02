@@ -253,27 +253,37 @@ def default_collections():
 
 
 def home_rows():
-    """Show or hide whole Home rows: Continue Watching, Local (6.0.37) and each collection group."""
+    """Show or hide whole Home rows: Continue Watching, Local (6.0.37),
+    Plex / Jellyfin (6.0.39 beta, when connected) and each collection group."""
     from . import settings_page as page
     from . import settings
-    from resources.lib import local_media
+    from resources.lib import local_media, media_servers
+    def switches():
+        """[(label, setting, on)] rows above the collection groups."""
+        addon = settings.ADDON
+        out = [('Continue Watching', 'nuvio_home_continue', addon.getSetting('nuvio_home_continue') != 'false'),
+               ('Local (beta) · movies and series on this device', local_media.HOME_SETTING, local_media.enabled(addon))]
+        for kind in media_servers.KINDS:
+            if media_servers.signed_in(kind):
+                out.append(('%s (beta) · Continue watching and Recently added' % media_servers.label(kind),
+                            media_servers.HOME[kind], addon.getSetting(media_servers.HOME[kind]) == 'true'))
+        return out
     def rows():
         groups = collection_profile.load()
-        return ([page.item('Continue Watching', enabled=settings.ADDON.getSetting('nuvio_home_continue') != 'false'),
-                 page.item('Local · movies and series on this device', enabled=local_media.enabled(settings.ADDON))] +
+        return ([page.item(label, enabled=on) for label, _, on in switches()] +
                 [page.item(g['title'], '%d collections' % len(g['folders']) if not g.get('hidden') else '', enabled=not g.get('hidden'))
                  for g in groups] + [page.item('Back')])
     def choose(pick):
         groups = collection_profile.load()
-        if pick == 0:
-            settings.ADDON.setSetting('nuvio_home_continue', 'true' if settings.ADDON.getSetting('nuvio_home_continue') == 'false' else 'false')
+        top = switches()
+        if pick < len(top):
+            _, key, on = top[pick]
+            settings.ADDON.setSetting(key, 'false' if on else 'true')
+            media_servers.forget()
             return None
-        if pick == 1:
-            settings.ADDON.setSetting(local_media.HOME_SETTING, 'false' if local_media.enabled(settings.ADDON) else 'true')
-            return None
-        if pick > len(groups) + 1:
+        if pick >= len(top) + len(groups):
             return page.DONE
-        group = groups[pick - 2]
+        group = groups[pick - len(top)]
         group['hidden'] = not group.get('hidden')
         collection_profile.save(groups)
         return None

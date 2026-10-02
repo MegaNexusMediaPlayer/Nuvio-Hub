@@ -212,14 +212,47 @@ async function copyText(text){
   return legacyCopy(text);
 }
 const TRACKERS = [['trakt', 'Trakt'], ['simkl', 'Simkl']];
+const SERVERS = [['plex', 'Plex (beta)']];
 let TRACK_POLL = null;
 function renderTracking(box){
+  const waitingTrackers = linkCard(box, 'Tracking services',
+    'Optional. Sends what you watch, imports your progress and shows your watchlists in the Library.', TRACKERS);
+  // 6.0.39 beta: own media servers. Off until connected; their copies come first when playing.
+  const waitingServers = linkCard(box, 'Your media servers (beta)',
+    'Optional. Plays your own Plex or Jellyfin copy first and adds their rows to Home (turn rows on in HUB Settings > Collections > Home rows).', SERVERS);
+  renderJellyfin(box);
+  clearTimeout(TRACK_POLL);
+  if (waitingTrackers || waitingServers) TRACK_POLL = setTimeout(reload, 4000);
+}
+function renderJellyfin(box){
+  const J = S.jellyfin || {};
+  const card = el('div', {class: 'card'});
+  if (J.connected){
+    const off = el('button', {class: 'btn ghost small', text: 'Disconnect'});
+    off.addEventListener('click', () => { if (confirm('Disconnect ' + (J.kind || 'Jellyfin') + '?'))
+      busy(off, async () => { await api('/api/jellyfin/disconnect', {}); say('Disconnected.', true); await reload(); }); });
+    card.append(el('div', {class: 'row'}, el('div', {class: 'grow'}, el('div', {class: 'name', text: (J.kind || 'Jellyfin') + ' (beta)'}),
+      el('div', {class: 'sub', text: 'Connected · ' + (J.server || '') + (J.user ? ' · ' + J.user : '')})), off));
+  } else {
+    const url = el('input', {type: 'url', placeholder: 'Server address, e.g. http://192.168.1.10:8096', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false'});
+    const user = el('input', {type: 'text', placeholder: 'Username', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false'});
+    const pass = el('input', {type: 'password', placeholder: 'Password', autocomplete: 'off'});
+    const go = el('button', {class: 'btn wide', text: 'Connect Jellyfin / Emby'});
+    go.addEventListener('click', () => busy(go, async () => {
+      await api('/api/jellyfin/signin', {url: url.value, username: user.value, password: pass.value}); pass.value = '';
+      say('Connected.', true); await reload(); }));
+    card.append(el('div', {class: 'name', text: 'Jellyfin / Emby (beta)'}),
+      el('p', {class: 'note', text: 'Jellyfin 10.10 to 12 and Emby. On the TV you can also use Quick Connect (HUB Settings > Accounts).'}),
+      url, user, pass, go);
+  }
+  box.append(card);
+}
+function linkCard(box, title, note, list){
   const T = S.tracking || {};
-  box.append(el('h2', {text: 'Tracking services'}));
-  const card = el('div', {class: 'card'},
-    el('p', {class: 'note', text: 'Optional. Sends what you watch, imports your progress and shows your watchlists in the Library.'}));
+  box.append(el('h2', {text: title}));
+  const card = el('div', {class: 'card'}, el('p', {class: 'note', text: note}));
   let waiting = false;
-  for (const [id, name] of TRACKERS){
+  for (const [id, name] of list){
     const t = T[id] || {};
     const row = el('div', {class: 'row'}, el('div', {class: 'grow'}, el('div', {class: 'name', text: name}),
       el('div', {class: 'sub', text: t.connected ? 'Connected' : (t.code ? 'Waiting for approval…' : 'Not connected')})));
@@ -257,8 +290,7 @@ function renderTracking(box){
     }
   }
   box.append(card);
-  clearTimeout(TRACK_POLL);
-  if (waiting) TRACK_POLL = setTimeout(reload, 4000);
+  return waiting;
 }
 
 /* ---------- Add-ons ---------- */

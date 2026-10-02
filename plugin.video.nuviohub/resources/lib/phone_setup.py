@@ -118,7 +118,43 @@ def state():
         'display': display,
         'tracking': _tracking_status(),
         'tmdb_key': bool(addon.getSetting('tmdb_api_key')),
+        'jellyfin': _jellyfin_status(),
     }
+
+
+def _jellyfin_status():
+    """Server name and user only - never the address token."""
+    try:
+        from . import emby_client, media_servers
+        if not emby_client.is_signed_in():
+            return {'connected': False}
+        auth = emby_client.account()
+        return {'connected': True, 'server': auth.get('server_name') or '', 'user': auth.get('username') or '',
+                'kind': media_servers.label(media_servers.JELLYFIN)}
+    except Exception:
+        return {'connected': False}
+
+
+def jellyfin_sign_in(url, username, password):
+    """Jellyfin / Emby with username and password (6.0.39 beta)."""
+    from . import emby_client, settings_cache
+    if not str(url or '').strip() or not str(username or '').strip():
+        raise ValueError('Enter the server address and the username.')
+    try:
+        emby_client.sign_in(url, username, password or '')
+    except emby_client.EmbyError as exc:
+        raise ValueError(str(exc) or 'Sign-in failed.')
+    _addon().setSetting('nuvio_jellyfin_enabled', 'true')
+    settings_cache.invalidate()
+    return {}
+
+
+def jellyfin_sign_out():
+    from . import emby_client, settings_cache
+    emby_client.sign_out()
+    _addon().setSetting('nuvio_jellyfin_enabled', 'false')
+    settings_cache.invalidate()
+    return {}
 
 
 def _tracking_status():
@@ -437,6 +473,8 @@ class SetupService:
                     '/api/save': lambda: save(body),
                     '/api/tracking/start': lambda: tracking_start(body.get('service')),
                     '/api/tmdb/key': lambda: tmdb_key(body.get('key')),
+                    '/api/jellyfin/signin': lambda: jellyfin_sign_in(body.get('url'), body.get('username'), body.get('password')),
+                    '/api/jellyfin/disconnect': jellyfin_sign_out,
                     '/api/tracking/disconnect': lambda: tracking_disconnect(body.get('service')),
                 }
                 action = actions.get(parts.path)

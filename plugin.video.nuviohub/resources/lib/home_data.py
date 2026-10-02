@@ -105,6 +105,11 @@ def initial_shelves(bucket=''):
             shelves.extend(local_shelves())   # 6.0.37: Local Movies / Local Series (Home rows)
         except Exception:
             pass
+        try:
+            from .media_servers import shelves as server_shelves
+            shelves.extend(server_shelves())  # 6.0.39 beta: Plex / Jellyfin rows (off by default)
+        except Exception:
+            pass
         leading=len(shelves)
         from .collections_home import home_rows,layout,catalog_rows
         if layout()=='rows':
@@ -215,6 +220,10 @@ def load_catalog(shelf, stopped=None, cached_only=False):
         if cached_only:return None
         from .local_media import rows as local_rows
         return local_rows(shelf['local_job'])
+    if shelf.get('server_job'):
+        if cached_only:return None
+        from .media_servers import load_rows
+        return load_rows(*shelf['server_job'])
     if shelf.get('people_job'):
         if cached_only:return None
         from .search_catalogs import search_people

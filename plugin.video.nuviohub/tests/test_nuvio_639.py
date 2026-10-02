@@ -301,5 +301,205 @@ class RamProfile(unittest.TestCase):
         ram._DEVICE.clear()
 
 
+class JellyfinTwelve(unittest.TestCase):
+    def setUp(self):
+        self.emby = importlib.import_module('resources.lib.emby_client')
+
+    def test_jellyfin_uses_the_standard_header_root_paths_and_apikey(self):
+        headers = self.emby._headers('TOKEN', self.emby.JELLYFIN)
+        self.assertIn('Token="TOKEN"', headers['Authorization'])
+        self.assertTrue(headers['Authorization'].startswith('MediaBrowser Client="MegaNexus"'))
+        self.assertFalse({'X-Emby-Token', 'X-Emby-Authorization', 'X-MediaBrowser-Token'} & set(headers))
+        server = {'url': 'http://nas:8096', 'token': 'TOKEN', 'flavor': 'jellyfin'}
+        art = self.emby.artwork_url(server, 'abc')
+        self.assertTrue(art.startswith('http://nas:8096/Items/abc/Images/Primary?'))
+        self.assertIn('ApiKey=TOKEN', art)
+        self.assertNotIn('api_key', art)
+        self.assertIn('maxWidth=500', art)
+        self.assertTrue(self.emby.playback_url(server, 'abc').startswith('http://nas:8096/Videos/abc/stream?'))
+
+    def test_emby_keeps_its_own_scheme(self):
+        headers = self.emby._headers('TOKEN', self.emby.EMBY)
+        self.assertEqual(headers['X-Emby-Token'], 'TOKEN')
+        self.assertNotIn('Authorization', headers)
+        server = {'url': 'http://nas:8096', 'token': 'TOKEN', 'flavor': 'emby'}
+        self.assertIn('/emby/Items/abc/Images/Primary?', self.emby.artwork_url(server, 'abc'))
+        self.assertIn('api_key=TOKEN', self.emby.artwork_url(server, 'abc'))
+
+    def test_flavor_detection(self):
+        import json
+        replies = {'http://nas:8096/System/Info/Public': {'ProductName': 'Jellyfin Server', 'ServerName': 'Home', 'Version': '12.1.0'}}
+        def request(url, **kw):
+            if url not in replies:
+                raise self.emby.EmbyError('404')
+            return json.dumps(replies[url]).encode()
+        with mock.patch.object(self.emby, '_request', side_effect=request):
+            found = self.emby.detect('nas:8096')
+        self.assertEqual((found['flavor'], found['name'], found['url']), ('jellyfin', 'Home', 'http://nas:8096'))
+
+    def test_quick_connect(self):
+        import json
+        calls = []
+        def request(url, method='GET', token='', data=None, timeout=None, flavor='jellyfin'):
+            calls.append((method, url.split('8096')[1], data))
+            if url.endswith('/QuickConnect/Enabled'):
+                return b'true'
+            if url.endswith('/QuickConnect/Initiate'):
+                return json.dumps({'Secret': 'S', 'Code': '123456'}).encode()
+            if '/QuickConnect/Connect' in url:
+                return json.dumps({'Authenticated': True}).encode()
+            return json.dumps({'AccessToken': 'T', 'User': {'Id': 'U', 'Name': 'me'}, 'ServerName': 'Home'}).encode()
+        server = {'flavor': 'jellyfin', 'name': 'Home', 'version': '12.1', 'url': 'http://nas:8096'}
+        with mock.patch.object(self.emby, 'detect', return_value=server), \
+                mock.patch.object(self.emby, '_request', side_effect=request), \
+                mock.patch.object(self.emby, '_save_json_setting') as save:
+            state = self.emby.quick_connect_start('nas')
+            self.assertEqual(state['code'], '123456')
+            auth = self.emby.quick_connect_poll(state)
+        self.assertEqual((auth['token'], auth['flavor'], auth['user_id']), ('T', 'jellyfin', 'U'))
+        self.assertIn(('POST', '/QuickConnect/Initiate', None), calls)   # GET Initiate is gone in Jellyfin 12
+        self.assertIn(('POST', '/Users/AuthenticateWithQuickConnect', {'Secret': 'S'}), calls)
+        save.assert_called_once()
+
+    def test_reporter_follows_the_server(self):
+        companion = importlib.import_module('resources.lib.companion')
+        sent = []
+        class Response:
+            def __enter__(self): return self
+            def __exit__(self, *a): return False
+            def read(self): return b''
+        def urlopen(req, timeout=None):
+            sent.append((req.full_url, dict(req.header_items())))
+            return Response()
+        ctx = {'server_url': 'http://nas:8096', 'token': 'T', 'item_id': 'I', 'server_flavor': 'jellyfin'}
+        with mock.patch.object(companion.urllib.request, 'urlopen', side_effect=urlopen):
+            companion.EmbyReporter().started(ctx, 1000)
+        url, headers = sent[0]
+        self.assertEqual(url, 'http://nas:8096/Sessions/Playing')
+        self.assertIn('Token="T"', headers.get('Authorization', ''))
+
+
+class PlexResources(unittest.TestCase):
+    def test_v2_json_resources_first(self):
+        import json
+        plex = importlib.import_module('resources.lib.plex_client')
+        rows = [{'name': 'Home', 'provides': 'server', 'clientIdentifier': 'abc', 'accessToken': 'T', 'owned': True,
+                 'httpsRequired': False, 'connections': [{'uri': 'https://1-2-3-4.x.plex.direct:32400', 'local': True,
+                                                          'relay': False, 'protocol': 'https', 'address': '1.2.3.4', 'port': 32400}]}]
+        urls = []
+        def request(url, **kw):
+            urls.append(url)
+            return json.dumps(rows).encode()
+        with mock.patch.object(plex, 'account', return_value={'token': 'acc'}), \
+                mock.patch.object(plex, '_parse_json_setting', return_value={}), \
+                mock.patch.object(plex.plex_state, 'load_server_cache', return_value={}), \
+                mock.patch.object(plex, '_cache_servers'), \
+                mock.patch.object(plex, '_request', side_effect=request):
+            found = plex.servers(force=True)
+        self.assertTrue(urls[0].startswith('https://clients.plex.tv/api/v2/resources'))
+        self.assertEqual((found[0]['id'], found[0]['token'], found[0]['owned']), ('abc', 'T', True))
+        self.assertTrue(found[0]['connections'][0]['local'])
+        self.assertTrue(plex.is_local_connection(found[0], 'https://1-2-3-4.x.plex.direct:32400'))
+
+    def test_posters_are_resized_by_the_server(self):
+        plex = importlib.import_module('resources.lib.plex_client')
+        url = plex.poster_url({'server_url': 'http://nas:32400', 'token': 'T'}, '/library/metadata/1/thumb/2')
+        self.assertTrue(url.startswith('http://nas:32400/photo/:/transcode?width=500&height=750'))
+
+
+class MediaServersInMegaNexus(unittest.TestCase):
+    def setUp(self):
+        self.ms = importlib.import_module('resources.lib.media_servers')
+        self.ms.forget()
+
+    def addon(self, **values):
+        return mock.Mock(getSetting=lambda key: values.get(key, ''))
+
+    def test_everything_is_off_by_default(self):
+        with mock.patch.object(self.ms, 'signed_in', return_value=True):
+            self.assertFalse(self.ms.enabled('plex', self.addon()))
+            self.assertEqual(self.ms.source_jobs('movie', 'tt1', self.addon()), [])
+            self.assertEqual(self.ms.shelves(self.addon(nuvio_plex_enabled='true')), [])   # Home rows: own switch
+        with mock.patch.object(self.ms, 'signed_in', return_value=False):
+            self.assertFalse(self.ms.enabled('plex', self.addon(nuvio_plex_enabled='true')))
+        import kodi_stub
+        text = open(kodi_stub.ADDON_ROOT + '/resources/settings.xml', encoding='utf-8').read()
+        for key in ('nuvio_plex_enabled', 'nuvio_jellyfin_enabled', 'nuvio_home_plex', 'nuvio_home_jellyfin', 'nuvio_home_local'):
+            self.assertIn('id="%s" type="bool" default="false"' % key, text)
+
+    def test_video_ids(self):
+        self.assertEqual(self.ms.parse_video_id('movie', 'tt1'), ({'imdb_id': 'tt1'}, None, None))
+        self.assertEqual(self.ms.parse_video_id('series', 'tmdb:9:2:3'), ({'tmdb_id': '9'}, 2, 3))
+        self.assertEqual(self.ms.parse_video_id('series', 'tt1'), (None, None, None))
+        self.assertEqual(self.ms.parse_video_id('movie', 'kitsu:1'), (None, None, None))
+
+    def test_own_server_copies_come_first(self):
+        backend = importlib.import_module('resources.lib.backend_api')
+        media = importlib.import_module(backend.__package__ + '.media_servers')
+        stream_providers = importlib.import_module(backend.__package__ + '.stream_providers')
+        client = importlib.import_module(backend.__package__ + '.nuviohub.client')
+        addon_row = {'name': 'Add-on', 'url': 'http://a/1.mkv'}
+        server_row = {'name': 'Plex · Home', 'url': 'http://nas/1.mkv', '_nuvio_server': {'server_type': 'plex'}}
+        with mock.patch.object(stream_providers, 'enabled', return_value=[{'id': 'a', 'name': 'A', 'base_url': 'http://a'}]), \
+                mock.patch.object(media, 'source_jobs', return_value=[('Plex', lambda: [server_row])]), \
+                mock.patch.object(client, 'build_resource_url', return_value='http://a/stream'), \
+                mock.patch.object(client, 'get_json', return_value={'streams': [addon_row]}):
+            source, rows = backend.streams('movie', 'tt1')
+        self.assertEqual([r['name'] for r in rows], ['Plex · Home', 'Add-on'])
+        with mock.patch.object(stream_providers, 'enabled', return_value=[]), \
+                mock.patch.object(media, 'source_jobs', return_value=[('Plex', lambda: [server_row])]):
+            source, rows = backend.streams('movie', 'tt1')   # no stream add-on needed
+        self.assertEqual(len(rows), 1)
+
+    def test_cards_use_server_posters_and_open_our_page_only_with_ids(self):
+        movie = {'media_type': 'movie', 'raw_title': 'Heat', 'year': 1995, 'ids': {'imdb_id': 'tt0113277'}, 'duration_ms': 100}
+        card = self.ms._card('plex', movie, 'http://nas/p.jpg', 'http://nas/f.jpg', 'plugin://x')
+        self.assertEqual(card['target']['canonical_id'], 'tt0113277')
+        self.assertEqual(card['poster'], 'http://nas/p.jpg')   # no second poster download
+        home_video = {'media_type': 'movie', 'raw_title': 'Holiday', 'ids': {}}
+        self.assertEqual(self.ms._card('plex', home_video, '', '', 'plugin://x')['server_play'], 'plugin://x')
+        resumed = self.ms._card('plex', dict(movie, duration_ms=1000), '', '', 'plugin://x', resume_ms=500)
+        self.assertEqual((resumed['percent_value'], resumed['server_play']), (50, 'plugin://x'))
+
+    def test_plex_row_says_when_it_needs_a_pass(self):
+        plex = importlib.import_module(self.ms.__package__ + '.plex_client')
+        health = importlib.import_module(self.ms.__package__ + '.servers.health')
+        item = {'server_name': 'Home', 'server_url': 'https://far:32400', 'token': 'T', 'rating_key': '1',
+                'duration_ms': 5, 'versions': [{'part_key': '/p', 'info_line': '4K'}]}
+        with mock.patch.object(plex, 'servers', return_value=[{'id': 's', 'connections': [{'uri': 'http://lan:32400', 'local': True}]}]), \
+                mock.patch.object(health, 'should_query', return_value=True), \
+                mock.patch.object(plex, 'find_all_by_ids', return_value=[item]), \
+                mock.patch.object(plex, 'client_identifier', return_value='cid'):
+            rows = self.ms._plex_rows({'imdb_id': 'tt1'}, 'movie', None, None)
+        self.assertIn('Plex Pass', rows[0]['title'])
+        self.assertEqual(rows[0]['_nuvio_server']['rating_key'], '1')
+
+    def test_settings_and_phone(self):
+        import kodi_stub
+        root = kodi_stub.ADDON_ROOT + '/../script.nuvio/nuvio_ui/'
+        settings_text = open(root + 'settings.py', encoding='utf-8').read()
+        self.assertIn("Plex (beta)", settings_text)
+        self.assertIn("Jellyfin / Emby (beta)", settings_text)
+        self.assertIn("Local storage (beta)", settings_text)
+        page = open(kodi_stub.ADDON_ROOT + '/resources/phone_setup/index.html', encoding='utf-8').read()
+        self.assertIn('/api/jellyfin/signin', page)
+        link = importlib.import_module('resources.lib.tracking_link')
+        self.assertIn('plex', link.SERVICES)
+        phone = importlib.import_module('resources.lib.phone_setup')
+        with self.assertRaises(ValueError):
+            phone.jellyfin_sign_in('', 'me', 'pw')
+
+    def test_home_server_card_plays_from_the_server(self):
+        sent = []
+        with mock.patch.object(home.xbmc, 'executebuiltin', side_effect=sent.append), \
+                mock.patch.object(home.xbmc, 'Player') as player, \
+                mock.patch.object(home.xbmc, 'Monitor') as monitor:
+            monitor.return_value.waitForAbort.return_value = False
+            player.return_value.isPlayingVideo.return_value = True
+            self.assertEqual(home._server_play('plugin://plugin.video.nuviohub/?action=plex_play&server_id=a&rating_key=1'), 'playing')
+        self.assertEqual(sent, ['RunPlugin("plugin://plugin.video.nuviohub/?action=plex_play&server_id=a&rating_key=1")'])
+        self.assertEqual(home._server_play('plugin://other/?x'), '')
+
+
 if __name__ == '__main__':
     unittest.main()

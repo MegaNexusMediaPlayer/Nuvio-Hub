@@ -51,6 +51,21 @@ def launch_command(row):
     return 'ActivateWindow(Videos,"%s",return)' % path if folder else 'RunPlugin("%s")' % path
 
 
+def _server_play(path):
+    """Start a Plex / Jellyfin item; wait while its version picker is open so
+    Home does not come back over the starting video."""
+    if not path.startswith('plugin://plugin.video.nuviohub/?action=') or any(c in path for c in ('\n', '\r', '"')):
+        return ''
+    xbmc.executebuiltin('RunPlugin("%s")' % path)
+    monitor=xbmc.Monitor();start=time.monotonic()
+    while not monitor.waitForAbort(.2):
+        if xbmc.Player().isPlayingVideo():return 'playing'
+        picking=xbmc.getCondVisibility('Window.IsVisible(selectdialog) | Window.IsVisible(contextmenu) | Window.IsVisible(busydialog)')
+        if picking:start=time.monotonic()
+        elif time.monotonic()-start>8:return ''
+    return ''
+
+
 class HomeWindow(Dialog):
     TOUCH_ROWS = True   # vertical drags over poster rows move between rows (touch only)
     def __init__(self, *args, **kwargs):
@@ -231,7 +246,7 @@ class HomeWindow(Dialog):
         for i in indices:
             if i>=len(self._shelves) or i in self._scheduled:continue
             shelf=self._shelves[i]
-            if shelf.get('continue_job') or ((shelf.get('job') or shelf.get('collection_job') or shelf.get('people_job') or shelf.get('local_job')) and not shelf.get('_loaded')):
+            if shelf.get('continue_job') or ((shelf.get('job') or shelf.get('collection_job') or shelf.get('people_job') or shelf.get('local_job') or shelf.get('server_job')) and not shelf.get('_loaded')):
                 self._scheduled.add(i)
                 shelf['progress_revision']=self._progress_revision
                 self._futures.append(self._pool.submit(self._load, i, dict(shelf), self._generation))
@@ -437,7 +452,7 @@ class HomeWindow(Dialog):
         for row in rows:
             li = xbmcgui.ListItem(label=str(row.get('title') or 'Untitled'), label2=str(row.get('subtitle') or ''))
             art={key: str(row.get(key) or '') for key in ('poster', 'fanart', 'clearlogo')}
-            if getattr(self,'_card_shape','poster')=='landscape' and (row.get('target') or row.get('local')):
+            if getattr(self,'_card_shape','poster')=='landscape' and (row.get('target') or row.get('local') or row.get('server_play')):
                 art['poster']=row.get('landscape') or row.get('fanart') or row.get('poster') or ''
             li.setArt(art_cache.art(art))
             for key in ('title', 'plot', 'meta_line', 'subtitle', 'resume_label', 'airing_banner','tomorrow'):
@@ -446,7 +461,7 @@ class HomeWindow(Dialog):
             li.setProperty('animation', row.get('animation') or '')
             li.setProperty('hide_title', row.get('hide_title') or '')
             target=row.get('target') or {}
-            identity=json.dumps([target.get('media_type'),target.get('canonical_id'),target.get('video_id'),row.get('collection_id'),None if target.get('canonical_id') or row.get('collection_id') else row.get('path') or row.get('local')],ensure_ascii=False)
+            identity=json.dumps([target.get('media_type'),target.get('canonical_id'),target.get('video_id'),row.get('collection_id'),None if target.get('canonical_id') or row.get('collection_id') else row.get('path') or row.get('local') or row.get('server_play')],ensure_ascii=False)
             li.setProperty('nuvio.identity',identity);identities.append(identity)
             li.setProperty('watched','1' if row.get('watched') or simkl_watched.state(watched_data,target.get('media_type'),target.get('canonical_id')).get('watched') else '')
             try:
@@ -567,7 +582,10 @@ class HomeWindow(Dialog):
         if row.get('group_id'):
             self._bucket='group:'+row['group_id']
             self._paint(home_data.initial_shelves(self._bucket));return
-        if row.get('local'):
+        if row.get('server_play'):
+            # 6.0.39 beta: a Plex / Jellyfin episode or resume plays from the server.
+            command=_server_play(row['server_play'])
+        elif row.get('local'):
             # 6.0.37: a movie / series from the device's own storage (Kodi library).
             from .local_storage import open_item
             self._suspended=True

@@ -1981,6 +1981,24 @@ def artwork_url(item, path):
     return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(pairs), parts.fragment))
 
 
+def poster_url(item, path, width=500, height=750):
+    """Artwork resized by the Plex server itself (photo transcoder, 6.0.39):
+    cards load a 500 px poster instead of the full-size original."""
+    value = str(path or '').strip()
+    base = _normalise_uri(item.get('server_url'))
+    if not value or not base or value.startswith(('http://', 'https://')):
+        return artwork_url(item, value)
+    query = urlencode({'width': int(width), 'height': int(height), 'minSize': 1, 'upscale': 0,
+                       'url': value, 'X-Plex-Token': item.get('token') or ''})
+    return base + '/photo/:/transcode?' + query
+
+
+def is_local_connection(server, base_url):
+    """True when base_url is one of the server's home-network connections."""
+    base = _normalise_uri(base_url)
+    return any(c.get('local') and _normalise_uri(c.get('uri')) == base for c in (server.get('connections') or []))
+
+
 def playback_url(item, part_key=''):
     """Direct Play URL (token included) for a chosen part, default first."""
     part = str(part_key or item.get('part_key') or '').strip()

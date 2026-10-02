@@ -8,13 +8,16 @@ import threading
 import time
 from urllib.parse import quote, urlsplit
 
-SERVICES = ('trakt', 'simkl')
+SERVICES = ('trakt', 'simkl', 'plex')   # plex: 6.0.39 beta, a media server linked the same way
 _LOCK = threading.Lock()
 _PENDING = {}   # service -> {'code', 'url', 'expires', 'error'}
 
 
 def connected(service):
     try:
+        if service == 'plex':
+            from . import plex_client
+            return plex_client.is_signed_in()
         if service == 'trakt':
             from . import trakt
             return trakt.authorized()
@@ -95,17 +98,38 @@ def _simkl_code():
     return user_code, url, int(code.get('interval') or 5), int(code.get('expires_in') or 900), poll
 
 
+def _plex_code():
+    """plex.tv/link with the short PIN (the page asks the user to sign in)."""
+    from . import plex_client
+    from .settings_cache import cached_addon
+    pin = plex_client.request_pin()
+    code = str(pin.get('code') or '').strip()
+    if not code or not pin.get('id'):
+        raise ValueError('Plex did not return a code. Try again.')
+
+    def poll():
+        try:
+            linked = plex_client.poll_pin(pin['id'], code, flavor=pin.get('flavor') or 'v2')
+        except Exception:
+            return None
+        if linked:
+            cached_addon().setSetting('nuvio_plex_enabled', 'true')
+            return True
+        return None
+    return code, 'https://plex.tv/link', 3, 900, poll
+
+
 def start(service, sleep=time.sleep):
     """Begin linking; returns {'url', 'code'} for the phone."""
     if service not in SERVICES:
         raise ValueError('Unknown tracking service.')
     try:
-        code, url, interval, expires, poll = (_trakt_code if service == 'trakt' else _simkl_code)()
+        code, url, interval, expires, poll = {'trakt': _trakt_code, 'simkl': _simkl_code, 'plex': _plex_code}[service]()
     except ValueError:
         raise
     except Exception:
         raise ValueError('%s could not be reached. Check the connection and retry.' % service.title())
-    interval = max(5, min(60, interval))
+    interval = max(3 if service == 'plex' else 5, min(60, interval))
     expires = max(60, min(1800, expires))
     entry = {'code': code, 'url': url, 'expires': time.monotonic() + expires}
     with _LOCK:
@@ -135,6 +159,11 @@ def disconnect(service):
     elif service == 'simkl':
         from . import simkl
         simkl.logout()
+    elif service == 'plex':
+        from . import plex_client
+        from .settings_cache import cached_addon
+        plex_client.sign_out()
+        cached_addon().setSetting('nuvio_plex_enabled', 'false')
     else:
         raise ValueError('Unknown tracking service.')
     with _LOCK:

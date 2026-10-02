@@ -124,4 +124,4 @@ def run():
         elif pick == 5:
             return page.DONE
         return None
-    return page.show('Local storage', rows, choose)
+    return page.show('Local storage (beta)', rows, choose)

@@ -532,9 +532,12 @@ def choose_card_opacity():
 
 def tracking_accounts():
     from resources.lib import trakt,simkl
+    from resources.lib import media_servers as servers
     def rows():return [page.item('Nuvio account',nuvio_status()),
         page.item('Simkl · tracking service','Connected' if simkl.authorized() else 'Not connected'),
-        page.item('Trakt · tracking service','Connected' if trakt.authorized() else 'Not connected'),page.item('Back')]
+        page.item('Trakt · tracking service','Connected' if trakt.authorized() else 'Not connected'),
+        page.item('Plex (beta) · your Plex servers',servers.status(servers.PLEX)),
+        page.item('Jellyfin / Emby (beta) · your media server',servers.status(servers.JELLYFIN)),page.item('Back')]
     def choose(pick):
         if pick==0:return accounts()
         elif pick==1:
@@ -543,7 +546,13 @@ def tracking_accounts():
         elif pick==2:
             from .trakt_account import run as trakt_settings
             return trakt_settings()
-        elif pick==3:return page.DONE
+        elif pick==3:
+            from .media_servers import plex
+            return plex()
+        elif pick==4:
+            from .media_servers import jellyfin
+            return jellyfin()
+        elif pick==5:return page.DONE
     return page.show('Accounts & tracking services',rows,choose)
 
 
@@ -686,7 +695,7 @@ def run(back_command=''):
         from .iptv import configure
         configure()
     actions=[('Set up on phone · QR code',phone_setup),('Accounts & tracking services',tracking_accounts),('Continue Watching',continue_watching),('Add-ons',addons),('Collections',collections),
-        ('Local storage · movies and series on this device',local_storage),('IPTV',iptv_settings),('Sport',sport_settings),('Playback',playback),('Subtitles',subtitle_settings),('Trailers',trailers),
+        ('Local storage (beta) · movies and series on this device',local_storage),('IPTV',iptv_settings),('Sport',sport_settings),('Playback',playback),('Subtitles',subtitle_settings),('Trailers',trailers),
         ('Home & appearance',appearance),('Performance & image cache',performance),('Maintenance & updates',maintenance),
         ('Support MegaNexus · Ko-fi',support)]
     def rows():return [page.item(label) for label,_ in actions]+[page.item('Done')]

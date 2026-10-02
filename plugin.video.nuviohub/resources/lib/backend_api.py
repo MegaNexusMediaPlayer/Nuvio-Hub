@@ -68,7 +68,14 @@ def streams(media_type, video_id):
     from . import stream_providers
     from .nuviohub.client import get_json, build_resource_url
     sources = stream_providers.enabled(media_type, video_id)
-    if not sources:
+    # 6.0.39 (beta): the user's own Plex / Jellyfin servers, when switched on,
+    # are searched at the same time and listed first.
+    try:
+        from . import media_servers
+        server_jobs = media_servers.source_jobs(media_type, video_id)
+    except Exception:
+        server_jobs = []
+    if not sources and not server_jobs:
         raise ValueError('Enable a compatible stream add-on in Settings > Add-ons > Stream add-ons.')
 
     def fetch(source):
@@ -89,8 +96,10 @@ def streams(media_type, video_id):
     import time
     from concurrent.futures import wait, FIRST_COMPLETED
     results, errors, slow = {}, [], []
-    pool = ThreadPoolExecutor(max_workers=min(8, len(sources)), thread_name_prefix='NuvioStreams')
+    pool = ThreadPoolExecutor(max_workers=min(8, len(sources) + len(server_jobs)), thread_name_prefix='NuvioStreams')
     futures = {pool.submit(fetch, source): source for source in sources}
+    servers = [{'id': '__server_%d__' % i, 'name': name} for i, (name, _) in enumerate(server_jobs)]
+    futures.update({pool.submit(job): server for server, (_, job) in zip(servers, server_jobs)})
     pending = set(futures)
     deadline = time.monotonic() + STREAM_TIMEOUT
     grace = None
@@ -114,11 +123,12 @@ def streams(media_type, video_id):
     finally:
         pool.shutdown(wait=False)
     slow = [s.get('name') or s['id'] for s in (futures[f] for f in pending)]
-    # Keep the configured add-on order, not arrival order.
-    rows = [row for source in sources for row in results.get(source['id'], [])]
-    if not rows and len(errors) + len(slow) == len(sources):
+    # Own servers first, then the configured add-on order (not arrival order).
+    rows = [row for source in servers + sources for row in results.get(source['id'], [])]
+    if not rows and len(errors) + len(slow) == len(sources) + len(servers):
         raise ValueError('Stream add-ons could not respond. Check their configuration and connection.')
-    return dict(sources[0], _nuvio_errors=errors, _nuvio_slow=slow), rows
+    first = sources[0] if sources else {'id': '__servers__', 'name': 'Your servers', 'base_url': ''}
+    return dict(first, _nuvio_errors=errors, _nuvio_slow=slow), rows
 
 
 def playback_context(meta, row, source, season='', episode='', video_id='', resume_seconds=0):
@@ -147,7 +157,16 @@ def playback_context(meta, row, source, season='', episode='', video_id='', resu
         'subtitles': row.get('subtitles') or [], 'behaviorHints': row.get('behaviorHints') or {},
         'request_headers': p._stream_row_request_headers(row),
         'stream_name': row.get('name') or '', 'stream_title': row.get('title') or '',
+        # 6.0.39: a Plex / Jellyfin copy reports progress and watched to its server.
+        **(_server_keys(row)),
     }
+
+
+def _server_keys(row):
+    if not row.get('_nuvio_server'):
+        return {}
+    from . import media_servers
+    return media_servers.playback_keys(row)
 
 
 def queue_playback(context):

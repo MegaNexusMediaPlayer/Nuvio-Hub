@@ -543,6 +543,8 @@ def item_from_node(item, server):
                  if p.get('Type') == 'Actor' and p.get('Name')][:10],
         'versions': versions,
         'ids': _ids(item),
+        'series_id': str(item.get('SeriesId') or ''),
+        'show_title': str(item.get('SeriesName') or ''),
         'info_line': versions[0]['info_line'] if versions else '',
         'size_label': versions[0]['size_label'] if versions else '',
     }
@@ -752,6 +754,15 @@ def next_up(server, limit=PAGE_SIZE):
         row['resume_ms'] = _resume_ms(node)
         rows.append(row)
     return rows
+
+
+def latest(server, limit=PAGE_SIZE):
+    """Recently added movies and series (6.0.39 Home row)."""
+    data = _api(server, '/Users/%s/Items/Latest' % server.get('user_id'), {
+        'IncludeItemTypes': 'Movie,Series', 'Limit': int(limit or PAGE_SIZE),
+        'Fields': BROWSE_FIELDS, 'GroupItems': 'true'})
+    nodes = data if isinstance(data, list) else (data.get('Items') or [])
+    return [item_from_node(node, server) for node in nodes if str(node.get('Type') or '') in ('Movie', 'Series')]
 
 
 def _resume_ms(node):
