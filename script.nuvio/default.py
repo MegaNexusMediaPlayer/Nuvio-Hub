@@ -79,6 +79,11 @@ def launch():
                 xbmc.executebuiltin('ActivateWindow(fullscreenvideo)')
             elif command: xbmc.executebuiltin(command)
         else:
+            try:
+                # 6.0.37: add-ons that overload Kodi - clean install, turn off or Skip.
+                from nuvio_ui.system_check import run as system_check
+                system_check()
+            except Exception:xbmc.log('[MegaNexus] System check skipped.',xbmc.LOGWARNING)
             from nuvio_ui.onboarding import run as setup
             command=setup()
             if command:execute_command(command)

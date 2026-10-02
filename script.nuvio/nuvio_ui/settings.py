@@ -646,7 +646,8 @@ def maintenance():
     def rows():return [page.item('Check for updates',version_label()),
         page.item('Automatic updates from GitHub',enabled=ADDON.getSetting('nuvio_auto_update')!='false'),
         page.item('Support MegaNexus · Ko-fi','QR code'),
-        page.item('Run setup wizard'),page.item('Remove MegaNexus build'),page.item('Back')]
+        page.item('Run setup wizard'),page.item('Remove MegaNexus build'),
+        page.item('System check · add-ons that slow MegaNexus down'),page.item('Back')]
     def choose(pick):
         if pick==0:
             result=check_updates()
@@ -659,7 +660,10 @@ def maintenance():
         elif pick==4:
             from resources.lib.nuvio_uninstall import prepare
             return prepare()
-        elif pick==5:return page.DONE
+        elif pick==5:
+            from .system_check import run as system_check
+            system_check(force=True)
+        elif pick==6:return page.DONE
     return page.show('Maintenance',rows,choose)
 
 

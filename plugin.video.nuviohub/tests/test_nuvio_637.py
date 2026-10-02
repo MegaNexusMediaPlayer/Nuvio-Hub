@@ -175,5 +175,66 @@ class ExternalCollectionSources(unittest.TestCase):
         self.assertIn("api('/api/tmdb/key'", page)
 
 
+class SecurityNotice(unittest.TestCase):
+    def setUp(self):
+        self.check = importlib.import_module('nuvio_ui.system_check')
+
+    def found(self, enabled, trakt_connected=False):
+        trakt = importlib.import_module('resources.lib.trakt')
+        with mock.patch.object(self.check.xbmc, 'getCondVisibility', side_effect=lambda c: any(a in c for a in enabled)), \
+                mock.patch.object(self.check, '_name', side_effect=lambda aid, name: name), \
+                mock.patch.object(trakt, 'authorized', return_value=trakt_connected):
+            return self.check.found()
+
+    def test_known_addons_are_found(self):
+        names = [n for _, n in self.found({'plugin.video.umbrella', 'plugin.video.fenlight', 'plugin.video.redlight', 'plugin.program.openwizard'})]
+        self.assertEqual(names, ['Umbrella', 'Fen Light', 'Red Light', 'Open Wizard'])
+
+    def test_trakt_addon_only_when_meganexus_uses_trakt(self):
+        self.assertEqual(self.found({'script.trakt'}), [])
+        self.assertEqual(self.found({'script.trakt'}, trakt_connected=True), [('script.trakt', 'Trakt')])
+
+    def test_text_recommends_clean_install_first(self):
+        text = self.check.text([('script.trakt', 'Trakt')])
+        self.assertLess(text.index('clean Kodi install'), text.index('turn them off'))
+        self.assertIn('logged twice', text)
+        self.assertIn('Nothing is deleted', text)
+
+    def run_check(self, choice, skipped=''):
+        values = {self.check.SKIPPED_SETTING: skipped}
+        addon = SimpleNamespace(getSetting=lambda k: values.get(k, ''), setSetting=values.__setitem__)
+        win = mock.Mock(choice=choice)
+        rpc = []
+        with mock.patch.object(self.check, 'found', return_value=[('plugin.video.fen', 'Fen')]), \
+                mock.patch.object(self.check.xbmcaddon, 'Addon', return_value=SimpleNamespace(getAddonInfo=lambda k: '/x', getSetting=addon.getSetting, setSetting=addon.setSetting)), \
+                mock.patch.object(self.check, 'Notice', return_value=win) as notice, \
+                mock.patch.object(self.check.xbmc, 'executeJSONRPC', side_effect=lambda r: rpc.append(r) or '{"result":"OK"}', create=True), \
+                mock.patch.object(self.check.xbmcgui, 'Dialog'):
+            result = self.check.run()
+        return result, values, rpc, notice
+
+    def test_turn_off_disables_them(self):
+        result, values, rpc, _ = self.run_check('off')
+        self.assertEqual(result, 'off')
+        self.assertIn('"enabled": false', rpc[0])
+        self.assertIn('plugin.video.fen', rpc[0])
+
+    def test_skip_is_remembered_until_another_addon_appears(self):
+        result, values, rpc, _ = self.run_check('skip')
+        self.assertEqual((result, values[self.check.SKIPPED_SETTING], rpc), ('skip', 'plugin.video.fen', []))
+        result, _, _, notice = self.run_check('off', skipped='plugin.video.fen')
+        self.assertEqual(result, 'skip')
+        notice.assert_not_called()
+
+    def test_window_and_wiring(self):
+        import xml.etree.ElementTree as ET
+        root = ET.parse(kodi_stub.ADDON_ROOT + '/../script.nuvio/resources/skins/Default/1080i/nuvio_notice.xml').getroot()
+        labels = {c.get('id'): c.findtext('label') for c in root.iter('control') if c.get('type') == 'button'}
+        self.assertEqual(labels, {'300': 'Turn them off', '301': 'Skip'})
+        self.assertTrue(any('nuvio_shield.png' in (c.findtext('texture') or '') for c in root.iter('control')))
+        default = open(kodi_stub.ADDON_ROOT + '/../script.nuvio/default.py', encoding='utf-8').read()
+        self.assertIn('system_check()', default)
+
+
 if __name__ == '__main__':
     unittest.main()
