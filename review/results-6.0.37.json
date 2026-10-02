@@ -3,12 +3,12 @@
   "base": "6.0.36 release",
   "python": "3.14.7",
   "checks": {
-    "runtime_python38_grammar": 225,
-    "component_xml": 194,
+    "runtime_python38_grammar": 228,
+    "component_xml": 197,
     "component_json": 5
   },
-  "unit_tests": 717,
-  "unit_seconds": 34.361,
+  "unit_tests": 730,
+  "unit_seconds": 34.354,
   "test_modules": [
     "test_nuvio_601",
     "test_nuvio_602",
