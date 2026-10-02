@@ -253,12 +253,14 @@ def default_collections():
 
 
 def home_rows():
-    """Show or hide whole Home rows: Continue Watching and each collection group."""
+    """Show or hide whole Home rows: Continue Watching, Local (6.0.37) and each collection group."""
     from . import settings_page as page
     from . import settings
+    from resources.lib import local_media
     def rows():
         groups = collection_profile.load()
-        return ([page.item('Continue Watching', enabled=settings.ADDON.getSetting('nuvio_home_continue') != 'false')] +
+        return ([page.item('Continue Watching', enabled=settings.ADDON.getSetting('nuvio_home_continue') != 'false'),
+                 page.item('Local · movies and series on this device', enabled=local_media.enabled(settings.ADDON))] +
                 [page.item(g['title'], '%d collections' % len(g['folders']) if not g.get('hidden') else '', enabled=not g.get('hidden'))
                  for g in groups] + [page.item('Back')])
     def choose(pick):
@@ -266,9 +268,12 @@ def home_rows():
         if pick == 0:
             settings.ADDON.setSetting('nuvio_home_continue', 'true' if settings.ADDON.getSetting('nuvio_home_continue') == 'false' else 'false')
             return None
-        if pick > len(groups):
+        if pick == 1:
+            settings.ADDON.setSetting(local_media.HOME_SETTING, 'false' if local_media.enabled(settings.ADDON) else 'true')
+            return None
+        if pick > len(groups) + 1:
             return page.DONE
-        group = groups[pick - 1]
+        group = groups[pick - 2]
         group['hidden'] = not group.get('hidden')
         collection_profile.save(groups)
         return None

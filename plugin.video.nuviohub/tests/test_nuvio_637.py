@@ -1,4 +1,5 @@
-"""6.0.37: Kodi 22 RC1 windows (read-only SWIG classes) and touch row dragging."""
+"""6.0.37: Kodi 22 RC1 windows (read-only SWIG classes), touch row dragging,
+Trakt/TMDB collection sources, security notice, Local storage."""
 import importlib
 import unittest
 from unittest import mock
@@ -234,6 +235,94 @@ class SecurityNotice(unittest.TestCase):
         self.assertTrue(any('nuvio_shield.png' in (c.findtext('texture') or '') for c in root.iter('control')))
         default = open(kodi_stub.ADDON_ROOT + '/../script.nuvio/default.py', encoding='utf-8').read()
         self.assertIn('system_check()', default)
+
+
+class LocalStorage(unittest.TestCase):
+    MOVIES = {'limits': {'total': 2}, 'movies': [
+        {'movieid': 7, 'label': 'Heat', 'year': 1995, 'art': {'poster': 'image://p/', 'fanart': 'image://f/'},
+         'resume': {'position': 600, 'total': 6000}, 'playcount': 0, 'rating': 8.3},
+        {'movieid': 8, 'label': 'Ronin', 'year': 1998, 'art': {}, 'resume': {}, 'playcount': 1}]}
+    SHOWS = {'limits': {'total': 1}, 'tvshows': [
+        {'tvshowid': 3, 'label': 'Dark', 'year': 2017, 'art': {'poster': 'image://d/'}, 'episode': 26, 'watchedepisodes': 10}]}
+
+    def setUp(self):
+        self.media = importlib.import_module('resources.lib.local_media')
+        self.media.forget_counts()
+        self.calls = []
+
+    def fake_rpc(self, replies):
+        import json
+        def answer(raw):
+            request = json.loads(raw)
+            self.calls.append(request)
+            return json.dumps({'result': replies.get(request['method'], {})})
+        return mock.patch.object(self.media.xbmc, 'executeJSONRPC', side_effect=answer, create=True)
+
+    def test_home_shows_local_rows_only_when_turned_on_and_not_empty(self):
+        addon = mock.Mock(getSetting=lambda key: 'true')
+        with self.fake_rpc({'VideoLibrary.GetMovies': self.MOVIES, 'VideoLibrary.GetTVShows': {'limits': {'total': 0}}}):
+            shelves = self.media.shelves(addon)
+        self.assertEqual([(s['title'], s['local_job']) for s in shelves], [('Local Movies', 'movie')])
+        self.assertEqual(self.media.shelves(mock.Mock(getSetting=lambda key: 'false')), [])
+
+    def test_movie_and_series_cards(self):
+        with self.fake_rpc({'VideoLibrary.GetMovies': self.MOVIES, 'VideoLibrary.GetTVShows': self.SHOWS}):
+            movies = self.media.rows('movie')
+            shows = self.media.rows('series')
+        self.assertEqual(self.calls[0]['params']['sort'], {'method': 'dateadded', 'order': 'descending'})
+        heat, ronin = movies
+        self.assertEqual((heat['title'], heat['percent_value'], heat['local'], heat['poster']),
+                         ('Heat', 10, {'type': 'movie', 'id': 7, 'title': 'Heat'}, 'image://p/'))
+        self.assertNotIn('target', heat)   # never sent to stream add-ons
+        self.assertEqual(ronin['watched'], '1')
+        self.assertEqual((shows[0]['subtitle'], shows[0]['local']['id']), ('2017  ·  16 new episodes', 3))
+
+    def test_empty_library_points_to_settings(self):
+        with self.fake_rpc({}):
+            row, = self.media.rows('movie')
+        self.assertIn('Local storage', row['plot'])
+        self.assertIn('action=setup_center', row['path'])
+
+    def test_play_opens_the_library_item_with_resume(self):
+        with self.fake_rpc({'Player.Open': 'OK'}):
+            self.assertTrue(self.media.play('episode', 41, resume=True))
+        self.assertEqual(self.calls[0]['params'], {'item': {'episodeid': 41}, 'options': {'resume': True}})
+
+    def test_next_episode_prefers_in_progress_then_unwatched(self):
+        items = [{'playcount': 1}, {'playcount': 0}, {'playcount': 0, 'resume': {'position': 5, 'total': 50}}]
+        self.assertEqual(self.media.next_episode(items), 2)
+        self.assertEqual(self.media.next_episode(items[:2]), 1)
+
+    def test_home_data_and_window_wiring(self):
+        home_data = importlib.import_module('resources.lib.home_data')
+        media = importlib.import_module(home_data.__package__ + '.local_media')   # the copy home_data imports
+        with mock.patch.object(media, 'rows', return_value=['x']) as rows:
+            self.assertEqual(home_data.load_catalog({'local_job': 'series'}), ['x'])
+            self.assertIsNone(home_data.load_catalog({'local_job': 'series'}, cached_only=True))
+        rows.assert_called_once_with('series')
+        root = kodi_stub.ADDON_ROOT + '/../script.nuvio/nuvio_ui/'
+        window = open(root + 'home_window.py', encoding='utf-8').read()
+        self.assertIn("shelf.get('local_job')", window)
+        self.assertIn('open_item', window)
+        settings_text = open(root + 'settings.py', encoding='utf-8').read()
+        self.assertIn("'Local storage", settings_text)
+        editor = open(root + 'collection_editor.py', encoding='utf-8').read()
+        self.assertIn('local_media.HOME_SETTING', editor)
+
+    def test_open_item(self):
+        storage = importlib.import_module('nuvio_ui.local_storage')
+        self.assertIn('videodb://movies/titles/', storage.open_item({'type': 'all', 'kind': 'movie'}))
+        with mock.patch.object(storage.local_media, 'resume_seconds', return_value=0), \
+                mock.patch.object(storage.local_media, 'play', return_value=True) as play:
+            self.assertEqual(storage.open_item({'type': 'movie', 'id': 7}), 'playing')
+        play.assert_called_once_with('movie', 7, False)
+        with mock.patch.object(storage.local_media, 'resume_seconds', return_value=754), \
+                mock.patch.object(storage.local_media, 'play', return_value=True) as play, \
+                mock.patch.object(storage.xbmcgui, 'Dialog') as dialog:
+            dialog.return_value.contextmenu.return_value = 0
+            self.assertEqual(storage.open_item({'type': 'movie', 'id': 7}), 'playing')
+        self.assertEqual(dialog.return_value.contextmenu.call_args[0][0][0], 'Resume from 12:34')
+        play.assert_called_once_with('movie', 7, True)
 
 
 if __name__ == '__main__':

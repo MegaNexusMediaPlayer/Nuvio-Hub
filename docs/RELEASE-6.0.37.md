@@ -1,4 +1,4 @@
-# Nuvio Hub 6.0.37 — Kodi 22 RC1, touch screens, Trakt/TMDB collections, security notice
+# Nuvio Hub 6.0.37 — Kodi 22 RC1, touch screens, Trakt/TMDB collections, security notice, Local storage
 
 Prepared 2 October 2026 (test build, not released).
 
@@ -42,6 +42,19 @@ Prepared 2 October 2026 (test build, not released).
   **Turn them off** (one click, nothing deleted, reversible in Add-ons).
   **Skip** is remembered until another such add-on appears. Maintenance >
   System check shows it again at any time.
+
+* **Local storage:** movies and series on the device itself (USB disk, NAS,
+  SMB/NFS share) in MegaNexus. HUB Settings > Local storage: show the rows on
+  Home, how many titles Kodi found, add a folder (opens Kodi's video sources
+  with short steps: Add videos, set Movies or TV shows), scan for new files,
+  remove missing files. Home gets **Local Movies** and **Local Series** rows
+  (newest first; only kinds that have titles), switched on there or in
+  Collections > Home rows > Local. A movie plays at once (Resume / From the
+  beginning when Kodi has a resume point); a series opens a season and episode
+  list on the next episode to watch. Playback opens Kodi's own library item,
+  so its resume points and watched marks keep working, and these files never
+  go to stream add-ons. Read through Kodi JSON-RPC (VideoLibrary.*), no
+  network.
 
 Checks: `test_nuvio_637.py`; `python review/check_637.py`, release guard,
 builder, packaged smoke test.

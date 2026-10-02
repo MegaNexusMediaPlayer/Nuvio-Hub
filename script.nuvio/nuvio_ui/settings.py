@@ -667,6 +667,11 @@ def maintenance():
     return page.show('Maintenance',rows,choose)
 
 
+def local_storage():
+    from .local_storage import run as local
+    return local()
+
+
 def phone_setup():
     from .phone_setup import run as phone
     phone()
@@ -677,7 +682,7 @@ def run(back_command=''):
         from .iptv import configure
         configure()
     actions=[('Set up on phone · QR code',phone_setup),('Accounts & tracking services',tracking_accounts),('Continue Watching',continue_watching),('Add-ons',addons),('Collections',collections),
-        ('IPTV',iptv_settings),('Sport',sport_settings),('Playback',playback),('Subtitles',subtitle_settings),('Trailers',trailers),
+        ('Local storage · movies and series on this device',local_storage),('IPTV',iptv_settings),('Sport',sport_settings),('Playback',playback),('Subtitles',subtitle_settings),('Trailers',trailers),
         ('Home & appearance',appearance),('Performance & image cache',performance),('Maintenance & updates',maintenance),
         ('Support MegaNexus · Ko-fi',support)]
     def rows():return [page.item(label) for label,_ in actions]+[page.item('Done')]

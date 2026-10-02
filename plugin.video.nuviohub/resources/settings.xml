@@ -190,6 +190,7 @@
     <setting id="nuvio_home_layout" type="text" default="" visible="false" />
     <setting id="nuvio_manifests_refreshed" type="text" default="" visible="false" />
     <setting id="nuvio_conflicts_skipped" type="text" default="" visible="false" />
+    <setting id="nuvio_home_local" type="bool" default="false" visible="false" />
     <setting id="nuvio_cw_days" type="text" default="60" visible="false" />
     <setting id="nuvio_cw_unaired" type="bool" default="true" visible="false" />
     <setting id="nuvio_art_cache" type="text" default="ram256" visible="false" />

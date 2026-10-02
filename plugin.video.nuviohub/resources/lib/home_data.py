@@ -100,6 +100,12 @@ def initial_shelves(bucket=''):
             show_continue = True
         if show_continue:
             shelves.append(continue_shelf())
+        try:
+            from .local_media import shelves as local_shelves
+            shelves.extend(local_shelves())   # 6.0.37: Local Movies / Local Series (Home rows)
+        except Exception:
+            pass
+        leading=len(shelves)
         from .collections_home import home_rows,layout,catalog_rows
         if layout()=='rows':
             try:shelves.extend(catalog_rows(MAX_ROWS-len(shelves)))
@@ -114,7 +120,7 @@ def initial_shelves(bucket=''):
         if len(shelves)>MAX_ROWS:
             from .collections_home import groups,tiles
             extra=[]
-            for group in groups()[MAX_ROWS-2:]:
+            for group in groups()[MAX_ROWS-1-leading:]:
                 cards=tiles(group)['rows'];art=cards[0] if cards else {}
                 extra.append(dict(placeholder(group['title'],'Open this collection group.'),group_id=group['id'],poster=art.get('poster',''),fanart=art.get('fanart','')))
             shelves=shelves[:MAX_ROWS-1]+[{'title':'More collection groups','shape':'landscape','rows':extra}]
@@ -205,6 +211,10 @@ def load_catalog(shelf, stopped=None, cached_only=False):
     disk) never touches the network and returns ``None`` unless every source
     already has a cached page."""
     if stopped and stopped():return []
+    if shelf.get('local_job'):
+        if cached_only:return None
+        from .local_media import rows as local_rows
+        return local_rows(shelf['local_job'])
     if shelf.get('people_job'):
         if cached_only:return None
         from .search_catalogs import search_people
