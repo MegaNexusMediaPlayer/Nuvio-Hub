@@ -87,7 +87,8 @@ def addons():
         enabled=sum(1 for _,on in providers if on)
         pick=dialog.select('Add-ons',['Metadata add-ons: '+name,
             'Stream add-ons: %d / %d enabled'%(enabled,len(providers)),
-            'Add configured manifest URL','Import add-ons from Nuvio','Remove a provider','Actor search fallback (optional TMDb key)',
+            'Add configured manifest URL','Import add-ons from Nuvio','Remove a provider',
+            'TMDb API key · TMDB collections and actor search: '+('Set' if ADDON.getSetting('tmdb_api_key') else 'Not set'),
             'Refresh add-on catalogs now','Back'],preselect=previous)
         if pick<0 or pick==7:return
         previous=pick
@@ -104,7 +105,7 @@ def addons():
             if changed is not None:
                 dialog.ok('Add-ons','Updated: %s.'%', '.join(changed) if changed else 'All add-ons were already up to date.')
         elif pick==5:
-            key=dialog.input('Optional TMDb API key',option=xbmcgui.ALPHANUM_HIDE_INPUT).strip()
+            key=dialog.input('Your TMDb API key (v3 key or v4 token, free at themoviedb.org)',option=xbmcgui.ALPHANUM_HIDE_INPUT).strip()
             if key:ADDON.setSetting('tmdb_api_key',key);settings_cache.invalidate()
         elif pick==4:
             providers=store.list_providers()

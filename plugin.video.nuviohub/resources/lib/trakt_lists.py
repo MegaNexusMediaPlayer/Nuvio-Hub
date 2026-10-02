@@ -21,7 +21,7 @@ PROVIDER = {'id': 'trakt-lists', 'name': 'Trakt', 'kind': KIND,
 def normalize(source):
     """A Nuvio export's Trakt source -> stored collection source, or None."""
     try:
-        list_id = int(source.get('traktListId') or source.get('trakt_list_id') or 0)
+        list_id = int(source.get('traktListId') or source.get('trakt_list_id') or source.get('listId') or 0)
     except (TypeError, ValueError):
         return None
     if list_id <= 0:
@@ -44,6 +44,7 @@ def job(source):
     """(provider, catalog, extra) for the loaders."""
     catalog = {'id': 'trakt.list.%s.%s.%s' % (source['listId'], source['sortBy'], source['sortHow']),
                'type': source['type'], 'name': source.get('title') or 'Trakt list',
+               'extra': [{'name': 'skip'}],   # paged like an add-on catalog
                'trakt': {'list': source['listId'], 'sort_by': source['sortBy'], 'sort_how': source['sortHow']}}
     return PROVIDER, catalog, {}
 
@@ -89,7 +90,7 @@ def to_meta(row, media_type):
     return {'id': mid, 'type': media_type, 'name': node.get('title') or mid,
             'poster': _poster(node, images), 'background': _background(images),
             'description': node.get('overview') or '', 'releaseInfo': str(node.get('year') or ''),
-            'imdbRating': str(node.get('rating') or '') if node.get('rating') else ''}
+            'imdbRating': ('%.1f' % float(node['rating'])) if node.get('rating') else ''}
 
 
 def fetch(catalog, extra=None, timeout=8):

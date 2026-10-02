@@ -60,6 +60,9 @@ def _addon():
 def _source_label(source, providers):
     from .collections_home import matching_catalog
     kind = 'Series' if source.get('type') == 'series' else 'Movies'
+    from .collection_sources import is_virtual, label
+    if is_virtual(source):
+        return label(source)
     match = matching_catalog(source, providers)
     if not match:
         return '%s (%s) · not installed' % (source.get('catalogId'), kind)
@@ -110,6 +113,7 @@ def state():
                    for g in collection_profile.load()],
         'display': display,
         'tracking': _tracking_status(),
+        'tmdb_key': bool(addon.getSetting('tmdb_api_key')),
     }
 
 
@@ -119,6 +123,17 @@ def _tracking_status():
         return tracking_link.status()
     except Exception:
         return {}
+
+
+def tmdb_key(value):
+    """The user's own TMDb key (v3 key or v4 token) for TMDB collection sources."""
+    value = str(value or '').strip()
+    if not value or len(value) < 16 or any(ch.isspace() for ch in value):
+        raise ValueError('Paste the TMDb API key or read access token from themoviedb.org > Settings > API.')
+    _addon().setSetting('tmdb_api_key', value)
+    from . import settings_cache
+    settings_cache.invalidate()
+    return {}
 
 
 def tracking_start(service):
@@ -417,6 +432,7 @@ class SetupService:
                     '/api/nuvio/import': lambda: nuvio_import(bool(body.get('collections'))),
                     '/api/save': lambda: save(body),
                     '/api/tracking/start': lambda: tracking_start(body.get('service')),
+                    '/api/tmdb/key': lambda: tmdb_key(body.get('key')),
                     '/api/tracking/disconnect': lambda: tracking_disconnect(body.get('service')),
                 }
                 action = actions.get(parts.path)

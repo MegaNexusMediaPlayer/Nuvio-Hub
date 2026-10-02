@@ -22,7 +22,13 @@ def jobs_for(params):
                 'catalogId':params.get('catalog_id'),'type':params.get('media_type') or 'movie',
                 'extra':{k:params[k] for k in ('genre','search','year') if params.get(k)}}]
     jobs=[]
+    from . import collection_sources
     for spec in specs:
+        if collection_sources.is_virtual(spec):
+            if not collection_sources.usable(spec):continue
+            provider,catalog,extra=collection_sources.job(spec)
+            jobs.append({'provider':provider,'catalog':catalog,'extra':extra,'offset':0,'done':False})
+            continue
         match = matching_catalog(spec, providers)
         if match:
             source, catalog = match

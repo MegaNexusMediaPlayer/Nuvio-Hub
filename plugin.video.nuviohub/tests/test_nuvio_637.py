@@ -82,5 +82,98 @@ class TouchRows(unittest.TestCase):
         self.assertFalse(dialog.Dialog.TOUCH_ROWS)
 
 
+class ExternalCollectionSources(unittest.TestCase):
+    def setUp(self):
+        self.profile = importlib.import_module('resources.lib.collection_profile')
+        self.sources = importlib.import_module('resources.lib.collection_sources')
+        self.tmdb = importlib.import_module('resources.lib.tmdb_lists')
+        self.trakt = importlib.import_module('resources.lib.trakt_lists')
+        self.ch = importlib.import_module('resources.lib.collections_home')
+
+    def export(self):
+        return [{'id': 'streaming', 'title': 'Streaming', 'folders': [{'id': 'netflix', 'title': 'Netflix', 'catalogSources': [
+            {'provider': 'tmdb', 'tmdbSourceType': 'NETWORK', 'tmdbId': 213, 'mediaType': 'TV', 'sortBy': 'popularity.desc',
+             'filters': {'withOriginalLanguage': 'en', 'releaseDateGte': '2020-01-01'}},
+            {'provider': 'trakt', 'traktListId': 1248149, 'mediaType': 'MOVIE', 'sortBy': 'released', 'sortHow': 'desc', 'title': 'MCU'},
+            {'provider': 'tmdb', 'tmdbSourceType': 'BOGUS', 'tmdbId': 1}]}]}]
+
+    def test_nuvio_tmdb_and_trakt_sources_are_imported(self):
+        groups = self.profile.normalize(self.export())
+        sources = groups[0]['folders'][0]['sources']
+        self.assertEqual([s['provider'] for s in sources], ['tmdb', 'trakt'])
+        self.assertEqual((sources[0]['sourceType'], sources[0]['type']), ('NETWORK', 'series'))
+        self.assertEqual((sources[1]['listId'], sources[1]['sortBy'], sources[1]['sortHow']), (1248149, 'released', 'desc'))
+        self.assertEqual(self.profile.normalize(groups), groups, 'stored form re-normalizes to itself')
+
+    def key(self, value):
+        """has_key on every loaded copy of tmdb_lists (the suite loads the
+        library under two package names)."""
+        import sys
+        from contextlib import ExitStack
+        stack = ExitStack()
+        for name, mod in list(sys.modules.items()):
+            if name.endswith('.tmdb_lists') and hasattr(mod, 'has_key'):
+                stack.enter_context(mock.patch.object(mod, 'has_key', return_value=value))
+        return stack
+
+    def test_shelf_loads_them_like_catalogs_and_asks_for_a_tmdb_key(self):
+        folder = self.profile.normalize(self.export())[0]['folders'][0]
+        with self.key(True):
+            shelf = self.ch.folder_shelf(folder, [])
+        kinds = [p['kind'] for p, _, _ in shelf['collection_job']]
+        self.assertEqual(kinds, ['tmdb', 'trakt'])
+        only_tmdb = dict(folder, sources=[folder['sources'][0]])
+        with self.key(False):
+            shelf = self.ch.folder_shelf(only_tmdb, [])
+        self.assertEqual(shelf['rows'][0]['title'], 'Add your TMDb API key')
+
+    def test_tmdb_network_uses_discover_with_nuvio_filters(self):
+        source = self.profile.normalize(self.export())[0]['folders'][0]['sources'][0]
+        _, catalog, _ = self.tmdb.job(source)
+        calls = []
+        def request(path, params=None, timeout=None):
+            calls.append((path, params))
+            return {'results': [{'id': 1399, 'name': 'Show', 'poster_path': '/p.jpg', 'first_air_date': '2021-04-01', 'vote_average': 8.12}]}
+        with mock.patch.object(self.tmdb, 'has_key', return_value=True), \
+                mock.patch('resources.lib.tmdb_direct._request', side_effect=request):
+            data = self.tmdb.fetch(catalog, {'skip': 20})
+        path, params = calls[0]
+        self.assertEqual(path, '/discover/tv')
+        self.assertEqual((params['with_networks'], params['with_original_language'], params['first_air_date.gte'], params['page']),
+                         (213, 'en', '2020-01-01', 2))
+        self.assertEqual(data['metas'][0], {'id': 'tmdb:1399', 'type': 'series', 'name': 'Show', 'poster': 'https://image.tmdb.org/t/p/w500/p.jpg',
+                                            'background': '', 'description': '', 'releaseInfo': '2021', 'imdbRating': '8.1'})
+
+    def test_tmdb_needs_the_users_key(self):
+        _, catalog, _ = self.tmdb.job(self.tmdb.normalize({'tmdbSourceType': 'LIST', 'tmdbId': 5, 'mediaType': 'MOVIE'}))
+        with mock.patch.object(self.tmdb, 'has_key', return_value=False):
+            with self.assertRaises(ValueError):
+                self.tmdb.fetch(catalog)
+
+    def test_trakt_list_is_read_like_nuvio_tv(self):
+        source = self.profile.normalize(self.export())[0]['folders'][0]['sources'][1]
+        _, catalog, _ = self.trakt.job(source)
+        trakt = importlib.import_module('resources.lib.trakt')
+        row = {'movie': {'title': 'Iron Man', 'year': 2008, 'rating': 7.91, 'ids': {'imdb': 'tt0371746'},
+                         'images': {'poster': ['media.trakt.tv/images/p.jpg']}}}
+        with mock.patch.object(trakt, '_request', return_value=[row]) as request, \
+                mock.patch.object(trakt, 'authorized', return_value=False):
+            data = self.trakt.fetch(catalog, {'skip': 50})
+        path = request.call_args.args[0]
+        self.assertTrue(path.startswith('/lists/1248149/items/movies?'))
+        for part in ('extended=full%2Cimages', 'page=2', 'limit=50', 'sort_by=released', 'sort_how=desc'):
+            self.assertIn(part, path)
+        self.assertEqual(data['metas'][0]['poster'], 'https://media.trakt.tv/images/p.jpg')
+        self.assertEqual(data['metas'][0]['imdbRating'], '7.9')
+
+    def test_cache_and_grid_use_the_same_path(self):
+        browse = open(kodi_stub.ADDON_ROOT + '/resources/lib/browse_cache.py', encoding='utf-8').read()
+        self.assertIn("provider.get('kind') in ('trakt', 'tmdb')", browse)
+        pages = open(kodi_stub.ADDON_ROOT + '/resources/lib/catalog_pages.py', encoding='utf-8').read()
+        self.assertIn('collection_sources.is_virtual(spec)', pages)
+        page = open(kodi_stub.ADDON_ROOT + '/resources/phone_setup/index.html', encoding='utf-8').read()
+        self.assertIn("api('/api/tmdb/key'", page)
+
+
 if __name__ == '__main__':
     unittest.main()

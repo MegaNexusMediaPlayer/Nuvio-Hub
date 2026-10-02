@@ -26,8 +26,10 @@ def _catalogs(folder):
                if c.get('id') and c.get('type') in ('movie', 'series')]
     if not options:
         raise ValueError('Add a manifest with movie or series catalogs first.')
+    # Trakt / TMDB sources (6.0.37) are not add-on catalogs: kept as they are.
+    kept = [s for s in folder.get('sources') or [] if s.get('provider') in ('trakt', 'tmdb')]
     old = {(s.get('addonId'), s.get('providerId'), s['catalogId'], s['type']): s
-           for s in folder.get('sources') or []}
+           for s in folder.get('sources') or [] if s.get('catalogId')}
     def identity(p, c):
         return ((p.get('manifest') or {}).get('id'), p['id'], c['id'], c['type'])
     selected = xbmcgui.Dialog().multiselect('Catalogs for ' + folder['title'],
@@ -35,11 +37,11 @@ def _catalogs(folder):
         preselect=[i for i, (p, c) in enumerate(options) if identity(p, c) in old])
     if selected is None:
         return False
-    if not selected:
+    if not selected and not kept:
         raise ValueError('Choose at least one catalog. Use Hide to remove a card from Home.')
     folder['sources'] = [dict(old.get(identity(*options[i]), {}),
         addonId=(options[i][0].get('manifest') or {}).get('id', ''), providerId=options[i][0]['id'],
-        catalogId=options[i][1]['id'], type=options[i][1]['type']) for i in selected]
+        catalogId=options[i][1]['id'], type=options[i][1]['type']) for i in selected] + kept
     for source, index in zip(folder['sources'], selected):
         catalog = options[index][1]
         specs = {item['name']: item for item in catalog.get('extra') or [] if isinstance(item, dict) and item.get('name')}
@@ -64,6 +66,9 @@ def _catalogs(folder):
 def _source_label(source, providers):
     from resources.lib.collections_home import matching_catalog
     kind = 'Series' if source.get('type') == 'series' else 'Movies'
+    from resources.lib.collection_sources import is_virtual, label
+    if is_virtual(source):
+        return label(source), True
     match = matching_catalog(source, providers)
     if not match:
         return '%s (%s)' % (source.get('catalogId'), kind), False
