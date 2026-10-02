@@ -434,10 +434,16 @@ class MediaServersInMegaNexus(unittest.TestCase):
         self.assertEqual(self.ms.parse_video_id('movie', 'kitsu:1'), (None, None, None))
 
     def test_own_server_copies_come_first(self):
-        backend = importlib.import_module('resources.lib.backend_api')
-        media = importlib.import_module(backend.__package__ + '.media_servers')
-        stream_providers = importlib.import_module(backend.__package__ + '.stream_providers')
-        client = importlib.import_module(backend.__package__ + '.nuviohub.client')
+        import sys
+        def live(name):
+            # The module object backend_api's "from . import name" resolves to;
+            # importing other copies would confuse later test modules.
+            importlib.import_module('resources.lib.' + name)
+            return getattr(sys.modules['resources.lib'], name)
+        backend = live('backend_api')
+        media = live('media_servers')
+        stream_providers = live('stream_providers')
+        client = sys.modules[backend.__package__ + '.nuviohub.client']
         addon_row = {'name': 'Add-on', 'url': 'http://a/1.mkv'}
         server_row = {'name': 'Plex · Home', 'url': 'http://nas/1.mkv', '_nuvio_server': {'server_type': 'plex'}}
         with mock.patch.object(stream_providers, 'enabled', return_value=[{'id': 'a', 'name': 'A', 'base_url': 'http://a'}]), \
