@@ -59,6 +59,62 @@ class UpdateCheck(unittest.TestCase):
             self.assertEqual(settings.version_label(), '6.0.36 · interface 6.0.27')
 
 
+def provider(pid, mid, catalogs, name=''):
+    return {'id': pid, 'name': name or mid, 'manifest_url': 'https://x/%s/manifest.json' % pid,
+            'manifest': {'id': mid, 'name': name or mid, 'version': '1', 'resources': ['catalog'], 'types': ['movie', 'series'],
+                         'catalogs': [{'id': cid, 'type': ctype} for cid, ctype in catalogs]}}
+
+
+class CollectionMatching(unittest.TestCase):
+    def setUp(self):
+        self.ch = importlib.import_module('resources.lib.collections_home')
+        patch = mock.patch('resources.lib.metadata_providers.entries', side_effect=lambda providers: [(p, True) for p in providers])
+        patch.start();self.addCleanup(patch.stop)
+
+    def test_other_peoples_instance_connects_by_catalog(self):
+        mine = provider('x1', 'xperience.metadata.mine', [('streaming.netflix', 'movie')], 'Xperience')
+        source = {'addonId': 'xperience.metadata.someone-else', 'catalogId': 'streaming.netflix', 'type': 'movie'}
+        self.assertEqual(self.ch.matching_catalog(source, [mine])[0]['id'], 'x1')
+
+    def test_comma_ids_and_type_aliases_like_nuvio(self):
+        mine = provider('x1', 'aiometadata', [('mdblist.123', 'series')])
+        source = {'addonId': 'aiometadata', 'catalogId': 'mdblist.123,genre=Drama', 'type': 'tv'}
+        self.assertEqual(self.ch.matching_catalog(source, [mine])[1]['id'], 'mdblist.123')
+        self.assertEqual(self.ch.kind('tv'), 'series')
+
+    def test_most_similar_addon_wins_and_general_ids_stay_put(self):
+        cinemeta = provider('c', 'com.linvo.cinemeta', [('top', 'movie'), ('streaming.netflix', 'movie')], 'Cinemeta')
+        xp = provider('x', 'xperience.v2', [('streaming.netflix', 'movie')], 'Xperience')
+        source = {'addonId': 'xperience.v1', 'catalogId': 'streaming.netflix', 'type': 'movie'}
+        self.assertEqual(self.ch.matching_catalog(source, [cinemeta, xp])[0]['id'], 'x')
+        general = {'addonId': 'some.other.addon', 'catalogId': 'top', 'type': 'movie'}
+        self.assertIsNone(self.ch.matching_catalog(general, [cinemeta]))
+
+
+class ManifestRefresh(unittest.TestCase):
+    def test_changed_manifests_are_stored(self):
+        refresh = importlib.import_module('resources.lib.manifest_refresh')
+        store = importlib.import_module('resources.lib.nuviohub.store')
+        old = provider('x1', 'xperience', [('a', 'movie')])
+        new_manifest = dict(old['manifest'], catalogs=[{'id': 'a', 'type': 'movie'}, {'id': 'streaming.netflix', 'type': 'movie'}])
+        with mock.patch.object(store, 'list_providers', return_value=[old]), \
+                mock.patch.object(refresh, 'fetch', return_value=new_manifest), \
+                mock.patch.object(store, 'refresh_provider_manifest') as saved:
+            changed = refresh.refresh_all()
+        saved.assert_called_once_with('x1', new_manifest)
+        self.assertEqual(changed, ['xperience'])
+
+    def test_nuvio_import_reads_the_current_manifest(self):
+        source = open(kodi_stub.ADDON_ROOT + '/resources/lib/nuvio_import.py', encoding='utf-8').read()
+        self.assertIn("fetch_manifest(url, timeout=6) or", source)
+
+    def test_service_and_settings_refresh(self):
+        root = kodi_stub.ADDON_ROOT
+        self.assertIn('NuvioHubManifests', open(root + '/service.py', encoding='utf-8').read())
+        settings_source = open(root + '/../script.nuvio/nuvio_ui/settings.py', encoding='utf-8').read()
+        self.assertIn('Refresh add-on catalogs now', settings_source)
+
+
 class AutoInstall(unittest.TestCase):
     def test_a_failed_install_is_retried(self):
         addon = SimpleNamespace(getSetting=lambda k: '', setSetting=lambda k, v: None)

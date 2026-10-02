@@ -87,13 +87,22 @@ def addons():
         enabled=sum(1 for _,on in providers if on)
         pick=dialog.select('Add-ons',['Metadata add-ons: '+name,
             'Stream add-ons: %d / %d enabled'%(enabled,len(providers)),
-            'Add configured manifest URL','Import add-ons from Nuvio','Remove a provider','Actor search fallback (optional TMDb key)','Back'],preselect=previous)
-        if pick<0 or pick==6:return
+            'Add configured manifest URL','Import add-ons from Nuvio','Remove a provider','Actor search fallback (optional TMDb key)',
+            'Refresh add-on catalogs now','Back'],preselect=previous)
+        if pick<0 or pick==7:return
         previous=pick
         if pick==0:select_provider('metadata')
         elif pick==1:stream_addons()
         elif pick==2:add_manifest(dialog)
         elif pick==3:sync_nuvio()
+        elif pick==6:
+            # 6.0.36: catalogs added in an add-on's configuration (e.g. streaming
+            # services in AIOMetadata / Xperience) appear without re-adding it.
+            from resources.lib import manifest_refresh
+            from .playback import job
+            changed=job(manifest_refresh.refresh_all,label='Reading the add-ons\' catalogs')
+            if changed is not None:
+                dialog.ok('Add-ons','Updated: %s.'%', '.join(changed) if changed else 'All add-ons were already up to date.')
         elif pick==5:
             key=dialog.input('Optional TMDb API key',option=xbmcgui.ALPHANUM_HIDE_INPUT).strip()
             if key:ADDON.setSetting('tmdb_api_key',key);settings_cache.invalidate()

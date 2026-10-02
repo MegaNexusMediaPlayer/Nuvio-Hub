@@ -49,6 +49,9 @@ class CollectionsTests(unittest.TestCase):
         self.assertEqual(c.matching_catalog(source,[provider])[0]['id'],'installed-aio')
         provider['manifest']['id']='different'
         provider['name']='AIOMetadata'
+        # 6.0.36: the catalog itself (not the name) connects another instance.
+        self.assertEqual(c.matching_catalog(source,[provider])[0]['id'],'installed-aio')
+        provider['manifest']['catalogs']=[x for x in provider['manifest']['catalogs'] if x.get('id')!='tvdb.trending']
         self.assertIsNone(c.matching_catalog(source,[provider]))
 
     def test_genre_filter_is_preserved(self):

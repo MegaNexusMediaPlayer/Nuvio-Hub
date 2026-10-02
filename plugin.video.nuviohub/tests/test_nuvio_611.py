@@ -780,7 +780,12 @@ class NuvioCollectionImport(TempCache):
     def test_same_id_written_differently_matches_but_name_never_does(self):
         source = {'addonId': 'aio-metadata', 'catalogId': 'tmdb.top', 'type': 'movie'}
         self.assertEqual(collections_home.matching_catalog(source, [aio_provider(manifest_id='aiometadata')])[0]['id'], 'aio')
-        self.assertIsNone(collections_home.matching_catalog(source, [aio_provider(manifest_id='different')]))
+        # 6.0.36: another instance of the add-on (other ID) that publishes the
+        # same catalog is used - collections shared by other people name theirs.
+        other = aio_provider(manifest_id='different')
+        self.assertEqual(collections_home.matching_catalog(source, [other])[0]['id'], 'aio')
+        other['manifest']['catalogs'] = []
+        self.assertIsNone(collections_home.matching_catalog(source, [other]), 'never by name alone')
 
     def test_switched_off_source_is_not_loaded_or_checked(self):
         groups = profiles.normalize(nuvio_export('tmdb.top'))

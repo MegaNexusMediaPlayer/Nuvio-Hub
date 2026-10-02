@@ -62,10 +62,10 @@ def fetch(collections=False):
         for row in remote:
             url = row['manifest_url']
             try:
-                manifest = (existing.get(url) or {}).get('manifest')
-                if not manifest:
-                    manifest = client.get_json(url, ttl_seconds=300, timeout_override=6,
-                                               retry=False, rate_wait=0.25)
+                # 6.0.36: always the current manifest - the stored copy missed
+                # catalogs added to the add-on later ("not installed").
+                from .manifest_refresh import fetch as fetch_manifest
+                manifest = fetch_manifest(url, timeout=6) or (existing.get(url) or {}).get('manifest')
                 if not isinstance(manifest, dict) or any(k not in manifest for k in ('id','version','resources','types')):
                     raise ValueError('Invalid manifest')
                 if not isinstance(manifest['resources'], list) or not isinstance(manifest['types'], list):

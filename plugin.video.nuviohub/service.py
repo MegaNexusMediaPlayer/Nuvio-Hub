@@ -849,6 +849,10 @@ if __name__ == '__main__':
         import threading as _thr_upd
         _thr_upd.Thread(target=_component_sync, args=(monitor,), name='NuvioHubComponents', daemon=True).start()
         _thr_upd.Thread(target=_update_loop, args=(monitor,), name='NuvioHubUpdates', daemon=True).start()
+        # 6.0.36: add-on manifests (new catalogs) are re-read regularly.
+        from resources.lib.manifest_refresh import service_loop as _manifest_loop
+        _thr_upd.Thread(target=_manifest_loop, args=(monitor,), kwargs={'busy': _interactive_busy},
+                        name='NuvioHubManifests', daemon=True).start()
     except Exception as exc:
         xbmc.log('[NuvioHub] update checks not started: %s' % exc, xbmc.LOGWARNING)
 

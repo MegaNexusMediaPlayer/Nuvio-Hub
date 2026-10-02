@@ -30,47 +30,103 @@ def active_sources(folder):
     return [s for s in (folder or {}).get('sources') or [] if s.get('enabled') is not False]
 
 
+SERIES_TYPES = {'series', 'tv', 'show', 'shows', 'tvshow', 'tvshows'}
+MOVIE_TYPES = {'movie', 'movies', 'film', 'films'}
+# Catalog IDs too general to move to another add-on by their ID alone.
+GENERIC_CATALOGS = {'top', 'popular', 'trending', 'year', 'imdbrating', 'new', 'featured', 'latest', 'search'}
+
+
+def kind(media_type):
+    """'movie' / 'series' / the type itself - like Nuvio's catalogTypeKey."""
+    value = str(media_type or '').strip().lower()
+    if value in SERIES_TYPES:
+        return 'series'
+    if value in MOVIE_TYPES:
+        return 'movie'
+    return value
+
+
+def _find_catalog(manifest, source):
+    """Nuvio's findCollectionCatalog: same ID (also the part before a comma)
+    and the same type, aliases allowed (tv = series)."""
+    wanted_id = str(source.get('catalogId') or '')
+    wanted_type = str(source.get('type') or '')
+    catalogs = [c for c in manifest.get('catalogs') or [] if isinstance(c, dict)]
+    for cid in (wanted_id, wanted_id.split(',', 1)[0]):
+        found = [c for c in catalogs if c.get('id') == cid]
+        exact = next((c for c in found if c.get('type') == wanted_type), None)
+        if exact:
+            return exact
+        alike = [c for c in found if kind(c.get('type')) == kind(wanted_type)]
+        if len(alike) == 1:
+            return alike[0]
+    return None
+
+
+def _family(value):
+    return {w for w in re.split(r'[^a-z0-9]+', str(value or '').lower()) if len(w) > 2}
+
+
 def matching_catalog(source, providers, selected=None):
     """Resolve a collection source to one installed add-on catalog.
 
     The manifest ID must match (the same ID written with different separators,
     e.g. ``aio-metadata``/``aiometadata``, counts as the same ID) and that add-on
-    must publish exactly this catalog ID and type. A provider name never proves
-    identity. When the same add-on is installed more than once, the exported
-    ``providerId`` wins, then an enabled metadata add-on, then the first
-    configured install - Nuvio exports do not carry local provider IDs, so an
-    unknown ``providerId`` is a preference, not a requirement.
-    ``selected`` is retained for callers from older builds, never an ID override.
+    must publish this catalog ID and type. When the same add-on is installed
+    more than once, the exported ``providerId`` wins, then an enabled metadata
+    add-on, then the first configured install.
+
+    6.0.36: collections shared by other people name *their* instance of an
+    add-on (another host or configuration = another manifest ID). When no
+    installed add-on has that ID, the one installed add-on that publishes the
+    same catalog is used (several: the most similar name/ID, then an enabled
+    metadata add-on). General catalog IDs ("top", "popular"...) only move to an
+    add-on with a similar name. ``selected`` is retained for older callers.
     """
     addon = source.get('addonId') or ''
-    if not addon or not source.get('catalogId'):
+    if not source.get('catalogId'):
         return None
     exact, similar = [], []
     for provider in providers:
         manifest = provider.get('manifest') or {}
         mid = manifest.get('id') or ''
-        if mid == addon:
+        if addon and mid == addon:
             bucket = exact
-        elif _norm(mid) and _norm(mid) == _norm(addon):
+        elif addon and _norm(mid) and _norm(mid) == _norm(addon):
             bucket = similar
         else:
             continue
-        for catalog in manifest.get('catalogs') or []:
-            if catalog.get('id') == source.get('catalogId') and catalog.get('type') == source.get('type'):
-                bucket.append((provider, catalog))
-                break
+        catalog = _find_catalog(manifest, source)
+        if catalog:
+            bucket.append((provider, catalog))
     matches = exact or similar
-    if len(matches) <= 1:
-        return matches[0] if matches else None
-    wanted = source.get('providerId')
-    for match in matches:
-        if wanted and match[0].get('id') == wanted:
-            return match
     try:
         from .metadata_providers import entries
         switches = {p['id']: on for p, on in entries(providers)}
     except Exception:
         switches = {}
+    if not matches:
+        wanted_family = _family(addon)
+        generic = _norm(str(source.get('catalogId') or '').split(',', 1)[0]) in GENERIC_CATALOGS
+        for provider in providers:
+            manifest = provider.get('manifest') or {}
+            catalog = _find_catalog(manifest, source)
+            if not catalog:
+                continue
+            overlap = len(wanted_family & (_family(manifest.get('id')) | _family(manifest.get('name')) | _family(provider.get('name'))))
+            if generic and not overlap:
+                continue
+            matches.append((overlap, provider, catalog))
+        if not matches:
+            return None
+        matches.sort(key=lambda m: (-m[0], not switches.get(m[1].get('id'))))
+        return matches[0][1], matches[0][2]
+    if len(matches) == 1:
+        return matches[0]
+    wanted = source.get('providerId')
+    for match in matches:
+        if wanted and match[0].get('id') == wanted:
+            return match
     return next((m for m in matches if switches.get(m[0].get('id'))), matches[0])
 
 
@@ -83,7 +139,7 @@ def folder_shelf(folder, providers, media_type=None, title=None):
     providers=[p for p in providers if switches.get(p['id'],True)]
     selected=xbmcaddon.Addon('plugin.video.nuviohub').getSetting('nuvio_metadata_provider')
     for source in active_sources(folder):
-        if media_type and source['type'] != media_type:
+        if media_type and kind(source['type']) != media_type:
             continue
         match = matching_catalog(source, providers, selected)
         if match:
@@ -197,7 +253,7 @@ def catalog_rows(limit):
         for folder in group['folders']:
             if folder.get('hidden'):
                 continue
-            types = [mt for mt in ('movie', 'series') if any(s.get('type') == mt for s in active_sources(folder))]
+            types = [mt for mt in ('movie', 'series') if any(kind(s.get('type')) == mt for s in active_sources(folder))]
             if len(types) == 2:
                 wanted += [(folder, 'movie', folder['title'] + ' · Movies'), (folder, 'series', folder['title'] + ' · Series')]
             else:
@@ -222,7 +278,7 @@ def collection_shelves(collection_id):
     if not folder:
         return [{'title': 'Collection unavailable', 'rows': [placeholder('Open Setup', 'Choose another collection.', _api().build_url(action='setup_center'))]}]
     providers = store.list_providers()
-    types = {s['type'] for s in active_sources(folder)}
+    types = {kind(s['type']) for s in active_sources(folder)}
     return [folder_shelf(folder, providers, mt, folder['title'] + (' — Movies' if mt == 'movie' else ' — Series'))
             for mt in ('movie', 'series') if mt in types]
 

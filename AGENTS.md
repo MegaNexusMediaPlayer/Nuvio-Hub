@@ -3,7 +3,7 @@
 This is a four-component Kodi build: `plugin.video.nuviohub` (backend/service),
 `script.nuvio` (Python/XML frontend), `skin.nuvio` (Kodi shell), and
 `screensaver.nuvio` (screensaver entrypoint). The 6.0.27 release is the
-baseline for this 6.0.36 candidate. Do not publish, push, or change live user
+baseline for this 6.0.36 release. Do not publish, push, or change live user
 profiles as a side effect of reviewing code.
 
 ## Required repository skills
@@ -36,8 +36,13 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
   configuration Cinemeta supplies metadata and default collections. Cinemeta
   is always installed (6.0.23), OFF once the user has own metadata add-ons, and
   a hand-made Cinemeta switch is never changed automatically; collection
-  checks are reports only. The numb3rs presets are an explicit choice. Match exact manifest/catalog/type identities and
-  filters; never silently reinterpret a catalog as belonging to another addon.
+  checks are reports only. The numb3rs presets are an explicit choice. Match manifest/catalog/type identities and
+  filters (catalog ID also before a comma, tv = series, like Nuvio). Since
+  6.0.36 a collection naming another instance of an add-on (another ID) uses
+  the installed add-on that publishes the same catalog (most similar name
+  first); general IDs (top, popular...) never move to an unrelated add-on and
+  a name alone never matches. Manifests are re-read by the service
+  (`manifest_refresh.py`); a Nuvio import always reads the current manifest.
 * OFF providers stay OFF. Respect per-resource `types` and `idPrefixes`,
   configuration/profile cache boundaries and a bounded request budget.
 * Settings pages run any row that can open a Kodi dialog with the page hidden
