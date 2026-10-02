@@ -489,7 +489,7 @@ def get_reporter(ctx):
     return MultiReporter(reporters)
 
 
-def should_mark_watched(position_ms, duration_ms, threshold=0.95):
+def should_mark_watched(position_ms, duration_ms, threshold=0.90):  # 6.0.35: as the Nuvio apps
     try:
         return duration_ms > 0 and (float(position_ms) / float(duration_ms)) >= threshold
     except Exception:

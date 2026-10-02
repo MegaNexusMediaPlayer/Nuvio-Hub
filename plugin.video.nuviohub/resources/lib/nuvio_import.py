@@ -4,26 +4,19 @@ from .nuviohub import nuvio_stremio_sync as sync, store, client
 
 
 def enable_imported(provider_ids):
-    """Add-ons just imported from the user's Nuvio profile: new metadata add-ons
-    are switched ON; one stream add-on is switched ON if none is. Existing
-    switches, including explicit OFF, are left alone."""
+    """Add-ons just imported from the user's Nuvio profile are switched ON, in
+    both lists - they are the add-ons the user runs in the Nuvio apps (6.0.35,
+    GitHub issue #3). Playback no longer waits for the slowest stream add-on
+    (backend_api.streams grace window), so several may be ON."""
     from . import metadata_providers, stream_providers
     wanted = set(provider_ids or [])
-    for provider, on in metadata_providers.entries():
-        if provider['id'] in wanted and not on:
-            try:
-                metadata_providers.set_enabled(provider['id'], True)
-            except ValueError:
-                pass
-    # Streams: every enabled add-on is queried before a video starts, so an
-    # import only switches one on, and only when none is on yet.
-    if not stream_providers.enabled():
-        choice = stream_providers.preferred([p for p, _ in stream_providers.entries() if p['id'] in wanted])
-        if choice:
-            try:
-                stream_providers.set_enabled(choice['id'], True)
-            except ValueError:
-                pass
+    for module in (metadata_providers, stream_providers):
+        for provider, on in module.entries():
+            if provider['id'] in wanted and not on:
+                try:
+                    module.set_enabled(provider['id'], True)
+                except ValueError:
+                    pass
 
 
 def enable_collection_metadata(groups):

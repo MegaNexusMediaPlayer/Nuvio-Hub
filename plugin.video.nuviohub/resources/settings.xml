@@ -176,7 +176,6 @@
     <setting id="nuvio_trailer_defaults_627" type="text" default="" visible="false" />
     <setting id="nuvio_imdb_trailer_quality" type="text" default="480" visible="false" />
     <setting id="nuvio_show_ratings" type="bool" default="true" visible="false" />
-    <setting id="nuvio_stream_switch_612" type="bool" default="false" visible="false" />
     <setting id="nuvio_home_continue" type="bool" default="true" visible="false" />
     <setting id="nuvio_auto_layout" type="text" default="" visible="false" />
     <setting id="nuvio_auto_layout_key" type="text" default="" visible="false" />
@@ -185,6 +184,8 @@
     <setting id="nuvio_update_checked" type="text" default="0" visible="false" />
     <setting id="nuvio_restart_pending" type="text" default="" visible="false" />
     <setting id="nuvio_animated_art" type="text" default="false" visible="false" />
+    <setting id="nuvio_cw_days" type="text" default="60" visible="false" />
+    <setting id="nuvio_cw_unaired" type="bool" default="true" visible="false" />
     <setting id="nuvio_art_cache" type="text" default="ram256" visible="false" />
     <setting id="nuvio_card_shape" type="text" default="poster" visible="false" />
     <setting id="nuvio_animation_map" type="text" default="{}" visible="false" />

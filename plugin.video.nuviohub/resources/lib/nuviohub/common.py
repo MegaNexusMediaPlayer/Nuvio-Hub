@@ -6,6 +6,11 @@ import xbmcaddon
 import xbmcvfs
 
 ADDON_ID = 'plugin.video.nuviohub'
+# 6.0.35 (GitHub issue #6): watched at 90 %, like the Nuvio apps
+# (WatchProgress.COMPLETED_THRESHOLD = 0.90; Simkl 0.80). Titles stopped in
+# the end credits no longer stay in Continue Watching.
+WATCHED_PERCENT = 90
+SIMKL_WATCHED_PERCENT = 80
 
 # v3.9.17: cache the Addon() instance with a short TTL.
 # Each xbmcaddon.Addon(ADDON_ID) construction crosses the Python↔C++ boundary

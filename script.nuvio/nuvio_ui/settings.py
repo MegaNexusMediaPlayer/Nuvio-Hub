@@ -483,14 +483,41 @@ def choose_card_opacity():
 
 
 def tracking_accounts():
-    def rows():return [page.item('Nuvio account',nuvio_status()),page.item('Simkl account & tracking'),page.item('Back')]
+    from resources.lib import trakt,simkl
+    def rows():return [page.item('Nuvio account',nuvio_status()),
+        page.item('Simkl · tracking service','Connected' if simkl.authorized() else 'Not connected'),
+        page.item('Trakt · tracking service','Connected' if trakt.authorized() else 'Not connected'),page.item('Back')]
     def choose(pick):
         if pick==0:return accounts()
         elif pick==1:
             from .simkl_account import run as simkl_settings
             return simkl_settings()
-        elif pick==2:return page.DONE
-    return page.show('Accounts & tracking',rows,choose)
+        elif pick==2:
+            from .trakt_account import run as trakt_settings
+            return trakt_settings()
+        elif pick==3:return page.DONE
+    return page.show('Accounts & tracking services',rows,choose)
+
+
+def continue_watching():
+    """Continue Watching like the Nuvio apps (6.0.35, GitHub issue #7)."""
+    from resources.lib import continue_rules as rules
+    def rows():return [page.item('Show titles watched in the last',rules.PERIOD_LABELS[str(rules.period_days(ADDON))]),
+        page.item('Show unaired next episodes (airs tomorrow)',enabled=rules.show_unaired(ADDON)),
+        page.item('Refresh interval and Nuvio sync direction',(ADDON.getSetting('nuvio_progress_interval') or '60')+' seconds'),
+        page.item('Back')]
+    def choose(pick):
+        if pick==0:
+            values=list(rules.PERIODS);current=str(rules.period_days(ADDON))
+            selected=xbmcgui.Dialog().select('Continue Watching period',[rules.PERIOD_LABELS[v] for v in values],
+                                             preselect=values.index(current) if current in values else 1)
+            if selected>=0:ADDON.setSetting(rules.PERIOD_SETTING,values[selected])
+        elif pick==1:ADDON.setSetting(rules.UNAIRED_SETTING,'false' if rules.show_unaired(ADDON) else 'true')
+        elif pick==2:progress_settings()
+        elif pick==3:return page.DONE
+        settings_cache.invalidate()
+        xbmcgui.Window(10000).setProperty('nuvio.progress.revision','settings-%s'%id(rows))
+    return page.show('Continue Watching',rows,choose)
 
 
 KOFI_URL='https://ko-fi.com/master100janovic'
@@ -569,7 +596,7 @@ def run(back_command=''):
     def iptv_settings():
         from .iptv import configure
         configure()
-    actions=[('Set up on phone · QR code',phone_setup),('Accounts & tracking',tracking_accounts),('Add-ons',addons),('Collections',collections),
+    actions=[('Set up on phone · QR code',phone_setup),('Accounts & tracking services',tracking_accounts),('Continue Watching',continue_watching),('Add-ons',addons),('Collections',collections),
         ('IPTV',iptv_settings),('Playback',playback),('Subtitles',subtitle_settings),('Trailers',trailers),
         ('Home & appearance',appearance),('Performance & image cache',performance),('Maintenance & updates',maintenance),
         ('Support MegaNexus · Ko-fi',support)]

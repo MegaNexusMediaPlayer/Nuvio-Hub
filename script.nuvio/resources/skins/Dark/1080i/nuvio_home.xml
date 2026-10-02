@@ -1643,30 +1643,48 @@
       <texturenofocus />
       <label>Home</label>
       <onleft>108</onleft>
-      <onright>105</onright>
+      <onright>106</onright>
       <ondown>7000</ondown>
       <onup>101</onup>
     </control>
-    <control type="button" id="105">
+    <control type="button" id="106">
       <left>580</left>
       <top>32</top>
-      <width>160</width>
+      <width>150</width>
       <height>56</height>
       <font>font13</font>
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFCCD1DC</textcolor>
       <focusedcolor>FF000000</focusedcolor>
-      <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_160x56_r22.png</texturefocus>
+      <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_150x56_r22.png</texturefocus>
+      <texturenofocus />
+      <label>Library</label>
+      <onleft>101</onleft>
+      <onright>105</onright>
+      <ondown>7000</ondown>
+      <onup>106</onup>
+    </control>
+    <control type="button" id="105">
+      <left>750</left>
+      <top>32</top>
+      <width>150</width>
+      <height>56</height>
+      <font>font13</font>
+      <align>center</align>
+      <aligny>center</aligny>
+      <textcolor>FFCCD1DC</textcolor>
+      <focusedcolor>FF000000</focusedcolor>
+      <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_150x56_r22.png</texturefocus>
       <texturenofocus />
       <label>Search</label>
-      <onleft>101</onleft>
+      <onleft>106</onleft>
       <ondown>7000</ondown>
       <onup>105</onup>
       <onright>107</onright>
     </control>
     <control type="button" id="107">
-      <left>760</left>
+      <left>920</left>
       <top>32</top>
       <width>170</width>
       <height>56</height>
@@ -1684,16 +1702,16 @@
       <onleft>105</onleft>
     </control>
     <control type="button" id="108">
-      <left>950</left>
+      <left>1110</left>
       <top>32</top>
-      <width>140</width>
+      <width>130</width>
       <height>56</height>
       <font>font13</font>
       <align>center</align>
       <aligny>center</aligny>
       <textcolor>FFCCD1DC</textcolor>
       <focusedcolor>FF000000</focusedcolor>
-      <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_140x56_r22.png</texturefocus>
+      <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_130x56_r22.png</texturefocus>
       <texturenofocus />
       <label>HUB</label>
       <onright>101</onright>

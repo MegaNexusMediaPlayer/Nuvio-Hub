@@ -269,21 +269,29 @@ class Details(Dialog):
         if choose_stream(self.meta,context):self.action='playing';self.close()
 
     def _favorite_label(self):
-        self.getControl(101).setLabel('Add to Library')
+        try:
+            from resources.lib import library
+            inside=library.contains(self.meta.get('type') or 'movie',self.meta.get('id') or '')
+        except Exception:inside=False
+        self.getControl(101).setLabel('In Library' if inside else 'Add to Library')
 
     def _add_to_library(self):
+        # 6.0.35: the MegaNexus Library (local, synced with the Nuvio account)
+        # plus Trakt / Simkl when connected - no Simkl sign-in required.
         from .playback import job
-        from .simkl_account import link
-        if not simkl.authorized() and not link():return
-        from resources.lib.plugin import extract_ids
-        ids=extract_ids(self.meta)
-        ctx=dict(ids,media_type=self.meta.get('type') or 'movie',title=self.meta.get('name') or self.meta.get('title') or '')
+        from resources.lib import library
+        mt=self.meta.get('type') or 'movie';mid=self.meta.get('id') or ''
         try:
-            if job(lambda:simkl.add_to_library(ctx),label='Saving to Simkl Library'):
-                self.getControl(101).setLabel('Saved to Library')
-                xbmcgui.Dialog().ok('Library','Saved to Simkl Plan to Watch.')
+            if library.contains(mt,mid):
+                library.remove(mt,mid);xbmcgui.Dialog().notification('Library','Removed from Library',time=3000)
+            else:
+                item=dict(self.meta,media_type=mt,canonical_id=mid,title=self.meta.get('name') or self.meta.get('title') or '')
+                reached=job(lambda:library.add(item),label='Saving to Library')
+                extra=(' and '+' + '.join(reached)) if reached else ''
+                xbmcgui.Dialog().notification('Library','Saved to Library'+extra,time=3000)
         except Exception as exc:
-            xbmcgui.Dialog().ok('Library',str(exc) if isinstance(exc,ValueError) else 'Simkl could not confirm the save. Check your connection and retry.')
+            xbmcgui.Dialog().ok('Library',str(exc) if isinstance(exc,ValueError) else 'The Library could not be updated.')
+        self._favorite_label()
 
     def onClick(self,control_id):
         if control_id==100:
@@ -320,7 +328,10 @@ class Details(Dialog):
         elif aid in (117,101,1009,11):
             focus=self.getFocusId()
             if focus==504 and self.related:
-                outcome=self.child(context_menu,self.related[self.getControl(504).getSelectedPosition()]['target'],info=aid==11)
+                row=self.related[self.getControl(504).getSelectedPosition()]
+                choice='info' if aid==11 else context_choice(row['target'],row)
+                if not choice or quick_choice(choice,row['target'],row):return
+                outcome=self.child(run_choice,row['target'],choice,row)
                 if outcome=='playing' or isinstance(outcome,dict):self.action=outcome;self.close()
                 return
             choice='info' if aid==11 else context_choice()
@@ -364,30 +375,121 @@ def show_info(meta,episode=None):
 
 
 class ContextMenu(xbmcgui.WindowXMLDialog):
+    """Title options (6.0.35): the options depend on the card (see title_options)."""
     def __init__(self,*args,**kwargs):
-        super().__init__(*args);self.choice=''
+        super().__init__(*args);self.choice='';self.options=list(kwargs.get('options') or DEFAULT_OPTIONS)[:7]
+        self.heading=kwargs.get('heading') or 'Title options'
     def onInit(self):
+        self.setProperty('nuvio.opt.title',self.heading)
+        for i in range(7):self.setProperty('nuvio.opt.%d'%i,self.options[i][1] if i<len(self.options) else '')
+        self.setProperty('nuvio.opt.count',str(len(self.options)))
         self.setFocusId(100)
     def onClick(self,cid):
-        if cid in (100,101,102):
-            self.choice=('manual','related','info')[cid-100]
+        if 100<=cid<100+len(self.options):
+            self.choice=self.options[cid-100][0]
             self.close()
     def onAction(self,action):
         if action.getId() in (9,10,92,216):self.close()
 
 
-def context_choice():
-    win=ContextMenu('nuvio_context.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),theme_folder(),'1080i')
+DEFAULT_OPTIONS=(('manual','Choose stream manually'),('related','More like this'),('info','Info'))
+# Choices that open another screen (the caller hides its window for them).
+SCREEN_CHOICES=('manual','start','related','info')
+
+
+def title_options(context,row=None):
+    """Options for one card. Continue Watching cards add Play from the
+    beginning / Remove (GitHub issue #5); every title can be added to or
+    removed from the Library."""
+    row=row or {};options=[]
+    kind=row.get('continue_card')
+    if kind=='resume' and float((row.get('target') or context).get('resume_seconds') or 0)>0:
+        options.append(('start','Play from the beginning'))
+    options.append(('manual','Choose stream manually'))
+    if kind in ('resume','next'):options.append(('remove','Remove from Continue Watching'))
+    try:
+        from resources.lib import library
+        inside=library.contains(context.get('media_type') or 'movie',context.get('canonical_id') or '')
+    except Exception:inside=False
+    options.append(('unlibrary','Remove from Library') if inside else ('library','Add to Library'))
+    options+=[('related','More like this'),('info','Info')]
+    return options
+
+
+def context_choice(context=None,row=None,options=None):
+    options=options or (title_options(context,row) if context else DEFAULT_OPTIONS)
+    win=ContextMenu('nuvio_context.xml',xbmcaddon.Addon('script.nuvio').getAddonInfo('path'),theme_folder(),'1080i',options=options)
     try:win.doModal();return win.choice
     finally:win.close()
 
 
-def context_menu(context,info=False,row=None):
-    choice='info' if info else context_choice()
-    if not choice:return ''
+def quick_choice(choice,context,row=None):
+    """Choices that need no screen. Returns True when handled."""
+    row=row or {}
+    mt=context.get('media_type') or 'movie';mid=context.get('canonical_id') or ''
+    if choice=='remove':
+        # Hidden until played again; progress and watched state stay as they are.
+        from resources.lib import continue_rules
+        continue_rules.hide(mt,mid)
+        import time
+        xbmcgui.Window(10000).setProperty('nuvio.progress.revision','removed-%s'%time.time())
+        xbmcgui.Dialog().notification('Continue Watching','Removed. It returns when you play it again.',time=3000)
+        return True
+    if choice in ('library','unlibrary'):
+        from resources.lib import library
+        from .playback import job
+        title=row.get('title') or context.get('title') or ''
+        try:
+            if choice=='library':
+                item=dict(row,media_type=mt,canonical_id=mid,title=title)
+                reached=job(lambda:library.add(item),label='Saving to Library')
+                extra=(' and '+' + '.join(reached)) if reached else ''
+                xbmcgui.Dialog().notification('Library','Saved to Library'+extra,time=3000)
+            else:
+                library.remove(mt,mid)
+                xbmcgui.Dialog().notification('Library','Removed from Library',time=3000)
+        except Exception as exc:
+            xbmcgui.Dialog().ok('Library',str(exc) if isinstance(exc,ValueError) else 'The Library could not be updated.')
+        return True
+    return False
+
+
+def run_choice(context,choice,row=None):
+    """Screens opened from Title options."""
+    if choice=='related':return more_like_this(context,row)
     ctx=dict(context,details_view=choice)
     if choice=='manual':ctx['force_manual']=True
+    if choice=='start':
+        ctx.pop('details_view',None)
+        ctx.update(resume_seconds=0,resume_percent=0,play_from_start=True)
     return open_context(ctx,row=row)
+
+
+def more_like_this(context,row=None):
+    """More like this opens straight as a grid (6.0.35)."""
+    from .playback import job
+    from .catalog import open_catalog
+    mt=context.get('media_type') or 'movie';mid=context.get('canonical_id') or ''
+    def load():
+        meta=browse_meta.cached(dict(context,media_type=mt,canonical_id=mid)) or backend_api.metadata(mt,mid)
+        return meta,title_details.related(meta,limit=100)
+    try:result=job(load,label='Loading recommendations')
+    except Exception:result=None
+    if not result:
+        xbmcgui.Dialog().ok('More like this','No recommendations are available for this title.');return ''
+    meta,rows=result
+    if not rows:
+        xbmcgui.Dialog().ok('More like this','No recommendations are available for this title.');return ''
+    return open_catalog({'label':'More like this · '+str(meta.get('name') or meta.get('title') or (row or {}).get('title') or ''),'rows':rows})
+
+
+def context_menu(context,info=False,row=None):
+    """Title options and the chosen action in one call (callers that are
+    already hidden). Home and catalog screens show the options first, over
+    themselves, then hide only for screen choices."""
+    choice='info' if info else context_choice(context,row)
+    if not choice or quick_choice(choice,context,row):return ''
+    return run_choice(context,choice,row)
 
 
 def choose_stream(meta,context):
@@ -408,7 +510,7 @@ def open_context(context,row=None):
     metadata_pending=meta is None
     if meta is None:meta=browse_meta.seed(context,row)
     view=context.get('details_view')
-    direct=(view=='manual' and (mt=='movie' or context.get('video_id'))) or (not view and (context.get('resume_seconds') or context.get('video_id')))
+    direct=(view=='manual' and (mt=='movie' or context.get('video_id'))) or (not view and (context.get('resume_seconds') or context.get('video_id') or context.get('play_from_start')))
     if metadata_pending and (direct or view=='info'):
         from .playback import job
         try:meta=job(lambda:backend_api.metadata(mt,mid),meta,label='Loading details')

@@ -48,13 +48,9 @@ def ensure_defaults(job=None):
 
 
 def ensure_ready():
-    try:
-        kept = stream_providers.repair_all_on()
-    except Exception:
-        kept = None
-    if kept:
-        xbmcgui.Dialog().notification('Stream add-ons', 'Only %s is ON now for faster playback. Change it in Settings > Add-ons.'
-                                      % (kept.get('name') or kept['id']), time=6000)
+    # 6.0.35: the one-time 6.0.12 "keep one stream add-on" repair is gone. On a
+    # fresh install it ran after the phone setup and switched off add-ons the
+    # user had just chosen (GitHub issue #3).
     from .playback import job
     ensure_defaults(job)
     offer_switch_on(metadata_providers, 'metadata')

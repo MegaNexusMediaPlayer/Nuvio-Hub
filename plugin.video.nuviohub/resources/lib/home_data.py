@@ -263,7 +263,9 @@ def continue_shelf():
     from . import simkl_watched, watch_nextup, continue_local
     from .progress_model import timestamp
     from nuviohub import playback_store
-    p=_api(); rows=[]; watched=simkl_watched.snapshot()
+    from .nuviohub.common import WATCHED_PERCENT
+    from . import continue_rules
+    p=_api(); rows=[]; watched=simkl_watched.snapshot(); removed=continue_rules.snapshot()
     local=continue_local.recent()
     # Local user actions win over account imports. Completed local titles also
     # suppress their stale remote resume, without discarding the watched archive.
@@ -277,9 +279,11 @@ def continue_shelf():
     def display_order(value):
         return timestamp(value[0].get('updated_at'))
     for raw,is_local in sorted(merged.values(),key=display_order,reverse=True):
-        if raw.get('event_type')=='watched' or float(raw.get('percent') or 0)>=95:continue
+        if raw.get('event_type')=='watched' or float(raw.get('percent') or 0)>=WATCHED_PERCENT:continue
         mt='movie' if raw.get('media_type')=='movie' else 'series'
         mid=raw.get('canonical_id') or ''
+        # 6.0.35: removed by the user (until played again) and the period (60 days).
+        if continue_rules.hidden(mt,mid,raw.get('updated_at'),removed) or not continue_rules.recent_enough(raw.get('updated_at')):continue
         entry=simkl_watched.state(watched,mt,mid)
         done=entry.get('watched') if mt=='movie' else simkl_watched.is_episode_watched(entry,raw.get('season'),raw.get('episode'))
         stamp=entry.get('watched_at') if mt=='movie' else (entry.get('episode_watched_at') or {}).get('%s:%s'%(raw.get('season'),raw.get('episode')))
@@ -294,7 +298,7 @@ def continue_shelf():
             poster=raw.get('poster') or '',fanart=raw.get('background') or '',
             landscape=raw.get('background') or '',clearlogo=raw.get('clearlogo') or '',
             percent_value=percent,percent=percent,target=target,is_folder=False,
-            plot=raw.get('plot') or '',resume_label='Resume',
+            plot=raw.get('plot') or '',resume_label='Resume',continue_card='resume',
             progress_key=[raw.get('media_type'),mid,raw.get('video_id') or mid],
             path=p.build_url(action='cw_resume',**{k:v for k,v in target.items() if v is not None})))
     try:rows=watch_nextup.augment(rows)

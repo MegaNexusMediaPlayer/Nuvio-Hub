@@ -221,6 +221,14 @@ class SimklApplication(unittest.TestCase):
         self.assertNotIn('Authorization',request.headers)
 
 class PlaybackExitAndOrder(unittest.TestCase):
+    def setUp(self):
+        # These fixtures use small, fixed timestamps: no Continue Watching period
+        # (6.0.35) and no removed titles here.
+        rules=importlib.import_module('resources.lib.continue_rules')
+        for patch in (mock.patch.object(rules,'period_days',return_value=0),mock.patch.object(rules,'snapshot',return_value={}),
+                      mock.patch.object(rules,'show_unaired',return_value=True)):
+            patch.start();self.addCleanup(patch.stop)
+
     def test_real_watch_timestamps_order_local_and_cloud_entries(self):
         data=importlib.import_module('resources.lib.home_data');local=importlib.import_module('resources.lib.continue_local');watched=importlib.import_module('resources.lib.simkl_watched');nextup=importlib.import_module('resources.lib.watch_nextup')
         def row(title,stamp,**extra):

@@ -4,7 +4,7 @@ import sqlite3
 import threading
 import time
 
-from .common import profile_path
+from .common import profile_path, WATCHED_PERCENT
 
 DB_PATH = os.path.join(profile_path(), 'playback.db')
 _DB_READY = False
@@ -312,7 +312,7 @@ def list_continue_items(limit=50):
         key=('movie' if row.get('media_type')=='movie' else 'series',row['canonical_id'])
         if key in seen:continue
         seen.add(key)
-        if float(row.get('percent') or 0)>=95 or row.get('event_type')=='watched':continue
+        if float(row.get('percent') or 0)>=WATCHED_PERCENT or row.get('event_type')=='watched':continue
         out.append(row)
         if len(out)>=limit:break
     return out
@@ -492,7 +492,7 @@ def watched_snapshot():
     stamp_key=(DB_PATH,stamp(DB_PATH),stamp(DB_PATH+'-wal'))
     if _WATCHED_MEM.get('key')==stamp_key:return _WATCHED_MEM['items']
     conn=_connect()
-    try:rows=conn.execute("SELECT media_type,canonical_id,season,episode,imdb_id,tmdb_id,tvdb_id FROM playback WHERE percent>=95 OR event_type='watched'").fetchall()
+    try:rows=conn.execute("SELECT media_type,canonical_id,season,episode,imdb_id,tmdb_id,tvdb_id FROM playback WHERE percent>=? OR event_type='watched'",(WATCHED_PERCENT,)).fetchall()
     finally:conn.close()
     items={}
     for media,mid,season,episode,imdb,tmdb,tvdb in rows:

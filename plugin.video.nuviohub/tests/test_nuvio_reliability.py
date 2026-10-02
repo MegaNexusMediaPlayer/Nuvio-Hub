@@ -210,7 +210,8 @@ class EmptyHome(unittest.TestCase):
     def test_home_search_settings_navigation_has_no_my_list(self):
         root=ET.parse(ROOT/'script.nuvio/resources/skins/Default/1080i/nuvio_home.xml').getroot()
         buttons={int(c.get('id')):c for c in root.findall('./controls/control') if c.get('type')=='button'}
-        self.assertEqual(set(buttons),{101,105,107,108})
+        self.assertEqual(set(buttons),{101,105,106,107,108})  # 6.0.35: Library (106)
+        self.assertEqual(buttons[106].findtext('label'),'Library')
         self.assertEqual(buttons[107].findtext('onright'),'108')
         self.assertEqual(buttons[108].findtext('label'),'HUB')
         for c in buttons.values():

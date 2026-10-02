@@ -42,7 +42,7 @@ class HomeBack(unittest.TestCase):
     def test_back_from_settings_is_distinct_from_done(self):
         def show(title,rows,choose,back_result=None):
             self.assertEqual(back_result,'ActivateWindow(Home)')
-            self.assertEqual(choose(12),settings.page.DONE)  # 6.0.22: 'Set up on phone' row added first
+            self.assertEqual(choose(13),settings.page.DONE)  # 6.0.35: 'Continue Watching' row added
             return back_result
         with mock.patch.object(settings.page,'show',side_effect=show):
             self.assertEqual(settings.run(back_command='ActivateWindow(Home)'),'ActivateWindow(Home)')

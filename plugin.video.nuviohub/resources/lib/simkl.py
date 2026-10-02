@@ -672,7 +672,8 @@ def queue_progress(ctx, position_ms, event='pause'):
     payload = progress_payload(ctx, position_ms)
     if not account or not payload: return False
     # Simkl's stop threshold is 80%. Pause preserves 80–94.99% as resumable.
-    action = 'stop' if payload['progress'] >= 95 and mark_watched_enabled() else 'pause'
+    from .nuviohub.common import SIMKL_WATCHED_PERCENT
+    action = 'stop' if payload['progress'] >= SIMKL_WATCHED_PERCENT and mark_watched_enabled() else 'pause'
     if event == 'start' and payload['progress'] < 95: action = 'start'
     from . import continue_local
     key = continue_local.identity(ctx)

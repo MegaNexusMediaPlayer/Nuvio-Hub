@@ -1,89 +1,250 @@
 <?xml version='1.0' encoding='utf-8'?>
 <window>
-  <defaultcontrol always="true">100</defaultcontrol>
+  <defaultcontrol always="true">9000</defaultcontrol>
+  <!-- 6.0.35: Title options float over the screen behind them (no dimming);
+       the panel is translucent glass like the catalog boxes. Options come
+       from details.title_options() as nuvio.opt.N window properties. -->
   <controls>
-    <control type="image">
-      <left>0</left>
-      <top>0</top>
-      <width>1920</width>
-      <height>1080</height>
-      <aspectratio>stretch</aspectratio>
-      <texture background="true" colordiffuse="CC000000">special://home/addons/script.nuvio/resources/media/white.png</texture>
+    <control type="group">
+      <animation effect="fade" start="0" end="100" time="140">WindowOpen</animation>
+      <animation effect="fade" start="100" end="0" time="100">WindowClose</animation>
+    <control type="group">
+      <visible>String.IsEqual(Window.Property(nuvio.opt.count),1)</visible>
+      <control type="image">
+        <left>575</left>
+        <top>230</top>
+        <width>770</width>
+        <height>230</height>
+        <texture colordiffuse="C4061838" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+      </control>
+      <control type="image">
+        <left>575</left>
+        <top>230</top>
+        <width>770</width>
+        <height>230</height>
+        <texture colordiffuse="1AFFFFFF" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+      </control>
     </control>
-    <control type="image">
-      <left>575</left>
-      <top>305</top>
-      <width>770</width>
-      <height>460</height>
-      <aspectratio>stretch</aspectratio>
-      <texture background="true" colordiffuse="FF061838" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+    <control type="group">
+      <visible>String.IsEqual(Window.Property(nuvio.opt.count),2)</visible>
+      <control type="image">
+        <left>575</left>
+        <top>230</top>
+        <width>770</width>
+        <height>316</height>
+        <texture colordiffuse="C4061838" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+      </control>
+      <control type="image">
+        <left>575</left>
+        <top>230</top>
+        <width>770</width>
+        <height>316</height>
+        <texture colordiffuse="1AFFFFFF" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+      </control>
     </control>
-    <control type="label">
-      <left>625</left>
-      <top>345</top>
-      <width>670</width>
-      <height>48</height>
-      <font>font32</font>
-      <textcolor>FFF3F4F8</textcolor>
-      <label>Title options</label>
-      <scroll>true</scroll>
+    <control type="group">
+      <visible>String.IsEqual(Window.Property(nuvio.opt.count),3)</visible>
+      <control type="image">
+        <left>575</left>
+        <top>230</top>
+        <width>770</width>
+        <height>402</height>
+        <texture colordiffuse="C4061838" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+      </control>
+      <control type="image">
+        <left>575</left>
+        <top>230</top>
+        <width>770</width>
+        <height>402</height>
+        <texture colordiffuse="1AFFFFFF" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+      </control>
     </control>
-    <control type="button" id="100">
-      <left>615</left>
-      <top>427</top>
-      <width>690</width>
-      <height>80</height>
-      <label>Choose stream manually</label>
-      <font>font12</font>
-      <align>left</align>
-      <aligny>center</aligny>
-      <textcolor>FFF3F4F8</textcolor>
-      <focusedcolor>FF051229</focusedcolor>
-      <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturefocus>
-      <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturenofocus>
-      <onup>102</onup>
-      <ondown>101</ondown>
-      <onleft>100</onleft>
-      <onright>100</onright>
-      <textoffsetx>28</textoffsetx>
+    <control type="group">
+      <visible>String.IsEqual(Window.Property(nuvio.opt.count),4)</visible>
+      <control type="image">
+        <left>575</left>
+        <top>230</top>
+        <width>770</width>
+        <height>488</height>
+        <texture colordiffuse="C4061838" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+      </control>
+      <control type="image">
+        <left>575</left>
+        <top>230</top>
+        <width>770</width>
+        <height>488</height>
+        <texture colordiffuse="1AFFFFFF" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+      </control>
     </control>
-    <control type="button" id="101">
-      <left>615</left>
-      <top>517</top>
-      <width>690</width>
-      <height>80</height>
-      <label>More like this</label>
-      <font>font12</font>
-      <align>left</align>
-      <aligny>center</aligny>
-      <textcolor>FFF3F4F8</textcolor>
-      <focusedcolor>FF051229</focusedcolor>
-      <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturefocus>
-      <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturenofocus>
-      <onup>100</onup>
-      <ondown>102</ondown>
-      <onleft>101</onleft>
-      <onright>101</onright>
-      <textoffsetx>28</textoffsetx>
+    <control type="group">
+      <visible>String.IsEqual(Window.Property(nuvio.opt.count),5)</visible>
+      <control type="image">
+        <left>575</left>
+        <top>230</top>
+        <width>770</width>
+        <height>574</height>
+        <texture colordiffuse="C4061838" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+      </control>
+      <control type="image">
+        <left>575</left>
+        <top>230</top>
+        <width>770</width>
+        <height>574</height>
+        <texture colordiffuse="1AFFFFFF" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+      </control>
     </control>
-    <control type="button" id="102">
-      <left>615</left>
-      <top>607</top>
-      <width>690</width>
-      <height>80</height>
-      <label>Info</label>
-      <font>font12</font>
-      <align>left</align>
-      <aligny>center</aligny>
-      <textcolor>FFF3F4F8</textcolor>
-      <focusedcolor>FF051229</focusedcolor>
-      <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturefocus>
-      <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturenofocus>
-      <onup>101</onup>
-      <ondown>100</ondown>
-      <onleft>102</onleft>
-      <onright>102</onright>
-      <textoffsetx>28</textoffsetx>
+    <control type="group">
+      <visible>String.IsEqual(Window.Property(nuvio.opt.count),6)</visible>
+      <control type="image">
+        <left>575</left>
+        <top>230</top>
+        <width>770</width>
+        <height>660</height>
+        <texture colordiffuse="C4061838" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+      </control>
+      <control type="image">
+        <left>575</left>
+        <top>230</top>
+        <width>770</width>
+        <height>660</height>
+        <texture colordiffuse="1AFFFFFF" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+      </control>
+    </control>
+    <control type="group">
+      <visible>String.IsEqual(Window.Property(nuvio.opt.count),7)</visible>
+      <control type="image">
+        <left>575</left>
+        <top>230</top>
+        <width>770</width>
+        <height>746</height>
+        <texture colordiffuse="C4061838" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+      </control>
+      <control type="image">
+        <left>575</left>
+        <top>230</top>
+        <width>770</width>
+        <height>746</height>
+        <texture colordiffuse="1AFFFFFF" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+      </control>
+    </control>
+      <control type="label">
+        <left>625</left>
+        <top>264</top>
+        <width>670</width>
+        <height>48</height>
+        <font>font32</font>
+        <textcolor>FFF3F4F8</textcolor>
+        <label>$INFO[Window.Property(nuvio.opt.title)]</label>
+        <scroll>true</scroll>
+      </control>
+      <control type="grouplist" id="9000">
+        <left>615</left>
+        <top>340</top>
+        <width>690</width>
+        <height>602</height>
+        <itemgap>6</itemgap>
+        <orientation>vertical</orientation>
+        <onleft>9000</onleft>
+        <onright>9000</onright>
+      <control type="button" id="100">
+        <width>690</width>
+        <height>80</height>
+        <label>$INFO[Window.Property(nuvio.opt.0)]</label>
+        <font>font12</font>
+        <align>left</align>
+        <aligny>center</aligny>
+        <textcolor>FFF3F4F8</textcolor>
+        <focusedcolor>FF051229</focusedcolor>
+        <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturefocus>
+        <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturenofocus>
+        <textoffsetx>28</textoffsetx>
+        <visible>!String.IsEmpty(Window.Property(nuvio.opt.0))</visible>
+      </control>
+      <control type="button" id="101">
+        <width>690</width>
+        <height>80</height>
+        <label>$INFO[Window.Property(nuvio.opt.1)]</label>
+        <font>font12</font>
+        <align>left</align>
+        <aligny>center</aligny>
+        <textcolor>FFF3F4F8</textcolor>
+        <focusedcolor>FF051229</focusedcolor>
+        <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturefocus>
+        <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturenofocus>
+        <textoffsetx>28</textoffsetx>
+        <visible>!String.IsEmpty(Window.Property(nuvio.opt.1))</visible>
+      </control>
+      <control type="button" id="102">
+        <width>690</width>
+        <height>80</height>
+        <label>$INFO[Window.Property(nuvio.opt.2)]</label>
+        <font>font12</font>
+        <align>left</align>
+        <aligny>center</aligny>
+        <textcolor>FFF3F4F8</textcolor>
+        <focusedcolor>FF051229</focusedcolor>
+        <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturefocus>
+        <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturenofocus>
+        <textoffsetx>28</textoffsetx>
+        <visible>!String.IsEmpty(Window.Property(nuvio.opt.2))</visible>
+      </control>
+      <control type="button" id="103">
+        <width>690</width>
+        <height>80</height>
+        <label>$INFO[Window.Property(nuvio.opt.3)]</label>
+        <font>font12</font>
+        <align>left</align>
+        <aligny>center</aligny>
+        <textcolor>FFF3F4F8</textcolor>
+        <focusedcolor>FF051229</focusedcolor>
+        <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturefocus>
+        <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturenofocus>
+        <textoffsetx>28</textoffsetx>
+        <visible>!String.IsEmpty(Window.Property(nuvio.opt.3))</visible>
+      </control>
+      <control type="button" id="104">
+        <width>690</width>
+        <height>80</height>
+        <label>$INFO[Window.Property(nuvio.opt.4)]</label>
+        <font>font12</font>
+        <align>left</align>
+        <aligny>center</aligny>
+        <textcolor>FFF3F4F8</textcolor>
+        <focusedcolor>FF051229</focusedcolor>
+        <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturefocus>
+        <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturenofocus>
+        <textoffsetx>28</textoffsetx>
+        <visible>!String.IsEmpty(Window.Property(nuvio.opt.4))</visible>
+      </control>
+      <control type="button" id="105">
+        <width>690</width>
+        <height>80</height>
+        <label>$INFO[Window.Property(nuvio.opt.5)]</label>
+        <font>font12</font>
+        <align>left</align>
+        <aligny>center</aligny>
+        <textcolor>FFF3F4F8</textcolor>
+        <focusedcolor>FF051229</focusedcolor>
+        <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturefocus>
+        <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturenofocus>
+        <textoffsetx>28</textoffsetx>
+        <visible>!String.IsEmpty(Window.Property(nuvio.opt.5))</visible>
+      </control>
+      <control type="button" id="106">
+        <width>690</width>
+        <height>80</height>
+        <label>$INFO[Window.Property(nuvio.opt.6)]</label>
+        <font>font12</font>
+        <align>left</align>
+        <aligny>center</aligny>
+        <textcolor>FFF3F4F8</textcolor>
+        <focusedcolor>FF051229</focusedcolor>
+        <texturefocus colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturefocus>
+        <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_690x80_r22.png</texturenofocus>
+        <textoffsetx>28</textoffsetx>
+        <visible>!String.IsEmpty(Window.Property(nuvio.opt.6))</visible>
+      </control>
+      </control>
     </control>
   </controls>
 </window>

@@ -89,32 +89,3 @@ def supports(provider, media_type, video_id):
 def enabled(media_type=None, video_id=''):
     return [p for p, on in entries() if on and
             (media_type is None or supports(p, media_type, video_id))]
-
-
-REPAIR_SETTING = 'nuvio_stream_switch_612'
-
-
-def repair_all_on():
-    """One-time 6.0.12 repair: the 6.0.11 test build switched every imported
-    stream add-on ON, which made "Loading video" wait for the slowest of them.
-    If every one of three or more add-ons is ON, keep only the preferred one.
-    Returns the kept provider, or None when nothing changed."""
-    addon = xbmcaddon.Addon('plugin.video.nuviohub')
-    if addon.getSetting(REPAIR_SETTING) == 'true':
-        return None
-    addon.setSetting(REPAIR_SETTING, 'true')
-    if _saved() is None:
-        return None
-    rows = entries()
-    on = [p for p, enabled in rows if enabled]
-    if len(on) < 3 or len(on) != len(rows):
-        return None
-    keep = preferred(on)
-    value = [{'id': p['id'], 'enabled': p['id'] == keep['id']} for p, _ in rows]
-    addon.setSetting(SETTING, json.dumps(value))
-    try:
-        from . import settings_cache
-        settings_cache.invalidate()
-    except Exception:
-        pass
-    return keep

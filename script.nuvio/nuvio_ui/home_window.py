@@ -476,10 +476,19 @@ class HomeWindow(Dialog):
             if ROW_BASE <= cid < ROW_BASE+len(self._shelves):
                 rows=self._shelves[cid-ROW_BASE]['rows'];pos=self.getControl(cid).getSelectedPosition()
                 if 0<=pos<len(rows) and rows[pos].get('target'):
-                    from .details import context_menu,open_person
+                    from .details import context_choice,quick_choice,run_choice,open_person
                     self._suspended=True
                     if self._previews:self._previews.pause()
-                    try:outcome=self.child(open_person,rows[pos]['person']) if rows[pos].get('person') else self.child(context_menu,rows[pos]['target'],info=action.getId()==11,row=rows[pos])
+                    outcome=''
+                    try:
+                        if rows[pos].get('person'):outcome=self.child(open_person,rows[pos]['person'])
+                        else:
+                            # 6.0.35: Title options float over Home; only a choice that
+                            # opens a screen hides it.
+                            target=rows[pos]['target']
+                            choice='info' if action.getId()==11 else context_choice(target,rows[pos])
+                            if choice and not quick_choice(choice,target,rows[pos]):
+                                outcome=self.child(run_choice,target,choice,rows[pos])
                     finally:self._suspended=False;self._watched_badges()
                     if outcome=='playing' or isinstance(outcome,dict):
                         self._pending=outcome;self._finish()
@@ -514,6 +523,17 @@ class HomeWindow(Dialog):
         elif control_id == 108:
             self._pending='hub'
             self._finish()
+            return
+        elif control_id == 106:
+            # 6.0.35: Library (Local / Tracking services).
+            from .library import open_library
+            self._suspended=True
+            try:outcome=self.child(open_library)
+            finally:
+                self._suspended=False
+                self._watched_badges()
+            if outcome=='playing' or isinstance(outcome,dict):
+                self._pending=outcome;self._finish()
             return
         elif control_id == 107:
             self._settings()

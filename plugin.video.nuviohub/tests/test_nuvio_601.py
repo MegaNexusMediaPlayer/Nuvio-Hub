@@ -32,9 +32,10 @@ class LocalProgress(unittest.TestCase):
         self.save('ttone',100,100);self.save('tttwo',120,110);self.save('ttone',115,120)
         rows=store.list_continue_items();self.assertEqual([r['canonical_id'] for r in rows],['ttone','tttwo'])
         self.assertEqual(rows[0]['updated_at'],120)
-    def test_95_percent_marks_watched_locally_without_account(self):
-        self.save('ttone',949,100);self.assertEqual(len(store.list_continue_items()),1)
-        self.save('ttone',950,110);self.assertEqual(store.list_continue_items(),[])
+    def test_90_percent_marks_watched_locally_without_account(self):
+        # 6.0.35 (GitHub issue #6): 90 %, like the Nuvio apps (was 95 %).
+        self.save('ttone',899,100);self.assertEqual(len(store.list_continue_items()),1)
+        self.save('ttone',900,110);self.assertEqual(store.list_continue_items(),[])
         with mock.patch.object(watched,'_remote_snapshot',return_value={'items':{}}):
             self.assertTrue(watched.state(watched.snapshot(),'movie','ttone')['watched'])
     def test_completed_latest_episode_does_not_resurrect_old_episode(self):

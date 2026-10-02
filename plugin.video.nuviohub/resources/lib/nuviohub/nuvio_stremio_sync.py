@@ -20,6 +20,7 @@ implementation before being ported to Python.
 import json
 import os
 import time
+from .common import WATCHED_PERCENT
 import urllib.request
 import urllib.error
 
@@ -543,7 +544,7 @@ class Nuvio:
             if wire is not None:
                 push.append(wire)
                 acknowledged.append(row)
-            elif model.percent(row) >= 95:
+            elif model.percent(row) >= WATCHED_PERCENT:
                 # A completed title with unknown runtime can remove a resume key,
                 # but cannot pretend to have a measured duration.
                 deletes.append(model.wire_key(other or row))
@@ -691,8 +692,8 @@ class Stremio:
                 'video_id': (str(r.get('video_id') or ('%s:%s:%s' % (_id, r.get('season'), r.get('episode'))))
                              if is_series else str(_id)),
                 'lastWatched': iso,
-                'watched': iso if pct >= 95 else (state.get('watched') or ''),
-                'flaggedWatched': 1 if pct >= 95 else 0,
+                'watched': iso if pct >= WATCHED_PERCENT else (state.get('watched') or ''),
+                'flaggedWatched': 1 if pct >= WATCHED_PERCENT else 0,
             })
             if is_series:
                 state['season'] = int(r.get('season') or 0)
@@ -1068,7 +1069,7 @@ def _writeback_progress(rows):
                 'position': float(r.get('position') or 0.0),
                 'duration': float(r.get('duration') or 0.0),
                 'percent': float(r.get('percent') or (100*float(r.get('position') or 0)/float(r['duration']) if r.get('duration') else 0)),
-                'stream_url': '', 'event_type': 'watched' if float(r.get('percent') or 0)>=95 or r.get('event_type')=='watched' else 'account_sync',
+                'stream_url': '', 'event_type': 'watched' if float(r.get('percent') or 0)>=WATCHED_PERCENT or r.get('event_type')=='watched' else 'account_sync',
                 'ext_updated_at': r.get('updated_at'),
                 'tmdb_id': r.get('tmdb_id', ''),
                 'imdb_id': r.get('imdb_id', ''),

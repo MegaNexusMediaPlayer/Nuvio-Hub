@@ -248,7 +248,7 @@ def read_resume_hint(expected_tmdb_id=None, expected_imdb_id=None, season=None, 
         percent = position * 100.0 / duration
     if position <= 0 and percent > 0 and duration > 0:
         position = duration * percent / 100.0
-    if position <= 30.0 or percent >= 95.0:
+    if position <= 30.0 or percent >= 90.0:  # 6.0.35: watched at 90 %
         return {}
     return {
         'resume_seconds': position,

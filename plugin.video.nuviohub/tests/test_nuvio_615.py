@@ -135,8 +135,7 @@ class NeverBlocked(TempProfile):
         self.assertEqual(profiles.load()[0]['title'], 'Mine')
 
     def test_ensure_ready_always_enters(self):
-        with mock.patch.object(self.gate.stream_providers, 'repair_all_on', return_value=None), \
-                mock.patch.object(self.gate, 'ensure_defaults'), \
+        with mock.patch.object(self.gate, 'ensure_defaults'), \
                 mock.patch.object(self.gate, 'offer_switch_on', return_value=False):
             self.assertTrue(self.gate.ensure_ready())
 

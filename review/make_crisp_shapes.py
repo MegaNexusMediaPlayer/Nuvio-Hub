@@ -116,7 +116,7 @@ WORDMARK = 'nuvio_wordmark.png'   # master, 1600x507; phone page /logo.png
 LOGO = re.compile(r'<control type="image">(?:(?!</control>).)*?nuvio_wordmark(?:_\d+x\d+)?\.png</texture>(?:(?!</control>).)*?</control>', re.S)
 
 
-HEADER_IDS = ('101', '105', '107', '108')   # Home, Search, Settings, HUB
+HEADER_IDS = ('101', '106', '105', '107', '108')   # Home, Library (6.0.35), Search, Settings, HUB
 HEADER = re.compile(r'<control type="button" id="(?:%s)">(?:(?!</control>).)*?</control>' % '|'.join(HEADER_IDS), re.S)
 NOFOCUS = re.compile(r'\n[ \t]*<texturenofocus[^>]*?(?:/>|>[^<]*</texturenofocus>)')
 

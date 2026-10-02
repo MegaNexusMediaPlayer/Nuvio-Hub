@@ -102,10 +102,14 @@ class Catalog(Dialog):
     def onAction(self,action):
         if action.getId() in (9,10,92,216):self.close()
         elif action.getId() in (117,101,1009,11) and self.getFocusId()==500 and self.rows:
-            from .details import context_menu,open_person
+            from .details import context_choice,quick_choice,run_choice,open_person
             self._selected=self.getControl(500).getSelectedPosition()
             row=self.rows[self._selected]
-            self.outcome=self.child(open_person,row['person']) if row.get('person') else self.child(context_menu,row['target'],info=action.getId()==11,row=row)
+            if row.get('person'):self.outcome=self.child(open_person,row['person'])
+            else:
+                choice='info' if action.getId()==11 else context_choice(row['target'],row)
+                if not choice or quick_choice(choice,row['target'],row):return
+                self.outcome=self.child(run_choice,row['target'],choice,row)
             if self.outcome=='playing' or isinstance(self.outcome,dict):self.close()
 
 def open_catalog(params):

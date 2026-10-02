@@ -1,0 +1,330 @@
+<?xml version='1.0' encoding='utf-8'?>
+<window>
+  <defaultcontrol always="true">500</defaultcontrol>
+  <!-- MegaNexus Library (6.0.35): Local / Tracking services, Movies and Series. -->
+  <controls>
+    <control type="image">
+      <left>0</left>
+      <top>0</top>
+      <width>1920</width>
+      <height>1080</height>
+      <aspectratio>scale</aspectratio>
+      <texture colordiffuse="FF040F22">special://home/addons/script.nuvio/resources/media/white.png</texture>
+    </control>
+    <control type="group">
+      <width>1920</width>
+      <height>1080</height>
+      <animation effect="fade" start="0" end="100" time="160">WindowOpen</animation>
+      <control type="label">
+        <left>70</left>
+        <top>28</top>
+        <width>1360</width>
+        <height>68</height>
+        <font>font37</font>
+        <textcolor>FFFFFFFF</textcolor>
+        <label>Library</label>
+      </control>
+      <control type="group">
+        <visible>!String.IsEmpty(Weather.Temperature)</visible>
+        <control type="image">
+          <left>1590</left>
+          <top>35</top>
+          <width>48</width>
+          <height>48</height>
+          <aspectratio>scale</aspectratio>
+          <texture>special://home/addons/skin.nuvio/media/nuvio/weather/$INFO[Weather.FanartCode].png</texture>
+          <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
+        </control>
+        <control type="label">
+          <left>1645</left>
+          <top>39</top>
+          <width>110</width>
+          <height>40</height>
+          <font>font12</font>
+          <textcolor>FFADD3FF</textcolor>
+          <label>$INFO[Weather.Temperature]</label>
+          <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
+        </control>
+      </control>
+      <control type="label">
+        <left>1750</left>
+        <top>39</top>
+        <width>130</width>
+        <height>40</height>
+        <font>font12</font>
+        <textcolor>FFCAD0DB</textcolor>
+        <label>$INFO[System.Time(hh:mm)]</label>
+        <visible>!Skin.HasSetting(nuvio.hideweather) + !String.IsEqual(Window(10000).Property(nuvio.hide_weather_clock),1)</visible>
+      </control>
+      <control type="image">
+        <left>70</left>
+        <top>112</top>
+        <width>170</width>
+        <height>56</height>
+        <texture colordiffuse="66FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_170x56_r22.png</texture>
+        <visible>String.IsEqual(Window.Property(nuvio.library.tab),local)</visible>
+      </control>
+      <control type="button" id="201">
+        <left>70</left>
+        <top>112</top>
+        <width>170</width>
+        <height>56</height>
+        <font>font13</font>
+        <label>Local</label>
+        <align>center</align>
+        <aligny>center</aligny>
+        <textcolor>FFFFFFFF</textcolor>
+        <focusedcolor>FF040F22</focusedcolor>
+        <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_170x56_r22.png</texturefocus>
+        <texturenofocus colordiffuse="1FFFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_170x56_r22.png</texturenofocus>
+        <onleft>202</onleft>
+        <onright>202</onright>
+        <onup>201</onup>
+        <ondown>500</ondown>
+      </control>
+      <control type="image">
+        <left>260</left>
+        <top>112</top>
+        <width>300</width>
+        <height>56</height>
+        <texture colordiffuse="66FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_300x56_r22.png</texture>
+        <visible>String.IsEqual(Window.Property(nuvio.library.tab),tracking)</visible>
+      </control>
+      <control type="button" id="202">
+        <left>260</left>
+        <top>112</top>
+        <width>300</width>
+        <height>56</height>
+        <font>font13</font>
+        <label>Tracking Services</label>
+        <align>center</align>
+        <aligny>center</aligny>
+        <textcolor>FFFFFFFF</textcolor>
+        <focusedcolor>FF040F22</focusedcolor>
+        <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_300x56_r22.png</texturefocus>
+        <texturenofocus colordiffuse="1FFFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_300x56_r22.png</texturenofocus>
+        <onleft>201</onleft>
+        <onright>201</onright>
+        <onup>202</onup>
+        <ondown>500</ondown>
+      </control>
+      <control type="label">
+        <left>590</left>
+        <top>118</top>
+        <width>1200</width>
+        <height>44</height>
+        <font>font12</font>
+        <textcolor>FFA6AEBD</textcolor>
+        <label>$INFO[Window.Property(nuvio.library.status)]</label>
+      </control>
+      <control type="label">
+        <left>72</left>
+        <top>190</top>
+        <width>900</width>
+        <height>44</height>
+        <font>font14</font>
+        <textcolor>FFFFFFFF</textcolor>
+        <label>Movies</label>
+      </control>
+      <control type="label">
+        <left>72</left>
+        <top>310</top>
+        <width>1500</width>
+        <height>44</height>
+        <font>font12</font>
+        <textcolor>FFA6AEBD</textcolor>
+        <label>$INFO[Window.Property(nuvio.library.movies_empty)]</label>
+      </control>
+      <control type="list" id="500">
+        <left>58</left>
+        <top>238</top>
+        <width>1820</width>
+        <height>340</height>
+        <onup>201</onup>
+        <ondown>501</ondown>
+        <onleft>500</onleft>
+        <onright>500</onright>
+        <orientation>horizontal</orientation>
+        <scrolltime>180</scrolltime>
+        <itemlayout width="196" height="340">
+          <control type="image">
+            <left>10</left>
+            <top>6</top>
+            <width>176</width>
+            <height>264</height>
+            <aspectratio>stretch</aspectratio>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+          </control>
+          <control type="image">
+            <left>10</left>
+            <top>6</top>
+            <width>176</width>
+            <height>264</height>
+            <aspectratio>scale</aspectratio>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
+            <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
+            <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+            <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+            <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
+          </control>
+          <control type="label">
+            <left>10</left>
+            <top>278</top>
+            <width>176</width>
+            <height>40</height>
+            <font>font12</font>
+            <textcolor>FFCCD1DC</textcolor>
+            <label>$INFO[ListItem.Label]</label>
+          </control>
+        </itemlayout>
+        <focusedlayout width="196" height="340">
+          <control type="image">
+            <left>10</left>
+            <top>6</top>
+            <width>176</width>
+            <height>264</height>
+            <aspectratio>stretch</aspectratio>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+          </control>
+          <control type="image">
+            <left>10</left>
+            <top>6</top>
+            <width>176</width>
+            <height>264</height>
+            <aspectratio>scale</aspectratio>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
+            <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
+            <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+            <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+            <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
+          </control>
+          <control type="image">
+            <left>2</left>
+            <top>-2</top>
+            <width>192</width>
+            <height>280</height>
+            <aspectratio>stretch</aspectratio>
+            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass.png</texture>
+            <visible>Control.HasFocus(500)</visible>
+          </control>
+          <control type="label">
+            <left>10</left>
+            <top>278</top>
+            <width>176</width>
+            <height>40</height>
+            <font>font12</font>
+            <textcolor>FFFFFFFF</textcolor>
+            <label>$INFO[ListItem.Label]</label>
+            <scroll>true</scroll>
+          </control>
+        </focusedlayout>
+      </control>
+      <control type="label">
+        <left>72</left>
+        <top>600</top>
+        <width>900</width>
+        <height>44</height>
+        <font>font14</font>
+        <textcolor>FFFFFFFF</textcolor>
+        <label>Series</label>
+      </control>
+      <control type="label">
+        <left>72</left>
+        <top>720</top>
+        <width>1500</width>
+        <height>44</height>
+        <font>font12</font>
+        <textcolor>FFA6AEBD</textcolor>
+        <label>$INFO[Window.Property(nuvio.library.series_empty)]</label>
+      </control>
+      <control type="list" id="501">
+        <left>58</left>
+        <top>648</top>
+        <width>1820</width>
+        <height>340</height>
+        <onup>500</onup>
+        <ondown>501</ondown>
+        <onleft>501</onleft>
+        <onright>501</onright>
+        <orientation>horizontal</orientation>
+        <scrolltime>180</scrolltime>
+        <itemlayout width="196" height="340">
+          <control type="image">
+            <left>10</left>
+            <top>6</top>
+            <width>176</width>
+            <height>264</height>
+            <aspectratio>stretch</aspectratio>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+          </control>
+          <control type="image">
+            <left>10</left>
+            <top>6</top>
+            <width>176</width>
+            <height>264</height>
+            <aspectratio>scale</aspectratio>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
+            <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
+            <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+            <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+            <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
+          </control>
+          <control type="label">
+            <left>10</left>
+            <top>278</top>
+            <width>176</width>
+            <height>40</height>
+            <font>font12</font>
+            <textcolor>FFCCD1DC</textcolor>
+            <label>$INFO[ListItem.Label]</label>
+          </control>
+        </itemlayout>
+        <focusedlayout width="196" height="340">
+          <control type="image">
+            <left>10</left>
+            <top>6</top>
+            <width>176</width>
+            <height>264</height>
+            <aspectratio>stretch</aspectratio>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+          </control>
+          <control type="image">
+            <left>10</left>
+            <top>6</top>
+            <width>176</width>
+            <height>264</height>
+            <aspectratio>scale</aspectratio>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
+            <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
+            <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
+            <animation effect="fade" start="60" end="60" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),40)">Conditional</animation>
+            <animation effect="fade" start="50" end="50" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),50)">Conditional</animation>
+          </control>
+          <control type="image">
+            <left>2</left>
+            <top>-2</top>
+            <width>192</width>
+            <height>280</height>
+            <aspectratio>stretch</aspectratio>
+            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass.png</texture>
+            <visible>Control.HasFocus(501)</visible>
+          </control>
+          <control type="label">
+            <left>10</left>
+            <top>278</top>
+            <width>176</width>
+            <height>40</height>
+            <font>font12</font>
+            <textcolor>FFFFFFFF</textcolor>
+            <label>$INFO[ListItem.Label]</label>
+            <scroll>true</scroll>
+          </control>
+        </focusedlayout>
+      </control>
+    </control>
+  </controls>
+</window>

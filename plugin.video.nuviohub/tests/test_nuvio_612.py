@@ -92,26 +92,18 @@ class StreamSwitches(unittest.TestCase):
     def test_never_configured_uses_one_preferred_addon(self):
         self.assertEqual([p['id'] for p in streams_mod.enabled()], ['aio'])
 
-    def test_import_switches_on_one_only_when_none_is_on(self):
+    def test_import_switches_on_every_imported_addon(self):
+        # 6.0.35 (GitHub issue #3): the user's Nuvio add-ons are all ON after import.
         nuvio_import = importlib.import_module('resources.lib.nuvio_import')
         self.values[streams_mod.SETTING] = json.dumps([{'id': p['id'], 'enabled': False} for p in self.rows])
         with mock.patch.object(importlib.import_module('resources.lib.metadata_providers'), 'entries', return_value=[]):
-            nuvio_import.enable_imported(['torrentio', 'aio', 'other'])
-            self.assertEqual([p['id'] for p in streams_mod.enabled()], ['aio'])
-            self.values[streams_mod.SETTING] = json.dumps([{'id': 'other', 'enabled': True}])
             nuvio_import.enable_imported(['torrentio', 'aio'])
-            self.assertEqual([p['id'] for p in streams_mod.enabled()], ['other'])
+        self.assertEqual([p['id'] for p in streams_mod.enabled()], ['torrentio', 'aio'])
 
-    def test_one_time_repair_of_the_all_on_state(self):
+    def test_no_repair_overrides_the_users_choice(self):
+        self.assertFalse(hasattr(streams_mod, 'repair_all_on'))
         self.values[streams_mod.SETTING] = json.dumps([{'id': p['id'], 'enabled': True} for p in self.rows])
-        self.assertEqual(streams_mod.repair_all_on()['id'], 'aio')
-        self.assertEqual([p['id'] for p in streams_mod.enabled()], ['aio'])
-        self.values[streams_mod.SETTING] = json.dumps([{'id': p['id'], 'enabled': True} for p in self.rows])
-        self.assertIsNone(streams_mod.repair_all_on(), 'runs only once; a later user choice is kept')
-
-    def test_repair_keeps_a_partial_choice(self):
-        self.values[streams_mod.SETTING] = json.dumps([{'id': 'torrentio', 'enabled': True}, {'id': 'aio', 'enabled': True}])
-        self.assertIsNone(streams_mod.repair_all_on())
+        self.assertEqual(len(streams_mod.enabled()), 3)
 
 
 class Ratings(unittest.TestCase):
@@ -166,7 +158,7 @@ class TrailerPlayback(unittest.TestCase):
 
     def test_settings_declare_trailer_and_rating_options(self):
         text = (ROOT / 'plugin.video.nuviohub/resources/settings.xml').read_text(encoding='utf-8')
-        for key in ('nuvio_imdb_trailer_quality', 'nuvio_show_ratings', 'nuvio_stream_switch_612'):
+        for key in ('nuvio_imdb_trailer_quality', 'nuvio_show_ratings'):
             self.assertIn('id="%s"' % key, text)
         self.assertIn('id="nuvio_trailer_source" type="text" default="imdb_youtube"', text)  # 6.0.27
 

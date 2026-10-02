@@ -1,6 +1,7 @@
 """Pure wire conversions: Kodi seconds, Nuvio milliseconds, canonical episode keys."""
 import math
 import re
+from .nuviohub.common import WATCHED_PERCENT
 
 
 def number(value, default=0.0):
@@ -75,7 +76,7 @@ def to_wire(row):
     season, episode = episode_numbers(row)
     if kind(row) == 'series' and (season is None or episode is None):
         return None
-    if percent(row) >= 95:
+    if percent(row) >= WATCHED_PERCENT:
         position = duration
     video_id = str(row.get('video_id') or (('%s:%d:%d' % (cid, season, episode)) if season is not None else cid))
     return {'content_id': cid, 'content_type': kind(row), 'video_id': video_id,
@@ -98,5 +99,5 @@ def from_wire(entry):
            'tmdb_id': cid.split(':', 1)[1] if re.fullmatch(r'tmdb:[0-9]+', cid) else ''}
     row['season'], row['episode'] = episode_numbers(row)
     row['percent'] = percent(row)
-    row['event_type'] = 'watched' if row['percent'] >= 95 else 'account_sync'
+    row['event_type'] = 'watched' if row['percent'] >= WATCHED_PERCENT else 'account_sync'
     return row

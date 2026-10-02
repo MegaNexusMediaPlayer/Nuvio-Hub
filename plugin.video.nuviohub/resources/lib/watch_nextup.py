@@ -5,6 +5,7 @@ import os
 import threading
 import time
 from .nuviohub.common import profile_path
+from .nuviohub.common import WATCHED_PERCENT
 from . import playback_store,simkl_watched
 
 _LOCK=threading.RLock()
@@ -62,7 +63,7 @@ def next_card(meta,history,entry,today=None):
     eligible=[e for e in episodes if (number(e.get('season')),number(e.get('episode')))>base and not watched_scope(e)]
     tomorrow=next((e for e in eligible if release_day(e)==today+timedelta(days=1)),None)
     selected=tomorrow
-    if not selected and (float(history.get('percent') or 0)>=95 or history.get('event_type')=='watched'):
+    if not selected and (float(history.get('percent') or 0)>=WATCHED_PERCENT or history.get('event_type')=='watched'):
         selected=next((e for e in eligible if release_day(e) and release_day(e)<=today),None)
     if not selected:return None
     target={'media_type':'series','canonical_id':history['canonical_id'],'video_id':selected['id'],
@@ -75,15 +76,20 @@ def next_card(meta,history,entry,today=None):
             'subtitle':'S%s • E%s'%(selected['season'],selected['episode']),
             'meta_line':'Series','target':target,'percent_value':0,
             'airing_banner':'Tomorrow • New episode' if tomorrow else 'Next episode',
-            'tomorrow':'1' if tomorrow else '', 'shape':'poster'}
+            'tomorrow':'1' if tomorrow else '', 'shape':'poster','continue_card':'next'}
 
 def augment(rows,refresh=False,stopped=lambda:False):
     from . import backend_api
+    from . import continue_rules
     source=backend_api.provider('metadata') or {};cache=_read();seen=set();history=[]
+    removed=continue_rules.snapshot();unaired=continue_rules.show_unaired()
     for row in playback_store.list_recent_items(limit=500,media_types=('series','tv','show','anime')):
         mid=row['canonical_id']
         if mid not in seen and row.get('episode'):
-            seen.add(mid);history.append(row)
+            seen.add(mid)
+            # 6.0.35 (issue #7): only series watched in the period, not removed.
+            if continue_rules.recent_enough(row.get('updated_at')) and not continue_rules.hidden('series',mid,row.get('updated_at'),removed):
+                history.append(row)
         if len(history)>=50:break
     states=simkl_watched.snapshot();cards=[];requests=0
     for row in history:
@@ -101,6 +107,7 @@ def augment(rows,refresh=False,stopped=lambda:False):
     output=[dict(row) for row in rows if row.get('target')]
     upcoming=[];next_episodes=[]
     for card in cards:
+        if card.get('tomorrow') and not unaired:continue  # "Show unaired next episodes" off
         mid=card['target']['canonical_id']
         existing=next((r for r in output if r.get('target',{}).get('canonical_id')==mid),None)
         if existing:

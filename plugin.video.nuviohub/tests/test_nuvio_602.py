@@ -45,8 +45,9 @@ class Progress(unittest.TestCase):
         entry['episode_watched_at']={'1:2':time.time()+100}
         with mock.patch.object(watched,'snapshot',return_value={'items':{'series|tt123':entry}}),mock.patch.object(nextup,'augment',side_effect=lambda rows:rows):
             self.assertEqual(home.continue_shelf()['rows'][0]['target']['video_id'],'tt123:1:1')
-    def test_80_to_94_percent_uses_pause_and_95_uses_stop(self):
-        for position,action in [(800000,'pause'),(940000,'pause'),(950000,'stop')]:
+    def test_below_80_percent_uses_pause_and_80_uses_stop(self):
+        # 6.0.35: Simkl counts a title as watched at 80 %, as in the Nuvio apps.
+        for position,action in [(700000,'pause'),(790000,'pause'),(800000,'stop')]:
             simkl.queue_progress(self.ctx,position,'stop')
             with mock.patch.object(simkl,'_request',return_value={}) as send:self.assertEqual(simkl.flush_progress(),1)
             self.assertEqual(send.call_args.args[0],'/scrobble/'+action)
