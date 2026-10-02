@@ -240,7 +240,9 @@ def search_shelves(query):
     shelves=[];p=_api()
     query=str(query or '').strip()
     if not query:return []
+    from .sports import is_sports_provider
     for source in enabled():
+        if is_sports_provider(source):continue  # 6.0.35: sports stay in the Sports screen
         for catalog in search_catalogs.entries(source):
             path=p.build_url(action='catalog_all',provider_id=source['id'],media_type=catalog['type'],
                              catalog_id=catalog['id'],search=query)

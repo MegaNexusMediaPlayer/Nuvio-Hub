@@ -288,7 +288,8 @@ def playback():
     dialog=xbmcgui.Dialog()
     def rows():return [page.item('Autoplay first provider result',enabled=ADDON.getSetting('nuvio_autoplay')=='true'),
         page.item('Intro / credits',ADDON.getSetting('nuvio_skip_mode') or 'Button'),
-        page.item('TheIntroDB API key (optional)','Configured' if ADDON.getSetting('nuvio_introdb_key') else 'Not set'),page.item('Back')]
+        page.item('TheIntroDB API key (optional)','Configured' if ADDON.getSetting('nuvio_introdb_key') else 'Not set'),
+        page.item('Sport · play the selected event in the small video',enabled=ADDON.getSetting('nuvio_sport_autoplay')!='false'),page.item('Back')]
     def choose(pick):
         if pick==0:toggle('nuvio_autoplay')
         elif pick==1:
@@ -298,7 +299,8 @@ def playback():
         elif pick==2:
             key=dialog.input('TheIntroDB API key',option=xbmcgui.ALPHANUM_HIDE_INPUT)
             if key:ADDON.setSetting('nuvio_introdb_key',key.strip())
-        elif pick==3:return page.DONE
+        elif pick==3:ADDON.setSetting('nuvio_sport_autoplay','false' if ADDON.getSetting('nuvio_sport_autoplay')!='false' else 'true')
+        elif pick==4:return page.DONE
     return page.show('Playback · Kodi controls',rows,choose)
 
 

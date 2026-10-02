@@ -62,8 +62,8 @@ class Pills(unittest.TestCase):
 
     def test_hub_glass_pills_tint_white(self):
         home = (ROOT / 'skin.nuvio/xml/Home.xml').read_text(encoding='utf-8')
-        self.assertEqual(home.count('<texturenofocus colordiffuse="%s">' % crisp.GLASS_REST), 5)
-        self.assertEqual(home.count('<texturefocus colordiffuse="%s">' % crisp.GLASS_FOCUS), 5)
+        self.assertEqual(home.count('<texturenofocus colordiffuse="%s">' % crisp.GLASS_REST), 6)
+        self.assertEqual(home.count('<texturefocus colordiffuse="%s">' % crisp.GLASS_FOCUS), 6)
 
     def test_capsule_removed(self):
         for path in xml_files():

@@ -39,6 +39,10 @@ def launch():
         if mode == 'iptv':
             from nuvio_ui.iptv import open_iptv
             open_iptv()
+        elif mode == 'sports':
+            # 6.0.35: sports add-ons have their own screen (GitHub issue #8).
+            from nuvio_ui.sports import open_sports
+            open_sports()
         elif mode == 'wizard':
             from nuvio_ui.onboarding import run as setup
             command=setup(force=True)

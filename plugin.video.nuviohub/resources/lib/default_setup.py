@@ -121,8 +121,10 @@ def _usable(catalog):
 
 def catalog_providers(providers):
     """Added add-ons (other than Cinemeta) that offer usable movie/series catalogs."""
+    from .sports import is_sports_provider
+    # 6.0.35 (GitHub issue #8): sports add-ons have their own Sports screen.
     return [p for p in providers
-            if (p.get('manifest') or {}).get('id') != CINEMETA_ID
+            if (p.get('manifest') or {}).get('id') != CINEMETA_ID and not is_sports_provider(p)
             and any(_usable(c) for c in (p.get('manifest') or {}).get('catalogs') or [])]
 
 

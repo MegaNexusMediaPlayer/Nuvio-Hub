@@ -108,7 +108,26 @@ def state():
                                 for f in g['folders']]}
                    for g in collection_profile.load()],
         'display': display,
+        'tracking': _tracking_status(),
     }
+
+
+def _tracking_status():
+    try:
+        from . import tracking_link
+        return tracking_link.status()
+    except Exception:
+        return {}
+
+
+def tracking_start(service):
+    from . import tracking_link
+    return tracking_link.start(service)
+
+
+def tracking_disconnect(service):
+    from . import tracking_link
+    return tracking_link.disconnect(service)
 
 
 # --------------------------------------------------------------- actions ----
@@ -396,6 +415,8 @@ class SetupService:
                     '/api/nuvio/logout': nuvio_sign_out,
                     '/api/nuvio/import': lambda: nuvio_import(bool(body.get('collections'))),
                     '/api/save': lambda: save(body),
+                    '/api/tracking/start': lambda: tracking_start(body.get('service')),
+                    '/api/tracking/disconnect': lambda: tracking_disconnect(body.get('service')),
                 }
                 action = actions.get(parts.path)
                 if action is None:

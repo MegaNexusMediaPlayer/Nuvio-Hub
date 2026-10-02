@@ -53,6 +53,7 @@ footer .btn{width:100%;max-width:720px;display:flex;margin:0 auto;font-size:17px
 #done{display:none;text-align:center;padding:60px 24px}
 #done h1{font-size:24px}#done p{color:var(--muted)}
 .empty{color:var(--dim);font-size:14px;padding:6px 0}
+.code{font:700 26px/1.2 ui-monospace,monospace;letter-spacing:4px;margin-top:4px}
 </style></head>
 <body>
 <header>
@@ -190,6 +191,55 @@ function renderAccount(){
         el('label', {class: 'switch'}, withCollections, el('i'))), imp, out);
     box.append(card);
   }
+  renderTracking(box);
+}
+
+/* ---------- Tracking services (6.0.35) ---------- */
+const TRACKERS = [['trakt', 'Trakt'], ['simkl', 'Simkl']];
+let TRACK_POLL = null;
+function renderTracking(box){
+  const T = S.tracking || {};
+  box.append(el('h2', {text: 'Tracking services'}));
+  const card = el('div', {class: 'card'},
+    el('p', {class: 'note', text: 'Optional. Sends what you watch, imports your progress and shows your watchlists in the Library.'}));
+  let waiting = false;
+  for (const [id, name] of TRACKERS){
+    const t = T[id] || {};
+    const row = el('div', {class: 'row'}, el('div', {class: 'grow'}, el('div', {class: 'name', text: name}),
+      el('div', {class: 'sub', text: t.connected ? 'Connected' : (t.code ? 'Waiting for approval…' : 'Not connected')})));
+    if (t.connected){
+      const off = el('button', {class: 'btn ghost small', text: 'Disconnect'});
+      off.addEventListener('click', () => { if (confirm('Disconnect ' + name + '?'))
+        busy(off, async () => { await api('/api/tracking/disconnect', {service: id}); say(name + ' disconnected.', true); await reload(); }); });
+      row.append(off);
+    } else {
+      const go = el('button', {class: 'btn small', text: t.code ? 'Open again' : 'Connect'});
+      go.addEventListener('click', () => {
+        // Open the tab inside the tap (pop-up blockers), then point it at the service.
+        const tab = window.open('about:blank', '_blank');
+        busy(go, async () => {
+          try {
+            const d = await api('/api/tracking/start', {service: id});
+            if (tab) tab.location = d.url; else window.open(d.url, '_blank');
+            say(name + ': enter code ' + d.code + ' on the page that opened.', true);
+            await reload();
+          } catch (e) { if (tab) tab.close(); throw e; }
+        });
+      });
+      row.append(go);
+    }
+    card.append(row);
+    if (!t.connected && t.code){
+      waiting = true;
+      const code = el('div', {class: 'code', text: t.code});
+      const copy = el('button', {class: 'btn ghost small', text: 'Copy code'});
+      copy.addEventListener('click', () => { if (navigator.clipboard) navigator.clipboard.writeText(t.code); say('Code copied.', true); });
+      card.append(el('div', {class: 'row'}, el('div', {class: 'grow'}, el('div', {class: 'sub', text: 'Code for ' + name}), code), copy));
+    }
+  }
+  box.append(card);
+  clearTimeout(TRACK_POLL);
+  if (waiting) TRACK_POLL = setTimeout(reload, 4000);
 }
 
 /* ---------- Add-ons ---------- */
