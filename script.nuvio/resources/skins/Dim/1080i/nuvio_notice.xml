@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='utf-8'?>
+<window>
+  <defaultcontrol always="true">300</defaultcontrol>
+  <!-- 6.0.37: security notice - add-ons that overload Kodi (nuvio_ui/system_check.py). -->
+  <controls>
+    <control type="group">
+      <animation effect="fade" start="0" end="100" time="160">WindowOpen</animation>
+      <animation effect="fade" start="100" end="0" time="120">WindowClose</animation>
+      <control type="image">
+        <left>360</left>
+        <top>210</top>
+        <width>1200</width>
+        <height>620</height>
+        <texture colordiffuse="E6061838" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+      </control>
+      <control type="image">
+        <left>360</left>
+        <top>210</top>
+        <width>1200</width>
+        <height>620</height>
+        <texture colordiffuse="1AFFFFFF" border="24">special://home/addons/script.nuvio/resources/media/nuvio_pill.png</texture>
+      </control>
+      <control type="image">
+        <left>420</left>
+        <top>256</top>
+        <width>96</width>
+        <height>108</height>
+        <aspectratio>keep</aspectratio>
+        <texture colordiffuse="FFFFB020">special://home/addons/script.nuvio/resources/media/nuvio_shield.png</texture>
+      </control>
+      <control type="label">
+        <left>546</left>
+        <top>270</top>
+        <width>960</width>
+        <height>56</height>
+        <font>font32</font>
+        <textcolor>FFFFFFFF</textcolor>
+        <label>Security notice</label>
+      </control>
+      <control type="label">
+        <left>548</left>
+        <top>326</top>
+        <width>960</width>
+        <height>36</height>
+        <font>font12</font>
+        <textcolor>FFFFB020</textcolor>
+        <label>$INFO[Window.Property(nuvio.notice.subtitle)]</label>
+      </control>
+      <control type="textbox">
+        <left>420</left>
+        <top>392</top>
+        <width>1080</width>
+        <height>196</height>
+        <font>font13</font>
+        <textcolor>FFDBE3F0</textcolor>
+        <label>$INFO[Window.Property(nuvio.notice.text)]</label>
+      </control>
+      <control type="textbox">
+        <left>420</left>
+        <top>598</top>
+        <width>1080</width>
+        <height>90</height>
+        <font>font12</font>
+        <textcolor>FFADD3FF</textcolor>
+        <label>$INFO[Window.Property(nuvio.notice.addons)]</label>
+      </control>
+      <control type="button" id="300">
+        <left>420</left>
+        <top>708</top>
+        <width>460</width>
+        <height>70</height>
+        <font>font13</font>
+        <label>Turn them off</label>
+        <align>center</align>
+        <aligny>center</aligny>
+        <textcolor>FFF3F4F8</textcolor>
+        <focusedcolor>FF051229</focusedcolor>
+        <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_460x70_r22.png</texturefocus>
+        <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_460x70_r22.png</texturenofocus>
+        <onleft>301</onleft>
+        <onright>301</onright>
+        <onup>300</onup>
+        <ondown>300</ondown>
+      </control>
+      <control type="button" id="301">
+        <left>900</left>
+        <top>708</top>
+        <width>260</width>
+        <height>70</height>
+        <font>font13</font>
+        <label>Skip</label>
+        <align>center</align>
+        <aligny>center</aligny>
+        <textcolor>FFF3F4F8</textcolor>
+        <focusedcolor>FF051229</focusedcolor>
+        <texturefocus colordiffuse="F2FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_260x70_r22.png</texturefocus>
+        <texturenofocus colordiffuse="33FFFFFF">special://home/addons/script.nuvio/resources/media/nuvio_pill_260x70_r22.png</texturenofocus>
+        <onleft>300</onleft>
+        <onright>300</onright>
+        <onup>301</onup>
+        <ondown>301</ondown>
+      </control>
+    </control>
+  </controls>
+</window>

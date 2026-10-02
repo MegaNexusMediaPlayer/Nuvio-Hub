@@ -1,14 +1,14 @@
 {
-  "version": "6.0.36",
-  "base": "6.0.35 release",
+  "version": "6.0.37",
+  "base": "6.0.36 release",
   "python": "3.14.7",
   "checks": {
-    "runtime_python38_grammar": 222,
-    "component_xml": 194,
+    "runtime_python38_grammar": 228,
+    "component_xml": 197,
     "component_json": 5
   },
-  "unit_tests": 705,
-  "unit_seconds": 32.2,
+  "unit_tests": 731,
+  "unit_seconds": 34.723,
   "test_modules": [
     "test_nuvio_601",
     "test_nuvio_602",
@@ -42,6 +42,7 @@
     "test_nuvio_634",
     "test_nuvio_635",
     "test_nuvio_636",
+    "test_nuvio_637",
     "test_nuvio_home_iptv",
     "test_nuvio_build",
     "test_nuvio_extras",

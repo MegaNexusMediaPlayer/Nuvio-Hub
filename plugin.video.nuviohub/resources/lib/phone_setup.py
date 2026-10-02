@@ -27,6 +27,10 @@ import xbmcaddon
 ADDON_ID = 'plugin.video.nuviohub'
 IDLE_TIMEOUT = 15 * 60          # seconds without a phone request
 MAX_BODY = 64 * 1024
+# 6.0.37: one fixed port, so a firewall on the device (Linux PCs with ufw
+# default-deny, for example) can allow it once; a random port was blocked on
+# every attempt. Falls back to any free port when something else uses it.
+PORT = 8765
 PAGE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'phone_setup', 'index.html')
 DISPLAY_KEYS = {
     # page field: (setting id, kind)
@@ -60,6 +64,9 @@ def _addon():
 def _source_label(source, providers):
     from .collections_home import matching_catalog
     kind = 'Series' if source.get('type') == 'series' else 'Movies'
+    from .collection_sources import is_virtual, label
+    if is_virtual(source):
+        return label(source)
     match = matching_catalog(source, providers)
     if not match:
         return '%s (%s) · not installed' % (source.get('catalogId'), kind)
@@ -110,6 +117,7 @@ def state():
                    for g in collection_profile.load()],
         'display': display,
         'tracking': _tracking_status(),
+        'tmdb_key': bool(addon.getSetting('tmdb_api_key')),
     }
 
 
@@ -119,6 +127,17 @@ def _tracking_status():
         return tracking_link.status()
     except Exception:
         return {}
+
+
+def tmdb_key(value):
+    """The user's own TMDb key (v3 key or v4 token) for TMDB collection sources."""
+    value = str(value or '').strip()
+    if not value or len(value) < 16 or any(ch.isspace() for ch in value):
+        raise ValueError('Paste the TMDb API key or read access token from themoviedb.org > Settings > API.')
+    _addon().setSetting('tmdb_api_key', value)
+    from . import settings_cache
+    settings_cache.invalidate()
+    return {}
 
 
 def tracking_start(service):
@@ -341,7 +360,7 @@ def save(payload):
 class SetupService:
     """Local HTTP service. ``events`` are read by the TV window."""
 
-    def __init__(self, host=None, port=0):
+    def __init__(self, host=None, port=None):
         self.key = secrets.token_urlsafe(18)
         self.host = host or lan_ip()
         self.lock = threading.Lock()
@@ -417,6 +436,7 @@ class SetupService:
                     '/api/nuvio/import': lambda: nuvio_import(bool(body.get('collections'))),
                     '/api/save': lambda: save(body),
                     '/api/tracking/start': lambda: tracking_start(body.get('service')),
+                    '/api/tmdb/key': lambda: tmdb_key(body.get('key')),
                     '/api/tracking/disconnect': lambda: tracking_disconnect(body.get('service')),
                 }
                 action = actions.get(parts.path)
@@ -426,7 +446,12 @@ class SetupService:
                 if done and parts.path == '/api/save':
                     service.finish()
 
-        self.server = ThreadingHTTPServer((self.host, port), Handler)
+        try:
+            self.server = ThreadingHTTPServer((self.host, PORT if port is None else port), Handler)
+        except OSError:
+            if port is not None:
+                raise
+            self.server = ThreadingHTTPServer((self.host, 0), Handler)   # fixed port busy
         self.server.daemon_threads = True
         self.port = self.server.server_address[1]
         self.thread = threading.Thread(target=self.server.serve_forever, name='MegaNexusPhoneSetup', daemon=True)

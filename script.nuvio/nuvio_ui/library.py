@@ -18,6 +18,14 @@ MAX_ROWS = 14
 
 
 class LibraryWindow(Dialog):
+    TOUCH_ROWS = True   # vertical drags over poster rows move between rows (touch only)
+
+    def touch_can_step(self, down):
+        # Touch moves between rows only, never up out of the first row (6.0.39).
+        try:
+            return down or self.getFocusId() > ROW_BASE
+        except Exception:
+            return False
     def __init__(self, *args, **kwargs):
         super().__init__(*args)
         self.tab = 'tracking' if library.tracking_connected() else 'local'

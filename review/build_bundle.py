@@ -13,7 +13,7 @@ PACKAGES=BACK/'resources/packages'
 PACKAGES.mkdir(parents=True,exist_ok=True)
 OMIT_UI={'home_window.py','home_trailers.py','source_browser.py','sources_loading.py','skin_theme.py','search_window.py'}
 BACK_MEDIA={'icon.png','nuvio_mark.png','nuvio_banner.png','meganexus_icon.png','meganexus_fanart.png'}
-UI_MEDIA={'nuvio_video_vignette.png','kofi_qr.png','nuvio_poster_mask_v2.png','nuvio_poster_focus_v2.png','nuvio_tile_mask_v2.png','nuvio_tile_focus_v2.png','person.png','person_circle.png','person_ring.png','black.png','white.png','nuvio_mark.png','nuvio_wordmark.png','nuvio_banner.png','nuvio_hero_shade.png','nuvio_hero_fade.png',
+UI_MEDIA={'nuvio_video_vignette.png','kofi_qr.png','nuvio_poster_mask_v2.png','nuvio_poster_focus_v2.png','nuvio_tile_mask_v2.png','nuvio_tile_focus_v2.png','person.png','person_circle.png','person_ring.png','black.png','white.png','nuvio_mark.png','nuvio_wordmark.png','nuvio_shield.png','nuvio_banner.png','nuvio_hero_shade.png','nuvio_hero_fade.png',
           'nuvio_pill.png','nuvio_poster_mask.png','nuvio_poster_focus.png','nuvio_poster_blank.png','nuvio_tile_mask.png','nuvio_tile_focus.png','meganexus_saver_bg.png','meganexus_saver_logo.png','meganexus_saver_glow.png','meganexus_saver_spark.png','meganexus_icon.png','meganexus_fanart.png',
           'nuvio_banner_dark.png','nuvio_banner_dim.png','meganexus_saver_bg_dark.png','meganexus_saver_bg_dim.png','nuvio_bottom_fade.png',
           'nuvio_tile_glass.png','nuvio_poster_glass.png',

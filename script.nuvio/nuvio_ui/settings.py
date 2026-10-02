@@ -87,7 +87,8 @@ def addons():
         enabled=sum(1 for _,on in providers if on)
         pick=dialog.select('Add-ons',['Metadata add-ons: '+name,
             'Stream add-ons: %d / %d enabled'%(enabled,len(providers)),
-            'Add configured manifest URL','Import add-ons from Nuvio','Remove a provider','Actor search fallback (optional TMDb key)',
+            'Add configured manifest URL','Import add-ons from Nuvio','Remove a provider',
+            'TMDb API key · TMDB collections and actor search: '+('Set' if ADDON.getSetting('tmdb_api_key') else 'Not set'),
             'Refresh add-on catalogs now','Back'],preselect=previous)
         if pick<0 or pick==7:return
         previous=pick
@@ -104,7 +105,7 @@ def addons():
             if changed is not None:
                 dialog.ok('Add-ons','Updated: %s.'%', '.join(changed) if changed else 'All add-ons were already up to date.')
         elif pick==5:
-            key=dialog.input('Optional TMDb API key',option=xbmcgui.ALPHANUM_HIDE_INPUT).strip()
+            key=dialog.input('Your TMDb API key (v3 key or v4 token, free at themoviedb.org)',option=xbmcgui.ALPHANUM_HIDE_INPUT).strip()
             if key:ADDON.setSetting('tmdb_api_key',key);settings_cache.invalidate()
         elif pick==4:
             providers=store.list_providers()
@@ -645,7 +646,8 @@ def maintenance():
     def rows():return [page.item('Check for updates',version_label()),
         page.item('Automatic updates from GitHub',enabled=ADDON.getSetting('nuvio_auto_update')!='false'),
         page.item('Support MegaNexus · Ko-fi','QR code'),
-        page.item('Run setup wizard'),page.item('Remove MegaNexus build'),page.item('Back')]
+        page.item('Run setup wizard'),page.item('Remove MegaNexus build'),
+        page.item('System check · add-ons that slow MegaNexus down'),page.item('Back')]
     def choose(pick):
         if pick==0:
             result=check_updates()
@@ -658,8 +660,16 @@ def maintenance():
         elif pick==4:
             from resources.lib.nuvio_uninstall import prepare
             return prepare()
-        elif pick==5:return page.DONE
+        elif pick==5:
+            from .system_check import run as system_check
+            system_check(force=True)
+        elif pick==6:return page.DONE
     return page.show('Maintenance',rows,choose)
+
+
+def local_storage():
+    from .local_storage import run as local
+    return local()
 
 
 def phone_setup():
@@ -672,7 +682,7 @@ def run(back_command=''):
         from .iptv import configure
         configure()
     actions=[('Set up on phone · QR code',phone_setup),('Accounts & tracking services',tracking_accounts),('Continue Watching',continue_watching),('Add-ons',addons),('Collections',collections),
-        ('IPTV',iptv_settings),('Sport',sport_settings),('Playback',playback),('Subtitles',subtitle_settings),('Trailers',trailers),
+        ('Local storage · movies and series on this device',local_storage),('IPTV',iptv_settings),('Sport',sport_settings),('Playback',playback),('Subtitles',subtitle_settings),('Trailers',trailers),
         ('Home & appearance',appearance),('Performance & image cache',performance),('Maintenance & updates',maintenance),
         ('Support MegaNexus · Ko-fi',support)]
     def rows():return [page.item(label) for label,_ in actions]+[page.item('Done')]
