@@ -34,7 +34,7 @@
       <width>220</width>
       <height>330</height>
       <aspectratio scalediffuse="false">keep</aspectratio>
-      <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[Window.Property(nuvio.poster)]</texture>
+      <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_220x330.png">$INFO[Window.Property(nuvio.poster)]</texture>
       <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
       <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
       <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>

@@ -71,7 +71,7 @@
             <width>336</width>
             <height>189</height>
             <aspectratio>scale</aspectratio>
-            <texture diffuse="special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture diffuse="special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_336x189.png">$INFO[ListItem.Art(poster)]</texture>
           </control>
           <control type="textbox">
             <left>12</left>
@@ -99,7 +99,7 @@
             <width>336</width>
             <height>189</height>
             <aspectratio>scale</aspectratio>
-            <texture diffuse="special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture diffuse="special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_336x189.png">$INFO[ListItem.Art(poster)]</texture>
           </control>
           <control type="image">
             <left>8</left>
@@ -107,7 +107,7 @@
             <width>344</width>
             <height>197</height>
             <aspectratio>scale</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_344x197.png</texture>
             <visible>Control.HasFocus(500)</visible>
           </control>
           <control type="textbox">

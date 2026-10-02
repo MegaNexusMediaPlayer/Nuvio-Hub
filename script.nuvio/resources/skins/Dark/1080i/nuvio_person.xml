@@ -88,7 +88,7 @@
           <width>164</width>
           <height>246</height>
           <aspectratio>scale</aspectratio>
-          <texture diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+          <texture diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_164x246.png">$INFO[ListItem.Art(poster)]</texture>
         </control>
         <control type="label">
           <left>10</left>
@@ -108,14 +108,14 @@
           <width>164</width>
           <height>246</height>
           <aspectratio>scale</aspectratio>
-          <texture diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+          <texture diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_164x246.png">$INFO[ListItem.Art(poster)]</texture>
         </control>
         <control type="image">
           <left>16</left>
           <top>4</top>
           <width>172</width>
           <height>254</height>
-          <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+          <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_172x254.png</texture>
           <visible>Control.HasFocus(500)</visible>
         </control>
         <control type="label">
@@ -174,7 +174,7 @@
           <width>164</width>
           <height>246</height>
           <aspectratio>scale</aspectratio>
-          <texture diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+          <texture diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_164x246.png">$INFO[ListItem.Art(poster)]</texture>
         </control>
         <control type="label">
           <left>10</left>
@@ -194,14 +194,14 @@
           <width>164</width>
           <height>246</height>
           <aspectratio>scale</aspectratio>
-          <texture diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+          <texture diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_164x246.png">$INFO[ListItem.Art(poster)]</texture>
         </control>
         <control type="image">
           <left>16</left>
           <top>4</top>
           <width>172</width>
           <height>254</height>
-          <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_v2.png</texture>
+          <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_172x254.png</texture>
           <visible>Control.HasFocus(501)</visible>
         </control>
         <control type="label">

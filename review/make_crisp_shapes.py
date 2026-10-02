@@ -63,6 +63,22 @@ def ring(out, w, h, r, thickness):
            '-depth', '8', '-strip', 'PNG32:%s' % out)
 
 
+def glass_box(out, w, h, r=19, top=0.10, bottom=0.03):
+    """Translucent glass card box (white, brighter at the top) with the same
+    smooth supersampled corners as the masks. 6.0.35: the earlier glass was
+    the mask eroded by a 4 px disk, which left stepped corners - visible on
+    landscape cards whose art does not cover the whole box."""
+    with tempfile.TemporaryDirectory() as temp:
+        temp = Path(temp)
+        rounded(temp / 'mask.png', w, h, r)
+        W, H = round(w * SCALE), round(h * SCALE)
+        magick(temp / 'mask.png', '-alpha', 'extract', temp / 'a.png')
+        magick('-size', '%dx%d' % (W, H), 'gradient:gray(%d%%)-gray(%d%%)' % (top * 100, bottom * 100), temp / 'g.png')
+        magick(temp / 'a.png', temp / 'g.png', '-compose', 'multiply', '-composite', temp / 'alpha.png')
+        magick('-size', '%dx%d' % (W, H), 'xc:white', temp / 'alpha.png', '-alpha', 'off', '-compose', 'copyopacity',
+               '-composite', '-depth', '8', '-strip', 'PNG32:%s' % out)
+
+
 def cards():
     """Masks (card shape, radius 19), focus rings (radius 25, 4.3 px) and their glass versions."""
     import make_glass_ui as glass
@@ -70,8 +86,8 @@ def cards():
     rounded(MEDIA / 'nuvio_poster_mask_v2.png', 192, 288, 19)
     ring(MEDIA / 'nuvio_tile_focus_v2.png', 312, 179, 25, 4.3)
     ring(MEDIA / 'nuvio_poster_focus_v2.png', 200, 296, 25, 4.3)
-    glass.glass_from_mask(MEDIA / 'nuvio_tile_mask_v2.png', MEDIA / 'nuvio_tile_glass.png')
-    glass.glass_from_mask(MEDIA / 'nuvio_poster_mask_v2.png', MEDIA / 'nuvio_poster_glass.png')
+    glass_box(MEDIA / 'nuvio_tile_glass.png', 304, 171)
+    glass_box(MEDIA / 'nuvio_poster_glass.png', 192, 288)
     glass.focus_glass(MEDIA / 'nuvio_tile_focus_v2.png', MEDIA / 'nuvio_tile_focus_glass.png', pad=4 * SCALE, glow=3 * SCALE)
     glass.focus_glass(MEDIA / 'nuvio_poster_focus_v2.png', MEDIA / 'nuvio_poster_focus_glass.png', pad=4 * SCALE, glow=3 * SCALE)
 
@@ -110,6 +126,57 @@ def convert(text, made):
             return '<%s%s>%s%s</%s>' % (t['tag'], attrs, t['base'], name, t['tag'])
         return PILL.sub(tex, b)
     return BLOCK.sub(block, text)
+
+
+# Card shapes drawn at other sizes than the base textures (landscape catalog
+# grid, landscape Details, Library...) get their own 2x textures with the same
+# radius - a stretched mask is aliased at the corners (6.0.35).
+CARD_BASE = {('tile', 'mask_v2'): (304, 171), ('poster', 'mask_v2'): (192, 288),
+             ('tile', 'glass'): (304, 171), ('poster', 'glass'): (192, 288),
+             ('tile', 'focus_v2'): (312, 179), ('poster', 'focus_v2'): (200, 296),
+             ('tile', 'focus_glass'): (320, 187), ('poster', 'focus_glass'): (208, 304)}
+CARD_NAMES = {'mask_v2': 'mask', 'glass': 'glass', 'focus_v2': 'focus', 'focus_glass': 'focus_glass'}
+CARD = re.compile(r'<control type="image">(?:(?!</control>).)*?</control>', re.S)
+CARD_TEX = re.compile(r'nuvio_(tile|poster)_(mask_v2|focus_glass|focus_v2|glass)(?:_(\d+)x(\d+))?\.png')
+
+
+def card_name(kind, variant, w, h):
+    return 'nuvio_%s_%s_%dx%d.png' % (kind, CARD_NAMES[variant], w, h)
+
+
+def card_sizes(text, made):
+    def block(m):
+        b = m.group(0)
+        w = re.search(r'<width>(\d+)</width>', b)
+        h = re.search(r'<height>(\d+)</height>', b)
+        if not (w and h):
+            return b
+        w, h = int(w.group(1)), int(h.group(1))
+        def tex(t):
+            kind, variant = t.group(1), t.group(2)
+            if t.group(3):   # already sized (re-run): keep its own size
+                return t.group(0)
+            if CARD_BASE[(kind, variant)] == (w, h):
+                return t.group(0)
+            made.add((kind, variant, w, h))
+            return card_name(kind, variant, w, h)
+        return re.sub(r'nuvio_(tile|poster)_(mask_v2|focus_glass|focus_v2|glass)\.png', lambda t: tex(re.match(CARD_TEX.pattern, t.group(0))), b)
+    return CARD.sub(block, text)
+
+
+def card_texture(kind, variant, w, h, out):
+    import make_glass_ui as glass
+    if variant == 'mask_v2':
+        rounded(out, w, h, 19)
+    elif variant == 'focus_v2':
+        ring(out, w, h, 25, 4.3)
+    elif variant == 'glass':
+        glass_box(out, w, h)
+    else:   # focus_glass: ring of the card + 4 px of glow room on each side
+        with tempfile.TemporaryDirectory() as temp:
+            ring_png = Path(temp) / 'ring.png'
+            ring(ring_png, w - 8, h - 8, 25, 4.3)
+            glass.focus_glass(ring_png, out, pad=4 * SCALE, glow=3 * SCALE)
 
 
 WORDMARK = 'nuvio_wordmark.png'   # master, 1600x507; phone page /logo.png
@@ -172,6 +239,7 @@ def patch():
         new = CAPSULE.sub('', text)
         new = convert(new, made)
         new = logos(new, marks, w / h)
+        new = card_sizes(new, set())
         if path.name.startswith('nuvio_home'):
             new = plain_header(new)
         if new != text:
@@ -188,6 +256,17 @@ def patch():
                 rounded(target, w, h, r)
     for w, h in sorted(marks):
         wordmark(MEDIA / wordmark_name(w, h), w, h)
+    cards_used = set()
+    for path in sorted(DEFAULT.glob('*.xml')):
+        for kind, variant, cw, ch in re.findall(r'nuvio_(tile|poster)_(mask|glass|focus|focus_glass)_(\d+)x(\d+)\.png', path.read_text(encoding='utf-8')):
+            cards_used.add('nuvio_%s_%s_%sx%s.png' % (kind, variant, cw, ch))
+            target = MEDIA / ('nuvio_%s_%s_%sx%s.png' % (kind, variant, cw, ch))
+            if not target.exists():
+                back = {'mask': 'mask_v2', 'glass': 'glass', 'focus': 'focus_v2', 'focus_glass': 'focus_glass'}[variant]
+                card_texture(kind, back, int(cw), int(ch), target)
+    for path in MEDIA.glob('nuvio_*_*_*x*.png'):
+        if re.fullmatch(r'nuvio_(tile|poster)_(mask|glass|focus|focus_glass)_\d+x\d+\.png', path.name) and path.name not in cards_used:
+            path.unlink()
     # Sizes no window uses any more are removed (they would only be packaged).
     used = {pill_name(w, h, r) for w, h, r in sizes}
     for folder in (MEDIA, SKIN_MEDIA):

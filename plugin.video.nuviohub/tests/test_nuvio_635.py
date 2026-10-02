@@ -430,6 +430,28 @@ class GlassSettings(unittest.TestCase):
         self.assertIn('def over(self, fn', dialog)
 
 
+class CardShapes(unittest.TestCase):
+    def test_every_card_size_has_its_own_2x_texture(self):
+        import re as _re
+        media = ROOT / 'script.nuvio/resources/media'
+        def size(path):
+            data = path.read_bytes()
+            return int.from_bytes(data[16:20], 'big'), int.from_bytes(data[20:24], 'big')
+        seen = 0
+        for folder in ('Default', 'Dark', 'Dim'):
+            for path in (SKINS / folder / '1080i').glob('*.xml'):
+                text = path.read_text(encoding='utf-8')
+                for name, w, h in _re.findall(r'(nuvio_(?:tile|poster)_(?:mask|glass|focus|focus_glass)_(\d+)x(\d+)\.png)', text):
+                    self.assertEqual(size(media / name), (int(w) * 2, int(h) * 2), name)
+                    seen += 1
+        self.assertGreater(seen, 10)
+
+    def test_glass_box_is_smooth_not_an_eroded_mask(self):
+        source = (ROOT / 'review/make_crisp_shapes.py').read_text(encoding='utf-8')
+        self.assertIn("glass_box(MEDIA / 'nuvio_tile_glass.png', 304, 171)", source)
+        self.assertNotIn('glass.glass_from_mask(', source)
+
+
 class PhoneCopy(unittest.TestCase):
     def test_copy_works_on_the_plain_http_page(self):
         page = (ROOT / 'plugin.video.nuviohub/resources/phone_setup/index.html').read_text(encoding='utf-8')

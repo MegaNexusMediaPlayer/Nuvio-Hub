@@ -69,7 +69,7 @@
             <width>172</width>
             <height>258</height>
             <aspectratio scalediffuse="false">keep</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[Window.Property(nuvio.poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_172x258.png">$INFO[Window.Property(nuvio.poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -308,7 +308,7 @@
                 <width>352</width>
                 <height>198</height>
                 <aspectratio>stretch</aspectratio>
-                <texture background="true" colordiffuse="FF061838">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+                <texture background="true" colordiffuse="FF061838">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_352x198.png</texture>
               </control>
               <control type="image">
                 <left>16</left>
@@ -316,7 +316,7 @@
                 <width>352</width>
                 <height>198</height>
                 <aspectratio scalediffuse="false">keep</aspectratio>
-                <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png">$INFO[ListItem.Art(thumb)]</texture>
+                <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_352x198.png">$INFO[ListItem.Art(thumb)]</texture>
                 <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
                 <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
                 <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -370,7 +370,7 @@
                 <width>352</width>
                 <height>198</height>
                 <aspectratio>stretch</aspectratio>
-                <texture background="true" colordiffuse="FF061838">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+                <texture background="true" colordiffuse="FF061838">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_352x198.png</texture>
               </control>
               <control type="image">
                 <left>16</left>
@@ -378,7 +378,7 @@
                 <width>352</width>
                 <height>198</height>
                 <aspectratio scalediffuse="false">keep</aspectratio>
-                <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png">$INFO[ListItem.Art(thumb)]</texture>
+                <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_352x198.png">$INFO[ListItem.Art(thumb)]</texture>
                 <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
                 <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
                 <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -392,7 +392,7 @@
                 <height>204</height>
                 <visible>Control.HasFocus(502)</visible>
                 <aspectratio>stretch</aspectratio>
-                <texture background="true" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+                <texture background="true" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_358x204.png</texture>
               </control>
               <control type="image">
                 <left>331</left>
@@ -627,7 +627,7 @@
                 <width>352</width>
                 <height>198</height>
                 <aspectratio>stretch</aspectratio>
-                <texture background="true" colordiffuse="FF061838">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+                <texture background="true" colordiffuse="FF061838">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_352x198.png</texture>
               </control>
               <control type="image">
                 <left>16</left>
@@ -635,7 +635,7 @@
                 <width>352</width>
                 <height>198</height>
                 <aspectratio scalediffuse="false">keep</aspectratio>
-                <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png">$INFO[ListItem.Art(thumb)]</texture>
+                <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_352x198.png">$INFO[ListItem.Art(thumb)]</texture>
                 <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
                 <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
                 <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -679,7 +679,7 @@
                 <width>352</width>
                 <height>198</height>
                 <aspectratio>stretch</aspectratio>
-                <texture background="true" colordiffuse="FF061838">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png</texture>
+                <texture background="true" colordiffuse="FF061838">special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_352x198.png</texture>
               </control>
               <control type="image">
                 <left>16</left>
@@ -687,7 +687,7 @@
                 <width>352</width>
                 <height>198</height>
                 <aspectratio scalediffuse="false">keep</aspectratio>
-                <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_v2.png">$INFO[ListItem.Art(thumb)]</texture>
+                <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_tile_mask_352x198.png">$INFO[ListItem.Art(thumb)]</texture>
                 <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
                 <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
                 <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -701,7 +701,7 @@
                 <height>204</height>
                 <visible>Control.HasFocus(504)</visible>
                 <aspectratio>stretch</aspectratio>
-                <texture background="true" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_v2.png</texture>
+                <texture background="true" colordiffuse="FFC2DEFF">special://home/addons/script.nuvio/resources/media/nuvio_tile_focus_358x204.png</texture>
               </control>
               <control type="image">
                 <left>331</left>

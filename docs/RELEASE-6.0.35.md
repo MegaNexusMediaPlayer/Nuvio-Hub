@@ -93,6 +93,12 @@ Prepared 2 October 2026 from 6.0.34 (test build, not released).
 * Library: Trakt's watchlist now uses IMDb IDs first, like Simkl - the same
   title on both services is one card with two badges, and Trakt titles get
   posters.
+* Glass card boxes have smooth corners: they were the card mask shrunk by a
+  4 px erosion, which left stepped corners (visible on landscape cards whose
+  art does not cover the box). Card shapes drawn at other sizes (landscape
+  catalog grid and Details, Library, person and info pages) get their own 2x
+  mask / glass / focus textures with the same radius instead of a stretched
+  one (`review/make_crisp_shapes.py`).
 * Every sports add-on gets its metadata and stream switches ON (each serves
   its own metadata).
 * Catalog rows: Movies and Series are two rows, one under the other.
@@ -112,7 +118,7 @@ Prepared 2 October 2026 from 6.0.34 (test build, not released).
 * Nuvio collections named **World** are imported again (only Sports stays out
   of the MegaNexus Home).
 
-Checks: `test_nuvio_635.py` (47 tests) plus updated 601, 602, 605, 612, 615,
+Checks: `test_nuvio_635.py` (49 tests) plus updated 601, 602, 605, 612, 615,
 618, 628, 631, home_iptv and reliability expectations. `python
 review/check_635.py`, release guard, builder, packaged smoke test. The Sports
 backend was also run against https://sports.highfly.dev/manifest.json

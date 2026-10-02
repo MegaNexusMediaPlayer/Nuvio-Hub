@@ -18,7 +18,7 @@ UI_MEDIA={'nuvio_video_vignette.png','kofi_qr.png','nuvio_poster_mask_v2.png','n
           'nuvio_banner_dark.png','nuvio_banner_dim.png','meganexus_saver_bg_dark.png','meganexus_saver_bg_dim.png','nuvio_bottom_fade.png',
           'nuvio_tile_glass.png','nuvio_poster_glass.png',
           'nuvio_tile_focus_glass.png','nuvio_poster_focus_glass.png'}
-CRISP_PILL=re.compile(r'nuvio_(?:pill_\d+x\d+_r\d+|wordmark_\d+x\d+)\.png$')  # per-size pills and logos (review/make_crisp_shapes.py)
+CRISP_PILL=re.compile(r'nuvio_(?:pill_\d+x\d+_r\d+|wordmark_\d+x\d+|(?:tile|poster)_(?:mask|glass|focus|focus_glass)_\d+x\d+)\.png$')  # per-size pills, logos and card shapes (review/make_crisp_shapes.py)
 COLLECTION_MEDIA={value for group in json.loads((BACK/'resources/collections.json').read_text(encoding='utf-8'))
                   for folder in group['folders'] for key,value in folder.items()
                   if key in ('cover','backdrop','animation') and isinstance(value,str) and value.startswith('resources/media/collections/')}

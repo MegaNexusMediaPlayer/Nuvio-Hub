@@ -182,7 +182,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -190,7 +190,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -278,7 +278,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -286,7 +286,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -362,7 +362,7 @@
             <width>192</width>
             <height>280</height>
             <aspectratio>stretch</aspectratio>
-            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass.png</texture>
+            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass_192x280.png</texture>
             <visible>Control.HasFocus(500)</visible>
           </control>
           <control type="label">
@@ -406,7 +406,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -414,7 +414,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -502,7 +502,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -510,7 +510,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -586,7 +586,7 @@
             <width>192</width>
             <height>280</height>
             <aspectratio>stretch</aspectratio>
-            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass.png</texture>
+            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass_192x280.png</texture>
             <visible>Control.HasFocus(501)</visible>
           </control>
           <control type="label">
@@ -630,7 +630,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -638,7 +638,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -726,7 +726,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -734,7 +734,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -810,7 +810,7 @@
             <width>192</width>
             <height>280</height>
             <aspectratio>stretch</aspectratio>
-            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass.png</texture>
+            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass_192x280.png</texture>
             <visible>Control.HasFocus(502)</visible>
           </control>
           <control type="label">
@@ -854,7 +854,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -862,7 +862,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -950,7 +950,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -958,7 +958,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -1034,7 +1034,7 @@
             <width>192</width>
             <height>280</height>
             <aspectratio>stretch</aspectratio>
-            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass.png</texture>
+            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass_192x280.png</texture>
             <visible>Control.HasFocus(503)</visible>
           </control>
           <control type="label">
@@ -1078,7 +1078,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -1086,7 +1086,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -1174,7 +1174,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -1182,7 +1182,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -1258,7 +1258,7 @@
             <width>192</width>
             <height>280</height>
             <aspectratio>stretch</aspectratio>
-            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass.png</texture>
+            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass_192x280.png</texture>
             <visible>Control.HasFocus(504)</visible>
           </control>
           <control type="label">
@@ -1302,7 +1302,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -1310,7 +1310,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -1398,7 +1398,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -1406,7 +1406,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -1482,7 +1482,7 @@
             <width>192</width>
             <height>280</height>
             <aspectratio>stretch</aspectratio>
-            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass.png</texture>
+            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass_192x280.png</texture>
             <visible>Control.HasFocus(505)</visible>
           </control>
           <control type="label">
@@ -1526,7 +1526,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -1534,7 +1534,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -1622,7 +1622,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -1630,7 +1630,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -1706,7 +1706,7 @@
             <width>192</width>
             <height>280</height>
             <aspectratio>stretch</aspectratio>
-            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass.png</texture>
+            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass_192x280.png</texture>
             <visible>Control.HasFocus(506)</visible>
           </control>
           <control type="label">
@@ -1750,7 +1750,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -1758,7 +1758,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -1846,7 +1846,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -1854,7 +1854,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -1930,7 +1930,7 @@
             <width>192</width>
             <height>280</height>
             <aspectratio>stretch</aspectratio>
-            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass.png</texture>
+            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass_192x280.png</texture>
             <visible>Control.HasFocus(507)</visible>
           </control>
           <control type="label">
@@ -1974,7 +1974,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -1982,7 +1982,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -2070,7 +2070,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -2078,7 +2078,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -2154,7 +2154,7 @@
             <width>192</width>
             <height>280</height>
             <aspectratio>stretch</aspectratio>
-            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass.png</texture>
+            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass_192x280.png</texture>
             <visible>Control.HasFocus(508)</visible>
           </control>
           <control type="label">
@@ -2198,7 +2198,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -2206,7 +2206,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -2294,7 +2294,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -2302,7 +2302,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -2378,7 +2378,7 @@
             <width>192</width>
             <height>280</height>
             <aspectratio>stretch</aspectratio>
-            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass.png</texture>
+            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass_192x280.png</texture>
             <visible>Control.HasFocus(509)</visible>
           </control>
           <control type="label">
@@ -2422,7 +2422,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -2430,7 +2430,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -2518,7 +2518,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -2526,7 +2526,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -2602,7 +2602,7 @@
             <width>192</width>
             <height>280</height>
             <aspectratio>stretch</aspectratio>
-            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass.png</texture>
+            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass_192x280.png</texture>
             <visible>Control.HasFocus(510)</visible>
           </control>
           <control type="label">
@@ -2646,7 +2646,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -2654,7 +2654,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -2742,7 +2742,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -2750,7 +2750,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -2826,7 +2826,7 @@
             <width>192</width>
             <height>280</height>
             <aspectratio>stretch</aspectratio>
-            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass.png</texture>
+            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass_192x280.png</texture>
             <visible>Control.HasFocus(511)</visible>
           </control>
           <control type="label">
@@ -2870,7 +2870,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -2878,7 +2878,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -2966,7 +2966,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -2974,7 +2974,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -3050,7 +3050,7 @@
             <width>192</width>
             <height>280</height>
             <aspectratio>stretch</aspectratio>
-            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass.png</texture>
+            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass_192x280.png</texture>
             <visible>Control.HasFocus(512)</visible>
           </control>
           <control type="label">
@@ -3094,7 +3094,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -3102,7 +3102,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -3190,7 +3190,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>stretch</aspectratio>
-            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass.png</texture>
+            <texture>special://home/addons/script.nuvio/resources/media/nuvio_poster_glass_176x264.png</texture>
           </control>
           <control type="image">
             <left>10</left>
@@ -3198,7 +3198,7 @@
             <width>176</width>
             <height>264</height>
             <aspectratio>scale</aspectratio>
-            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_v2.png">$INFO[ListItem.Art(poster)]</texture>
+            <texture background="true" diffuse="special://home/addons/script.nuvio/resources/media/nuvio_poster_mask_176x264.png">$INFO[ListItem.Art(poster)]</texture>
             <animation effect="fade" start="90" end="90" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),10)">Conditional</animation>
             <animation effect="fade" start="80" end="80" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),20)">Conditional</animation>
             <animation effect="fade" start="70" end="70" time="0" condition="String.IsEqual(Window(Home).Property(nuvio.card_opacity),30)">Conditional</animation>
@@ -3274,7 +3274,7 @@
             <width>192</width>
             <height>280</height>
             <aspectratio>stretch</aspectratio>
-            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass.png</texture>
+            <texture colordiffuse="FFDBECFF">special://home/addons/script.nuvio/resources/media/nuvio_poster_focus_glass_192x280.png</texture>
             <visible>Control.HasFocus(513)</visible>
           </control>
           <control type="label">
