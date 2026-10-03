@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addons>
+<addon id="plugin.video.nuviohub" name="MegaNexus Hub (old)" version="7.0.4" provider-name="MegaNexus">
+  <requires>
+    <import addon="xbmc.python" version="3.0.0" />
+    <import addon="xbmc.gui" version="5.17.0" />
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="default.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.service" library="service.py" start="startup" />
+  <extension point="xbmc.addon.metadata">
+    <reuselanguageinvoker>true</reuselanguageinvoker>
+    <platform>all</platform>
+    <license>MegaNexus License (see LICENSE.txt); bundled python-qrcode: BSD</license>
+    <language>en</language>
+    <summary lang="en_GB">Previous MegaNexus Hub - removed automatically after the move to MegaNexus 7.</summary>
+    <description lang="en_GB">Backend for the independent Nuvio interface and Kodi skin. Metadata add-ons supply catalog metadata; individually enabled stream add-ons supply sources in their original order. Includes local component installation, account sync, Continue Watching and playback services. Manual bundle ZIP updates only.</description>
+    <disclaimer lang="en_GB">The author of this addon does not host any of the content which is found and has no affiliation with any of the content providers. The author is in no way affiliated with Kodi, Team Kodi, or the XBMC Foundation.</disclaimer>
+    <news>The previous MegaNexus Hub. It installs MegaNexus 7, which moves your settings, accounts and Continue Watching and removes this add-on after the next restart.</news>
+    <assets>
+      <icon>resources/media/meganexus_icon.png</icon>
+      <fanart>resources/media/meganexus_fanart.png</fanart>
+    </assets>
+  </extension>
+</addon>
+<addon id="repository.meganexus" name="MegaNexus Repository" version="2.0.0" provider-name="MegaNexus">
+  <extension point="xbmc.addon.repository" name="MegaNexus Repository">
+    <dir minversion="19.0.0">
+      <info compressed="false">https://meganexusmediaplayer.github.io/MegaNexus/repo/addons.xml</info>
+      <checksum>https://meganexusmediaplayer.github.io/MegaNexus/repo/addons.xml.md5</checksum>
+      <datadir zip="true">https://meganexusmediaplayer.github.io/MegaNexus/repo/</datadir>
+    </dir>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <platform>all</platform>
+    <license>MegaNexus License (see LICENSE.txt)</license>
+    <summary lang="en_GB">MegaNexus add-ons for Kodi.</summary>
+    <description lang="en_GB">Installs and updates the MegaNexus build (MegaNexus Hub, the MegaNexus interface, MegaNexus Skin and MegaNexus Screensaver) from GitHub Pages. Kodi checks this repository for updates automatically.</description>
+    <assets>
+      <icon>icon.png</icon>
+      <fanart>fanart.png</fanart>
+    </assets>
+  </extension>
+</addon>
+</addons>
