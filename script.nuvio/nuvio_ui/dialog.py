@@ -1,30 +1,17 @@
 """Keep Kodi callbacks short and remove parent modals while a child owns input."""
 import queue
 import threading
-import time
 import traceback
 import xbmc
 import xbmcgui
 
 BACK = (9, 10, 92, 216, 13, 247, 257, 275, 61448, 61467)
 ACTIONS = (117, 101, 1009, 11)
-# Touch screens (6.0.37, 6.0.39). Kodi gives a horizontal row the whole drag
-# when the finger starts on a poster, so dragging up/down over posters did not
-# move Home. Windows with TOUCH_ROWS turn a vertical drag into row steps (the
-# same Up/Down a remote sends). Remote, mouse and keyboard never send these IDs.
-# 6.0.39: the step follows the finger's speed, a fast flick keeps gliding a few
-# rows after the finger lifts (a new touch stops it), and touch never leaves
-# the rows for the header (touch_can_step).
-GESTURE_BEGIN, GESTURE_PAN, GESTURE_ABORT, GESTURE_END = 501, 504, 505, 599
-GESTURES = (GESTURE_BEGIN, GESTURE_PAN, GESTURE_ABORT, GESTURE_END)
-TOUCH_LOCK = 20          # px before the drag direction is decided
-TOUCH_STEP = 0.11        # of the screen height per row step (slow drag)
-TOUCH_STEP_FAST = 0.07   # ... while the finger moves fast
-TOUCH_FAST = 1.2         # screen heights per second = a fast drag / flick
-TOUCH_FLING_MAX = 8      # rows a flick may add after the finger lifts
-TOUCH_FLING_GAP = 0.07   # s between glide steps, growing as it slows down
-TOUCH_SAMPLE = 0.12      # s of finger movement used for the speed
-TOUCH_SETTLE = 0.4       # s after the finger lifts that counts as touching
+# Touch gestures (IDs 501-599) are left entirely to Kodi, as before 6.0.37.
+# 6.0.37/6.0.39 turned vertical drags into Up/Down steps; it fought Kodi's own
+# panning (too fast on a small move, focus changes repainted Home) and was
+# removed in 6.0.40. Never reuse window attribute names for Dialog state:
+# 6.0.37 stored it as self._touch and replaced HomeWindow._touch().
 
 class Action:
     def __init__(self, aid): self.aid = aid
@@ -63,10 +50,7 @@ class Dialog(xbmcgui.WindowXMLDialog):
                 if self._child_active or self._dialog_closed: return
                 if _name == 'onAction':
                     aid = value.getId()
-                    if aid in GESTURES:
-                        self._touch_gesture(aid, value)
-                        return
-                    if aid not in BACK + ACTIONS: return  # Kodi owns navigation/seek.
+                    if aid not in BACK + ACTIONS: return  # Kodi owns navigation/seek/touch.
                     value = Action(aid)
                     if aid in BACK: return _fn(self, value)
                 # A busy operation already owns this click; do not replay held
@@ -74,91 +58,6 @@ class Dialog(xbmcgui.WindowXMLDialog):
                 if not self._dispatching:
                     self.defer(lambda: _fn(self, value))
             setattr(self, name, callback)
-
-    TOUCH_ROWS = False
-
-    def touching(self):
-        """A finger is on the screen, just left it, or a flick still glides."""
-        state = self.__dict__
-        return (bool(state.get('_touch_state')) or bool(state.get('_touch_fling'))
-                or time.monotonic() - float(state.get('_touch_ended_at') or 0.0) < TOUCH_SETTLE)
-
-    def touch_can_step(self, down):
-        """Windows refuse a step that would leave the rows (Home: the header)."""
-        return True
-
-    @staticmethod
-    def _screen_height():
-        try:
-            return max(240.0, float(xbmcgui.getScreenHeight()))
-        except Exception:
-            return 1080.0
-
-    def _touch_step(self, down):
-        if not self.touch_can_step(down):
-            return False
-        # Finger up = content up = the next row, like scrolling a page.
-        xbmc.executebuiltin('Action(Down)' if down else 'Action(Up)')
-        return True
-
-    def _touch_speed(self, touch):
-        """Vertical finger speed in screen heights per second (signed)."""
-        samples = touch['samples']
-        if len(samples) < 2:
-            return 0.0
-        (t0, y0), (t1, y1) = samples[0], samples[-1]
-        if t1 - t0 <= 0:
-            return 0.0
-        return (y1 - y0) / (t1 - t0) / self._screen_height()
-
-    def _touch_gesture(self, aid, action):
-        now = time.monotonic()
-        if aid == GESTURE_BEGIN:
-            y = action.getAmount2()
-            self._touch_fling = None   # a new touch stops a glide
-            self._touch_state = {'x': action.getAmount1(), 'y': y, 'axis': None, 'last': y, 'samples': [(now, y)]}
-            return
-        touch = self.__dict__.get('_touch_state')
-        if aid in (GESTURE_ABORT, GESTURE_END) or touch is None:
-            self._touch_state = None
-            self._touch_ended_at = now
-            if aid == GESTURE_END and touch and touch['axis'] == 'v' and self.TOUCH_ROWS:
-                speed = self._touch_speed(touch)
-                if abs(speed) >= TOUCH_FAST:
-                    rows = min(TOUCH_FLING_MAX, int(abs(speed) * 1.5))
-                    self._touch_fling = {'down': speed < 0, 'left': rows, 'gap': TOUCH_FLING_GAP, 'next': now}
-            return
-        x, y = action.getAmount1(), action.getAmount2()
-        touch['samples'] = [s for s in touch['samples'] if now - s[0] <= TOUCH_SAMPLE] + [(now, y)]
-        if touch['axis'] is None:
-            dx, dy = abs(x - touch['x']), abs(y - touch['y'])
-            if max(dx, dy) < TOUCH_LOCK:
-                return
-            touch['axis'] = 'v' if dy > dx * 1.2 else 'h'
-            touch['last'] = y
-        if touch['axis'] != 'v' or not self.TOUCH_ROWS:
-            return
-        fast = abs(self._touch_speed(touch)) >= TOUCH_FAST
-        step = self._screen_height() * (TOUCH_STEP_FAST if fast else TOUCH_STEP)
-        moved = y - touch['last']
-        while abs(moved) >= step:
-            touch['last'] += -step if moved < 0 else step
-            if not self._touch_step(moved < 0):
-                touch['last'] = y   # at the edge: no step stored up for later
-            moved = y - touch['last']
-
-    def _touch_glide(self):
-        """One step of a flick's glide; called from the window loop."""
-        fling = self.__dict__.get('_touch_fling')
-        if not fling or time.monotonic() < fling['next']:
-            return
-        if fling['left'] <= 0 or not self._touch_step(fling['down']):
-            self._touch_fling = None
-            self._touch_ended_at = time.monotonic()
-            return
-        fling['left'] -= 1
-        fling['gap'] *= 1.3
-        fling['next'] = time.monotonic() + fling['gap']
 
     def show_ready(self):
         """Restored XML controls are valid only after Kodi delivers onInit."""
@@ -203,7 +102,6 @@ class Dialog(xbmcgui.WindowXMLDialog):
 
     def drain_events(self):
         if self._dialog_closed or self._dispatching or self._child_active: return
-        if self.TOUCH_ROWS: self._touch_glide()
         try: fn = self._events.get_nowait()
         except queue.Empty: return
         self._dispatching = True

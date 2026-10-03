@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<addon id="skin.nuvio" version="6.0.39" name="MegaNexus" provider-name="MegaNexus; Kodi foundation by Team Kodi">
+<addon id="skin.nuvio" version="6.0.40" name="MegaNexus" provider-name="MegaNexus; Kodi foundation by Team Kodi">
   <requires>
     <import addon="xbmc.gui" version="5.17.0" />
-    <import addon="script.nuvio" version="6.0.39" />
+    <import addon="script.nuvio" version="6.0.40" />
   </requires>
   <extension point="xbmc.gui.skin" debugging="false">
     <res width="1920" height="1080" aspect="16:9" default="true" folder="xml" />

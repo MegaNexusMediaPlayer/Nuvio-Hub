@@ -41,51 +41,23 @@ def action(aid, x=0.0, y=0.0):
     return SimpleNamespace(getId=lambda: aid, getAmount1=lambda: x, getAmount2=lambda: y)
 
 
-class TouchRows(unittest.TestCase):
-    def drag(self, rows, points, height=1080):
+class TouchIsKodis(unittest.TestCase):
+    """6.0.40: the 6.0.37/6.0.39 drag-to-row stepping was removed; touch
+    gestures are Kodi's own again (remote, mouse and keyboard never changed)."""
+    def test_gestures_reach_neither_the_window_nor_builtins(self):
         class Rows(dialog.Dialog):
-            TOUCH_ROWS = rows
             def onAction(self, a):
                 self.handled = a.getId()
         win = Rows()
         sent = []
-        clock = [100.0]
-        def slow():   # a slow drag: 0.3 s between events (6.0.39 measures speed)
-            clock[0] += 0.3
-            return clock[0]
-        with mock.patch.object(dialog.xbmc, 'executebuiltin', side_effect=sent.append), \
-                mock.patch.object(dialog.time, 'monotonic', side_effect=slow), \
-                mock.patch.object(dialog.xbmcgui, 'getScreenHeight', return_value=height, create=True):
-            win.onAction(action(dialog.GESTURE_BEGIN, *points[0]))
-            for point in points[1:]:
-                win.onAction(action(dialog.GESTURE_PAN, *point))
-                self.assertTrue(win.touching())
-            win.onAction(action(dialog.GESTURE_END, *points[-1]))
-        return win, sent
-
-    def test_vertical_drag_over_posters_steps_rows(self):
-        step = 1080 * dialog.TOUCH_STEP
-        win, sent = self.drag(True, [(500, 900), (505, 870), (510, 900 - step * 2 - 40)])
-        self.assertEqual(sent, ['Action(Down)', 'Action(Down)'])
-        win, sent = self.drag(True, [(500, 200), (500, 240), (500, 200 + step + 50)])
-        self.assertEqual(sent, ['Action(Up)'])
-
-    def test_horizontal_drag_is_left_to_kodi(self):
-        win, sent = self.drag(True, [(900, 500), (700, 510), (300, 520)])
+        with mock.patch.object(dialog.xbmc, 'executebuiltin', side_effect=sent.append):
+            for aid in (501, 504, 504, 599, 511, 531):
+                win.onAction(action(aid, 500, 500))
         self.assertEqual(sent, [])
-
-    def test_windows_without_rows_and_remote_keys_are_unchanged(self):
-        win, sent = self.drag(False, [(500, 900), (500, 870), (500, 300)])
-        self.assertEqual(sent, [])
-        self.assertFalse(hasattr(win, 'handled'), 'gestures never reach the window handler')
+        self.assertFalse(hasattr(win, 'handled'))
         win.onAction(action(92))
         self.assertEqual(win.handled, 92)   # Back still at once
-
-    def test_rows_screens_opt_in(self):
-        sports = importlib.import_module('nuvio_ui.sports')
-        library = importlib.import_module('nuvio_ui.library')
-        self.assertTrue(home.HomeWindow.TOUCH_ROWS and sports.SportsWindow.TOUCH_ROWS and library.LibraryWindow.TOUCH_ROWS)
-        self.assertFalse(dialog.Dialog.TOUCH_ROWS)
+        self.assertFalse(hasattr(dialog.Dialog, 'TOUCH_ROWS'))
 
 
 class ExternalCollectionSources(unittest.TestCase):

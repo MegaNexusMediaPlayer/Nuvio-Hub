@@ -67,7 +67,6 @@ def _server_play(path):
 
 
 class HomeWindow(Dialog):
-    TOUCH_ROWS = True   # vertical drags over poster rows move between rows (touch only)
     def __init__(self, *args, **kwargs):
         super().__init__(*args)
         self._shelves = kwargs.get('shelves') or []
@@ -290,9 +289,6 @@ class HomeWindow(Dialog):
     def drain_updates(self):
         self.drain_events()
         if self._closed:return
-        # While a finger drags a row, nothing repaints rows or starts previews:
-        # a row reset mid-drag felt like the posters got stuck (6.0.37).
-        if self.touching():return
         self._queue_visible()
         now=time.monotonic()
         if now-self._last_progress_check>=.5:
@@ -476,11 +472,6 @@ class HomeWindow(Dialog):
         if items:
             if old_identity and old_identity in identities:position=identities.index(old_identity)
             control.selectItem(min(max(0, position), len(items) - 1))
-
-    def touch_can_step(self, down):
-        # Touch moves between rows only; the header (Home, Search, ...) is tapped.
-        try:return down or self.getFocusId()>ROW_BASE
-        except Exception:return False
 
     def _touch(self):
         now = time.monotonic()

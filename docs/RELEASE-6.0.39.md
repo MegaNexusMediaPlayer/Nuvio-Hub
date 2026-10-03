@@ -1,6 +1,6 @@
 # Nuvio Hub 6.0.39 — test build: Android fix, touch, sync, RAM, Plex and Jellyfin (beta)
 
-Prepared 2 October 2026 (test build, not released). Built on 6.0.38 (the
+Prepared 2 October 2026 (test build, not released; released as 6.0.40 without the touch changes). Built on 6.0.38 (the
 6.0.36 code) with all 6.0.37 features restored (Kodi 22 RC1, Trakt / TMDB
 collection sources, Local storage, security notice, phone setup port 8765;
 see [RELEASE-6.0.37.md](RELEASE-6.0.37.md)).

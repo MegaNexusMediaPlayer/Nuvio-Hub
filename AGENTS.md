@@ -3,7 +3,7 @@
 This is a four-component Kodi build: `plugin.video.nuviohub` (backend/service),
 `script.nuvio` (Python/XML frontend), `skin.nuvio` (Kodi shell), and
 `screensaver.nuvio` (screensaver entrypoint). The 6.0.27 release is the
-baseline for this 6.0.39 candidate. Do not publish, push, or change live user
+baseline for this 6.0.40 candidate. Do not publish, push, or change live user
 profiles as a side effect of reviewing code.
 
 ## Required repository skills
@@ -15,7 +15,7 @@ claims that a runtime plugin or global agent skill has been installed.
 
 ## Before modifying code
 
-Read the relevant call sites, tests, and `docs/RELEASE-6.0.39.md` (and 6.0.36 back to 6.0.10). Identify which
+Read the relevant call sites, tests, and `docs/RELEASE-6.0.40.md` (and 6.0.36 back to 6.0.10). Identify which
 Kodi process/interpreter owns the work. Keep existing public add-on IDs,
 profile paths, encrypted credentials and migration aliases. Never mass-rename
 legacy state keys or remove upstream license notices. Since 6.0.24 the
@@ -48,13 +48,13 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
 * Never change a Kodi window class after creation (no class-level setattr,
   no __init_subclass__ wrapping): Kodi 22 RC1's SWIG 4.5 bindings make those
   attributes read-only. Wrap callbacks per instance (`nuvio_ui/dialog.py`).
-  Touch gestures (IDs 501-599) are handled in Dialog; remote/mouse/keyboard
-  paths stay untouched. Touch state lives in `_touch_state`/`_touch_fling`
-  (6.0.37 stored it as `_touch` and replaced HomeWindow._touch(): the next
-  click crashed the interface on Android). Never give Dialog state an
-  attribute name a window class uses. A failing deferred click/key is logged
-  and shown as a notification by `Dialog.drain_events`; it never closes
-  MegaNexus.
+  Touch gestures (IDs 501-599) belong to Kodi: Dialog ignores them (the
+  6.0.37/6.0.39 drag-to-row stepping fought Kodi's panning and was removed
+  in 6.0.40). 6.0.37 stored touch state as `_touch` and replaced
+  HomeWindow._touch(): the next click crashed the interface on Android. Never
+  give Dialog state an attribute name a window class uses. A failing deferred
+  click/key is logged and shown as a notification by `Dialog.drain_events`;
+  it never closes MegaNexus.
 * 6.0.39: Local storage, Plex and Jellyfin/Emby are beta and OFF by default
   (`nuvio_home_local`, `nuvio_plex_enabled`, `nuvio_jellyfin_enabled`,
   `nuvio_home_plex`, `nuvio_home_jellyfin`); nothing imports a server client
@@ -164,10 +164,10 @@ local policy. Do not make up runtime, IDs, air dates, translations, or credits.
 ## Required checks (Python 3.9+ review environment)
 
 ```sh
-python review/check_639.py
-python review/check_608_rebrand_kodi22.py 6.0.39
-python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.39.zip
-python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.39.zip
+python review/check_640.py
+python review/check_608_rebrand_kodi22.py 6.0.40
+python review/build_bundle.py --output /tmp/Nuvio-Hub-Complete-6.0.40.zip
+python review/check_packaged_build.py /tmp/Nuvio-Hub-Complete-6.0.40.zip
 ```
 
 The first command runs the maintained unit suite, parses XML/JSON, and checks
